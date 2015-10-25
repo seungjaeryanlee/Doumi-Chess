@@ -35,7 +35,8 @@ void queenMoveGeneration(int board[120], int turn, int position);
 void kingMoveGeneration(int board[120], int turn, int position); 
 void castlingMoveGeneration(int board[120], int turn);
 void promotionMoveGeneration(int board[120], int turn);
-
+//  Add the input move to the array
+void addMove(int initial, int terminal);
 
 
 /*                                   ENUMERATION                              */
@@ -136,6 +137,7 @@ int KING_PCSQTable_ENDGAME[64] = {
 //  First number: initial square, Second number: terminal square
 //  TODO: Check upper bound of moves
 int allMoves[1000][2];
+int moveCount = 0;
 
 /*                                    FUNCTION                                */
 void board120Setup() {
@@ -317,46 +319,55 @@ int position120to64(int position120) {
      return row * 8 + column;
 }
 void moveGeneration(int board[120], int turn) {
-     for (int i = 0; i < 120; i++) {
-          switch (board[i]) {
-          case WHITEPAWN:
-               pawnMoveGeneration(board, turn, i);
-               break;
-          case WHITEKNIGHT:
-               knightMoveGeneration(board, turn, i);
-               break;
-          case WHITEBISHOP:
-               bishopMoveGeneration(board, turn, i);
-               break;
-          case WHITEROOK:
-               rookMoveGeneration(board, turn, i);
-               break;
-          case WHITEQUEEN:
-               queenMoveGeneration(board, turn, i);
-               break;
-          case WHITEKING:
-               kingMoveGeneration(board, turn, i);
-               break;
-          case BLACKPAWN:
-               pawnMoveGeneration(board, turn, i);
-               break;
-          case BLACKKNIGHT:
-               knightMoveGeneration(board, turn, i);
-               break;
-          case BLACKBISHOP:
-               bishopMoveGeneration(board, turn, i);
-               break;
-          case BLACKROOK:
-               rookMoveGeneration(board, turn, i);
-               break;
-          case BLACKQUEEN:
-               queenMoveGeneration(board, turn, i);
-               break;
-          case BLACKKING:
-               kingMoveGeneration(board, turn, i);
-               break;
+     if (turn == WHITE) {
+          for (int i = 0; i < 120; i++) {
+               switch (board[i]) {
+               case WHITEPAWN:
+                    pawnMoveGeneration(board, turn, i);
+                    break;
+               case WHITEKNIGHT:
+                    knightMoveGeneration(board, turn, i);
+                    break;
+               case WHITEBISHOP:
+                    bishopMoveGeneration(board, turn, i);
+                    break;
+               case WHITEROOK:
+                    rookMoveGeneration(board, turn, i);
+                    break;
+               case WHITEQUEEN:
+                    queenMoveGeneration(board, turn, i);
+                    break;
+               case WHITEKING:
+                    kingMoveGeneration(board, turn, i);
+                    break;
+               }
           }
      }
+     if (turn == BLACK) {
+          for (int i = 0; i < 120; i++) {
+               switch (board[i]) {
+               case BLACKPAWN:
+                    pawnMoveGeneration(board, turn, i);
+                    break;
+               case BLACKKNIGHT:
+                    knightMoveGeneration(board, turn, i);
+                    break;
+               case BLACKBISHOP:
+                    bishopMoveGeneration(board, turn, i);
+                    break;
+               case BLACKROOK:
+                    rookMoveGeneration(board, turn, i);
+                    break;
+               case BLACKQUEEN:
+                    queenMoveGeneration(board, turn, i);
+                    break;
+               case BLACKKING:
+                    kingMoveGeneration(board, turn, i);
+                    break;
+               }
+          }
+     }
+     
      //  TODO: Add Castling
      //  TODO: Add Enpassant
      //  TODO: Add Promotion
@@ -373,7 +384,46 @@ int checkColor(int pieceType) {
           return NEITHER;
      }
 }
-void pawnMoveGeneration(int board[120], int turn, int position){}
+void pawnMoveGeneration(int board[120], int turn, int position) {
+     if (turn == WHITE) {
+          //  Advance 1 square
+          if (board[position - ROW] == EMPTYSQUARE) {
+               addMove(position, position - ROW);
+                    //  Advance 2 squares
+                    if (A2 <= position && position <= H2 && board[position - 2 * ROW] == EMPTYSQUARE) {
+                         addMove(position, position - 2 * ROW);
+                    }
+          }
+
+          //  attack diagonals
+          if (checkColor(board[position - ROW - COLUMN]) == BLACK) {
+               addMove(position, position - ROW - COLUMN);
+          }
+          if (checkColor(board[position - ROW + COLUMN]) == BLACK) {
+               addMove(position, position - ROW + COLUMN);
+          }
+          //  TODO: enpassant Generation
+     }
+     if (turn == BLACK) {
+          //  Advance 1 square
+          if (board[position + ROW] == EMPTYSQUARE) {
+               addMove(position, position + ROW);
+               //  Advance 2 squares
+               if (A7 <= position && position <= H7 && board[position + 2 * ROW] == EMPTYSQUARE) {
+                    addMove(position, position + 2 * ROW);
+               }
+          }
+
+          //  attack diagonals
+          if (checkColor(board[position + ROW - COLUMN]) == WHITE) {
+               addMove(position, position - ROW - COLUMN);
+          }
+          if (checkColor(board[position + ROW + COLUMN]) == WHITE) {
+               addMove(position, position - ROW + COLUMN);
+          }
+     }
+     
+}
 void knightMoveGeneration(int board[120], int turn, int position) {}
 void bishopMoveGeneration(int board[120], int turn, int position) {}
 void rookMoveGeneration(int board[120], int turn, int position) {}
@@ -381,24 +431,54 @@ void queenMoveGeneration(int board[120], int turn, int position) {}
 void kingMoveGeneration(int board[120], int turn, int position) {}
 void castlingMoveGeneration(int board[120], int turn) {}
 void promotionMoveGeneration(int board[120], int turn) {}
-
+void addMove(int initial, int terminal) {
+     allMoves[moveCount][0] = initial;
+     allMoves[moveCount][1] = terminal;
+     moveCount++;
+}
 
 void main() {
      //  Initialize Board
-      board120Setup();
-      printBoard(currentBoard);
-
+     //  board120Setup();
      
+     //  Testing pawnMoveGeneration
+     currentBoard[51] = WHITEPAWN;
+     currentBoard[64] = WHITEPAWN;
+     currentBoard[53] = BLACKPAWN;
+     currentBoard[62] = WHITEPAWN;
+     currentBoard[52] = WHITEPAWN;
+     
+     printBoard(currentBoard);
 
+     int evaluationScore;
+     int currentTurn = BLACK;
      while (gamePlaying) {
-          int evaluationScore;
-          evaluationScore = updateEvaluation(currentBoard);
 
-          printf("Evaluation Score: %d\n\n", evaluationScore);
+          //  evaluationScore = updateEvaluation(currentBoard);
+          //  printf("Evaluation Score: %d\n\n", evaluationScore);
+
+
+          //  Generate Moves
+          moveGeneration(currentBoard, currentTurn);
+          //  Print all moves
+          for (int i = 0; i < moveCount; i++) {
+               printf("%d to %d\n", allMoves[i][0], allMoves[i][1]);
+          }
+          printf("\nTotal Moves: %d\n", moveCount);
+
+
 
           // TODO: Check Endgame
 
           //  This should be deleted for non-test cases
           gamePlaying = false;
+
+          //  Change turns
+          if (currentTurn == WHITE) {
+               currentTurn = BLACK;
+          }
+          else {
+               currentTurn = WHITE;
+          }
      }
 }
