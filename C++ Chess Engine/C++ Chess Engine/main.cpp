@@ -1,10 +1,10 @@
 /*                                    DEFINITION                              */
-#define PAWNVALUE 0
-#define KNIGHTVALUE 0
-#define BISHOPVALUE 0
-#define ROOKVALUE 0
-#define QUEENVALUE 0
-#define KINGVALUE 0
+#define PAWNVALUE 100
+#define KNIGHTVALUE 300
+#define BISHOPVALUE 300
+#define ROOKVALUE 500
+#define QUEENVALUE 900
+#define KINGVALUE 9999
 #include <stdio.h>
 
 /*                              FUNCTION DECLARATION                          */
@@ -94,18 +94,6 @@ int QUEEN_PCSQTable[64] = {
      -10,  0,  5,  0,  0,  0,  0,-10,
      -20,-10,-10, -5, -5,-10,-10,-20
 };
-
-int KING_PCSQTable[64] = {
-     0, 1, 2, 3, 4, 5, 6, 7,
-     8, 9, 10, 11, 12, 13, 14, 15,
-     16, 17, 18, 19, 20, 21, 22, 23,
-     24, 25, 26, 27, 28, 29, 30, 31,
-     32, 33, 34, 35, 36, 37, 38, 39,
-     40, 41, 42, 43, 44, 45, 46, 47,
-     48, 49, 50, 51, 52, 53, 54, 55,
-     56, 57, 58, 59, 60, 61, 62, 63
-};
-/*
 int KING_PCSQTable[64] = {
      -30,-40,-40,-50,-50,-40,-40,-30,
      -30,-40,-40,-50,-50,-40,-40,-30,
@@ -116,7 +104,6 @@ int KING_PCSQTable[64] = {
       20, 20,  0,  0,  0,  0, 20, 20,
       20, 30, 10,  0,  0, 10, 30, 20
 };
-*/
 int KING_PCSQTable_ENDGAME[64] = {
      -50,-40,-30,-20,-20,-30,-40,-50,
      -30,-20,-10,  0,  0,-10,-20,-30,
@@ -170,8 +157,8 @@ void board120Setup() {
 
      //  Add Pawn Pieces
      for (int i = 0; i < 8; i++) {
-          currentBoard[A2+i] = WHITEROOK;
-          currentBoard[A7+i] = BLACKROOK;
+          currentBoard[A2+i] = WHITEPAWN;
+          currentBoard[A7+i] = BLACKPAWN;
      }
 }
 void printBoard(int board[120]) {
@@ -310,22 +297,12 @@ int position120to64(int position120) {
 
 void main() {
      //  Initialize Board
-     //  board120Setup();
+      board120Setup();
+      printBoard(currentBoard);
      
-     //  Testing updateEvaluation with PCSQ Table
-     
-     currentBoard[37] = WHITEKING;
-     printf("PCSQTable value of 37 is: %d\n", 
-          KING_PCSQTable[position120to64(37)]);
-     
-     
- 
-     currentBoard[33] = BLACKKING;
-     printf("PCSQTable value of 33 is: %d\n",
-          KING_PCSQTable[position120to64(reversePosition(33))]);
      
 
-     printBoard(currentBoard);
+     
 
      while (gamePlaying) {
           int evaluationScore;
