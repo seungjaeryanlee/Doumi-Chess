@@ -1,10 +1,10 @@
 /*                                    DEFINITION                              */
-#define PAWNVALUE 100
-#define KNIGHTVALUE 300
-#define BISHOPVALUE 300
-#define ROOKVALUE 500
-#define QUEENVALUE 900
-#define KINGVALUE 9999
+#define PAWNVALUE 1
+#define KNIGHTVALUE 10
+#define BISHOPVALUE 100
+#define ROOKVALUE 1000
+#define QUEENVALUE 10000
+#define KINGVALUE 100000
 #include <stdio.h>
 
 /*                              FUNCTION DECLARATION                          */
@@ -185,7 +185,15 @@ int updateEvaluation(int board[120]) {
 
 void main() {
      // Initialize Board
-     board120Setup();
+     
+     // board120Setup();
+     currentBoard[0] = WHITEPAWN;
+     currentBoard[1] = WHITEKNIGHT;
+     currentBoard[2] = WHITEBISHOP;
+     currentBoard[3] = WHITEROOK;
+     currentBoard[4] = WHITEQUEEN;
+     currentBoard[5] = WHITEKING;
+
      printBoard(currentBoard);
 
      while (gamePlaying) {
