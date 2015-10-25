@@ -94,6 +94,18 @@ int QUEEN_PCSQTable[64] = {
      -10,  0,  5,  0,  0,  0,  0,-10,
      -20,-10,-10, -5, -5,-10,-10,-20
 };
+
+int KING_PCSQTable[64] = {
+     0, 1, 2, 3, 4, 5, 6, 7,
+     8, 9, 10, 11, 12, 13, 14, 15,
+     16, 17, 18, 19, 20, 21, 22, 23,
+     24, 25, 26, 27, 28, 29, 30, 31,
+     32, 33, 34, 35, 36, 37, 38, 39,
+     40, 41, 42, 43, 44, 45, 46, 47,
+     48, 49, 50, 51, 52, 53, 54, 55,
+     56, 57, 58, 59, 60, 61, 62, 63
+};
+/*
 int KING_PCSQTable[64] = {
      -30,-40,-40,-50,-50,-40,-40,-30,
      -30,-40,-40,-50,-50,-40,-40,-30,
@@ -104,6 +116,7 @@ int KING_PCSQTable[64] = {
       20, 20,  0,  0,  0,  0, 20, 20,
       20, 30, 10,  0,  0, 10, 30, 20
 };
+*/
 int KING_PCSQTable_ENDGAME[64] = {
      -50,-40,-30,-20,-20,-30,-40,-50,
      -30,-20,-10,  0,  0,-10,-20,-30,
@@ -300,44 +313,16 @@ void main() {
      //  board120Setup();
      
      //  Testing updateEvaluation with PCSQ Table
-     currentBoard[21] = WHITEPAWN;
-     printf("PCSQTable value of 21 is: %d\n", 
-          PAWN_PCSQTable[position120to64(21)]);
-     currentBoard[22] = WHITEBISHOP;
-     printf("PCSQTable value of 22 is: %d\n", 
-          BISHOP_PCSQTable[position120to64(22)]);
-     currentBoard[23] = WHITEKNIGHT;
-     printf("PCSQTable value of 23 is: %d\n", 
-          KNIGHT_PCSQTable[position120to64(23)]);
-     currentBoard[24] = WHITEROOK;
-     printf("PCSQTable value of 24 is: %d\n", 
-          ROOK_PCSQTable[position120to64(24)]);
-     currentBoard[25] = WHITEQUEEN;
-     printf("PCSQTable value of 25 is: %d\n", 
-          QUEEN_PCSQTable[position120to64(25)]);
-     currentBoard[26] = WHITEKING;
-     printf("PCSQTable value of 26 is: %d\n", 
-          KING_PCSQTable[position120to64(26)]);
+     
+     currentBoard[37] = WHITEKING;
+     printf("PCSQTable value of 37 is: %d\n", 
+          KING_PCSQTable[position120to64(37)]);
      
      
-     currentBoard[91] = BLACKPAWN;
-     printf("PCSQTable value of 91 is: %d\n", 
-          PAWN_PCSQTable[position120to64(reversePosition(91))]);
-     currentBoard[92] = BLACKBISHOP;
-     printf("PCSQTable value of 92 is: %d\n",
-          BISHOP_PCSQTable[position120to64(reversePosition(92))]);
-     currentBoard[93] = BLACKKNIGHT;
-     printf("PCSQTable value of 93 is: %d\n",
-          KNIGHT_PCSQTable[position120to64(reversePosition(93))]);
-     currentBoard[94] = BLACKROOK;
-     printf("PCSQTable value of 94 is: %d\n",
-          ROOK_PCSQTable[position120to64(reversePosition(94))]);
-     currentBoard[95] = BLACKQUEEN;
-     printf("PCSQTable value of 95 is: %d\n",
-          QUEEN_PCSQTable[position120to64(reversePosition(95))]);
-     currentBoard[96] = BLACKKING;
-     printf("PCSQTable value of 96 is: %d\n",
-          KING_PCSQTable[position120to64(reversePosition(96))]);
+ 
+     currentBoard[33] = BLACKKING;
+     printf("PCSQTable value of 33 is: %d\n",
+          KING_PCSQTable[position120to64(reversePosition(33))]);
      
 
      printBoard(currentBoard);
@@ -347,15 +332,6 @@ void main() {
           evaluationScore = updateEvaluation(currentBoard);
 
           printf("Evaluation Score: %d\n\n", evaluationScore);
-
-          //  Testing position120to64
-          for (int i = 0; i < 120; i++) {
-               printf("%3d ", position120to64(i));
-               if (i % 10 == 9) {
-                    printf("\n");
-               }
-          }
-
 
           // TODO: Check Endgame
 
