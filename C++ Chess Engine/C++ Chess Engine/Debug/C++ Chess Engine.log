@@ -1,9 +1,18 @@
-﻿Build started 2015-10-25 오전 2:54:11.
-     1>Project "C:\Users\LG\Documents\GitHub\CPP-Chess-Engine\C++ Chess Engine\C++ Chess Engine\C++ Chess Engine.vcxproj" on node 2 (Build target(s)).
-     1>Link:
-         C++ Chess Engine.vcxproj -> C:\Users\LG\Documents\GitHub\CPP-Chess-Engine\C++ Chess Engine\Debug\C++ Chess Engine.exe
-     1>Done Building Project "C:\Users\LG\Documents\GitHub\CPP-Chess-Engine\C++ Chess Engine\C++ Chess Engine\C++ Chess Engine.vcxproj" (Build target(s)).
+﻿Build started 10/25/2015 3:04:34 AM.
+     1>Project "C:\Users\ryanlee\Documents\GitHub\CPP-Chess-Engine\C++ Chess Engine\C++ Chess Engine\C++ Chess Engine.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>c:\users\ryanlee\documents\github\cpp-chess-engine\c++ chess engine\c++ chess engine\main.cpp(3): warning C4091: '': ignored on left of 'void' when no variable is declared
+     1>c:\users\ryanlee\documents\github\cpp-chess-engine\c++ chess engine\c++ chess engine\main.cpp(3): error C2143: syntax error: missing ';' before 'user-defined literal'
+     1>c:\users\ryanlee\documents\github\cpp-chess-engine\c++ chess engine\c++ chess engine\main.cpp(3): error C2059: syntax error: 'user-defined literal'
+     1>c:\users\ryanlee\documents\github\cpp-chess-engine\c++ chess engine\c++ chess engine\main.cpp(5): warning C4091: '': ignored on left of 'void' when no variable is declared
+     1>c:\users\ryanlee\documents\github\cpp-chess-engine\c++ chess engine\c++ chess engine\main.cpp(5): error C2143: syntax error: missing ';' before 'user-defined literal'
+     1>c:\users\ryanlee\documents\github\cpp-chess-engine\c++ chess engine\c++ chess engine\main.cpp(5): error C2059: syntax error: 'user-defined literal'
+     1>c:\users\ryanlee\documents\github\cpp-chess-engine\c++ chess engine\c++ chess engine\main.cpp(5): error C2143: syntax error: missing ';' before '{'
+     1>c:\users\ryanlee\documents\github\cpp-chess-engine\c++ chess engine\c++ chess engine\main.cpp(5): error C2447: '{': missing function header (old-style formal list?)
+     1>Done Building Project "C:\Users\ryanlee\Documents\GitHub\CPP-Chess-Engine\C++ Chess Engine\C++ Chess Engine\C++ Chess Engine.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:00.07
+Time Elapsed 00:00:00.13
