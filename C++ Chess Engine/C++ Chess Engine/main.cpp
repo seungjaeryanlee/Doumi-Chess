@@ -1,10 +1,10 @@
 /*                                    DEFINITION                              */
-#define PAWNVALUE 100
-#define KNIGHTVALUE 300
-#define BISHOPVALUE 300
-#define ROOKVALUE 500
-#define QUEENVALUE 900
-#define KINGVALUE 9999
+#define PAWNVALUE 0
+#define KNIGHTVALUE 0
+#define BISHOPVALUE 0
+#define ROOKVALUE 0
+#define QUEENVALUE 0
+#define KINGVALUE 0
 #include <stdio.h>
 
 /*                              FUNCTION DECLARATION                          */
@@ -18,7 +18,8 @@ void updateEvaluaton(int board[120]);
 int reversePosition(int position);
 //  Gets position based on 64 and returns position based on 120
 int position64to120(int position64);
-
+//  Gets position based on 120 and returns position based on 64
+int position120to64(int position120);
 /*                                   ENUMERATION                              */
 enum squareType {
      EMPTYSQUARE,
@@ -218,60 +219,60 @@ int updateEvaluation(int board[120]) {
           switch (board[i]) {
           case WHITEPAWN:
                score += PAWNVALUE;
-               score += PAWN_PCSQTable[i];
+               score += PAWN_PCSQTable[position120to64(i)];
                break;
           case WHITEKNIGHT:
                score += KNIGHTVALUE;
-               score += KNIGHT_PCSQTable[i];
+               score += KNIGHT_PCSQTable[position120to64(i)];
                break;
           case WHITEBISHOP:
                score += BISHOPVALUE;
-               score += BISHOP_PCSQTable[i];
+               score += BISHOP_PCSQTable[position120to64(i)];
                break;
           case WHITEROOK:
                score += ROOKVALUE;
-               score += ROOK_PCSQTable[i];
+               score += ROOK_PCSQTable[position120to64(i)];
                break;
           case WHITEQUEEN:
                score += QUEENVALUE;
-               score += QUEEN_PCSQTable[i];
+               score += QUEEN_PCSQTable[position120to64(i)];
                break;
           case WHITEKING:
                score += KINGVALUE;
                if (endGame) {
-                    score += KING_PCSQTable_ENDGAME[i];
+                    score += KING_PCSQTable_ENDGAME[position120to64(i)];
                }
                else {
-                    score += KING_PCSQTable[i];
+                    score += KING_PCSQTable[position120to64(i)];
                }
                break;
           case BLACKPAWN:
                score -= PAWNVALUE;
-               score -= PAWN_PCSQTable[reversePosition(i)];
+               score -= PAWN_PCSQTable[position120to64(reversePosition(i))];
                break;
           case BLACKKNIGHT:
                score -= KNIGHTVALUE;
-               score -= KNIGHT_PCSQTable[reversePosition(i)];
+               score -= KNIGHT_PCSQTable[position120to64(reversePosition(i))];
                break;
           case BLACKBISHOP:
                score -= BISHOPVALUE;
-               score -= BISHOP_PCSQTable[reversePosition(i)];
+               score -= BISHOP_PCSQTable[position120to64(reversePosition(i))];
                break;
           case BLACKROOK:
                score -= ROOKVALUE;
-               score -= ROOK_PCSQTable[reversePosition(i)];
+               score -= ROOK_PCSQTable[position120to64(reversePosition(i))];
                break;
           case BLACKQUEEN:
                score -= QUEENVALUE;
-               score -= QUEEN_PCSQTable[reversePosition(i)];
+               score -= QUEEN_PCSQTable[position120to64(reversePosition(i))];
                break;
           case BLACKKING:
                score -= KINGVALUE;
                if (endGame) {
-                    score -= KING_PCSQTable_ENDGAME[reversePosition(i)];
+                    score -= KING_PCSQTable_ENDGAME[position120to64(reversePosition(i))];
                }
                else {
-                    score -= KING_PCSQTable[reversePosition(i)];
+                    score -= KING_PCSQTable[position120to64(reversePosition(i))];
                }
                break;
           }
@@ -288,13 +289,58 @@ int position64to120(int position64) {
      return (row + 2) * 10 + column + 1;
      
 }
+int position120to64(int position120) {
+     int row = position120 / 10 - 2, column = position120 % 10 - 1;
 
+     return row * 8 + column;
+}
 
 void main() {
-     // Initialize Board
-     board120Setup();
+     //  Initialize Board
+     //  board120Setup();
+     
+     //  Testing updateEvaluation with PCSQ Table
+     currentBoard[21] = WHITEPAWN;
+     printf("PCSQTable value of 21 is: %d\n", 
+          PAWN_PCSQTable[position120to64(21)]);
+     currentBoard[22] = WHITEBISHOP;
+     printf("PCSQTable value of 22 is: %d\n", 
+          BISHOP_PCSQTable[position120to64(22)]);
+     currentBoard[23] = WHITEKNIGHT;
+     printf("PCSQTable value of 23 is: %d\n", 
+          KNIGHT_PCSQTable[position120to64(23)]);
+     currentBoard[24] = WHITEROOK;
+     printf("PCSQTable value of 24 is: %d\n", 
+          ROOK_PCSQTable[position120to64(24)]);
+     currentBoard[25] = WHITEQUEEN;
+     printf("PCSQTable value of 25 is: %d\n", 
+          QUEEN_PCSQTable[position120to64(25)]);
+     currentBoard[26] = WHITEKING;
+     printf("PCSQTable value of 26 is: %d\n", 
+          KING_PCSQTable[position120to64(26)]);
+     
+     
+     currentBoard[91] = BLACKPAWN;
+     printf("PCSQTable value of 91 is: %d\n", 
+          PAWN_PCSQTable[position120to64(reversePosition(91))]);
+     currentBoard[92] = BLACKBISHOP;
+     printf("PCSQTable value of 92 is: %d\n",
+          BISHOP_PCSQTable[position120to64(reversePosition(92))]);
+     currentBoard[93] = BLACKKNIGHT;
+     printf("PCSQTable value of 93 is: %d\n",
+          KNIGHT_PCSQTable[position120to64(reversePosition(93))]);
+     currentBoard[94] = BLACKROOK;
+     printf("PCSQTable value of 94 is: %d\n",
+          ROOK_PCSQTable[position120to64(reversePosition(94))]);
+     currentBoard[95] = BLACKQUEEN;
+     printf("PCSQTable value of 95 is: %d\n",
+          QUEEN_PCSQTable[position120to64(reversePosition(95))]);
+     currentBoard[96] = BLACKKING;
+     printf("PCSQTable value of 96 is: %d\n",
+          KING_PCSQTable[position120to64(reversePosition(96))]);
+     
+
      printBoard(currentBoard);
-     // TODO: Test updateEvaluation with PCSQ Table
 
      while (gamePlaying) {
           int evaluationScore;
@@ -302,26 +348,15 @@ void main() {
 
           printf("Evaluation Score: %d\n\n", evaluationScore);
 
-          // Testing reversePosition
+          //  Testing position120to64
           for (int i = 0; i < 120; i++) {
-               printf("%3d ", reversePosition(i));
+               printf("%3d ", position120to64(i));
                if (i % 10 == 9) {
                     printf("\n");
                }
           }
-          printf("\n");
 
-          // Testing position64to120
-          for (int i = 0; i < 64; i++) {
-               printf("%3d ", position64to120(i));
-               if (i % 8 == 7) {
-                    printf("\n");
-               }
-          
-          }
-          printf("\n");
 
-          
           // TODO: Check Endgame
 
           //  This should be deleted for non-test cases
