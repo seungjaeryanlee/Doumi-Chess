@@ -1,3 +1,7 @@
+# Added by sjlee235
+*.suo
+*.sdf
+
 # Compiled Object files
 *.slo
 *.lo
