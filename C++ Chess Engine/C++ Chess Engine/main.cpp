@@ -494,10 +494,96 @@ void knightMoveGeneration(int board[120], int turn, int position) {
           }
      }
 }
-void bishopMoveGeneration(int board[120], int turn, int position) {}
-void rookMoveGeneration(int board[120], int turn, int position) {}
-void queenMoveGeneration(int board[120], int turn, int position) {}
-void kingMoveGeneration(int board[120], int turn, int position) {}
+void bishopMoveGeneration(int board[120], int turn, int position) {
+     if (turn == WHITE) {
+
+     }
+     if (turn == BLACK) {
+
+     }
+}
+void rookMoveGeneration(int board[120], int turn, int position) {
+     if (turn == WHITE) {
+
+     }
+     if (turn == BLACK) {
+
+     }
+}
+void queenMoveGeneration(int board[120], int turn, int position) {
+     rookMoveGeneration(board, turn, position);
+     bishopMoveGeneration(board, turn, position);
+}
+void kingMoveGeneration(int board[120], int turn, int position) {
+     if (turn == WHITE) {
+          if (checkColor(board[position + ROW]) == BLACK || 
+              board[position + ROW] == EMPTYSQUARE) {
+               addMove(position, position + ROW);
+          }
+          if (checkColor(board[position - ROW]) == BLACK ||
+              board[position - ROW] == EMPTYSQUARE) {
+               addMove(position, position - ROW);
+          }
+          if (checkColor(board[position + COLUMN]) == BLACK ||
+              board[position + COLUMN] == EMPTYSQUARE) {
+               addMove(position, position + COLUMN);
+          }
+          if (checkColor(board[position - COLUMN]) == BLACK ||
+              board[position - COLUMN] == EMPTYSQUARE) {
+               addMove(position, position - COLUMN);
+          }
+          if (checkColor(board[position + ROW + COLUMN]) == BLACK ||
+              board[position + ROW + COLUMN] == EMPTYSQUARE) {
+               addMove(position, position + ROW + COLUMN);
+          }
+          if (checkColor(board[position + ROW - COLUMN]) == BLACK ||
+              board[position + ROW - COLUMN] == EMPTYSQUARE) {
+               addMove(position, position + ROW - COLUMN);
+          }
+          if (checkColor(board[position - ROW + COLUMN]) == BLACK ||
+              board[position - ROW + COLUMN] == EMPTYSQUARE) {
+               addMove(position, position - ROW + COLUMN);
+          }
+          if (checkColor(board[position - ROW - COLUMN]) == BLACK ||
+              board[position - ROW - COLUMN] == EMPTYSQUARE) {
+               addMove(position, position - ROW - COLUMN);
+          }
+     }
+     if (turn == BLACK) {
+          if (checkColor(board[position + ROW]) == WHITE ||
+               board[position + ROW] == EMPTYSQUARE) {
+               addMove(position, position + ROW);
+          }
+          if (checkColor(board[position - ROW]) == WHITE ||
+               board[position - ROW] == EMPTYSQUARE) {
+               addMove(position, position - ROW);
+          }
+          if (checkColor(board[position + COLUMN]) == WHITE ||
+               board[position + COLUMN] == EMPTYSQUARE) {
+               addMove(position, position + COLUMN);
+          }
+          if (checkColor(board[position - COLUMN]) == WHITE ||
+               board[position - COLUMN] == EMPTYSQUARE) {
+               addMove(position, position - COLUMN);
+          }
+          if (checkColor(board[position + ROW + COLUMN]) == WHITE ||
+               board[position + ROW + COLUMN] == EMPTYSQUARE) {
+               addMove(position, position + ROW + COLUMN);
+          }
+          if (checkColor(board[position + ROW - COLUMN]) == WHITE ||
+               board[position + ROW - COLUMN] == EMPTYSQUARE) {
+               addMove(position, position + ROW - COLUMN);
+          }
+          if (checkColor(board[position - ROW + COLUMN]) == WHITE ||
+               board[position - ROW + COLUMN] == EMPTYSQUARE) {
+               addMove(position, position - ROW + COLUMN);
+          }
+          if (checkColor(board[position - ROW - COLUMN]) == WHITE ||
+               board[position - ROW - COLUMN] == EMPTYSQUARE) {
+               addMove(position, position - ROW - COLUMN);
+          }
+     }
+}
 void castlingMoveGeneration(int board[120], int turn) {}
 void promotionMoveGeneration(int board[120], int turn) {}
 void addMove(int initial, int terminal) {
@@ -511,11 +597,11 @@ void main() {
      //  board120Setup();
      
      //  Testing knightMoveGeneration
-     currentBoard[51] = WHITEKNIGHT;
-     currentBoard[64] = WHITEKNIGHT;
-     currentBoard[53] = BLACKKNIGHT;
-     currentBoard[62] = WHITEKNIGHT;
-     currentBoard[52] = WHITEKNIGHT;
+     currentBoard[51] = WHITEKING;
+     currentBoard[64] = WHITEKING;
+     currentBoard[53] = BLACKKING;
+     currentBoard[62] = WHITEKING;
+     currentBoard[52] = WHITEKING;
      
      printBoard(currentBoard);
 
