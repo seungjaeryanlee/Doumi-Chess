@@ -424,7 +424,76 @@ void pawnMoveGeneration(int board[120], int turn, int position) {
      }
      
 }
-void knightMoveGeneration(int board[120], int turn, int position) {}
+void knightMoveGeneration(int board[120], int turn, int position) {
+     if (turn == WHITE) {
+          if (checkColor(board[position + ROW + 2 * COLUMN]) == BLACK ||
+              board[position + ROW + 2 * COLUMN] == EMPTYSQUARE) {
+               addMove(position, position + ROW + 2 * COLUMN);
+          }
+          if (checkColor(board[position + ROW - 2 * COLUMN]) == BLACK ||
+               board[position + ROW - 2 * COLUMN] == EMPTYSQUARE) {
+               addMove(position, position + ROW - 2 * COLUMN);
+          }
+          if (checkColor(board[position - ROW + 2 * COLUMN]) == BLACK ||
+               board[position - ROW + 2 * COLUMN] == EMPTYSQUARE) {
+               addMove(position, position - ROW + 2 * COLUMN);
+          }
+          if (checkColor(board[position - ROW - 2 * COLUMN]) == BLACK ||
+               board[position - ROW - 2 * COLUMN] == EMPTYSQUARE) {
+               addMove(position, position - ROW - 2 * COLUMN);
+          }
+          if (checkColor(board[position + 2 * ROW + COLUMN]) == BLACK ||
+               board[position + 2 * ROW + COLUMN] == EMPTYSQUARE) {
+               addMove(position, position + 2 * ROW + COLUMN);
+          }
+          if (checkColor(board[position + 2 * ROW - COLUMN]) == BLACK ||
+               board[position + 2 * ROW - COLUMN] == EMPTYSQUARE) {
+               addMove(position, position + 2 * ROW - COLUMN);
+          }
+          if (checkColor(board[position - 2 * ROW + COLUMN]) == BLACK ||
+               board[position - 2 * ROW + COLUMN] == EMPTYSQUARE) {
+               addMove(position, position - 2 * ROW + COLUMN);
+          }
+          if (checkColor(board[position - 2 * ROW - COLUMN]) == BLACK ||
+               board[position - 2 * ROW - COLUMN] == EMPTYSQUARE) {
+               addMove(position, position - 2 * ROW - COLUMN);
+          }
+     }
+     if (turn == BLACK) {
+          if (checkColor(board[position + ROW + 2 * COLUMN]) == WHITE ||
+               board[position + ROW + 2 * COLUMN] == EMPTYSQUARE) {
+               addMove(position, position + ROW + 2 * COLUMN);
+          }
+          if (checkColor(board[position + ROW - 2 * COLUMN]) == WHITE ||
+               board[position + ROW - 2 * COLUMN] == EMPTYSQUARE) {
+               addMove(position, position + ROW - 2 * COLUMN);
+          }
+          if (checkColor(board[position - ROW + 2 * COLUMN]) == WHITE ||
+               board[position - ROW + 2 * COLUMN] == EMPTYSQUARE) {
+               addMove(position, position - ROW + 2 * COLUMN);
+          }
+          if (checkColor(board[position - ROW - 2 * COLUMN]) == WHITE ||
+               board[position - ROW - 2 * COLUMN] == EMPTYSQUARE) {
+               addMove(position, position - ROW - 2 * COLUMN);
+          }
+          if (checkColor(board[position + 2 * ROW + COLUMN]) == WHITE ||
+               board[position + 2 * ROW + COLUMN] == EMPTYSQUARE) {
+               addMove(position, position + 2 * ROW + COLUMN);
+          }
+          if (checkColor(board[position + 2 * ROW - COLUMN]) == WHITE ||
+               board[position + 2 * ROW - COLUMN] == EMPTYSQUARE) {
+               addMove(position, position + 2 * ROW - COLUMN);
+          }
+          if (checkColor(board[position - 2 * ROW + COLUMN]) == WHITE ||
+               board[position - 2 * ROW + COLUMN] == EMPTYSQUARE) {
+               addMove(position, position - 2 * ROW + COLUMN);
+          }
+          if (checkColor(board[position - 2 * ROW - COLUMN]) == WHITE ||
+               board[position - 2 * ROW - COLUMN] == EMPTYSQUARE) {
+               addMove(position, position - 2 * ROW - COLUMN);
+          }
+     }
+}
 void bishopMoveGeneration(int board[120], int turn, int position) {}
 void rookMoveGeneration(int board[120], int turn, int position) {}
 void queenMoveGeneration(int board[120], int turn, int position) {}
@@ -441,17 +510,17 @@ void main() {
      //  Initialize Board
      //  board120Setup();
      
-     //  Testing pawnMoveGeneration
-     currentBoard[51] = WHITEPAWN;
-     currentBoard[64] = WHITEPAWN;
-     currentBoard[53] = BLACKPAWN;
-     currentBoard[62] = WHITEPAWN;
-     currentBoard[52] = WHITEPAWN;
+     //  Testing knightMoveGeneration
+     currentBoard[51] = WHITEKNIGHT;
+     currentBoard[64] = WHITEKNIGHT;
+     currentBoard[53] = BLACKKNIGHT;
+     currentBoard[62] = WHITEKNIGHT;
+     currentBoard[52] = WHITEKNIGHT;
      
      printBoard(currentBoard);
 
      int evaluationScore;
-     int currentTurn = BLACK;
+     int currentTurn = WHITE;
      while (gamePlaying) {
 
           //  evaluationScore = updateEvaluation(currentBoard);
