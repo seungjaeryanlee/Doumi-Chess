@@ -33,8 +33,8 @@ void bishopMoveGeneration(int board[120], int turn, int position);
 void rookMoveGeneration(int board[120], int turn, int position);
 void queenMoveGeneration(int board[120], int turn, int position);
 void kingMoveGeneration(int board[120], int turn, int position); 
-void castlingMoveGeneration(int board[120], int turn);
-void promotionMoveGeneration(int board[120], int turn);
+void castlingStatusUpdate(int board[120]);
+void promotionMoveGeneration(int board[120], int turn, int position);
 //  Add the input move to the array
 void addMove(int initial, int terminal);
 
@@ -138,6 +138,8 @@ int KING_PCSQTable_ENDGAME[64] = {
 //  TODO: Check upper bound of moves
 int allMoves[1000][2];
 int moveCount = 0;
+bool whiteKingsideCastling = true, whiteQueensideCastling = true, 
+     blackKingsideCastling = true, blackQueensideCastling = true;
 
 /*                                    FUNCTION                                */
 void board120Setup() {
@@ -386,11 +388,18 @@ int checkColor(int pieceType) {
 }
 void pawnMoveGeneration(int board[120], int turn, int position) {
      if (turn == WHITE) {
+          //  if on the last row before promotion, just call promotion
+          if (A7 <= position && position <= H7) {
+               promotionMoveGeneration(board, turn, position);
+               return;
+          }
+
           //  Advance 1 square
           if (board[position - ROW] == EMPTYSQUARE) {
                addMove(position, position - ROW);
                     //  Advance 2 squares
-                    if (A2 <= position && position <= H2 && board[position - 2 * ROW] == EMPTYSQUARE) {
+                    if (A2 <= position && position <= H2 &&
+                         board[position - 2 * ROW] == EMPTYSQUARE) {
                          addMove(position, position - 2 * ROW);
                     }
           }
@@ -405,11 +414,18 @@ void pawnMoveGeneration(int board[120], int turn, int position) {
           //  TODO: enpassant Generation
      }
      if (turn == BLACK) {
+          //  if on the last row before promotion, just call promotion
+          if (A2 <= position && position <= H2) {
+               promotionMoveGeneration(board, turn, position);
+               return;
+          }
+          
           //  Advance 1 square
           if (board[position + ROW] == EMPTYSQUARE) {
                addMove(position, position + ROW);
                //  Advance 2 squares
-               if (A7 <= position && position <= H7 && board[position + 2 * ROW] == EMPTYSQUARE) {
+               if (A7 <= position && position <= H7 &&
+                    board[position + 2 * ROW] == EMPTYSQUARE) {
                     addMove(position, position + 2 * ROW);
                }
           }
@@ -749,8 +765,8 @@ void kingMoveGeneration(int board[120], int turn, int position) {
           }
      }
 }
-void castlingMoveGeneration(int board[120], int turn) {}
-void promotionMoveGeneration(int board[120], int turn) {}
+void castlingStatusUpdate(int board[120], int turn) {}
+void promotionMoveGeneration(int board[120], int turn, int position) {}
 void addMove(int initial, int terminal) {
      allMoves[moveCount][0] = initial;
      allMoves[moveCount][1] = terminal;
@@ -774,9 +790,10 @@ void main() {
           currentBoard[i*ROW + 9] = ERRORSQUARE;
      }
 
-     currentBoard[51] = WHITEBISHOP;
-     currentBoard[64] = WHITEBISHOP;
-     currentBoard[53] = BLACKBISHOP;
+     currentBoard[A7] = WHITEPAWN;
+     currentBoard[F7] = WHITEPAWN;
+     currentBoard[H2] = BLACKPAWN;
+     currentBoard[B2] = BLACKPAWN;
      
      printBoard(currentBoard);
 
