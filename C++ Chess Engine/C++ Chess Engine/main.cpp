@@ -136,13 +136,18 @@ int KING_PCSQTable_ENDGAME[64] = {
      -50,-30,-30,-30,-30,-30,-30,-50
 };
 //  First number: initial square, Second number: terminal square
-//  TODO: Check upper bound of moves
 int allNormalMoves[1000][2];
-int promotionMoves[88][3]; //  initial, terminal, piecetype
+//  initial, terminal, piecetype
+int promotionMoves[88][3]; 
 int normalMoveCount = 0;
 int promotionMoveCount = 0;
 bool whiteKingsideCastling = true, whiteQueensideCastling = true, 
      blackKingsideCastling = true, blackQueensideCastling = true;
+//  0 if double move did not happen, square value (ex. F3) otherwise
+int enpassantSquare = 0; 
+int enpassantMoves[2][2];
+int enpassantMoveCount = 0;
+
 
 /*                                    FUNCTION                                */
 void board120Setup() {
@@ -324,6 +329,10 @@ int position120to64(int position120) {
      return row * 8 + column;
 }
 void moveGeneration(int board[120], int turn) {
+     normalMoveCount = 0;
+     promotionMoveCount = 0;
+     enpassantMoveCount = 0;
+     
      if (turn == WHITE) {
           for (int i = 0; i < 120; i++) {
                switch (board[i]) {
@@ -400,11 +409,11 @@ void pawnMoveGeneration(int board[120], int turn, int position) {
           //  Advance 1 square
           if (board[position - ROW] == EMPTYSQUARE) {
                addMove(position, position - ROW);
-                    //  Advance 2 squares
-                    if (A2 <= position && position <= H2 &&
-                         board[position - 2 * ROW] == EMPTYSQUARE) {
-                         addMove(position, position - 2 * ROW);
-                    }
+               //  Advance 2 squares
+               if (A2 <= position && position <= H2 &&
+                    board[position - 2 * ROW] == EMPTYSQUARE) {
+                    addMove(position, position - 2 * ROW);
+               }
           }
 
           //  attack diagonals
@@ -414,7 +423,18 @@ void pawnMoveGeneration(int board[120], int turn, int position) {
           if (checkColor(board[position - ROW + COLUMN]) == BLACK) {
                addMove(position, position - ROW + COLUMN);
           }
-          //  TODO: enpassant Generation
+         
+          //  en passant
+          if (enpassantSquare == position - ROW - COLUMN) {
+               enpassantMoves[enpassantMoveCount][0] = position;
+               enpassantMoves[enpassantMoveCount][1] = enpassantSquare;
+               enpassantMoveCount++;
+          }
+          if (enpassantSquare == position - ROW + COLUMN) {
+               enpassantMoves[enpassantMoveCount][0] = position;
+               enpassantMoves[enpassantMoveCount][1] = enpassantSquare;
+               enpassantMoveCount++;
+          }
      }
      if (turn == BLACK) {
           //  if on the last row before promotion, just call promotion
@@ -440,8 +460,19 @@ void pawnMoveGeneration(int board[120], int turn, int position) {
           if (checkColor(board[position + ROW + COLUMN]) == WHITE) {
                addMove(position, position - ROW + COLUMN);
           }
+
+          //  en passant
+          if (enpassantSquare == position + ROW - COLUMN) {
+               enpassantMoves[enpassantMoveCount][0] = position;
+               enpassantMoves[enpassantMoveCount][1] = enpassantSquare;
+               enpassantMoveCount++;
+          }
+          if (enpassantSquare == position + ROW + COLUMN) {
+               enpassantMoves[enpassantMoveCount][0] = position;
+               enpassantMoves[enpassantMoveCount][1] = enpassantSquare;
+               enpassantMoveCount++;
+          }
      }
-     
 }
 void knightMoveGeneration(int board[120], int turn, int position) {
      if (turn == WHITE) {
@@ -839,12 +870,16 @@ void main() {
           currentBoard[i*ROW + 9] = ERRORSQUARE;
      }
 
-     currentBoard[A7] = WHITEPAWN;
-     currentBoard[F7] = WHITEPAWN;
-     currentBoard[G8] = BLACKROOK;
-     currentBoard[H2] = BLACKPAWN;
-     currentBoard[B2] = BLACKPAWN;
-     currentBoard[A1] = WHITEROOK;
+     //  enpassantSquare = B6;
+     //  currentBoard[B7] = BLACKPAWN;
+     //  currentBoard[A5] = WHITEPAWN;
+     //  currentBoard[C5] = WHITEPAWN;
+
+     enpassantSquare = C3;
+     currentBoard[B4] = BLACKPAWN;
+     currentBoard[D4] = BLACKPAWN;
+     currentBoard[C2] = WHITEPAWN;
+
 
      printBoard(currentBoard);
 
@@ -870,6 +905,11 @@ void main() {
           }
           printf("\nTotal Promotion Moves: %d\n\n", promotionMoveCount);
 
+          for (int i = 0; i < enpassantMoveCount; i++) {
+               printf("%d to %d\n",
+                    enpassantMoves[i][0], enpassantMoves[i][1]);
+          }
+          printf("\nTotal Enpassant Moves: %d\n\n", enpassantMoveCount);
 
           // TODO: Check Endgame
 
