@@ -37,6 +37,7 @@ void castlingStatusUpdate(int board[120]);
 void promotionMoveGeneration(int board[120], int turn, int position);
 //  Add the input move to the array
 void addMove(int initial, int terminal);
+void addPromotionMove(int initial, int terminal, int turn);
 
 
 /*                                   ENUMERATION                              */
@@ -136,8 +137,10 @@ int KING_PCSQTable_ENDGAME[64] = {
 };
 //  First number: initial square, Second number: terminal square
 //  TODO: Check upper bound of moves
-int allMoves[1000][2];
-int moveCount = 0;
+int allNormalMoves[1000][2];
+int promotionMoves[88][3]; //  initial, terminal, piecetype
+int normalMoveCount = 0;
+int promotionMoveCount = 0;
 bool whiteKingsideCastling = true, whiteQueensideCastling = true, 
      blackKingsideCastling = true, blackQueensideCastling = true;
 
@@ -766,11 +769,57 @@ void kingMoveGeneration(int board[120], int turn, int position) {
      }
 }
 void castlingStatusUpdate(int board[120], int turn) {}
-void promotionMoveGeneration(int board[120], int turn, int position) {}
+void promotionMoveGeneration(int board[120], int turn, int position) {
+     if (turn == WHITE) {
+          if (checkColor(board[position - ROW - COLUMN]) == BLACK) {
+               addPromotionMove(position, position - ROW - COLUMN, turn);
+          }
+          if (checkColor(board[position - ROW + COLUMN]) == BLACK) {
+               addPromotionMove(position, position - ROW + COLUMN, turn);
+          }
+          if (board[position - ROW] == EMPTYSQUARE) {
+               addPromotionMove(position, position - ROW, turn);
+          }
+     }
+     if (turn == BLACK) {
+          if (checkColor(board[position + ROW + COLUMN]) == WHITE) {
+               addPromotionMove(position, position + ROW + COLUMN, turn);
+          }
+          if (checkColor(board[position + ROW - COLUMN]) == WHITE) {
+               addPromotionMove(position, position + ROW - COLUMN, turn);
+          }
+          if (board[position + ROW] == EMPTYSQUARE) {
+               addPromotionMove(position, position + ROW, turn);
+          }
+     }
+}
 void addMove(int initial, int terminal) {
-     allMoves[moveCount][0] = initial;
-     allMoves[moveCount][1] = terminal;
-     moveCount++;
+     allNormalMoves[normalMoveCount][0] = initial;
+     allNormalMoves[normalMoveCount][1] = terminal;
+     normalMoveCount++;
+}
+void addPromotionMove(int initial, int terminal, int turn) {
+     promotionMoves[promotionMoveCount][0] = initial;
+     promotionMoves[promotionMoveCount][1] = terminal;
+     promotionMoves[promotionMoveCount + 1][0] = initial;
+     promotionMoves[promotionMoveCount + 1][1] = terminal;
+     promotionMoves[promotionMoveCount + 2][0] = initial;
+     promotionMoves[promotionMoveCount + 2][1] = terminal;
+     promotionMoves[promotionMoveCount + 3][0] = initial;
+     promotionMoves[promotionMoveCount + 3][1] = terminal;
+     if (turn == WHITE) {
+          promotionMoves[promotionMoveCount][2] = WHITEKNIGHT;
+          promotionMoves[promotionMoveCount + 1][2] = WHITEBISHOP;
+          promotionMoves[promotionMoveCount + 2][2] = WHITEQUEEN;
+          promotionMoves[promotionMoveCount + 3][2] = WHITEKING;
+     }
+     if (turn == BLACK) {
+          promotionMoves[promotionMoveCount][2] = BLACKKNIGHT;
+          promotionMoves[promotionMoveCount + 1][2] = BLACKBISHOP;
+          promotionMoves[promotionMoveCount + 2][2] = BLACKQUEEN;
+          promotionMoves[promotionMoveCount + 3][2] = BLACKKING;
+     }
+     promotionMoveCount += 4;
 }
 
 void main() {
@@ -792,13 +841,15 @@ void main() {
 
      currentBoard[A7] = WHITEPAWN;
      currentBoard[F7] = WHITEPAWN;
+     currentBoard[G8] = BLACKROOK;
      currentBoard[H2] = BLACKPAWN;
      currentBoard[B2] = BLACKPAWN;
-     
+     currentBoard[A1] = WHITEROOK;
+
      printBoard(currentBoard);
 
      //  int evaluationScore;
-     int currentTurn = WHITE;
+     int currentTurn = BLACK;
      while (gamePlaying) {
 
           //  evaluationScore = updateEvaluation(currentBoard);
@@ -808,11 +859,16 @@ void main() {
           //  Generate Moves
           moveGeneration(currentBoard, currentTurn);
           //  Print all moves
-          for (int i = 0; i < moveCount; i++) {
-               printf("%d to %d\n", allMoves[i][0], allMoves[i][1]);
+          for (int i = 0; i < normalMoveCount; i++) {
+               printf("%d to %d\n", allNormalMoves[i][0], allNormalMoves[i][1]);
           }
-          printf("\nTotal Moves: %d\n", moveCount);
+          printf("\nTotal Normal Moves: %d\n\n", normalMoveCount);
 
+          for (int i = 0; i < promotionMoveCount; i++) {
+               printf("%d to %d: Piece Change to %d\n", 
+                    promotionMoves[i][0], promotionMoves[i][1], promotionMoves[i][2]);
+          }
+          printf("\nTotal Promotion Moves: %d\n\n", promotionMoveCount);
 
 
           // TODO: Check Endgame
