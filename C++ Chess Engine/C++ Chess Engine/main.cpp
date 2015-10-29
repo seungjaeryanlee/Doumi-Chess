@@ -774,14 +774,14 @@ void main() {
           currentBoard[i*ROW + 9] = ERRORSQUARE;
      }
 
-     currentBoard[51] = WHITEROOK;
-     currentBoard[64] = WHITEROOK;
-     currentBoard[53] = BLACKROOK;
+     currentBoard[51] = WHITEBISHOP;
+     currentBoard[64] = WHITEBISHOP;
+     currentBoard[53] = BLACKBISHOP;
      
      printBoard(currentBoard);
 
      //  int evaluationScore;
-     int currentTurn = BLACK;
+     int currentTurn = WHITE;
      while (gamePlaying) {
 
           //  evaluationScore = updateEvaluation(currentBoard);
