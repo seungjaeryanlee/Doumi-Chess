@@ -938,44 +938,24 @@ void main() {
 
      //  Peft test from:
      //  https://chessprogramming.wikispaces.com/Perft+Results
-     currentBoard[A8] = BLACKROOK;
-     currentBoard[E8] = BLACKKING;
-     currentBoard[H8] = BLACKROOK;
-     currentBoard[A7] = BLACKPAWN;
      currentBoard[C7] = BLACKPAWN;
-     currentBoard[D7] = BLACKPAWN;
-     currentBoard[E7] = BLACKQUEEN;
-     currentBoard[F7] = BLACKPAWN;
-     currentBoard[G7] = BLACKBISHOP;
-     currentBoard[A6] = BLACKBISHOP;
-     currentBoard[B6] = BLACKKNIGHT;
-     currentBoard[E6] = BLACKPAWN;
-     currentBoard[F6] = BLACKKNIGHT;
-     currentBoard[G6] = BLACKPAWN;
-     currentBoard[B4] = BLACKPAWN;
-     currentBoard[H3] = BLACKPAWN;
+     currentBoard[D6] = BLACKPAWN;
+     currentBoard[H5] = BLACKROOK;
+     currentBoard[F4] = BLACKPAWN;
+     currentBoard[H4] = BLACKKING;
 
-     currentBoard[D5] = WHITEPAWN;
-     currentBoard[E5] = WHITEKNIGHT;
-     currentBoard[E4] = WHITEPAWN;
-     currentBoard[C3] = WHITEKNIGHT;
-     currentBoard[F3] = WHITEQUEEN;
-     currentBoard[A2] = WHITEPAWN;
-     currentBoard[B2] = WHITEPAWN;
-     currentBoard[C2] = WHITEPAWN;
-     currentBoard[D2] = WHITEBISHOP;
-     currentBoard[E2] = WHITEBISHOP;
-     currentBoard[F2] = WHITEPAWN;
+
+     currentBoard[A5] = WHITEKING;
+     currentBoard[B5] = WHITEPAWN;
+     currentBoard[B4] = WHITEROOK;
+     currentBoard[E2] = WHITEPAWN;
      currentBoard[G2] = WHITEPAWN;
-     currentBoard[H2] = WHITEPAWN;
-     currentBoard[A1] = WHITEROOK;
-     currentBoard[E1] = WHITEKING;
-     currentBoard[H1] = WHITEROOK;
+
 
      printBoard(currentBoard);
 
      //  int evaluationScore;
-     int currentTurn = WHITE;
+     int currentTurn = BLACK;
      while (gamePlaying) {
 
           //  evaluationScore = updateEvaluation(currentBoard);
