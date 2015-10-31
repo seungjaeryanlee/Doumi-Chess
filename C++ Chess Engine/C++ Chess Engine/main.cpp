@@ -959,7 +959,7 @@ void legalMoves(int board[120], int turn) {
                     }
 
                     //  also when it reaches the end of the board
-                    else if (board[kingSquare - i*ROW - i*COLUMN] != ERRORSQUARE) {
+                    else if (board[kingSquare - i*ROW - i*COLUMN] == ERRORSQUARE) {
                          break;
                     }
                }
@@ -975,7 +975,7 @@ void legalMoves(int board[120], int turn) {
                     }
 
                     //  also when it reaches the end of the board
-                    else if (board[kingSquare - i*ROW + i*COLUMN] != ERRORSQUARE) {
+                    else if (board[kingSquare - i*ROW + i*COLUMN] == ERRORSQUARE) {
                          break;
                     }
                }
@@ -991,7 +991,7 @@ void legalMoves(int board[120], int turn) {
                     }
 
                     //  also when it reaches the end of the board
-                    else if (board[kingSquare + i*ROW - i*COLUMN] != ERRORSQUARE) {
+                    else if (board[kingSquare + i*ROW - i*COLUMN] == ERRORSQUARE) {
                          break;
                     }
                }
@@ -1007,7 +1007,7 @@ void legalMoves(int board[120], int turn) {
                     }
 
                     //  also when it reaches the end of the board
-                    else if (board[kingSquare + i*ROW + i*COLUMN] != ERRORSQUARE) {
+                    else if (board[kingSquare + i*ROW + i*COLUMN] == ERRORSQUARE) {
                          break;
                     }
                }
@@ -1019,12 +1019,12 @@ void legalMoves(int board[120], int turn) {
                     }
 
                     //  if some other piece blocks it, no more serach is necessary
-                    else if (board[kingSquare - i*ROW] != BLACKROOK) {
+                    else if (board[kingSquare - i*ROW] != EMPTYSQUARE) {
                          break;
                     }
 
                     //  also when it reaches the end of the board
-                    else if (board[kingSquare - i*ROW] != BLACKROOK) {
+                    else if (board[kingSquare - i*ROW] == ERRORSQUARE) {
                          break;
                     }
                }
@@ -1035,12 +1035,12 @@ void legalMoves(int board[120], int turn) {
                     }
 
                     //  if some other piece blocks it, no more serach is necessary
-                    else if (board[kingSquare + i*ROW] != BLACKROOK) {
+                    else if (board[kingSquare + i*ROW] != EMPTYSQUARE) {
                          break;
                     }
 
                     //  also when it reaches the end of the board
-                    else if (board[kingSquare + i*ROW] != BLACKROOK) {
+                    else if (board[kingSquare + i*ROW] == ERRORSQUARE) {
                          break;
                     }
                }
@@ -1051,12 +1051,12 @@ void legalMoves(int board[120], int turn) {
                     }
 
                     //  if some other piece blocks it, no more serach is necessary
-                    else if (board[kingSquare - i*COLUMN] != BLACKROOK) {
+                    else if (board[kingSquare - i*COLUMN] != EMPTYSQUARE) {
                          break;
                     }
 
                     //  also when it reaches the end of the board
-                    else if (board[kingSquare - i*COLUMN] != BLACKROOK) {
+                    else if (board[kingSquare - i*COLUMN] == ERRORSQUARE) {
                          break;
                     }
                }
@@ -1067,16 +1067,175 @@ void legalMoves(int board[120], int turn) {
                     }
 
                     //  if some other piece blocks it, no more serach is necessary
-                    else if (board[kingSquare + i*COLUMN] != BLACKROOK) {
+                    else if (board[kingSquare + i*COLUMN] != EMPTYSQUARE) {
                          break;
                     }
 
                     //  also when it reaches the end of the board
-                    else if (board[kingSquare + i*COLUMN] != BLACKROOK) {
+                    else if (board[kingSquare + i*COLUMN] == ERRORSQUARE) {
                          break;
                     }
                }
                
+               //  5. queen: added to bishop and rook
+               //  6. king: is it needed?
+
+               //  add this move to legal move array
+               if (legal) {
+                    allLegalNormalMoves[legalNormalMoveCount][0] = initialPosition;
+                    allLegalNormalMoves[legalNormalMoveCount][1] = terminalPosition;
+                    legalNormalMoveCount++;
+               }
+          }
+
+          if (turn == BLACK) {
+               //  1. pawn
+               if (board[kingSquare - ROW - COLUMN] == WHITEPAWN ||
+                    board[kingSquare - ROW - COLUMN] == WHITEPAWN) {
+                    legal = false;
+               }
+               //  2. knight
+               if (board[kingSquare - ROW - 2 * COLUMN] == WHITEKNIGHT ||
+                    board[kingSquare - ROW + 2 * COLUMN] == WHITEKNIGHT ||
+                    board[kingSquare + ROW - 2 * COLUMN] == WHITEKNIGHT ||
+                    board[kingSquare + ROW + 2 * COLUMN] == WHITEKNIGHT ||
+                    board[kingSquare - 2 * ROW - COLUMN] == WHITEKNIGHT ||
+                    board[kingSquare - 2 * ROW + COLUMN] == WHITEKNIGHT ||
+                    board[kingSquare + 2 * ROW - COLUMN] == WHITEKNIGHT ||
+                    board[kingSquare + 2 * ROW + COLUMN] == WHITEKNIGHT) {
+                    legal = false;
+               }
+               //  3. bishop
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare - i*ROW - i*COLUMN] == WHITEBISHOP ||
+                         board[kingSquare - i*ROW - i*COLUMN] == WHITEQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare - i*ROW - i*COLUMN] != EMPTYSQUARE) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare - i*ROW - i*COLUMN] == ERRORSQUARE) {
+                         break;
+                    }
+               }
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare - i*ROW + i*COLUMN] == WHITEBISHOP ||
+                         board[kingSquare - i*ROW + i*COLUMN] == WHITEQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare - i*ROW + i*COLUMN] != EMPTYSQUARE) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare - i*ROW + i*COLUMN] == ERRORSQUARE) {
+                         break;
+                    }
+               }
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare + i*ROW - i*COLUMN] == WHITEBISHOP ||
+                         board[kingSquare + i*ROW - i*COLUMN] == WHITEQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare + i*ROW - i*COLUMN] != EMPTYSQUARE) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare + i*ROW - i*COLUMN] == ERRORSQUARE) {
+                         break;
+                    }
+               }
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare + i*ROW + i*COLUMN] == WHITEBISHOP ||
+                         board[kingSquare + i*ROW + i*COLUMN] == WHITEQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare + i*ROW + i*COLUMN] != EMPTYSQUARE) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare + i*ROW + i*COLUMN] == ERRORSQUARE) {
+                         break;
+                    }
+               }
+               //  4. rook
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare - i*ROW] == WHITEROOK ||
+                         board[kingSquare - i*ROW] == WHITEQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare - i*ROW] != EMPTYSQUARE) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare - i*ROW] == ERRORSQUARE) {
+                         break;
+                    }
+               }
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare + i*ROW] == WHITEROOK ||
+                         board[kingSquare + i*ROW] == WHITEQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare + i*ROW] != EMPTYSQUARE) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare + i*ROW] == ERRORSQUARE) {
+                         break;
+                    }
+               }
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare - i*COLUMN] == WHITEROOK ||
+                         board[kingSquare - i*COLUMN] == WHITEQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare - i*COLUMN] != EMPTYSQUARE) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare - i*COLUMN] == ERRORSQUARE) {
+                         break;
+                    }
+               }
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare + i*COLUMN] == WHITEROOK ||
+                         board[kingSquare + i*COLUMN] == WHITEQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare + i*COLUMN] != EMPTYSQUARE) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare + i*COLUMN] == ERRORSQUARE) {
+                         break;
+                    }
+               }
+
                //  5. queen: added to bishop and rook
                //  6. king: is it needed?
 
@@ -1215,7 +1374,6 @@ void FENboardSetup(int board[120], std::string FEN) {
 void main() {
      //  Initialize Board
      //  board120Setup();
-     
      
      //  Perft test from:
      //  https://chessprogramming.wikispaces.com/Perft+Results
