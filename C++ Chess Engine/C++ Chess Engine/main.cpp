@@ -929,6 +929,7 @@ void legalMoves(int board[120], int turn) {
           }
 
           //  check for checks (no pun intended)
+          //  turns should be reversed since move is made
           if (turn == WHITE) {
                //  1. pawn
                if (board[kingSquare - ROW - COLUMN] == BLACKPAWN || 
@@ -947,7 +948,7 @@ void legalMoves(int board[120], int turn) {
                     legal = false;
                }
                //  3. bishop
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare - i*ROW - i*COLUMN] == BLACKBISHOP ||
                          board[kingSquare - i*ROW - i*COLUMN] == BLACKQUEEN) {
                          legal = false;
@@ -963,7 +964,7 @@ void legalMoves(int board[120], int turn) {
                          break;
                     }
                }
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare - i*ROW + i*COLUMN] == BLACKBISHOP ||
                          board[kingSquare - i*ROW + i*COLUMN] == BLACKQUEEN) {
                          legal = false;
@@ -979,7 +980,7 @@ void legalMoves(int board[120], int turn) {
                          break;
                     }
                }
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare + i*ROW - i*COLUMN] == BLACKBISHOP || 
                          board[kingSquare + i*ROW - i*COLUMN] == BLACKQUEEN) {
                          legal = false;
@@ -995,7 +996,7 @@ void legalMoves(int board[120], int turn) {
                          break;
                     }
                }
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare + i*ROW + i*COLUMN] == BLACKBISHOP ||
                          board[kingSquare + i*ROW + i*COLUMN] == BLACKQUEEN) {
                          legal = false;
@@ -1012,7 +1013,7 @@ void legalMoves(int board[120], int turn) {
                     }
                }
                //  4. rook
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare - i*ROW] == BLACKROOK ||
                          board[kingSquare - i*ROW] == BLACKQUEEN) {
                          legal = false;
@@ -1028,7 +1029,7 @@ void legalMoves(int board[120], int turn) {
                          break;
                     }
                }
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare + i*ROW] == BLACKROOK ||
                          board[kingSquare + i*ROW] == BLACKQUEEN) {
                          legal = false;
@@ -1044,7 +1045,7 @@ void legalMoves(int board[120], int turn) {
                          break;
                     }
                }
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare - i*COLUMN] == BLACKROOK ||
                          board[kingSquare - i*COLUMN] == BLACKQUEEN) {
                          legal = false;
@@ -1060,7 +1061,7 @@ void legalMoves(int board[120], int turn) {
                          break;
                     }
                }
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare + i*COLUMN] == BLACKROOK ||
                          board[kingSquare + i*COLUMN] == BLACKQUEEN) {
                          legal = false;
@@ -1106,10 +1107,11 @@ void legalMoves(int board[120], int turn) {
                     legal = false;
                }
                //  3. bishop
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare - i*ROW - i*COLUMN] == WHITEBISHOP ||
                          board[kingSquare - i*ROW - i*COLUMN] == WHITEQUEEN) {
                          legal = false;
+                         break;
                     }
 
                     //  if some other piece blocks it, no more serach is necessary
@@ -1122,7 +1124,7 @@ void legalMoves(int board[120], int turn) {
                          break;
                     }
                }
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare - i*ROW + i*COLUMN] == WHITEBISHOP ||
                          board[kingSquare - i*ROW + i*COLUMN] == WHITEQUEEN) {
                          legal = false;
@@ -1138,7 +1140,7 @@ void legalMoves(int board[120], int turn) {
                          break;
                     }
                }
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare + i*ROW - i*COLUMN] == WHITEBISHOP ||
                          board[kingSquare + i*ROW - i*COLUMN] == WHITEQUEEN) {
                          legal = false;
@@ -1154,7 +1156,7 @@ void legalMoves(int board[120], int turn) {
                          break;
                     }
                }
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare + i*ROW + i*COLUMN] == WHITEBISHOP ||
                          board[kingSquare + i*ROW + i*COLUMN] == WHITEQUEEN) {
                          legal = false;
@@ -1171,7 +1173,7 @@ void legalMoves(int board[120], int turn) {
                     }
                }
                //  4. rook
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare - i*ROW] == WHITEROOK ||
                          board[kingSquare - i*ROW] == WHITEQUEEN) {
                          legal = false;
@@ -1187,7 +1189,7 @@ void legalMoves(int board[120], int turn) {
                          break;
                     }
                }
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare + i*ROW] == WHITEROOK ||
                          board[kingSquare + i*ROW] == WHITEQUEEN) {
                          legal = false;
@@ -1203,7 +1205,7 @@ void legalMoves(int board[120], int turn) {
                          break;
                     }
                }
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare - i*COLUMN] == WHITEROOK ||
                          board[kingSquare - i*COLUMN] == WHITEQUEEN) {
                          legal = false;
@@ -1219,7 +1221,7 @@ void legalMoves(int board[120], int turn) {
                          break;
                     }
                }
-               for (int i = 0; i < 8; i++) {
+               for (int i = 1; i < 8; i++) {
                     if (board[kingSquare + i*COLUMN] == WHITEROOK ||
                          board[kingSquare + i*COLUMN] == WHITEQUEEN) {
                          legal = false;
@@ -1246,7 +1248,7 @@ void legalMoves(int board[120], int turn) {
                     legalNormalMoveCount++;
                }
           }
-         
+
           //  unmake move
           board[initialPosition] = board[terminalPosition];
           board[terminalPosition] = terminalValue;
@@ -1445,5 +1447,6 @@ void main() {
           else {
                currentTurn = WHITE;
           }
+          
      }
 }
