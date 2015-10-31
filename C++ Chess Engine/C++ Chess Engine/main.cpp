@@ -8,6 +8,7 @@
 #define ROW 10
 #define COLUMN 1
 #include <stdio.h>
+#include <string>
 
 /*                              FUNCTION DECLARATION                          */
 //  This function sets up currentboard[120] for the initial position of pieces.
@@ -40,6 +41,8 @@ void addMove(int initial, int terminal);
 void addPromotionMove(int initial, int terminal, int turn);
 //  checks if a move is legal or not
 void legalMoves(int board[120], int turn);
+//  receives a FEN string to setup board
+void FENboardSetup(std::string FEN);
 
 
 /*                                   ENUMERATION                              */
@@ -152,6 +155,10 @@ int enpassantMoves[2][2];
 int enpassantMoveCount = 0;
 int castlingMoves[2][2];
 int castlingMoveCount = 0;
+int currentTurn;
+//  clock for fifty move rule
+int halfMoveClock = 0;
+int moveNumber = 1;
 
 
 /*                                    FUNCTION                                */
@@ -917,13 +924,13 @@ void legalMoves(int board[120], int turn) {
      }
 
 }
+void FENboardSetup(int board[120], std::string FEN) {
+     whiteKingsideCastling = false;
+     whiteQueensideCastling = false;
+     blackKingsideCastling = false;
+     blackQueensideCastling = false;
+     enpassantSquare = 0;
 
-
-
-void main() {
-     //  Initialize Board
-     //  board120Setup();
-     
      for (int i = 0; i < 10; i++) {
           currentBoard[i] = ERRORSQUARE;
           currentBoard[ROW + i] = ERRORSQUARE;
@@ -936,26 +943,128 @@ void main() {
           currentBoard[i*ROW + 9] = ERRORSQUARE;
      }
 
-     //  Peft test from:
+     int currentSquare = 21;
+     int i;
+     for (i = 0; i < FEN.length(); i++) {
+          if (FEN.at(i) == ' ') { break; }
+          if (FEN.at(i) == '/') {
+               //  next row, first square
+               currentSquare = currentSquare / ROW*ROW + ROW + 1;
+               continue;
+          }
+          else if ('1' <= FEN.at(i) && FEN.at(i) <= '8') {
+               for (int k = 0; k < FEN.at(i) - '0'; k++) {
+                    board[currentSquare] = EMPTYSQUARE;
+                    currentSquare++;
+               }
+          }
+          else {
+               switch (FEN.at(i)) {
+               case 'p':
+                    board[currentSquare] = BLACKPAWN;
+                    break;
+               case 'r':
+                    board[currentSquare] = BLACKROOK;
+                    break;
+               case 'n':
+                    board[currentSquare] = BLACKKNIGHT;
+                    break;
+               case 'b':
+                    board[currentSquare] = BLACKBISHOP;
+                    break;
+               case 'q':
+                    board[currentSquare] = BLACKQUEEN;
+                    break;
+               case 'k':
+                    board[currentSquare] = BLACKKING;
+                    break;
+               case 'P':
+                    board[currentSquare] = WHITEPAWN;
+                    break;
+               case 'R':
+                    board[currentSquare] = WHITEROOK;
+                    break;
+               case 'N':
+                    board[currentSquare] = WHITEKNIGHT;
+                    break;
+               case 'B':
+                    board[currentSquare] = WHITEBISHOP;
+                    break;
+               case 'Q':
+                    board[currentSquare] = WHITEQUEEN;
+                    break;
+               case 'K':
+                    board[currentSquare] = WHITEKING;
+                    break;
+               }
+               currentSquare++;
+          }
+     }
+     i++;
+     if (FEN.at(i) == 'w') { currentTurn = WHITE; }
+     else { currentTurn = BLACK; }
+
+     i += 2;
+     if (FEN.at(i) != '-') {
+          while (FEN.at(i) != ' ') {
+               if (FEN.at(i) == 'K') {
+                    whiteKingsideCastling = true;
+               }
+               if (FEN.at(i) == 'Q') {
+                    whiteQueensideCastling = true;
+               }
+               if (FEN.at(i) == 'k') {
+                    blackKingsideCastling = true;
+               }
+               if (FEN.at(i) == 'q') {
+                    blackQueensideCastling = true;
+               }
+               i++;
+          }
+     }
+     else { i += 2; }
+
+     if (FEN.at(i) != '-') {
+          //  get enpassant square
+          enpassantSquare = ROW*(FEN.at(i) - 'a' + 2);
+          i++;
+          enpassantSquare += FEN.at(i)-'0';
+     }
+
+     i += 2;
+     halfMoveClock = FEN.at(i) - '0';
+     
+     i += 2;
+     moveNumber = FEN.at(i) - '0';
+     
+
+}
+
+
+
+void main() {
+     //  Initialize Board
+     //  board120Setup();
+     
+     
+     //  Perft test from:
      //  https://chessprogramming.wikispaces.com/Perft+Results
-     currentBoard[C7] = BLACKPAWN;
-     currentBoard[D6] = BLACKPAWN;
-     currentBoard[H5] = BLACKROOK;
-     currentBoard[F4] = BLACKPAWN;
-     currentBoard[H4] = BLACKKING;
-
-
-     currentBoard[A5] = WHITEKING;
-     currentBoard[B5] = WHITEPAWN;
-     currentBoard[B4] = WHITEROOK;
-     currentBoard[E2] = WHITEPAWN;
-     currentBoard[G2] = WHITEPAWN;
-
+     FENboardSetup(currentBoard, "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1");
 
      printBoard(currentBoard);
+     printf("--------------------------------------------------\n");
+     printf("White Kingside Castling: %d\n", whiteKingsideCastling);
+     printf("White Queenside Castling: %d\n", whiteQueensideCastling);
+     printf("Black Kingside Castling: %d\n", blackKingsideCastling);
+     printf("Black Queenside Castling: %d\n", blackQueensideCastling);
+     printf("En passant Square: %d\n", enpassantSquare);
+     printf("Move number: %d\n", moveNumber);
+     if (currentTurn == WHITE) { printf("Turn: White\n"); }
+     else { printf("Turn: Black\n"); }
+     printf("--------------------------------------------------\n");
 
      //  int evaluationScore;
-     int currentTurn = BLACK;
+     currentTurn = BLACK;
      while (gamePlaying) {
 
           //  evaluationScore = updateEvaluation(currentBoard);
