@@ -159,6 +159,8 @@ int currentTurn;
 //  clock for fifty move rule
 int halfMoveClock = 0;
 int moveNumber = 1;
+int allLegalNormalMoves[1000][2];
+int legalNormalMoveCount = 0;
 
 
 /*                                    FUNCTION                                */
@@ -895,34 +897,202 @@ void addPromotionMove(int initial, int terminal, int turn) {
      promotionMoveCount += 4;
 }
 void legalMoves(int board[120], int turn) {
-     int initial, terminal;
-     int terminalSquare;
+     int initialPosition, terminalPosition;
+     int terminalValue;
      int kingSquare;
+     legalNormalMoveCount = 0;
+     bool legal=true;
+
+     //  find the king's location
+     for (int i = 0; i < 120; i++) {
+          if ((turn == WHITE && board[i] == WHITEKING) || (turn == BLACK && board[i] == BLACKKING)) {
+               kingSquare = i;
+               break;
+          }
+     }
      for (int i = 0; i < normalMoveCount; i++) {
-          initial = allNormalMoves[i][0];
-          terminal = allNormalMoves[i][1];
-          terminalSquare = EMPTYSQUARE;
+          initialPosition = allNormalMoves[i][0];
+          terminalPosition = allNormalMoves[i][1];
+          terminalValue = EMPTYSQUARE;
+          legal = true;
           
           //  make move
-          terminalSquare = board[terminal];
-          board[terminal] = board[initial];
-          board[initial] = EMPTYSQUARE;
+          terminalValue = board[terminalPosition];
+          board[terminalPosition] = board[initialPosition];
+          board[initialPosition] = EMPTYSQUARE;
 
-          //  find the king's location
-          for (int i = 0; i < 120; i++) {
-               if ((turn == WHITE && board[i] == WHITEKING) || (turn == BLACK && board[i] == BLACKKING)) {
-                    kingSquare = i;
-                    break;
-               }
+          if (turn == WHITE && terminalValue == WHITEKING) {
+               kingSquare = terminalPosition;
+          }
+          if (turn == BLACK && terminalValue == BLACKKING) {
+               kingSquare = terminalPosition;
           }
 
-          //  unmake move
-          board[initial] = board[terminal];
-          board[terminal] = terminalSquare;
+          //  check for checks (no pun intended)
+          if (turn == WHITE) {
+               //  1. pawn
+               if (board[kingSquare - ROW - COLUMN] == BLACKPAWN || 
+                    board[kingSquare - ROW - COLUMN] == BLACKPAWN) {
+                    legal = false;
+               }
+               //  2. knight
+               if (board[kingSquare - ROW - 2*COLUMN] == BLACKKNIGHT ||
+                    board[kingSquare - ROW + 2 * COLUMN] == BLACKKNIGHT ||
+                    board[kingSquare + ROW - 2 * COLUMN] == BLACKKNIGHT ||
+                    board[kingSquare + ROW + 2 * COLUMN] == BLACKKNIGHT ||
+                    board[kingSquare - 2 * ROW - COLUMN] == BLACKKNIGHT ||
+                    board[kingSquare - 2 * ROW + COLUMN] == BLACKKNIGHT || 
+                    board[kingSquare + 2 * ROW - COLUMN] == BLACKKNIGHT || 
+                    board[kingSquare + 2 * ROW + COLUMN] == BLACKKNIGHT) {
+                    legal = false;
+               }
+               //  3. bishop
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare - i*ROW - i*COLUMN] == BLACKBISHOP ||
+                         board[kingSquare - i*ROW - i*COLUMN] == BLACKQUEEN) {
+                         legal = false;
+                    }
+                    
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare - i*ROW - i*COLUMN] != EMPTYSQUARE) {
+                         break;
+                    }
 
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare - i*ROW - i*COLUMN] != ERRORSQUARE) {
+                         break;
+                    }
+               }
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare - i*ROW + i*COLUMN] == BLACKBISHOP ||
+                         board[kingSquare - i*ROW + i*COLUMN] == BLACKQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare - i*ROW + i*COLUMN] != EMPTYSQUARE) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare - i*ROW + i*COLUMN] != ERRORSQUARE) {
+                         break;
+                    }
+               }
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare + i*ROW - i*COLUMN] == BLACKBISHOP || 
+                         board[kingSquare + i*ROW - i*COLUMN] == BLACKQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare + i*ROW - i*COLUMN] != EMPTYSQUARE) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare + i*ROW - i*COLUMN] != ERRORSQUARE) {
+                         break;
+                    }
+               }
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare + i*ROW + i*COLUMN] == BLACKBISHOP ||
+                         board[kingSquare + i*ROW + i*COLUMN] == BLACKQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare + i*ROW + i*COLUMN] != EMPTYSQUARE) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare + i*ROW + i*COLUMN] != ERRORSQUARE) {
+                         break;
+                    }
+               }
+               //  4. rook
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare - i*ROW] == BLACKROOK ||
+                         board[kingSquare - i*ROW] == BLACKQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare - i*ROW] != BLACKROOK) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare - i*ROW] != BLACKROOK) {
+                         break;
+                    }
+               }
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare + i*ROW] == BLACKROOK ||
+                         board[kingSquare + i*ROW] == BLACKQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare + i*ROW] != BLACKROOK) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare + i*ROW] != BLACKROOK) {
+                         break;
+                    }
+               }
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare - i*COLUMN] == BLACKROOK ||
+                         board[kingSquare - i*COLUMN] == BLACKQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare - i*COLUMN] != BLACKROOK) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare - i*COLUMN] != BLACKROOK) {
+                         break;
+                    }
+               }
+               for (int i = 0; i < 8; i++) {
+                    if (board[kingSquare + i*COLUMN] == BLACKROOK ||
+                         board[kingSquare + i*COLUMN] == BLACKQUEEN) {
+                         legal = false;
+                    }
+
+                    //  if some other piece blocks it, no more serach is necessary
+                    else if (board[kingSquare + i*COLUMN] != BLACKROOK) {
+                         break;
+                    }
+
+                    //  also when it reaches the end of the board
+                    else if (board[kingSquare + i*COLUMN] != BLACKROOK) {
+                         break;
+                    }
+               }
+               
+               //  5. queen: added to bishop and rook
+               //  6. king: is it needed?
+
+               //  add this move to legal move array
+               if (legal) {
+                    allLegalNormalMoves[legalNormalMoveCount][0] = initialPosition;
+                    allLegalNormalMoves[legalNormalMoveCount][1] = terminalPosition;
+                    legalNormalMoveCount++;
+               }
+          }
+         
+          //  unmake move
+          board[initialPosition] = board[terminalPosition];
+          board[terminalPosition] = terminalValue;
 
      }
-
 }
 void FENboardSetup(int board[120], std::string FEN) {
      whiteKingsideCastling = false;
@@ -1078,6 +1248,13 @@ void main() {
                printf("%d to %d\n", allNormalMoves[i][0], allNormalMoves[i][1]);
           }
           printf("\nTotal Normal Moves: %d\n\n", normalMoveCount);
+
+          legalMoves(currentBoard, currentTurn);
+          for (int i = 0; i < legalNormalMoveCount; i++) {
+               printf("%d to %d\n", allLegalNormalMoves[i][0],  allLegalNormalMoves[i][1]);
+          }
+          printf("\nLegal Normal Moves: %d\n\n", legalNormalMoveCount);
+          printBoard(currentBoard);
 
           for (int i = 0; i < promotionMoveCount; i++) {
                printf("%d to %d: Piece Change to %d\n", 
