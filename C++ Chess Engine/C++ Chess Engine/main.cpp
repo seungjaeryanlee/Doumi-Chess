@@ -1375,9 +1375,10 @@ void main() {
      //  Initialize Board
      //  board120Setup();
      
-     //  Perft test from:
-     //  https://chessprogramming.wikispaces.com/Perft+Results
-     FENboardSetup(currentBoard, "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1");
+     //  FEN source:
+     //  http://www.chesskit.com/training/fenkit/index.php?page=p9&d=Page%209
+     //  turn has been edited
+     FENboardSetup(currentBoard, "rn6/kp3p1p/pq6/N1Q5/8/7P/5PP1/2R3K1 b - - 0 1");
 
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
