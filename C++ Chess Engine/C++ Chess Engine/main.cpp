@@ -38,6 +38,8 @@ void promotionMoveGeneration(int board[120], int turn, int position);
 //  Add the input move to the array
 void addMove(int initial, int terminal);
 void addPromotionMove(int initial, int terminal, int turn);
+//  checks if a move is legal or not
+void legalMoves(int board[120], int turn);
 
 
 /*                                   ENUMERATION                              */
@@ -885,6 +887,38 @@ void addPromotionMove(int initial, int terminal, int turn) {
      }
      promotionMoveCount += 4;
 }
+void legalMoves(int board[120], int turn) {
+     int initial, terminal;
+     int terminalSquare;
+     int kingSquare;
+     for (int i = 0; i < normalMoveCount; i++) {
+          initial = allNormalMoves[i][0];
+          terminal = allNormalMoves[i][1];
+          terminalSquare = EMPTYSQUARE;
+          
+          //  make move
+          terminalSquare = board[terminal];
+          board[terminal] = board[initial];
+          board[initial] = EMPTYSQUARE;
+
+          //  find the king's location
+          for (int i = 0; i < 120; i++) {
+               if ((turn == WHITE && board[i] == WHITEKING) || (turn == BLACK && board[i] == BLACKKING)) {
+                    kingSquare = i;
+                    break;
+               }
+          }
+
+          //  unmake move
+          board[initial] = board[terminal];
+          board[terminal] = terminalSquare;
+
+
+     }
+
+}
+
+
 
 void main() {
      //  Initialize Board
@@ -902,19 +936,46 @@ void main() {
           currentBoard[i*ROW + 9] = ERRORSQUARE;
      }
 
-     currentBoard[A1] = WHITEROOK;
-     currentBoard[H1] = WHITEROOK;
-     currentBoard[C1] = BLACKKNIGHT;
-     currentBoard[E1] = WHITEKING;
+     //  Peft test from:
+     //  https://chessprogramming.wikispaces.com/Perft+Results
      currentBoard[A8] = BLACKROOK;
-     currentBoard[H8] = BLACKROOK;
-     currentBoard[F8] = WHITEKNIGHT;
      currentBoard[E8] = BLACKKING;
+     currentBoard[H8] = BLACKROOK;
+     currentBoard[A7] = BLACKPAWN;
+     currentBoard[C7] = BLACKPAWN;
+     currentBoard[D7] = BLACKPAWN;
+     currentBoard[E7] = BLACKQUEEN;
+     currentBoard[F7] = BLACKPAWN;
+     currentBoard[G7] = BLACKBISHOP;
+     currentBoard[A6] = BLACKBISHOP;
+     currentBoard[B6] = BLACKKNIGHT;
+     currentBoard[E6] = BLACKPAWN;
+     currentBoard[F6] = BLACKKNIGHT;
+     currentBoard[G6] = BLACKPAWN;
+     currentBoard[B4] = BLACKPAWN;
+     currentBoard[H3] = BLACKPAWN;
+
+     currentBoard[D5] = WHITEPAWN;
+     currentBoard[E5] = WHITEKNIGHT;
+     currentBoard[E4] = WHITEPAWN;
+     currentBoard[C3] = WHITEKNIGHT;
+     currentBoard[F3] = WHITEQUEEN;
+     currentBoard[A2] = WHITEPAWN;
+     currentBoard[B2] = WHITEPAWN;
+     currentBoard[C2] = WHITEPAWN;
+     currentBoard[D2] = WHITEBISHOP;
+     currentBoard[E2] = WHITEBISHOP;
+     currentBoard[F2] = WHITEPAWN;
+     currentBoard[G2] = WHITEPAWN;
+     currentBoard[H2] = WHITEPAWN;
+     currentBoard[A1] = WHITEROOK;
+     currentBoard[E1] = WHITEKING;
+     currentBoard[H1] = WHITEROOK;
 
      printBoard(currentBoard);
 
      //  int evaluationScore;
-     int currentTurn = BLACK;
+     int currentTurn = WHITE;
      while (gamePlaying) {
 
           //  evaluationScore = updateEvaluation(currentBoard);
