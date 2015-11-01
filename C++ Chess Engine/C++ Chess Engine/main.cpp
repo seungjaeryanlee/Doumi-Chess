@@ -7,8 +7,10 @@
 #define KINGVALUE 9999
 #define ROW 10
 #define COLUMN 1
+#define MAXIMUM_DEPTH 10
 #include <stdio.h>
 #include <string>
+typedef unsigned long long u64;
 
 /*                              FUNCTION DECLARATION                          */
 //  This function sets up currentboard[120] for the initial position of pieces.
@@ -43,7 +45,7 @@ void addPromotionMove(int initial, int terminal, int turn);
 void legalMoves(int board[120], int turn);
 //  receives a FEN string to setup board
 void FENboardSetup(std::string FEN);
-
+u64 perft(int depth);
 
 /*                                   ENUMERATION                              */
 enum squareType {
@@ -161,7 +163,9 @@ int halfMoveClock = 0;
 int moveNumber = 1;
 int allLegalNormalMoves[1000][2];
 int legalNormalMoveCount = 0;
-
+//  added for recursion
+int depthLegalMoveList[MAXIMUM_DEPTH + 1][1000][2];
+int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 
 /*                                    FUNCTION                                */
 void board120Setup() {
@@ -397,7 +401,6 @@ void moveGeneration(int board[120], int turn) {
      }
      
      castlingMoveGeneration(board, turn);
-
 }
 int checkColor(int pieceType) {
      if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
@@ -901,7 +904,7 @@ void legalMoves(int board[120], int turn) {
      int terminalValue;
      int kingSquare;
      legalNormalMoveCount = 0;
-     bool legal=true;
+     bool legal = true;
 
      //  find the king's location
      for (int i = 0; i < 120; i++) {
@@ -1370,7 +1373,18 @@ void FENboardSetup(int board[120], std::string FEN) {
      
 
 }
-
+u64 perft(int depth) {
+     u64 node = 0;
+     if (depth == 0) { return 1; }
+     //  MOVEGEN
+     // CHECK FOR LEGALS
+     for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
+          //  MAKEMOVE
+          node += perft(depth - 1);
+          //  UNDOMOVE
+     }
+     return node;
+}
 
 
 void main() {
@@ -1439,7 +1453,7 @@ void main() {
 
           //  This should be deleted for non-test cases
           gamePlaying = false;
-
+          
           //  Change turns
           if (currentTurn == WHITE) {
                currentTurn = BLACK;
@@ -1447,6 +1461,8 @@ void main() {
           else {
                currentTurn = WHITE;
           }
+
+          moveNumber++;
           
      }
 }
