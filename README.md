@@ -14,8 +14,8 @@ I plan to use Negamax algorithm for this engine.
 3. Move Generation - *In progress*
   - Normal Move Generation - **Complete**
   - Special Move Generation (Promotion, Enpassant, Castling) - **Complete**
-  - Legal Move Check - *In progress*
-  - Comprehensive Move Count Test
+  - Legal Move Check - **Complete**  
+  - Performance Test (a.k.a. perft test) - *In progress*
 4. Recursion
 
 ## TODOs (In construction)
