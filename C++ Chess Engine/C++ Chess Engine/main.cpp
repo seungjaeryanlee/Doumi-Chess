@@ -46,6 +46,10 @@ void legalMoves(int board[120], int turn);
 //  receives a FEN string to setup board
 void FENboardSetup(std::string FEN);
 u64 perft(int depth);
+int makeMove(int board[120], int move[2]);
+void undoMove(int board[120], int move[2], int terminalValue);
+
+
 
 /*                                   ENUMERATION                              */
 enum squareType {
@@ -164,6 +168,8 @@ int moveNumber = 1;
 int allLegalNormalMoves[1000][2];
 int legalNormalMoveCount = 0;
 //  added for recursion
+int depthNormalMoveList[MAXIMUM_DEPTH + 1][1000][2];
+int depthNormalMoveCount[MAXIMUM_DEPTH + 1];
 int depthLegalMoveList[MAXIMUM_DEPTH + 1][1000][2];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 
@@ -1375,18 +1381,31 @@ void FENboardSetup(int board[120], std::string FEN) {
 }
 u64 perft(int depth) {
      u64 node = 0;
+     int terminalValue;
      if (depth == 0) { return 1; }
      //  MOVEGEN
      // CHECK FOR LEGALS
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
-          //  MAKEMOVE
+          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
           node += perft(depth - 1);
-          //  UNDOMOVE
+          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
      }
      return node;
 }
 
-
+int makeMove(int board[120], int move[2]) {
+     int terminalValue;
+     int initial = move[0], terminal = move[1];
+     terminalValue = board[terminal];
+     board[terminal] = board[initial];
+     board[initial] = EMPTYSQUARE;
+     return terminalValue;
+}
+void undoMove(int board[120], int move[2], int terminalValue) {
+     int initial = move[0], terminal = move[1];
+     board[initial] = board[terminal];
+     board[terminal] = terminalValue;
+}
 void main() {
      //  Initialize Board
      //  board120Setup();
