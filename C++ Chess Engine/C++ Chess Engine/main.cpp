@@ -7,7 +7,7 @@
 #define KINGVALUE 9999
 #define ROW 10
 #define COLUMN 1
-#define MAXIMUM_DEPTH 10
+#define MAXIMUM_DEPTH 6
 #include <stdio.h>
 #include <string>
 typedef unsigned long long u64;
@@ -29,7 +29,7 @@ int position120to64(int position120);
 void moveGeneration(int board[120], int turn);
 //  Gets a piece and returns the color of the piece
 int checkColor(int pieceType);
-//  functions for each piece move generation
+//  functions for each piece move generation & special move generation
 void pawnMoveGeneration(int board[120], int turn, int position);
 void knightMoveGeneration(int board[120], int turn, int position);
 void bishopMoveGeneration(int board[120], int turn, int position);
@@ -45,11 +45,19 @@ void addPromotionMove(int initial, int terminal, int turn);
 void legalMoves(int board[120], int turn);
 //  receives a FEN string to setup board
 void FENboardSetup(std::string FEN);
+//  performance test function to test move generation
 u64 perft(int depth);
+//  make and undo move (used for recursion
 int makeMove(int board[120], int move[2]);
 void undoMove(int board[120], int move[2], int terminalValue);
-
-
+void makeCastlingMove(int board[120], int move[2]);
+void undoCastlingMove(int board[120], int move[2]);
+int makePromotionMove(int board[120], int move[2]);
+void undoPromotionMove(int board[120], int move[2], int terminalValue);
+void makeEnpassantgMove(int board[120], int move[2]);
+void undoEnPassantMove(int board[120], int move[2]);
+//  test Output used for debugging
+void testOutput();
 
 /*                                   ENUMERATION                              */
 enum squareType {
@@ -164,12 +172,17 @@ int castlingMoveCount = 0;
 int currentTurn;
 //  clock for fifty move rule
 int halfMoveClock = 0;
+//  Current Move Number, starts at 1
 int moveNumber = 1;
 int allLegalNormalMoves[1000][2];
 int legalNormalMoveCount = 0;
 //  added for recursion
 int depthNormalMoveList[MAXIMUM_DEPTH + 1][1000][2];
 int depthNormalMoveCount[MAXIMUM_DEPTH + 1];
+int depthPromotionMoveList[MAXIMUM_DEPTH + 1][2][2];
+int depthPromotionMoveCount[MAXIMUM_DEPTH + 1];
+int depthEnpassantMoveList[MAXIMUM_DEPTH + 1][2][2];
+int depthEnpassantMoveCount[MAXIMUM_DEPTH + 1];
 int depthLegalMoveList[MAXIMUM_DEPTH + 1][1000][2];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 
@@ -1410,6 +1423,13 @@ void undoMove(int board[120], int move[2], int terminalValue) {
      board[initial] = board[terminal];
      board[terminal] = terminalValue;
 }
+void makeCastlingMove(int board[120], int move[2]) {}
+void undoCastlingMove(int board[120], int move[2]) {}
+int makePromotionMove(int board[120], int move[2]) { return 1; }
+void undoPromotionMove(int board[120], int move[2], int terminalValue) {}
+void makeEnpassantgMove(int board[120], int move[2]) {}
+void undoEnPassantMove(int board[120], int move[2]) {}
+
 void testOutput() {
      //  Generate Moves
      moveGeneration(currentBoard, currentTurn);
@@ -1500,7 +1520,6 @@ void main() {
           printf("\nTotal Castling Moves: %d\n", castlingMoveCount);
           printf("--------------------------------------------------\n");
 
-          // TODO: Check Endgame
           if (!endGame) {
                //  if no queens are on the board
                int queenCount=0;
@@ -1514,18 +1533,20 @@ void main() {
                }
           }
           printf("Endgame: %d\n", endGame);
-          //  This should be deleted for non-test cases
-          gamePlaying = false;
+          
+          //  TODO: Make Best Move
           
           //  Change turns
-          if (currentTurn == WHITE) {
-               currentTurn = BLACK;
-          }
-          else {
-               currentTurn = WHITE;
+          if (currentTurn == WHITE) { currentTurn = BLACK; }
+          else { 
+               currentTurn = WHITE; 
+               moveNumber++;
           }
 
-          moveNumber++;
+          //  This should be deleted for non-test cases
+          gamePlaying = false;
+
+          //  TODO: Check Fifty move rule
           
      }
 }
