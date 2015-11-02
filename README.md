@@ -16,9 +16,23 @@ I plan to use Negamax algorithm for this engine.
   - Special Move Generation (Promotion, Enpassant, Castling) - **Complete**
   - Legal Move Check - **Complete**  
   - Performance Test (a.k.a. perft test) - *In progress*
+    - Change Existing Functions for pointer arguments - *In progress*  
 4. Recursion
+  - Implement Negamax
+  - Test Recursion
+5. Other Minor Details  
+  - Stalemate rules  
+  - Resignation  
 
 ## TODOs (In construction)
+
+## Non-necessary Addition to Chess Engine
+1. Opening Book  
+2. Clock  
+3. Endgame Book  
+4. WinBoard or UCI  
+5. Create own GUI  
+6. *These will be worked on after the basic chess engine is completed. (Not in order)*  
 
 ## References  
 The Piece Square Tables of this version is from the following link:   https://chessprogramming.wikispaces.com/Simplified+evaluation+function  
