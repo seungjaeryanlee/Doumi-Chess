@@ -1486,6 +1486,9 @@ void main() {
      //  Custom FEN to check speical cases
      FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
 
+     //  int evaluationScore;
+     currentTurn = WHITE;
+
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("White Kingside Castling: %d\n", whiteKingsideCastling);
@@ -1498,8 +1501,7 @@ void main() {
      else { printf("Turn: Black\n"); }
      printf("--------------------------------------------------\n");
 
-     //  int evaluationScore;
-     currentTurn = BLACK;
+     
      while (gamePlaying) {
 
           //  evaluationScore = updateEvaluation(currentBoard);
