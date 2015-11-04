@@ -1423,7 +1423,6 @@ u64 perft(int depth, int turn) {
           undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
      }
 
-
      //  TODO: Add Castling Moves
      //  TODO: Add Promotion Moves
      //  TODO: Add enpassant Moves
@@ -1560,5 +1559,8 @@ void main() {
 
      printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(3, WHITE));
+     printf("PERFT TEST (DEPTH 3): %llu \n", perft(3, WHITE));
+     printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE));
+     printf("PERFT TEST (DEPTH 5): %llu \n", perft(5, WHITE));
+     printf("PERFT TEST (DEPTH 6): %llu \n", perft(6, WHITE));
 }
