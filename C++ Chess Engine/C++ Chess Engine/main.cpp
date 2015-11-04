@@ -42,7 +42,7 @@ void promotionMoveGeneration(int board[120], int turn, int position, int promoti
 void addMove(int initial, int terminal, int normalMoveList[250][2], int *normalMoveCount);
 void addPromotionMove(int initial, int terminal, int turn);
 //  checks if a move is legal or not
-void legalMoves(int board[120], int turn);
+void legalMoves(int board[120], int turn, int normalMoveList[250][2], int normalMoveCount, int legalNormalMoveList[250][2], int *legalNormalMoveCount);
 //  receives a FEN string to setup board
 void FENboardSetup(std::string FEN);
 //  performance test function to test move generation
@@ -181,7 +181,7 @@ int legalNormalMoveCount = 0;
 //  added for recursion
 int depthNormalMoveList[MAXIMUM_DEPTH + 1][250][2];
 int depthNormalMoveCount[MAXIMUM_DEPTH + 1];
-int depthPromotionMoveList[MAXIMUM_DEPTH + 1][2][2];
+int depthPromotionMoveList[MAXIMUM_DEPTH + 1][88][3];
 int depthPromotionMoveCount[MAXIMUM_DEPTH + 1];
 int depthEnpassantMoveList[MAXIMUM_DEPTH + 1][2][2];
 int depthEnpassantMoveCount[MAXIMUM_DEPTH + 1];
@@ -1399,16 +1399,23 @@ void FENboardSetup(int board[120], std::string FEN) {
      
 
 }
-u64 perft(int depth) {
+u64 perft(int depth, int turn) {
      u64 node = 0;
      int terminalValue;
      if (depth == 0) { return 1; }
      // MOVEGEN
+     moveGeneration(currentBoard, turn, depthNormalMoveList[depth], &depthNormalMoveCount[depth], depthPromotionMoveList[depth], &depthPromotionMoveCount[depth]);
      // CHECK FOR LEGALS
+     legalMoves(currentBoard, turn, depthNormalMoveList[depth], depthNormalMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
           terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
-          //  change turn;
-          node += perft(depth - 1);
+          if (turn == WHITE) {
+               node += perft(depth - 1, BLACK);
+          }
+          else {
+               node += perft(depth - 1, WHITE);
+          }
           undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
      }
 
@@ -1536,4 +1543,6 @@ void main() {
           //  TODO: Check Fifty move rule
           
      }
+
+     printf("Total Normal Nodes: %llu \n", perft(1, WHITE));
 }
