@@ -459,18 +459,6 @@ void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveLi
           if (checkColor(board[position - ROW + COLUMN]) == BLACK) {
                addMove(position, position - ROW + COLUMN, normalMoveList, normalMoveCount);
           }
-         
-          //  en passant
-          if (enpassantSquare == position - ROW - COLUMN) {
-               enpassantMoves[enpassantMoveCount][0] = position;
-               enpassantMoves[enpassantMoveCount][1] = enpassantSquare;
-               enpassantMoveCount++;
-          }
-          if (enpassantSquare == position - ROW + COLUMN) {
-               enpassantMoves[enpassantMoveCount][0] = position;
-               enpassantMoves[enpassantMoveCount][1] = enpassantSquare;
-               enpassantMoveCount++;
-          }
      }
      if (turn == BLACK) {
           //  if on the last row before promotion, just call promotion
@@ -495,18 +483,6 @@ void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveLi
           }
           if (checkColor(board[position + ROW + COLUMN]) == WHITE) {
                addMove(position, position - ROW + COLUMN, normalMoveList, normalMoveCount);
-          }
-
-          //  en passant
-          if (enpassantSquare == position + ROW - COLUMN) {
-               enpassantMoves[enpassantMoveCount][0] = position;
-               enpassantMoves[enpassantMoveCount][1] = enpassantSquare;
-               enpassantMoveCount++;
-          }
-          if (enpassantSquare == position + ROW + COLUMN) {
-               enpassantMoves[enpassantMoveCount][0] = position;
-               enpassantMoves[enpassantMoveCount][1] = enpassantSquare;
-               enpassantMoveCount++;
           }
      }
 }
@@ -889,6 +865,34 @@ void promotionMoveGeneration(int board[120], int turn, int position, int promoti
           }
           if (board[position + ROW] == EMPTYSQUARE) {
                addPromotionMove(position, position + ROW, turn);
+          }
+     }
+}
+void enpassantMoveGeneration(int board[120], int turn, int enpassantMoveList[2][2], int *enpassantMoveCount, int enpassantSquare) {
+     if (enpassantSquare == 0) { return; }
+     
+     if (turn == WHITE) {
+          if (board[enpassantSquare + ROW + COLUMN] == WHITEPAWN) {
+               enpassantMoves[*enpassantMoveCount][0] = enpassantSquare + ROW + COLUMN;
+               enpassantMoves[*enpassantMoveCount][1] = enpassantSquare;
+               *enpassantMoveCount += 1;
+          }
+          if (board[enpassantSquare + ROW - COLUMN] == WHITEPAWN) {
+               enpassantMoves[*enpassantMoveCount][0] = enpassantSquare + ROW - COLUMN;
+               enpassantMoves[*enpassantMoveCount][1] = enpassantSquare;
+               *enpassantMoveCount += 1;
+          }
+     }
+     if (turn == BLACK) {
+          if (board[enpassantSquare - ROW + COLUMN] == BLACKPAWN) {
+               enpassantMoves[*enpassantMoveCount][0] = enpassantSquare - ROW + COLUMN;
+               enpassantMoves[*enpassantMoveCount][1] = enpassantSquare;
+               *enpassantMoveCount += 1;
+          }
+          if (board[enpassantSquare - ROW - COLUMN] == BLACKPAWN) {
+               enpassantMoves[*enpassantMoveCount][0] = enpassantSquare - ROW - COLUMN;
+               enpassantMoves[*enpassantMoveCount][1] = enpassantSquare;
+               *enpassantMoveCount += 1;
           }
      }
 }
@@ -1468,7 +1472,6 @@ void testOutput() {
      printf("\nTotal Castling Moves: %d\n", castlingMoveCount);
 }
 
-//  TODO: Create separate function for enpassantMoveGeneration
 
 
 void main() {
@@ -1518,6 +1521,7 @@ void main() {
           }
           printf("Total Promotion Moves: %d\n", promotionMoveCount);
 
+          enpassantMoveGeneration(currentBoard, currentTurn, enpassantMoves, &enpassantMoveCount, enpassantSquare);
           for (int i = 0; i < enpassantMoveCount; i++) {
                printf("%d to %d\n",
                     enpassantMoves[i][0], enpassantMoves[i][1]);
