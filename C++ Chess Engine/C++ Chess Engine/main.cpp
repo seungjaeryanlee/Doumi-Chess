@@ -1437,42 +1437,6 @@ void undoPromotionMove(int board[120], int move[2], int terminalValue) {}
 void makeEnpassantMove(int board[120], int move[2]) {}
 void undoEnPassantMove(int board[120], int move[2]) {}
 
-void testOutput() {
-     //  Generate Moves
-     moveGeneration(currentBoard, currentTurn, allNormalMoves, &normalMoveCount, promotionMoves, &promotionMoveCount);
-     //  Print all moves
-     for (int i = 0; i < normalMoveCount; i++) {
-          printf("%d to %d\n", allNormalMoves[i][0], allNormalMoves[i][1]);
-     }
-     printf("Total Normal Moves: %d\n", normalMoveCount);
-     printf("--------------------------------------------------\n");
-     legalMoves(currentBoard, currentTurn);
-     for (int i = 0; i < legalNormalMoveCount; i++) {
-          printf("%d to %d\n", allLegalNormalMoves[i][0], allLegalNormalMoves[i][1]);
-     }
-     printf("Legal Normal Moves: %d\n", legalNormalMoveCount);
-     printBoard(currentBoard);
-
-     for (int i = 0; i < promotionMoveCount; i++) {
-          printf("%d to %d: Piece Change to %d\n",
-               promotionMoves[i][0], promotionMoves[i][1], promotionMoves[i][2]);
-     }
-     printf("\nTotal Promotion Moves: %d", promotionMoveCount);
-
-     for (int i = 0; i < enpassantMoveCount; i++) {
-          printf("%d to %d\n",
-               enpassantMoves[i][0], enpassantMoves[i][1]);
-     }
-     printf("\nTotal Enpassant Moves: %d", enpassantMoveCount);
-
-     for (int i = 0; i < castlingMoveCount; i++) {
-          printf("%d to %d\n",
-               castlingMoves[i][0], castlingMoves[i][1]);
-     }
-     printf("\nTotal Castling Moves: %d\n", castlingMoveCount);
-}
-
-
 
 void main() {
      //  Initialize Board
@@ -1507,33 +1471,39 @@ void main() {
           //  printf("Evaluation Score: %d\n\n", evaluationScore);
 
 
-          //  Generate Movesf
+          //  Generate Moves
           moveGeneration(currentBoard, currentTurn, allNormalMoves, &normalMoveCount, promotionMoves, &promotionMoveCount);
           //  Print all moves
           printf("Total Normal Moves: %d\n", normalMoveCount);
           legalMoves(currentBoard, currentTurn);
           printf("Legal Normal Moves: %d\n", legalNormalMoveCount);
-
-
+          
+          printf("--------------------------------------------------\n");
+          
+          printf("Total Promotion Moves: %d\n", promotionMoveCount);
           for (int i = 0; i < promotionMoveCount; i++) {
                printf("%d to %d: Piece Change to %d\n",
                     promotionMoves[i][0], promotionMoves[i][1], promotionMoves[i][2]);
           }
-          printf("Total Promotion Moves: %d\n", promotionMoveCount);
 
+          printf("--------------------------------------------------\n");
+          
           enpassantMoveGeneration(currentBoard, currentTurn, enpassantMoves, &enpassantMoveCount, enpassantSquare);
+          printf("Total Enpassant Moves: %d\n", enpassantMoveCount);
           for (int i = 0; i < enpassantMoveCount; i++) {
                printf("%d to %d\n",
                     enpassantMoves[i][0], enpassantMoves[i][1]);
           }
-          printf("Total Enpassant Moves: %d\n", enpassantMoveCount);
-
+          
+          printf("--------------------------------------------------\n");
+         
+          printf("Total Castling Moves: %d\n", castlingMoveCount);
           castlingMoveGeneration(currentBoard, currentTurn, castlingMoves, &castlingMoveCount);
           for (int i = 0; i < castlingMoveCount; i++) {
                printf("%d to %d\n",
                     castlingMoves[i][0], castlingMoves[i][1]);
           }
-          printf("Total Castling Moves: %d\n", castlingMoveCount);
+          
           printf("--------------------------------------------------\n");
 
           if (!endGame) {
