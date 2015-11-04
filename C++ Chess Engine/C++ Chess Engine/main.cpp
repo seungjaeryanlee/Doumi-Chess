@@ -1400,6 +1400,10 @@ void FENboardSetup(int board[120], std::string FEN) {
 
 }
 u64 perft(int depth, int turn) {
+     depthNormalMoveCount[depth] = 0;
+     depthPromotionMoveCount[depth] = 0;
+     depthLegalMoveCount[depth] = 0;
+
      u64 node = 0;
      int terminalValue;
      if (depth == 0) { return 1; }
@@ -1556,4 +1560,5 @@ void main() {
 
      printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(3, WHITE));
 }
