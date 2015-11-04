@@ -36,7 +36,7 @@ void bishopMoveGeneration(int board[120], int turn, int position, int normalMove
 void rookMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
 void queenMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
 void kingMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
-void castlingMoveGeneration(int board[120], int turn);
+void castlingMoveGeneration(int board[120], int turn, int castlingMoveList[2][2], int *castlingMoveCount);
 void promotionMoveGeneration(int board[120], int turn, int position);
 //  Add the input move to the array
 void addMove(int initial, int terminal, int normalMoveList[1000][2], int *normalMoveCount);
@@ -422,8 +422,6 @@ void moveGeneration(int board[120], int turn, int normalMoveList[1000][2], int *
                }
           }
      }
-     
-     castlingMoveGeneration(board, turn);
 }
 int checkColor(int pieceType) {
      if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
@@ -837,36 +835,36 @@ void kingMoveGeneration(int board[120], int turn, int position, int normalMoveLi
           }
      }
 }
-void castlingMoveGeneration(int board[120], int turn) {
+void castlingMoveGeneration(int board[120], int turn, int castlingMoveList[2][2], int *castlingMoveCount) {
      //  TODO: Check if king is in check during move
      
      if (turn == WHITE) {
           if (whiteKingsideCastling && 
                board[F1] == EMPTYSQUARE && board[G1] == EMPTYSQUARE) {
-               castlingMoves[castlingMoveCount][0] = E1;
-               castlingMoves[castlingMoveCount][1] = H1;
-               castlingMoveCount++;
+               castlingMoveList[*castlingMoveCount][0] = E1;
+               castlingMoveList[*castlingMoveCount][1] = H1;
+               *castlingMoveCount++;
           }
           if (whiteQueensideCastling && board[B1] == EMPTYSQUARE &&
                board[C1] == EMPTYSQUARE && board[D1] == EMPTYSQUARE) {
-               castlingMoves[castlingMoveCount][0] = E1;
-               castlingMoves[castlingMoveCount][1] = A1;
-               castlingMoveCount++;
+               castlingMoveList[*castlingMoveCount][0] = E1;
+               castlingMoveList[*castlingMoveCount][1] = A1;
+               *castlingMoveCount++;
           }
 
      }
      if (turn == BLACK) {
           if (whiteKingsideCastling &&
                board[F8] == EMPTYSQUARE && board[G8] == EMPTYSQUARE) {
-               castlingMoves[castlingMoveCount][0] = E8;
-               castlingMoves[castlingMoveCount][1] = H8;
-               castlingMoveCount++;
+               castlingMoveList[*castlingMoveCount][0] = E8;
+               castlingMoveList[*castlingMoveCount][1] = H8;
+               *castlingMoveCount++;
           }
           if (whiteQueensideCastling && board[B8] == EMPTYSQUARE &&
                board[C8] == EMPTYSQUARE && board[D8] == EMPTYSQUARE) {
-               castlingMoves[castlingMoveCount][0] = E8;
-               castlingMoves[castlingMoveCount][1] = A8;
-               castlingMoveCount++;
+               castlingMoveList[*castlingMoveCount][0] = E8;
+               castlingMoveList[*castlingMoveCount][1] = A8;
+               *castlingMoveCount++;
           }
      }
 }
@@ -1512,16 +1510,21 @@ void main() {
           printf("Total Normal Moves: %d\n", normalMoveCount);
           legalMoves(currentBoard, currentTurn);
           printf("Legal Normal Moves: %d\n", legalNormalMoveCount);
+
+
           for (int i = 0; i < promotionMoveCount; i++) {
                printf("%d to %d: Piece Change to %d\n",
                     promotionMoves[i][0], promotionMoves[i][1], promotionMoves[i][2]);
           }
           printf("Total Promotion Moves: %d\n", promotionMoveCount);
+
           for (int i = 0; i < enpassantMoveCount; i++) {
                printf("%d to %d\n",
                     enpassantMoves[i][0], enpassantMoves[i][1]);
           }
           printf("Total Enpassant Moves: %d\n", enpassantMoveCount);
+
+          castlingMoveGeneration(currentBoard, currentTurn, castlingMoves, &castlingMoveCount);
           for (int i = 0; i < castlingMoveCount; i++) {
                printf("%d to %d\n",
                     castlingMoves[i][0], castlingMoves[i][1]);
