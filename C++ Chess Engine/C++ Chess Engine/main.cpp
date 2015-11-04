@@ -154,26 +154,28 @@ int KING_PCSQTable_ENDGAME[64] = {
      -30,-30,  0,  0,  0,  0,-30,-30,
      -50,-30,-30,-30,-30,-30,-30,-50
 };
+//  true if king/rook did not move, false if it moved
+bool whiteKingsideCastling = true, whiteQueensideCastling = true,
+blackKingsideCastling = true, blackQueensideCastling = true;
+//  clock for fifty move rule
+int halfMoveClock = 0;
+//  Current Move Number, starts at 1
+int moveNumber = 1;
+//  WHITE or BLACK
+int currentTurn; 
 //  First number: initial square, Second number: terminal square
 int allNormalMoves[1000][2];
 //  initial, terminal, piecetype
 int promotionMoves[88][3]; 
 int normalMoveCount = 0;
 int promotionMoveCount = 0;
-//  true if king/rook did not move, false if it moved
-bool whiteKingsideCastling = true, whiteQueensideCastling = true, 
-     blackKingsideCastling = true, blackQueensideCastling = true;
 //  0 if double move did not happen, square value (ex. F3) otherwise
 int enpassantSquare = 0; 
 int enpassantMoves[2][2];
 int enpassantMoveCount = 0;
 int castlingMoves[2][2];
 int castlingMoveCount = 0;
-int currentTurn;
-//  clock for fifty move rule
-int halfMoveClock = 0;
-//  Current Move Number, starts at 1
-int moveNumber = 1;
+//  All moves after checked legal
 int allLegalNormalMoves[1000][2];
 int legalNormalMoveCount = 0;
 //  added for recursion
@@ -183,6 +185,8 @@ int depthPromotionMoveList[MAXIMUM_DEPTH + 1][2][2];
 int depthPromotionMoveCount[MAXIMUM_DEPTH + 1];
 int depthEnpassantMoveList[MAXIMUM_DEPTH + 1][2][2];
 int depthEnpassantMoveCount[MAXIMUM_DEPTH + 1];
+int depthCastlingMoveList[MAXIMUM_DEPTH + 1][2][2];
+int depthCastlingMoveCount[MAXIMUM_DEPTH + 1];
 int depthLegalMoveList[MAXIMUM_DEPTH + 1][1000][2];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 
