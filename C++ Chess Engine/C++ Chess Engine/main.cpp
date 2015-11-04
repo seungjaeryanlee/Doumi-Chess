@@ -1405,9 +1405,6 @@ u64 perft(int depth, int turn) {
      if (depth == 0) { return 1; }
      // MOVEGEN
      moveGeneration(currentBoard, turn, depthNormalMoveList[depth], &depthNormalMoveCount[depth], depthPromotionMoveList[depth], &depthPromotionMoveCount[depth]);
-     for (int i = 0; i < depthNormalMoveCount[depth]; i++) {
-          printf("%d to %d\n", depthNormalMoveList[depth][i][0], depthNormalMoveList[depth][i][1]);
-     }
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthNormalMoveList[depth], depthNormalMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
@@ -1485,7 +1482,7 @@ void main() {
      else { printf("Turn: Black\n"); }
      printf("--------------------------------------------------\n");
 
-     
+     /*
      while (gamePlaying) {
 
           //  evaluationScore = updateEvaluation(currentBoard);
@@ -1555,6 +1552,8 @@ void main() {
           //  TODO: Check Fifty move rule
           
      }
+     */
 
-     printf("Total Normal Nodes: %llu \n", perft(1, BLACK));
+     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
 }
