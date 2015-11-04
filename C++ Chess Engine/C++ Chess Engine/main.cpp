@@ -924,11 +924,11 @@ void addPromotionMove(int initial, int terminal, int turn) {
      }
      promotionMoveCount += 4;
 }
-void legalMoves(int board[120], int turn) {
+void legalMoves(int board[120], int turn, int normalMoveList[250][2], int normalMoveCount, int legalNormalMoveList[250][2], int *legalNormalMoveCount) {
      int initialPosition, terminalPosition;
      int terminalValue;
      int kingSquare;
-     legalNormalMoveCount = 0;
+     //  legalNormalMoveCount = 0;
      bool legal = true;
 
      //  find the king's location
@@ -939,8 +939,8 @@ void legalMoves(int board[120], int turn) {
           }
      }
      for (int i = 0; i < normalMoveCount; i++) {
-          initialPosition = allNormalMoves[i][0];
-          terminalPosition = allNormalMoves[i][1];
+          initialPosition = normalMoveList[i][0];
+          terminalPosition = normalMoveList[i][1];
           terminalValue = EMPTYSQUARE;
           legal = true;
           
@@ -1111,9 +1111,9 @@ void legalMoves(int board[120], int turn) {
 
                //  add this move to legal move array
                if (legal) {
-                    allLegalNormalMoves[legalNormalMoveCount][0] = initialPosition;
-                    allLegalNormalMoves[legalNormalMoveCount][1] = terminalPosition;
-                    legalNormalMoveCount++;
+                    legalNormalMoveList[*legalNormalMoveCount][0] = initialPosition;
+                    legalNormalMoveList[*legalNormalMoveCount][1] = terminalPosition;
+                    *legalNormalMoveCount += 1;
                }
           }
 
@@ -1271,9 +1271,9 @@ void legalMoves(int board[120], int turn) {
 
                //  add this move to legal move array
                if (legal) {
-                    allLegalNormalMoves[legalNormalMoveCount][0] = initialPosition;
-                    allLegalNormalMoves[legalNormalMoveCount][1] = terminalPosition;
-                    legalNormalMoveCount++;
+                    legalNormalMoveList[*legalNormalMoveCount][0] = initialPosition;
+                    legalNormalMoveList[*legalNormalMoveCount][1] = terminalPosition;
+                    *legalNormalMoveCount += 1;
                }
           }
 
@@ -1403,13 +1403,16 @@ u64 perft(int depth) {
      u64 node = 0;
      int terminalValue;
      if (depth == 0) { return 1; }
-     //  MOVEGEN
+     // MOVEGEN
      // CHECK FOR LEGALS
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
           terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
+          //  change turn;
           node += perft(depth - 1);
           undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
      }
+
+
      //  TODO: Add Castling Moves
      //  TODO: Add Promotion Moves
      //  TODO: Add enpassant Moves
@@ -1432,8 +1435,8 @@ void undoMove(int board[120], int move[2], int terminalValue) {
 }
 void makeCastlingMove(int board[120], int move[2]) {}
 void undoCastlingMove(int board[120], int move[2]) {}
-int makePromotionMove(int board[120], int move[2]) { return 1; }
-void undoPromotionMove(int board[120], int move[2], int terminalValue) {}
+int makePromotionMove(int board[120], int move[3]) { return 1; }
+void undoPromotionMove(int board[120], int move[3], int terminalValue) {}
 void makeEnpassantMove(int board[120], int move[2]) {}
 void undoEnPassantMove(int board[120], int move[2]) {}
 
@@ -1445,10 +1448,10 @@ void main() {
      //  FEN source:
      //  http://www.chesskit.com/training/fenkit/index.php?page=p9&d=Page%209
      //  turn has been edited
-     //  FENboardSetup(currentBoard, "rn6/kp3p1p/pb6/N1B5/8/7P/5PP1/2R3K1 b - - 0 1");
+     FENboardSetup(currentBoard, "rn6/kp3p1p/pb6/N1B5/8/7P/5PP1/2R3K1 b - - 0 1");
      
      //  Custom FEN to check speical cases
-     FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
+     //  FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
 
      //  int evaluationScore;
 
@@ -1471,11 +1474,9 @@ void main() {
           //  printf("Evaluation Score: %d\n\n", evaluationScore);
 
 
-          //  Generate Moves
           moveGeneration(currentBoard, currentTurn, allNormalMoves, &normalMoveCount, promotionMoves, &promotionMoveCount);
-          //  Print all moves
           printf("Total Normal Moves: %d\n", normalMoveCount);
-          legalMoves(currentBoard, currentTurn);
+          legalMoves(currentBoard, currentTurn, allNormalMoves, normalMoveCount, allLegalNormalMoves, &legalNormalMoveCount);
           printf("Legal Normal Moves: %d\n", legalNormalMoveCount);
           
           printf("--------------------------------------------------\n");
