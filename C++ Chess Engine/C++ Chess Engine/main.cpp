@@ -26,20 +26,20 @@ int position64to120(int position64);
 //  Gets position based on 120 and returns position based on 64
 int position120to64(int position120);
 //  Generates all moves possible by the current turn
-void moveGeneration(int board[120], int turn);
+void moveGeneration(int board[120], int turn, int normalMoveList[1000][2], int *normalMoveCount);
 //  Gets a piece and returns the color of the piece
 int checkColor(int pieceType);
 //  functions for each piece move generation & special move generation
-void pawnMoveGeneration(int board[120], int turn, int position);
-void knightMoveGeneration(int board[120], int turn, int position);
-void bishopMoveGeneration(int board[120], int turn, int position);
-void rookMoveGeneration(int board[120], int turn, int position);
-void queenMoveGeneration(int board[120], int turn, int position);
-void kingMoveGeneration(int board[120], int turn, int position); 
+void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
+void knightMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
+void bishopMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
+void rookMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
+void queenMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
+void kingMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
 void castlingMoveGeneration(int board[120], int turn);
 void promotionMoveGeneration(int board[120], int turn, int position);
 //  Add the input move to the array
-void addMove(int initial, int terminal, int allNormalMoves[1000][2], int *normalMoveCount);
+void addMove(int initial, int terminal, int normalMoveList[1000][2], int *normalMoveCount);
 void addPromotionMove(int initial, int terminal, int turn);
 //  checks if a move is legal or not
 void legalMoves(int board[120], int turn);
@@ -369,8 +369,8 @@ int position120to64(int position120) {
 
      return row * 8 + column;
 }
-void moveGeneration(int board[120], int turn) {
-     normalMoveCount = 0;
+void moveGeneration(int board[120], int turn, int normalMoveList[1000][2], int *normalMoveCount) {
+     //  normalMoveCount = 0;
      promotionMoveCount = 0;
      enpassantMoveCount = 0;
      
@@ -378,22 +378,22 @@ void moveGeneration(int board[120], int turn) {
           for (int i = 0; i < 120; i++) {
                switch (board[i]) {
                case WHITEPAWN:
-                    pawnMoveGeneration(board, turn, i);
+                    pawnMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
                     break;
                case WHITEKNIGHT:
-                    knightMoveGeneration(board, turn, i);
+                    knightMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
                     break;
                case WHITEBISHOP:
-                    bishopMoveGeneration(board, turn, i);
+                    bishopMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
                     break;
                case WHITEROOK:
-                    rookMoveGeneration(board, turn, i);
+                    rookMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
                     break;
                case WHITEQUEEN:
-                    queenMoveGeneration(board, turn, i);
+                    queenMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
                     break;
                case WHITEKING:
-                    kingMoveGeneration(board, turn, i);
+                    kingMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
                     break;
                }
           }
@@ -402,22 +402,22 @@ void moveGeneration(int board[120], int turn) {
           for (int i = 0; i < 120; i++) {
                switch (board[i]) {
                case BLACKPAWN:
-                    pawnMoveGeneration(board, turn, i);
+                    pawnMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
                     break;
                case BLACKKNIGHT:
-                    knightMoveGeneration(board, turn, i);
+                    knightMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
                     break;
                case BLACKBISHOP:
-                    bishopMoveGeneration(board, turn, i);
+                    bishopMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
                     break;
                case BLACKROOK:
-                    rookMoveGeneration(board, turn, i);
+                    rookMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
                     break;
                case BLACKQUEEN:
-                    queenMoveGeneration(board, turn, i);
+                    queenMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
                     break;
                case BLACKKING:
-                    kingMoveGeneration(board, turn, i);
+                    kingMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
                     break;
                }
           }
@@ -436,7 +436,7 @@ int checkColor(int pieceType) {
           return NEITHER;
      }
 }
-void pawnMoveGeneration(int board[120], int turn, int position) {
+void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount) {
      if (turn == WHITE) {
           //  if on the last row before promotion, just call promotion
           if (A7 <= position && position <= H7) {
@@ -446,20 +446,20 @@ void pawnMoveGeneration(int board[120], int turn, int position) {
 
           //  Advance 1 square
           if (board[position - ROW] == EMPTYSQUARE) {
-               addMove(position, position - ROW);
+               addMove(position, position - ROW, normalMoveList, normalMoveCount);
                //  Advance 2 squares
                if (A2 <= position && position <= H2 &&
                     board[position - 2 * ROW] == EMPTYSQUARE) {
-                    addMove(position, position - 2 * ROW);
+                    addMove(position, position - 2 * ROW, normalMoveList, normalMoveCount);
                }
           }
 
           //  attack diagonals
           if (checkColor(board[position - ROW - COLUMN]) == BLACK) {
-               addMove(position, position - ROW - COLUMN);
+               addMove(position, position - ROW - COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - ROW + COLUMN]) == BLACK) {
-               addMove(position, position - ROW + COLUMN);
+               addMove(position, position - ROW + COLUMN, normalMoveList, normalMoveCount);
           }
          
           //  en passant
@@ -483,20 +483,20 @@ void pawnMoveGeneration(int board[120], int turn, int position) {
           
           //  Advance 1 square
           if (board[position + ROW] == EMPTYSQUARE) {
-               addMove(position, position + ROW);
+               addMove(position, position + ROW, normalMoveList, normalMoveCount);
                //  Advance 2 squares
                if (A7 <= position && position <= H7 &&
                     board[position + 2 * ROW] == EMPTYSQUARE) {
-                    addMove(position, position + 2 * ROW);
+                    addMove(position, position + 2 * ROW, normalMoveList, normalMoveCount);
                }
           }
 
           //  attack diagonals
           if (checkColor(board[position + ROW - COLUMN]) == WHITE) {
-               addMove(position, position - ROW - COLUMN);
+               addMove(position, position - ROW - COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position + ROW + COLUMN]) == WHITE) {
-               addMove(position, position - ROW + COLUMN);
+               addMove(position, position - ROW + COLUMN, normalMoveList, normalMoveCount);
           }
 
           //  en passant
@@ -512,77 +512,77 @@ void pawnMoveGeneration(int board[120], int turn, int position) {
           }
      }
 }
-void knightMoveGeneration(int board[120], int turn, int position) {
+void knightMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount) {
      if (turn == WHITE) {
           if (checkColor(board[position + ROW + 2 * COLUMN]) == BLACK ||
               board[position + ROW + 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + ROW + 2 * COLUMN);
+               addMove(position, position + ROW + 2 * COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position + ROW - 2 * COLUMN]) == BLACK ||
                board[position + ROW - 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + ROW - 2 * COLUMN);
+               addMove(position, position + ROW - 2 * COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - ROW + 2 * COLUMN]) == BLACK ||
                board[position - ROW + 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - ROW + 2 * COLUMN);
+               addMove(position, position - ROW + 2 * COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - ROW - 2 * COLUMN]) == BLACK ||
                board[position - ROW - 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - ROW - 2 * COLUMN);
+               addMove(position, position - ROW - 2 * COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position + 2 * ROW + COLUMN]) == BLACK ||
                board[position + 2 * ROW + COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + 2 * ROW + COLUMN);
+               addMove(position, position + 2 * ROW + COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position + 2 * ROW - COLUMN]) == BLACK ||
                board[position + 2 * ROW - COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + 2 * ROW - COLUMN);
+               addMove(position, position + 2 * ROW - COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - 2 * ROW + COLUMN]) == BLACK ||
                board[position - 2 * ROW + COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - 2 * ROW + COLUMN);
+               addMove(position, position - 2 * ROW + COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - 2 * ROW - COLUMN]) == BLACK ||
                board[position - 2 * ROW - COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - 2 * ROW - COLUMN);
+               addMove(position, position - 2 * ROW - COLUMN, normalMoveList, normalMoveCount);
           }
      }
      if (turn == BLACK) {
           if (checkColor(board[position + ROW + 2 * COLUMN]) == WHITE ||
                board[position + ROW + 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + ROW + 2 * COLUMN);
+               addMove(position, position + ROW + 2 * COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position + ROW - 2 * COLUMN]) == WHITE ||
                board[position + ROW - 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + ROW - 2 * COLUMN);
+               addMove(position, position + ROW - 2 * COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - ROW + 2 * COLUMN]) == WHITE ||
                board[position - ROW + 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - ROW + 2 * COLUMN);
+               addMove(position, position - ROW + 2 * COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - ROW - 2 * COLUMN]) == WHITE ||
                board[position - ROW - 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - ROW - 2 * COLUMN);
+               addMove(position, position - ROW - 2 * COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position + 2 * ROW + COLUMN]) == WHITE ||
                board[position + 2 * ROW + COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + 2 * ROW + COLUMN);
+               addMove(position, position + 2 * ROW + COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position + 2 * ROW - COLUMN]) == WHITE ||
                board[position + 2 * ROW - COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + 2 * ROW - COLUMN);
+               addMove(position, position + 2 * ROW - COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - 2 * ROW + COLUMN]) == WHITE ||
                board[position - 2 * ROW + COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - 2 * ROW + COLUMN);
+               addMove(position, position - 2 * ROW + COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - 2 * ROW - COLUMN]) == WHITE ||
                board[position - 2 * ROW - COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - 2 * ROW - COLUMN);
+               addMove(position, position - 2 * ROW - COLUMN, normalMoveList, normalMoveCount);
           }
      }
 }
-void bishopMoveGeneration(int board[120], int turn, int position) {
+void bishopMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount) {
      bool topright = true, downright = true, downleft = true, topleft = true;
      if (turn == WHITE) {
           for (int i = 1; i < 8; i++) {
@@ -590,7 +590,7 @@ void bishopMoveGeneration(int board[120], int turn, int position) {
                if (topright == true &&
                     (checkColor(board[position - i*ROW + i*COLUMN]) == BLACK ||
                          board[position -  i*ROW + i*COLUMN] == EMPTYSQUARE)) {
-                    addMove(position, position - i*ROW + i*COLUMN);
+                    addMove(position, position - i*ROW + i*COLUMN, normalMoveList, normalMoveCount);
                     if (checkColor(board[position - i*ROW + i*COLUMN]) == BLACK) {
                          topright = false;
                     }
@@ -600,7 +600,7 @@ void bishopMoveGeneration(int board[120], int turn, int position) {
                if (downright == true &&
                     (checkColor(board[position + i*ROW + i*COLUMN]) == BLACK ||
                          board[position + i*ROW + i*COLUMN] == EMPTYSQUARE)) {
-                    addMove(position, position + i*ROW + i*COLUMN);
+                    addMove(position, position + i*ROW + i*COLUMN, normalMoveList, normalMoveCount);
                     if (checkColor(board[position + i*ROW + i*COLUMN]) == BLACK) {
                          downright = false;
                     }
@@ -610,7 +610,7 @@ void bishopMoveGeneration(int board[120], int turn, int position) {
                if (downleft == true &&
                     (checkColor(board[position + i*ROW - i*COLUMN]) == BLACK ||
                          board[position + i*ROW - i*COLUMN] == EMPTYSQUARE)) {
-                    addMove(position, position + i*ROW - i*COLUMN);
+                    addMove(position, position + i*ROW - i*COLUMN, normalMoveList, normalMoveCount);
                     if (checkColor(board[position + i*ROW - i*COLUMN]) == BLACK) {
                          downleft = false;
                     }
@@ -620,7 +620,7 @@ void bishopMoveGeneration(int board[120], int turn, int position) {
                if (topleft == true &&
                     (checkColor(board[position - i*ROW - i*COLUMN]) == BLACK ||
                          board[position - i*ROW - i*COLUMN] == EMPTYSQUARE)) {
-                    addMove(position, position - i*ROW - i*COLUMN);
+                    addMove(position, position - i*ROW - i*COLUMN, normalMoveList, normalMoveCount);
                     if (checkColor(board[position - i*ROW - i*COLUMN]) == BLACK) {
                          topleft = false;
                     }
@@ -634,7 +634,7 @@ void bishopMoveGeneration(int board[120], int turn, int position) {
                if (topright == true &&
                     (checkColor(board[position - i*ROW + i*COLUMN]) == WHITE ||
                          board[position - i*ROW + i*COLUMN] == EMPTYSQUARE)) {
-                    addMove(position, position - i*ROW + i*COLUMN);
+                    addMove(position, position - i*ROW + i*COLUMN, normalMoveList, normalMoveCount);
                     if (checkColor(board[position - i*ROW + i*COLUMN]) == WHITE) {
                          topright = false;
                     }
@@ -644,7 +644,7 @@ void bishopMoveGeneration(int board[120], int turn, int position) {
                if (downright == true &&
                     (checkColor(board[position + i*ROW + i*COLUMN]) == WHITE ||
                          board[position + i*ROW + i*COLUMN] == EMPTYSQUARE)) {
-                    addMove(position, position + i*ROW + i*COLUMN);
+                    addMove(position, position + i*ROW + i*COLUMN, normalMoveList, normalMoveCount);
                     if (checkColor(board[position + i*ROW + i*COLUMN]) == WHITE) {
                          downright = false;
                     }
@@ -654,7 +654,7 @@ void bishopMoveGeneration(int board[120], int turn, int position) {
                if (downleft == true &&
                     (checkColor(board[position + i*ROW - i*COLUMN]) == WHITE ||
                          board[position + i*ROW - i*COLUMN] == EMPTYSQUARE)) {
-                    addMove(position, position + i*ROW - i*COLUMN);
+                    addMove(position, position + i*ROW - i*COLUMN, normalMoveList, normalMoveCount);
                     if (checkColor(board[position + i*ROW - i*COLUMN]) == WHITE) {
                          downleft = false;
                     }
@@ -664,7 +664,7 @@ void bishopMoveGeneration(int board[120], int turn, int position) {
                if (topleft == true &&
                     (checkColor(board[position - i*ROW - i*COLUMN]) == WHITE ||
                          board[position - i*ROW - i*COLUMN] == EMPTYSQUARE)) {
-                    addMove(position, position - i*ROW - i*COLUMN);
+                    addMove(position, position - i*ROW - i*COLUMN, normalMoveList, normalMoveCount);
                     if (checkColor(board[position - i*ROW - i*COLUMN]) == WHITE) {
                          topleft = false;
                     }
@@ -673,7 +673,7 @@ void bishopMoveGeneration(int board[120], int turn, int position) {
           }
      }
 }
-void rookMoveGeneration(int board[120], int turn, int position) {
+void rookMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount) {
      bool top = true, right = true, down = true, left = true;
      
      if (turn == WHITE) {
@@ -681,7 +681,7 @@ void rookMoveGeneration(int board[120], int turn, int position) {
                if (top == true &&
                     (checkColor(board[position - i*ROW]) == BLACK ||
                          board[position - i*ROW] == EMPTYSQUARE)) {
-                    addMove(position, position - i*ROW);
+                    addMove(position, position - i*ROW, normalMoveList, normalMoveCount);
                     if (checkColor(board[position - i*ROW]) == BLACK) {
                          top = false;
                     }
@@ -691,7 +691,7 @@ void rookMoveGeneration(int board[120], int turn, int position) {
                if (right == true &&
                     (checkColor(board[position + i*COLUMN]) == BLACK ||
                          board[position + i*COLUMN] == EMPTYSQUARE)) {
-                    addMove(position, position + i*COLUMN);
+                    addMove(position, position + i*COLUMN, normalMoveList, normalMoveCount);
                     if (checkColor(board[position + i*COLUMN]) == BLACK) {
                          right = false;
                     }
@@ -701,7 +701,7 @@ void rookMoveGeneration(int board[120], int turn, int position) {
                if (down == true &&
                     (checkColor(board[position + i*ROW]) == BLACK ||
                          board[position + i*ROW] == EMPTYSQUARE)) {
-                    addMove(position, position + i*ROW);
+                    addMove(position, position + i*ROW, normalMoveList, normalMoveCount);
                     if (checkColor(board[position + i*ROW]) == BLACK) {
                          down = false;
                     }
@@ -711,7 +711,7 @@ void rookMoveGeneration(int board[120], int turn, int position) {
                if (left == true &&
                     (checkColor(board[position - i*COLUMN]) == BLACK ||
                          board[position - i*COLUMN] == EMPTYSQUARE)) {
-                    addMove(position, position - i*COLUMN);
+                    addMove(position, position - i*COLUMN, normalMoveList, normalMoveCount);
                     if (checkColor(board[position - i*COLUMN]) == BLACK) {
                          left = false;
                     }
@@ -724,7 +724,7 @@ void rookMoveGeneration(int board[120], int turn, int position) {
                if (top == true &&
                     (checkColor(board[position - i*ROW]) == WHITE ||
                          board[position - i*ROW] == EMPTYSQUARE)) {
-                    addMove(position, position - i*ROW);
+                    addMove(position, position - i*ROW, normalMoveList, normalMoveCount);
                     if (checkColor(board[position - i*ROW]) == WHITE) {
                          top = false;
                     }
@@ -734,7 +734,7 @@ void rookMoveGeneration(int board[120], int turn, int position) {
                if (right == true &&
                     (checkColor(board[position + i*COLUMN]) == WHITE ||
                          board[position + i*COLUMN] == EMPTYSQUARE)) {
-                    addMove(position, position + i*COLUMN);
+                    addMove(position, position + i*COLUMN, normalMoveList, normalMoveCount);
                     if (checkColor(board[position + i*COLUMN]) == WHITE) {
                          right = false;
                     }
@@ -744,7 +744,7 @@ void rookMoveGeneration(int board[120], int turn, int position) {
                if (down == true &&
                     (checkColor(board[position + i*ROW]) == WHITE ||
                          board[position + i*ROW] == EMPTYSQUARE)) {
-                    addMove(position, position + i*ROW);
+                    addMove(position, position + i*ROW, normalMoveList, normalMoveCount);
                     if (checkColor(board[position + i*ROW]) == WHITE) {
                          down = false;
                     }
@@ -754,7 +754,7 @@ void rookMoveGeneration(int board[120], int turn, int position) {
                if (left == true &&
                     (checkColor(board[position - i*COLUMN]) == WHITE ||
                          board[position - i*COLUMN] == EMPTYSQUARE)) {
-                    addMove(position, position - i*COLUMN);
+                    addMove(position, position - i*COLUMN, normalMoveList, normalMoveCount);
                     if (checkColor(board[position - i*COLUMN]) == WHITE) {
                          left = false;
                     }
@@ -763,77 +763,77 @@ void rookMoveGeneration(int board[120], int turn, int position) {
           }
      }
 }
-void queenMoveGeneration(int board[120], int turn, int position) {
-     rookMoveGeneration(board, turn, position);
-     bishopMoveGeneration(board, turn, position);
+void queenMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount) {
+     rookMoveGeneration(board, turn, position, normalMoveList, normalMoveCount);
+     bishopMoveGeneration(board, turn, position, normalMoveList, normalMoveCount);
 }
-void kingMoveGeneration(int board[120], int turn, int position) {
+void kingMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount) {
      if (turn == WHITE) {
           if (checkColor(board[position + ROW]) == BLACK || 
               board[position + ROW] == EMPTYSQUARE) {
-               addMove(position, position + ROW);
+               addMove(position, position + ROW, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - ROW]) == BLACK ||
               board[position - ROW] == EMPTYSQUARE) {
-               addMove(position, position - ROW);
+               addMove(position, position - ROW, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position + COLUMN]) == BLACK ||
               board[position + COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + COLUMN);
+               addMove(position, position + COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - COLUMN]) == BLACK ||
               board[position - COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - COLUMN);
+               addMove(position, position - COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position + ROW + COLUMN]) == BLACK ||
               board[position + ROW + COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + ROW + COLUMN);
+               addMove(position, position + ROW + COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position + ROW - COLUMN]) == BLACK ||
               board[position + ROW - COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + ROW - COLUMN);
+               addMove(position, position + ROW - COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - ROW + COLUMN]) == BLACK ||
               board[position - ROW + COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - ROW + COLUMN);
+               addMove(position, position - ROW + COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - ROW - COLUMN]) == BLACK ||
               board[position - ROW - COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - ROW - COLUMN);
+               addMove(position, position - ROW - COLUMN, normalMoveList, normalMoveCount);
           }
      }
      if (turn == BLACK) {
           if (checkColor(board[position + ROW]) == WHITE ||
                board[position + ROW] == EMPTYSQUARE) {
-               addMove(position, position + ROW);
+               addMove(position, position + ROW, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - ROW]) == WHITE ||
                board[position - ROW] == EMPTYSQUARE) {
-               addMove(position, position - ROW);
+               addMove(position, position - ROW, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position + COLUMN]) == WHITE ||
                board[position + COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + COLUMN);
+               addMove(position, position + COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - COLUMN]) == WHITE ||
                board[position - COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - COLUMN);
+               addMove(position, position - COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position + ROW + COLUMN]) == WHITE ||
                board[position + ROW + COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + ROW + COLUMN);
+               addMove(position, position + ROW + COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position + ROW - COLUMN]) == WHITE ||
                board[position + ROW - COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + ROW - COLUMN);
+               addMove(position, position + ROW - COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - ROW + COLUMN]) == WHITE ||
                board[position - ROW + COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - ROW + COLUMN);
+               addMove(position, position - ROW + COLUMN, normalMoveList, normalMoveCount);
           }
           if (checkColor(board[position - ROW - COLUMN]) == WHITE ||
                board[position - ROW - COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - ROW - COLUMN);
+               addMove(position, position - ROW - COLUMN, normalMoveList, normalMoveCount);
           }
      }
 }
@@ -894,9 +894,9 @@ void promotionMoveGeneration(int board[120], int turn, int position) {
           }
      }
 }
-void addMove(int initial, int terminal, int allNormalMoves[1000][2], int *normalMoveCount) {
-     allNormalMoves[*normalMoveCount][0] = initial;
-     allNormalMoves[*normalMoveCount][1] = terminal;
+void addMove(int initial, int terminal, int normalMoveList[1000][2], int *normalMoveCount) {
+     normalMoveList[*normalMoveCount][0] = initial;
+     normalMoveList[*normalMoveCount][1] = terminal;
      *normalMoveCount++;
 }
 void addPromotionMove(int initial, int terminal, int turn) {
@@ -1281,6 +1281,7 @@ void legalMoves(int board[120], int turn) {
 
      }
 }
+
 void FENboardSetup(int board[120], std::string FEN) {
      whiteKingsideCastling = false;
      whiteQueensideCastling = false;
@@ -1436,7 +1437,7 @@ void undoEnPassantMove(int board[120], int move[2]) {}
 
 void testOutput() {
      //  Generate Moves
-     moveGeneration(currentBoard, currentTurn);
+     moveGeneration(currentBoard, currentTurn, allNormalMoves, &normalMoveCount);
      //  Print all moves
      for (int i = 0; i < normalMoveCount; i++) {
           printf("%d to %d\n", allNormalMoves[i][0], allNormalMoves[i][1]);
@@ -1469,7 +1470,7 @@ void testOutput() {
      printf("\nTotal Castling Moves: %d\n", castlingMoveCount);
 }
 
-
+//  TODO: Create separate function for enpassantMoveGeneration
 
 
 void main() {
@@ -1502,7 +1503,7 @@ void main() {
 
 
           //  Generate Moves
-          moveGeneration(currentBoard, currentTurn);
+          moveGeneration(currentBoard, currentTurn, allNormalMoves, &normalMoveCount);
           //  Print all moves
           printf("Total Normal Moves: %d\n", normalMoveCount);
           legalMoves(currentBoard, currentTurn);
