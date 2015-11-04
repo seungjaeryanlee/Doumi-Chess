@@ -5,7 +5,7 @@ sjlee235
 1. Board Representation
 2. Board Evaluation
 3. Move Generation
-4. Recursion
+4. Recursion  
 I plan to use Negamax algorithm for this engine.
 
 ## Current Progress
@@ -15,8 +15,8 @@ I plan to use Negamax algorithm for this engine.
   - Normal Move Generation - **Complete**
   - Special Move Generation (Promotion, Enpassant, Castling) - **Complete**
   - Legal Move Check - **Complete**  
-  - Performance Test (a.k.a. perft test) - *In progress*
-    - Change Existing Functions for pointer arguments - *In progress*  
+  - Performance Test (a.k.a. perft test) - *In progress*  
+    - Change Existing Functions for pointer arguments - **Complete**  
 4. Recursion
   - Implement Negamax
   - Test Recursion
