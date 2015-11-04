@@ -843,13 +843,13 @@ void castlingMoveGeneration(int board[120], int turn, int castlingMoveList[2][2]
                board[F1] == EMPTYSQUARE && board[G1] == EMPTYSQUARE) {
                castlingMoveList[*castlingMoveCount][0] = E1;
                castlingMoveList[*castlingMoveCount][1] = H1;
-               *castlingMoveCount++;
+               *castlingMoveCount += 1;
           }
           if (whiteQueensideCastling && board[B1] == EMPTYSQUARE &&
                board[C1] == EMPTYSQUARE && board[D1] == EMPTYSQUARE) {
                castlingMoveList[*castlingMoveCount][0] = E1;
                castlingMoveList[*castlingMoveCount][1] = A1;
-               *castlingMoveCount++;
+               *castlingMoveCount += 1;
           }
 
      }
