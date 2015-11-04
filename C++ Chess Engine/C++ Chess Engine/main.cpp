@@ -1405,6 +1405,9 @@ u64 perft(int depth, int turn) {
      if (depth == 0) { return 1; }
      // MOVEGEN
      moveGeneration(currentBoard, turn, depthNormalMoveList[depth], &depthNormalMoveCount[depth], depthPromotionMoveList[depth], &depthPromotionMoveCount[depth]);
+     for (int i = 0; i < depthNormalMoveCount[depth]; i++) {
+          printf("%d to %d\n", depthNormalMoveList[depth][i][0], depthNormalMoveList[depth][i][1]);
+     }
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthNormalMoveList[depth], depthNormalMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
@@ -1446,16 +1449,24 @@ int makePromotionMove(int board[120], int move[3]) { return 1; }
 void undoPromotionMove(int board[120], int move[3], int terminalValue) {}
 void makeEnpassantMove(int board[120], int move[2]) {}
 void undoEnPassantMove(int board[120], int move[2]) {}
+bool checkGameEnd(int board[120]) {
+     bool whiteKing = false, blackKing = false;
+     for (int i = 0; i < 120; i++) {
+          if (board[i] == WHITEKING) { whiteKing = true; }
+          if (board[i] == BLACKKING) { blackKing = true; }
+     }
+     return !(whiteKing && blackKing);
+}
 
 
 void main() {
      //  Initialize Board
-     //  board120Setup();
+     board120Setup();
      
      //  FEN source:
      //  http://www.chesskit.com/training/fenkit/index.php?page=p9&d=Page%209
      //  turn has been edited
-     FENboardSetup(currentBoard, "rn6/kp3p1p/pb6/N1B5/8/7P/5PP1/2R3K1 b - - 0 1");
+     //FENboardSetup(currentBoard, "rn6/kp3p1p/pb6/N1B5/8/7P/5PP1/2R3K1 b - - 0 1");
      
      //  Custom FEN to check speical cases
      //  FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
@@ -1539,10 +1550,11 @@ void main() {
 
           //  This should be deleted for non-test cases
           gamePlaying = false;
+          //  gamePlaying = !checkGameEnd(currentBoard);
 
           //  TODO: Check Fifty move rule
           
      }
 
-     printf("Total Normal Nodes: %llu \n", perft(1, WHITE));
+     printf("Total Normal Nodes: %llu \n", perft(1, BLACK));
 }
