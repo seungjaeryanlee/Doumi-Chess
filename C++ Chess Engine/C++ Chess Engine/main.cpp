@@ -1379,6 +1379,7 @@ void FENboardSetup(int board[120], std::string FEN) {
                }
                i++;
           }
+          i++;
      }
      else { i += 2; }
 
@@ -1480,7 +1481,10 @@ void main() {
      //  FEN source:
      //  http://www.chesskit.com/training/fenkit/index.php?page=p9&d=Page%209
      //  turn has been edited
-     FENboardSetup(currentBoard, "rn6/kp3p1p/pb6/N1B5/8/7P/5PP1/2R3K1 b - - 0 1");
+     //  FENboardSetup(currentBoard, "rn6/kp3p1p/pb6/N1B5/8/7P/5PP1/2R3K1 b - - 0 1");
+     
+     //  Custom FEN to check speical cases
+     FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
 
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -1512,17 +1516,17 @@ void main() {
                printf("%d to %d: Piece Change to %d\n",
                     promotionMoves[i][0], promotionMoves[i][1], promotionMoves[i][2]);
           }
-          printf("Total Promotion Moves: %d", promotionMoveCount);
+          printf("Total Promotion Moves: %d\n", promotionMoveCount);
           for (int i = 0; i < enpassantMoveCount; i++) {
                printf("%d to %d\n",
                     enpassantMoves[i][0], enpassantMoves[i][1]);
           }
-          printf("\nTotal Enpassant Moves: %d", enpassantMoveCount);
+          printf("Total Enpassant Moves: %d\n", enpassantMoveCount);
           for (int i = 0; i < castlingMoveCount; i++) {
                printf("%d to %d\n",
                     castlingMoves[i][0], castlingMoves[i][1]);
           }
-          printf("\nTotal Castling Moves: %d\n", castlingMoveCount);
+          printf("Total Castling Moves: %d\n", castlingMoveCount);
           printf("--------------------------------------------------\n");
 
           if (!endGame) {
