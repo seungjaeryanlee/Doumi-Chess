@@ -30,14 +30,14 @@ void moveGeneration(int board[120], int turn, int normalMoveList[250][2], int *n
 //  Gets a piece and returns the color of the piece
 int checkColor(int pieceType);
 //  functions for each piece move generation & special move generation
-void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
+void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount, int promotionMoveList[88][3], int *promotionMoveCount);
 void knightMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
 void bishopMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
 void rookMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
 void queenMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
 void kingMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
 void castlingMoveGeneration(int board[120], int turn, int castlingMoveList[2][2], int *castlingMoveCount);
-void promotionMoveGeneration(int board[120], int turn, int position);
+void promotionMoveGeneration(int board[120], int turn, int position, int promotionMoveList[88][3], int *promotionMoveCount);
 //  Add the input move to the array
 void addMove(int initial, int terminal, int normalMoveList[250][2], int *normalMoveCount);
 void addPromotionMove(int initial, int terminal, int turn);
@@ -369,16 +369,16 @@ int position120to64(int position120) {
 
      return row * 8 + column;
 }
-void moveGeneration(int board[120], int turn, int normalMoveList[250][2], int *normalMoveCount) {
+void moveGeneration(int board[120], int turn, int normalMoveList[250][2], int *normalMoveCount, int promotionMoveList[88][3], int *promotionMoveCount) {
      //  normalMoveCount = 0;
-     promotionMoveCount = 0;
+     //  promotionMoveCount = 0;
      enpassantMoveCount = 0;
      
      if (turn == WHITE) {
           for (int i = 0; i < 120; i++) {
                switch (board[i]) {
                case WHITEPAWN:
-                    pawnMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
+                    pawnMoveGeneration(board, turn, i, normalMoveList, normalMoveCount, promotionMoveList, promotionMoveCount);
                     break;
                case WHITEKNIGHT:
                     knightMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
@@ -402,7 +402,7 @@ void moveGeneration(int board[120], int turn, int normalMoveList[250][2], int *n
           for (int i = 0; i < 120; i++) {
                switch (board[i]) {
                case BLACKPAWN:
-                    pawnMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
+                    pawnMoveGeneration(board, turn, i, normalMoveList, normalMoveCount, promotionMoveList, promotionMoveCount);
                     break;
                case BLACKKNIGHT:
                     knightMoveGeneration(board, turn, i, normalMoveList, normalMoveCount);
@@ -434,11 +434,11 @@ int checkColor(int pieceType) {
           return NEITHER;
      }
 }
-void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount) {
+void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount, int promotionMoveList[88][3], int *promotionMoveCount) {
      if (turn == WHITE) {
           //  if on the last row before promotion, just call promotion
           if (A7 <= position && position <= H7) {
-               promotionMoveGeneration(board, turn, position);
+               promotionMoveGeneration(board, turn, position, promotionMoveList, promotionMoveCount);
                return;
           }
 
@@ -475,7 +475,7 @@ void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveLi
      if (turn == BLACK) {
           //  if on the last row before promotion, just call promotion
           if (A2 <= position && position <= H2) {
-               promotionMoveGeneration(board, turn, position);
+               promotionMoveGeneration(board, turn, position, promotionMoveList, promotionMoveCount);
                return;
           }
           
@@ -868,7 +868,7 @@ void castlingMoveGeneration(int board[120], int turn, int castlingMoveList[2][2]
           }
      }
 }
-void promotionMoveGeneration(int board[120], int turn, int position) {
+void promotionMoveGeneration(int board[120], int turn, int position, int promotionMoveList[88][3], int *promotionMoveCount) {
      if (turn == WHITE) {
           if (checkColor(board[position - ROW - COLUMN]) == BLACK) {
                addPromotionMove(position, position - ROW - COLUMN, turn);
@@ -1430,12 +1430,12 @@ void makeCastlingMove(int board[120], int move[2]) {}
 void undoCastlingMove(int board[120], int move[2]) {}
 int makePromotionMove(int board[120], int move[2]) { return 1; }
 void undoPromotionMove(int board[120], int move[2], int terminalValue) {}
-void makeEnpassantgMove(int board[120], int move[2]) {}
+void makeEnpassantMove(int board[120], int move[2]) {}
 void undoEnPassantMove(int board[120], int move[2]) {}
 
 void testOutput() {
      //  Generate Moves
-     moveGeneration(currentBoard, currentTurn, allNormalMoves, &normalMoveCount);
+     moveGeneration(currentBoard, currentTurn, allNormalMoves, &normalMoveCount, promotionMoves, &promotionMoveCount);
      //  Print all moves
      for (int i = 0; i < normalMoveCount; i++) {
           printf("%d to %d\n", allNormalMoves[i][0], allNormalMoves[i][1]);
@@ -1504,8 +1504,8 @@ void main() {
           //  printf("Evaluation Score: %d\n\n", evaluationScore);
 
 
-          //  Generate Moves
-          moveGeneration(currentBoard, currentTurn, allNormalMoves, &normalMoveCount);
+          //  Generate Movesf
+          moveGeneration(currentBoard, currentTurn, allNormalMoves, &normalMoveCount, promotionMoves, &promotionMoveCount);
           //  Print all moves
           printf("Total Normal Moves: %d\n", normalMoveCount);
           legalMoves(currentBoard, currentTurn);
