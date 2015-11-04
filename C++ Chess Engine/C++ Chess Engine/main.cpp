@@ -897,7 +897,7 @@ void promotionMoveGeneration(int board[120], int turn, int position) {
 void addMove(int initial, int terminal, int normalMoveList[1000][2], int *normalMoveCount) {
      normalMoveList[*normalMoveCount][0] = initial;
      normalMoveList[*normalMoveCount][1] = terminal;
-     *normalMoveCount++;
+     *normalMoveCount += 1;
 }
 void addPromotionMove(int initial, int terminal, int turn) {
      promotionMoves[promotionMoveCount][0] = initial;
