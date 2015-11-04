@@ -26,20 +26,20 @@ int position64to120(int position64);
 //  Gets position based on 120 and returns position based on 64
 int position120to64(int position120);
 //  Generates all moves possible by the current turn
-void moveGeneration(int board[120], int turn, int normalMoveList[1000][2], int *normalMoveCount);
+void moveGeneration(int board[120], int turn, int normalMoveList[250][2], int *normalMoveCount);
 //  Gets a piece and returns the color of the piece
 int checkColor(int pieceType);
 //  functions for each piece move generation & special move generation
-void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
-void knightMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
-void bishopMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
-void rookMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
-void queenMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
-void kingMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount);
+void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
+void knightMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
+void bishopMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
+void rookMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
+void queenMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
+void kingMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
 void castlingMoveGeneration(int board[120], int turn, int castlingMoveList[2][2], int *castlingMoveCount);
 void promotionMoveGeneration(int board[120], int turn, int position);
 //  Add the input move to the array
-void addMove(int initial, int terminal, int normalMoveList[1000][2], int *normalMoveCount);
+void addMove(int initial, int terminal, int normalMoveList[250][2], int *normalMoveCount);
 void addPromotionMove(int initial, int terminal, int turn);
 //  checks if a move is legal or not
 void legalMoves(int board[120], int turn);
@@ -164,7 +164,7 @@ int moveNumber = 1;
 //  WHITE or BLACK
 int currentTurn; 
 //  First number: initial square, Second number: terminal square
-int allNormalMoves[1000][2];
+int allNormalMoves[250][2];
 //  initial, terminal, piecetype
 int promotionMoves[88][3]; 
 int normalMoveCount = 0;
@@ -176,10 +176,10 @@ int enpassantMoveCount = 0;
 int castlingMoves[2][2];
 int castlingMoveCount = 0;
 //  All moves after checked legal
-int allLegalNormalMoves[1000][2];
+int allLegalNormalMoves[250][2];
 int legalNormalMoveCount = 0;
 //  added for recursion
-int depthNormalMoveList[MAXIMUM_DEPTH + 1][1000][2];
+int depthNormalMoveList[MAXIMUM_DEPTH + 1][250][2];
 int depthNormalMoveCount[MAXIMUM_DEPTH + 1];
 int depthPromotionMoveList[MAXIMUM_DEPTH + 1][2][2];
 int depthPromotionMoveCount[MAXIMUM_DEPTH + 1];
@@ -187,7 +187,7 @@ int depthEnpassantMoveList[MAXIMUM_DEPTH + 1][2][2];
 int depthEnpassantMoveCount[MAXIMUM_DEPTH + 1];
 int depthCastlingMoveList[MAXIMUM_DEPTH + 1][2][2];
 int depthCastlingMoveCount[MAXIMUM_DEPTH + 1];
-int depthLegalMoveList[MAXIMUM_DEPTH + 1][1000][2];
+int depthLegalMoveList[MAXIMUM_DEPTH + 1][250][2];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 
 /*                                    FUNCTION                                */
@@ -369,7 +369,7 @@ int position120to64(int position120) {
 
      return row * 8 + column;
 }
-void moveGeneration(int board[120], int turn, int normalMoveList[1000][2], int *normalMoveCount) {
+void moveGeneration(int board[120], int turn, int normalMoveList[250][2], int *normalMoveCount) {
      //  normalMoveCount = 0;
      promotionMoveCount = 0;
      enpassantMoveCount = 0;
@@ -434,7 +434,7 @@ int checkColor(int pieceType) {
           return NEITHER;
      }
 }
-void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount) {
+void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount) {
      if (turn == WHITE) {
           //  if on the last row before promotion, just call promotion
           if (A7 <= position && position <= H7) {
@@ -510,7 +510,7 @@ void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveLi
           }
      }
 }
-void knightMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount) {
+void knightMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount) {
      if (turn == WHITE) {
           if (checkColor(board[position + ROW + 2 * COLUMN]) == BLACK ||
               board[position + ROW + 2 * COLUMN] == EMPTYSQUARE) {
@@ -580,7 +580,7 @@ void knightMoveGeneration(int board[120], int turn, int position, int normalMove
           }
      }
 }
-void bishopMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount) {
+void bishopMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount) {
      bool topright = true, downright = true, downleft = true, topleft = true;
      if (turn == WHITE) {
           for (int i = 1; i < 8; i++) {
@@ -671,7 +671,7 @@ void bishopMoveGeneration(int board[120], int turn, int position, int normalMove
           }
      }
 }
-void rookMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount) {
+void rookMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount) {
      bool top = true, right = true, down = true, left = true;
      
      if (turn == WHITE) {
@@ -761,11 +761,11 @@ void rookMoveGeneration(int board[120], int turn, int position, int normalMoveLi
           }
      }
 }
-void queenMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount) {
+void queenMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount) {
      rookMoveGeneration(board, turn, position, normalMoveList, normalMoveCount);
      bishopMoveGeneration(board, turn, position, normalMoveList, normalMoveCount);
 }
-void kingMoveGeneration(int board[120], int turn, int position, int normalMoveList[1000][2], int *normalMoveCount) {
+void kingMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount) {
      if (turn == WHITE) {
           if (checkColor(board[position + ROW]) == BLACK || 
               board[position + ROW] == EMPTYSQUARE) {
@@ -892,7 +892,7 @@ void promotionMoveGeneration(int board[120], int turn, int position) {
           }
      }
 }
-void addMove(int initial, int terminal, int normalMoveList[1000][2], int *normalMoveCount) {
+void addMove(int initial, int terminal, int normalMoveList[250][2], int *normalMoveCount) {
      normalMoveList[*normalMoveCount][0] = initial;
      normalMoveList[*normalMoveCount][1] = terminal;
      *normalMoveCount += 1;
