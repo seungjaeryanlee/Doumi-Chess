@@ -1281,7 +1281,6 @@ void legalMoves(int board[120], int turn) {
 
      }
 }
-
 void FENboardSetup(int board[120], std::string FEN) {
      whiteKingsideCastling = false;
      whiteQueensideCastling = false;
@@ -1487,7 +1486,6 @@ void main() {
      FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
 
      //  int evaluationScore;
-     currentTurn = WHITE;
 
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
