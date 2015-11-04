@@ -39,7 +39,7 @@ void kingMoveGeneration(int board[120], int turn, int position);
 void castlingMoveGeneration(int board[120], int turn);
 void promotionMoveGeneration(int board[120], int turn, int position);
 //  Add the input move to the array
-void addMove(int initial, int terminal);
+void addMove(int initial, int terminal, int allNormalMoves[1000][2], int *normalMoveCount);
 void addPromotionMove(int initial, int terminal, int turn);
 //  checks if a move is legal or not
 void legalMoves(int board[120], int turn);
@@ -894,10 +894,10 @@ void promotionMoveGeneration(int board[120], int turn, int position) {
           }
      }
 }
-void addMove(int initial, int terminal) {
-     allNormalMoves[normalMoveCount][0] = initial;
-     allNormalMoves[normalMoveCount][1] = terminal;
-     normalMoveCount++;
+void addMove(int initial, int terminal, int allNormalMoves[1000][2], int *normalMoveCount) {
+     allNormalMoves[*normalMoveCount][0] = initial;
+     allNormalMoves[*normalMoveCount][1] = terminal;
+     *normalMoveCount++;
 }
 void addPromotionMove(int initial, int terminal, int turn) {
      promotionMoves[promotionMoveCount][0] = initial;
