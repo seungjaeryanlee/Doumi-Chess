@@ -192,6 +192,8 @@ int depthCastlingMoveCount[MAXIMUM_DEPTH + 1];
 //  initial, terminal, moveType
 int currentBoardMoveList[250][3];
 int currentBoardMoveCount;
+int currentBoardLegalMoveList[250][3];
+int currentBoardLegalMoveCount;
 int depthAllMoveList[MAXIMUM_DEPTH + 1][250][3];
 int depthAllMoveCount[MAXIMUM_DEPTH + 1];
 int depthEnpassantSquare[MAXIMUM_DEPTH + 1];
@@ -2456,6 +2458,7 @@ bool squareAttackCheck(int board[120], int position, int turn) {
 void legalMoves2(int board[120], int turn, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount) {
      //  find king position
      int kingPosition = 0, changedKingPosition = 0;
+     int terminalValue;
      for (int i = 0; i < 120; i++) {
           if (turn == WHITE && board[i] == WHITEKING ||
                turn == BLACK && board[i] == BLACKKING) {
@@ -2465,11 +2468,14 @@ void legalMoves2(int board[120], int turn, int moveList[250][3], int moveCount, 
      }
 
      for (int i = 0; i < moveCount; i++) {
-          //  check if king was moved
+          //  check if king will be moved
           if (moveList[i][0] == WHITEKING || moveList[i][0] == BLACKKING) {
                changedKingPosition = moveList[i][1];
           }
           else { changedKingPosition = kingPosition; }
+
+          //  make move
+          terminalValue = makeMove2(board, moveList[i]);
 
           //  if king is safe
           if (!squareAttackCheck(board, kingPosition, turn)) {
@@ -2478,6 +2484,9 @@ void legalMoves2(int board[120], int turn, int moveList[250][3], int moveCount, 
                legalMoveList[*legalMoveCount][2] = moveList[i][2];
                *legalMoveCount += 1;
           }
+
+          //  undo move
+          undoMove2(board, moveList[i], terminalValue);
      }
 }
 
@@ -2519,7 +2528,7 @@ void main() {
      //  FEN source:
      //  http://www.chesskit.com/training/fenkit/index.php?page=p9&d=Page%209
      //  turn has been edited
-     //FENboardSetup(currentBoard, "rn6/kp3p1p/pb6/N1B5/8/7P/5PP1/2R3K1 b - - 0 1");
+     FENboardSetup(currentBoard, "rn6/kp3p1p/pb6/N1B5/8/7P/5PP1/2R3K1 b - - 0 1");
 
      //  Custom FEN to check speical cases
      //FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
@@ -2539,8 +2548,7 @@ void main() {
      printf("--------------------------------------------------\n");
     
 
-     //  MOVEGEN2 CHECK
-     /*
+     //  LEGALMOVES2 CHECK
      moveGeneration2(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare);
      printf("Number of Moves: %d\n", currentBoardMoveCount);
      for (int i = 0; i < currentBoardMoveCount; i++) {
@@ -2573,7 +2581,49 @@ void main() {
           }
           printf("\n");
      }
-     */
+
+     printf("--------------------------------------------------\n");
+
+     legalMoves2(currentBoard, currentTurn, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
+     printf("Number of Moves: %d\n", currentBoardLegalMoveCount);
+     for (int i = 0; i < currentBoardLegalMoveCount; i++) {
+          printf("%d to %d", currentBoardLegalMoveList[i][0], currentBoardLegalMoveList[i][1]);
+          switch (currentBoardLegalMoveList[i][2]) {
+          case NORMAL:
+               break;
+          case ENPASSANT:
+               printf(" - ENPASSANT");
+               break;
+          case KNIGHT_PROMOTION:
+               printf(" - KNIGHT PROMOTION");
+               break;
+          case BISHOP_PROMOTION:
+               printf(" - BISHOP PROMOTION");
+               break;
+          case ROOK_PROMOTION:
+               printf(" - ROOK PROMOTION");
+               break;
+          case QUEEN_PROMOTION:
+               printf(" - QUEEN PROMOTION");
+               break;
+          case KINGSIDE_CASTLING:
+               printf(" - KINGSIDE CASTLING");
+               break;
+          case QUEENSIDE_CASTLING:
+               printf(" - QUEENSIDE CASTLING");
+               break;
+
+          }
+          printf("\n");
+     }
+
+     printf("--------------------------------------------------\n");
+     for (int i = 2; i < 10; i++) {
+          for (int j = 1; j < 9; j++) {
+               printf("%d ", squareAttackCheck(currentBoard, i * 10 + j, BLACK));
+          }
+          printf("\n");
+     }
 
      //  makeMove2, undoMove2 test
      /*
@@ -2689,12 +2739,12 @@ void main() {
      */
 
      //  PERFT2 TEST
-     
+     /*
      printf("PERFT TEST (DEPTH 1): %llu \n", perft2(1, WHITE));
      printf("PERFT TEST (DEPTH 2): %llu \n", perft2(2, WHITE));
      printf("PERFT TEST (DEPTH 3): %llu \n", perft2(3, WHITE));
      printf("PERFT TEST (DEPTH 4): %llu \n", perft2(4, WHITE));
      printf("PERFT TEST (DEPTH 5): %llu \n", perft2(5, WHITE));
      printf("PERFT TEST (DEPTH 6): %llu \n", perft2(6, WHITE));
-     
+     */
 }
