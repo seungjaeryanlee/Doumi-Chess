@@ -1479,8 +1479,8 @@ int makeMove2(int board[120], int move[3]) {
           board[terminal] = board[initial]; 
           board[initial] = EMPTYSQUARE;
           //  move rook
-          board[terminal + COLUMN] = board[initial - 5 * COLUMN];
-          board[initial - 5 * COLUMN] = EMPTYSQUARE;
+          board[terminal + COLUMN] = board[initial - 4 * COLUMN];
+          board[initial - 4 * COLUMN] = EMPTYSQUARE;
           //  castling does not involve capture
           return 0;
      }
@@ -1555,14 +1555,14 @@ int makeMove2(int board[120], int move[3]) {
           if (board[initial] == WHITEPAWN) {
                board[terminal] = board[initial];
                board[initial] = EMPTYSQUARE;
-               board[terminal - ROW] = EMPTYSQUARE;
+               board[terminal + ROW] = EMPTYSQUARE;
                return BLACKPAWN;
           }
           //  Black turn
           else {
                board[terminal] = board[initial];
                board[initial] = EMPTYSQUARE;
-               board[terminal + ROW] = EMPTYSQUARE;
+               board[terminal - ROW] = EMPTYSQUARE;
                return WHITEPAWN;
           }
      }
@@ -1612,7 +1612,7 @@ u64 perft2(int depth, int turn) {
 
 void main() {
      //  Initialize Board
-     board120Setup();
+     //  board120Setup();
 
      //  FEN source:
      //  http://www.chesskit.com/training/fenkit/index.php?page=p9&d=Page%209
@@ -1620,7 +1620,7 @@ void main() {
      //FENboardSetup(currentBoard, "rn6/kp3p1p/pb6/N1B5/8/7P/5PP1/2R3K1 b - - 0 1");
 
      //  Custom FEN to check speical cases
-     //  FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
+     FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
 
      //  int evaluationScore;
 
@@ -1636,8 +1636,16 @@ void main() {
      else { printf("Turn: Black\n"); }
      printf("--------------------------------------------------\n");
 
-     int tempMove[3] = { E2, E4, NORMAL };
+     int tempMove[3] = { B7, B8, QUEEN_PROMOTION };
      makeMove2(currentBoard, tempMove);
+     printBoard(currentBoard);
+
+     int tempMove2[3] = { E1, C1, QUEENSIDE_CASTLING };
+     makeMove2(currentBoard, tempMove2);
+     printBoard(currentBoard);
+
+     int tempMove3[3] = {E5, F6, ENPASSANT};
+     makeMove2(currentBoard, tempMove3);
      printBoard(currentBoard);
 
      /*
