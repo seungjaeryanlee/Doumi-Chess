@@ -2493,6 +2493,7 @@ void legalMoves2(int board[120], int turn, int moveList[250][3], int moveCount, 
 
 u64 perft2(int depth, int turn) {
      depthAllMoveCount[depth] = 0;
+     depthLegalMoveCount[depth] = 0;
 
      u64 node = 0;
      int terminalValue;
@@ -2746,9 +2747,11 @@ void main() {
      //  PERFT2 TEST
      
      printf("PERFT TEST (DEPTH 1): %llu \n", perft2(1, WHITE));
-     printf("PERFT TEST (DEPTH 1): %llu \n", perft2(1, WHITE));
-     printf("PERFT TEST (DEPTH 1): %llu \n", perft2(1, WHITE));
-     printf("PERFT TEST (DEPTH 1): %llu \n", perft2(1, WHITE));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft2(2, WHITE));
+     printf("PERFT TEST (DEPTH 3): %llu \n", perft2(3, WHITE));
+     printf("PERFT TEST (DEPTH 4): %llu \n", perft2(4, WHITE));
+     printf("PERFT TEST (DEPTH 5): %llu \n", perft2(5, WHITE));
+     printf("PERFT TEST (DEPTH 6): %llu \n", perft2(6, WHITE));
 
      
 }
