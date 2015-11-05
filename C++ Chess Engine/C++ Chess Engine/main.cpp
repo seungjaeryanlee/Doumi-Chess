@@ -2528,7 +2528,7 @@ void main() {
      //  FEN source:
      //  http://www.chesskit.com/training/fenkit/index.php?page=p9&d=Page%209
      //  turn has been edited
-     FENboardSetup(currentBoard, "rn6/kp3p1p/pb6/N1B5/8/7P/5PP1/2R3K1 b - - 0 1");
+     //  FENboardSetup(currentBoard, "rn6/kp3p1p/pb6/N1B5/8/7P/5PP1/2R3K1 b - - 0 1");
 
      //  Custom FEN to check speical cases
      //FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
@@ -2549,6 +2549,7 @@ void main() {
     
 
      //  LEGALMOVES2 CHECK
+     /*
      moveGeneration2(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare);
      printf("Number of Moves: %d\n", currentBoardMoveCount);
      for (int i = 0; i < currentBoardMoveCount; i++) {
@@ -2624,6 +2625,7 @@ void main() {
           }
           printf("\n");
      }
+     */
 
      //  makeMove2, undoMove2 test
      /*
@@ -2739,12 +2741,14 @@ void main() {
      */
 
      //  PERFT2 TEST
-     /*
+     
      printf("PERFT TEST (DEPTH 1): %llu \n", perft2(1, WHITE));
+     printBoard(currentBoard);
      printf("PERFT TEST (DEPTH 2): %llu \n", perft2(2, WHITE));
-     printf("PERFT TEST (DEPTH 3): %llu \n", perft2(3, WHITE));
-     printf("PERFT TEST (DEPTH 4): %llu \n", perft2(4, WHITE));
-     printf("PERFT TEST (DEPTH 5): %llu \n", perft2(5, WHITE));
-     printf("PERFT TEST (DEPTH 6): %llu \n", perft2(6, WHITE));
-     */
+     printBoard(currentBoard);
+     //  printf("PERFT TEST (DEPTH 3): %llu \n", perft2(3, WHITE));
+     //  printf("PERFT TEST (DEPTH 4): %llu \n", perft2(4, WHITE));
+     //  printf("PERFT TEST (DEPTH 5): %llu \n", perft2(5, WHITE));
+     //  printf("PERFT TEST (DEPTH 6): %llu \n", perft2(6, WHITE));
+     
 }
