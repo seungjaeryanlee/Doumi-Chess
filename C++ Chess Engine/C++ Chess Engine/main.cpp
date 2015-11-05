@@ -188,14 +188,15 @@ int depthEnpassantMoveList[MAXIMUM_DEPTH + 1][2][2];
 int depthEnpassantMoveCount[MAXIMUM_DEPTH + 1];
 int depthCastlingMoveList[MAXIMUM_DEPTH + 1][2][2];
 int depthCastlingMoveCount[MAXIMUM_DEPTH + 1];
-int depthLegalMoveList[MAXIMUM_DEPTH + 1][250][2];
-int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 //  Uniting All Moves for less confusion / global variables
 //  initial, terminal, moveType
 int currentBoardMoveList[250][3];
 int currentBoardMoveCount;
 int depthAllMoveList[MAXIMUM_DEPTH + 1][250][3];
 int depthAllMoveCount[MAXIMUM_DEPTH + 1];
+int depthEnpassantSquare[MAXIMUM_DEPTH + 1];
+int depthLegalMoveList[MAXIMUM_DEPTH + 1][250][3];
+int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 
 
 /*                                    FUNCTION                                */
@@ -1407,6 +1408,7 @@ void FENboardSetup(int board[120], std::string FEN) {
      
 
 }
+/*
 u64 perft(int depth, int turn) {
      depthNormalMoveCount[depth] = 0;
      depthPromotionMoveCount[depth] = 0;
@@ -1436,6 +1438,8 @@ u64 perft(int depth, int turn) {
      //  TODO: Add enpassant Moves
      return node;
 }
+*/
+
 int makeMove(int board[120], int move[2]) {
      int terminalValue;
      int initial = move[0], terminal = move[1];
@@ -1623,35 +1627,7 @@ void undoMove2(int board[120], int move[3], int terminalValue) {
      }
      
 }
-u64 perft2(int depth, int turn) {
-     depthNormalMoveCount[depth] = 0;
-     depthPromotionMoveCount[depth] = 0;
-     depthLegalMoveCount[depth] = 0;
 
-     u64 node = 0;
-     int terminalValue;
-     if (depth == 0) { return 1; }
-     // MOVEGEN
-     moveGeneration(currentBoard, turn, depthNormalMoveList[depth], &depthNormalMoveCount[depth], depthPromotionMoveList[depth], &depthPromotionMoveCount[depth]);
-     // CHECK FOR LEGALS
-     legalMoves(currentBoard, turn, depthNormalMoveList[depth], depthNormalMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
-
-     for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
-          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
-          if (turn == WHITE) {
-               node += perft(depth - 1, BLACK);
-          }
-          else {
-               node += perft(depth - 1, WHITE);
-          }
-          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
-     }
-
-     //  TODO: Add Castling Moves
-     //  TODO: Add Promotion Moves
-     //  TODO: Add enpassant Moves
-     return node;
-}
 
 void addMove2(int initial, int terminal, int moveType, int moveList[250][3], int *moveCount) {
      moveList[*moveCount][0] = initial;
@@ -2167,6 +2143,370 @@ void moveGeneration2(int board[120], int turn, int moveList[250][3], int *moveCo
      }
 }
 
+bool squareAttackCheck(int board[120], int position, int turn) {
+     if (turn == WHITE) {
+          //  1. pawn
+          if (board[position - ROW - COLUMN] == BLACKPAWN ||
+               board[position - ROW - COLUMN] == BLACKPAWN) {
+               return true;
+          }
+          //  2. knight
+          if (board[position - ROW - 2 * COLUMN] == BLACKKNIGHT ||
+               board[position - ROW + 2 * COLUMN] == BLACKKNIGHT ||
+               board[position + ROW - 2 * COLUMN] == BLACKKNIGHT ||
+               board[position + ROW + 2 * COLUMN] == BLACKKNIGHT ||
+               board[position - 2 * ROW - COLUMN] == BLACKKNIGHT ||
+               board[position - 2 * ROW + COLUMN] == BLACKKNIGHT ||
+               board[position + 2 * ROW - COLUMN] == BLACKKNIGHT ||
+               board[position + 2 * ROW + COLUMN] == BLACKKNIGHT) {
+               return true;
+          }
+          //  3. bishop
+          for (int i = 1; i < 8; i++) {
+               if (board[position - i*ROW - i*COLUMN] == BLACKBISHOP ||
+                    board[position - i*ROW - i*COLUMN] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position - i*ROW - i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position - i*ROW - i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[position - i*ROW + i*COLUMN] == BLACKBISHOP ||
+                    board[position - i*ROW + i*COLUMN] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position - i*ROW + i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position - i*ROW + i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[position + i*ROW - i*COLUMN] == BLACKBISHOP ||
+                    board[position + i*ROW - i*COLUMN] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position + i*ROW - i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position + i*ROW - i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[position + i*ROW + i*COLUMN] == BLACKBISHOP ||
+                    board[position + i*ROW + i*COLUMN] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position + i*ROW + i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position + i*ROW + i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          //  4. rook
+          for (int i = 1; i < 8; i++) {
+               if (board[position - i*ROW] == BLACKROOK ||
+                    board[position - i*ROW] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position - i*ROW] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position - i*ROW] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[position + i*ROW] == BLACKROOK ||
+                    board[position + i*ROW] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position + i*ROW] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position + i*ROW] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[position - i*COLUMN] == BLACKROOK ||
+                    board[position - i*COLUMN] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position - i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position - i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[position + i*COLUMN] == BLACKROOK ||
+                    board[position + i*COLUMN] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position + i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position + i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+
+          //  5. queen: added to bishop and rook
+          //  6. king: is it needed?
+
+          return false;
+     }
+
+     if (turn == BLACK) {
+          //  1. pawn
+          if (board[position - ROW - COLUMN] == WHITEPAWN ||
+               board[position - ROW - COLUMN] == WHITEPAWN) {
+               return true;
+          }
+          //  2. knight
+          if (board[position - ROW - 2 * COLUMN] == WHITEKNIGHT ||
+               board[position - ROW + 2 * COLUMN] == WHITEKNIGHT ||
+               board[position + ROW - 2 * COLUMN] == WHITEKNIGHT ||
+               board[position + ROW + 2 * COLUMN] == WHITEKNIGHT ||
+               board[position - 2 * ROW - COLUMN] == WHITEKNIGHT ||
+               board[position - 2 * ROW + COLUMN] == WHITEKNIGHT ||
+               board[position + 2 * ROW - COLUMN] == WHITEKNIGHT ||
+               board[position + 2 * ROW + COLUMN] == WHITEKNIGHT) {
+               return true;
+          }
+          //  3. bishop
+          for (int i = 1; i < 8; i++) {
+               if (board[position - i*ROW - i*COLUMN] == WHITEBISHOP ||
+                    board[position - i*ROW - i*COLUMN] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position - i*ROW - i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position - i*ROW - i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[position - i*ROW + i*COLUMN] == WHITEBISHOP ||
+                    board[position - i*ROW + i*COLUMN] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position - i*ROW + i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position - i*ROW + i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[position + i*ROW - i*COLUMN] == WHITEBISHOP ||
+                    board[position + i*ROW - i*COLUMN] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position + i*ROW - i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position + i*ROW - i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[position + i*ROW + i*COLUMN] == WHITEBISHOP ||
+                    board[position + i*ROW + i*COLUMN] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position + i*ROW + i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position + i*ROW + i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          //  4. rook
+          for (int i = 1; i < 8; i++) {
+               if (board[position - i*ROW] == WHITEROOK ||
+                    board[position - i*ROW] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position - i*ROW] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position - i*ROW] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[position + i*ROW] == WHITEROOK ||
+                    board[position + i*ROW] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position + i*ROW] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position + i*ROW] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[position - i*COLUMN] == WHITEROOK ||
+                    board[position - i*COLUMN] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position - i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position - i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[position + i*COLUMN] == WHITEROOK ||
+                    board[position + i*COLUMN] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[position + i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[position + i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+
+          //  5. queen: added to bishop and rook
+          //  6. king: is it needed?
+
+          return false;
+     }
+}
+
+void legalMoves2(int board[120], int turn, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount) {
+     //  find king position
+     int kingPosition = 0, changedKingPosition = 0;
+     for (int i = 0; i < 120; i++) {
+          if (turn == WHITE && board[i] == WHITEKING ||
+               turn == BLACK && board[i] == BLACKKING) {
+               kingPosition = i;
+               break;
+          }
+     }
+
+     for (int i = 0; i < moveCount; i++) {
+          //  check if king was moved
+          if (moveList[i][0] == WHITEKING || moveList[i][0] == BLACKKING) {
+               changedKingPosition = moveList[i][1];
+          }
+          else { changedKingPosition = kingPosition; }
+
+          //  if king is safe
+          if (!squareAttackCheck(board, kingPosition, turn)) {
+               legalMoveList[*legalMoveCount][0] = moveList[i][0];
+               legalMoveList[*legalMoveCount][1] = moveList[i][1];
+               legalMoveList[*legalMoveCount][2] = moveList[i][2];
+               *legalMoveCount += 1;
+          }
+     }
+}
+
+
+u64 perft2(int depth, int turn) {
+     depthAllMoveCount[depth] = 0;
+
+     u64 node = 0;
+     int terminalValue;
+     if (depth == 0) { return 1; }
+
+     // MOVEGEN
+     moveGeneration2(currentBoard, currentTurn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth]);
+     // CHECK FOR LEGALS - TODO
+     legalMoves2(currentBoard, currentTurn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+
+     for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
+          terminalValue = makeMove2(currentBoard, depthNormalMoveList[depth][i]);
+          if (turn == WHITE) {
+               node += perft2(depth - 1, BLACK);
+          }
+          else {
+               node += perft2(depth - 1, WHITE);
+          }
+          undoMove2(currentBoard, depthNormalMoveList[depth][i], terminalValue);
+     }
+
+     return node;
+}
 
 //  TODO: Castling move gen - initial and terminal both show king's position
 //  TODO: create a function that checks if a square is attacked
@@ -2174,7 +2514,7 @@ void moveGeneration2(int board[120], int turn, int moveList[250][3], int *moveCo
 
 void main() {
      //  Initialize Board
-     //  board120Setup();
+     board120Setup();
 
      //  FEN source:
      //  http://www.chesskit.com/training/fenkit/index.php?page=p9&d=Page%209
@@ -2182,7 +2522,7 @@ void main() {
      //FENboardSetup(currentBoard, "rn6/kp3p1p/pb6/N1B5/8/7P/5PP1/2R3K1 b - - 0 1");
 
      //  Custom FEN to check speical cases
-     FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
+     //FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
 
      //  int evaluationScore;
 
@@ -2198,6 +2538,9 @@ void main() {
      else { printf("Turn: Black\n"); }
      printf("--------------------------------------------------\n");
     
+
+     //  MOVEGEN2 CHECK
+     /*
      moveGeneration2(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare);
      printf("Number of Moves: %d\n", currentBoardMoveCount);
      for (int i = 0; i < currentBoardMoveCount; i++) {
@@ -2230,6 +2573,7 @@ void main() {
           }
           printf("\n");
      }
+     */
 
      //  makeMove2, undoMove2 test
      /*
@@ -2343,4 +2687,14 @@ void main() {
      printf("PERFT TEST (DEPTH 5): %llu \n", perft(5, WHITE));
      printf("PERFT TEST (DEPTH 6): %llu \n", perft(6, WHITE));
      */
+
+     //  PERFT2 TEST
+     
+     printf("PERFT TEST (DEPTH 1): %llu \n", perft2(1, WHITE));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft2(2, WHITE));
+     printf("PERFT TEST (DEPTH 3): %llu \n", perft2(3, WHITE));
+     printf("PERFT TEST (DEPTH 4): %llu \n", perft2(4, WHITE));
+     printf("PERFT TEST (DEPTH 5): %llu \n", perft2(5, WHITE));
+     printf("PERFT TEST (DEPTH 6): %llu \n", perft2(6, WHITE));
+     
 }
