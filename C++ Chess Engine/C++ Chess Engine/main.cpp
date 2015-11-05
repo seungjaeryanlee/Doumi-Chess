@@ -1915,7 +1915,81 @@ void queenMoveGeneration2(int board[120], int turn, int position, int moveList[2
      rookMoveGeneration2(board, turn, position, moveList, moveCount);
      bishopMoveGeneration2(board, turn, position, moveList, moveCount);
 }
-void kingMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {}
+void kingMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
+     if (turn == WHITE) {
+          if (checkColor(board[position + ROW]) == BLACK ||
+               board[position + ROW] == EMPTYSQUARE) {
+               addMove2(position, position + ROW, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position - ROW]) == BLACK ||
+               board[position - ROW] == EMPTYSQUARE) {
+               addMove2(position, position - ROW, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position + COLUMN]) == BLACK ||
+               board[position + COLUMN] == EMPTYSQUARE) {
+               addMove2(position, position + COLUMN, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position - COLUMN]) == BLACK ||
+               board[position - COLUMN] == EMPTYSQUARE) {
+               addMove2(position, position - COLUMN, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position + ROW + COLUMN]) == BLACK ||
+               board[position + ROW + COLUMN] == EMPTYSQUARE) {
+               addMove2(position, position + ROW + COLUMN, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position + ROW - COLUMN]) == BLACK ||
+               board[position + ROW - COLUMN] == EMPTYSQUARE) {
+               addMove2(position, position + ROW - COLUMN, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position - ROW + COLUMN]) == BLACK ||
+               board[position - ROW + COLUMN] == EMPTYSQUARE) {
+               addMove2(position, position - ROW + COLUMN, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position - ROW - COLUMN]) == BLACK ||
+               board[position - ROW - COLUMN] == EMPTYSQUARE) {
+               addMove2(position, position - ROW - COLUMN, NORMAL, moveList, moveCount);
+          }
+     }
+     if (turn == BLACK) {
+          if (checkColor(board[position + ROW]) == WHITE ||
+               board[position + ROW] == EMPTYSQUARE) {
+               addMove2(position, position + ROW, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position - ROW]) == WHITE ||
+               board[position - ROW] == EMPTYSQUARE) {
+               addMove2(position, position - ROW, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position + COLUMN]) == WHITE ||
+               board[position + COLUMN] == EMPTYSQUARE) {
+               addMove2(position, position + COLUMN, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position - COLUMN]) == WHITE ||
+               board[position - COLUMN] == EMPTYSQUARE) {
+               addMove2(position, position - COLUMN, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position + ROW + COLUMN]) == WHITE ||
+               board[position + ROW + COLUMN] == EMPTYSQUARE) {
+               addMove2(position, position + ROW + COLUMN, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position + ROW - COLUMN]) == WHITE ||
+               board[position + ROW - COLUMN] == EMPTYSQUARE) {
+               addMove2(position, position + ROW - COLUMN, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position - ROW + COLUMN]) == WHITE ||
+               board[position - ROW + COLUMN] == EMPTYSQUARE) {
+               addMove2(position, position - ROW + COLUMN, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position - ROW - COLUMN]) == WHITE ||
+               board[position - ROW - COLUMN] == EMPTYSQUARE) {
+               addMove2(position, position - ROW - COLUMN, NORMAL, moveList, moveCount);
+          }
+     }
+}
+void castlingMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {}
+void promotionMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {}
+void enpassantMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {}
+
+
 void moveGeneration2(int board[120], int turn, int moveList[250][3], int *moveCount) {
      if (turn == WHITE) {
           for (int i = 0; i < 120; i++) {
