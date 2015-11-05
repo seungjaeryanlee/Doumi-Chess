@@ -2148,8 +2148,8 @@ void moveGeneration2(int board[120], int turn, int moveList[250][3], int *moveCo
 bool squareAttackCheck(int board[120], int position, int turn) {
      if (turn == WHITE) {
           //  1. pawn
-          if (board[position - ROW - COLUMN] == BLACKPAWN ||
-               board[position - ROW - COLUMN] == BLACKPAWN) {
+          if (board[position - ROW - COLUMN] == BLACKPAWN || 
+               board[position - ROW + COLUMN] == BLACKPAWN) {
                return true;
           }
           //  2. knight
@@ -2302,8 +2302,8 @@ bool squareAttackCheck(int board[120], int position, int turn) {
 
      if (turn == BLACK) {
           //  1. pawn
-          if (board[position - ROW - COLUMN] == WHITEPAWN ||
-               board[position - ROW - COLUMN] == WHITEPAWN) {
+          if (board[position + ROW - COLUMN] == WHITEPAWN ||
+               board[position + ROW + COLUMN] == WHITEPAWN) {
                return true;
           }
           //  2. knight
@@ -2469,7 +2469,7 @@ void legalMoves2(int board[120], int turn, int moveList[250][3], int moveCount, 
 
      for (int i = 0; i < moveCount; i++) {
           //  check if king will be moved
-          if (moveList[i][0] == WHITEKING || moveList[i][0] == BLACKKING) {
+          if (board[moveList[i][0]] == WHITEKING || board[moveList[i][0]] == BLACKKING) {
                changedKingPosition = moveList[i][1];
           }
           else { changedKingPosition = kingPosition; }
@@ -2478,7 +2478,7 @@ void legalMoves2(int board[120], int turn, int moveList[250][3], int moveCount, 
           terminalValue = makeMove2(board, moveList[i]);
 
           //  if king is safe
-          if (!squareAttackCheck(board, kingPosition, turn)) {
+          if (!squareAttackCheck(board, changedKingPosition, turn)) {
                legalMoveList[*legalMoveCount][0] = moveList[i][0];
                legalMoveList[*legalMoveCount][1] = moveList[i][1];
                legalMoveList[*legalMoveCount][2] = moveList[i][2];
@@ -2498,6 +2498,7 @@ u64 perft2(int depth, int turn) {
      u64 node = 0;
      int terminalValue;
      if (depth == 0) { return 1; }
+
 
      // MOVEGEN
      moveGeneration2(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth]);
@@ -2520,12 +2521,10 @@ u64 perft2(int depth, int turn) {
 }
 
 //  TODO: Castling move gen - initial and terminal both show king's position
-//  TODO: create a function that checks if a square is attacked
-//  TODO: Determine checkmate? (for perft)
 
 void main() {
      //  Initialize Board
-     board120Setup();
+     //  board120Setup();
 
      //  FEN source:
      //  http://www.chesskit.com/training/fenkit/index.php?page=p9&d=Page%209
@@ -2534,6 +2533,7 @@ void main() {
 
      //  Custom FEN to check speical cases
      //FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
+     FENboardSetup(currentBoard, "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1");
 
      //  int evaluationScore;
 
@@ -2551,7 +2551,7 @@ void main() {
     
 
      //  LEGALMOVES2 CHECK
-     /*
+     
      moveGeneration2(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare);
      printf("Number of Moves: %d\n", currentBoardMoveCount);
      for (int i = 0; i < currentBoardMoveCount; i++) {
@@ -2623,11 +2623,11 @@ void main() {
      printf("--------------------------------------------------\n");
      for (int i = 2; i < 10; i++) {
           for (int j = 1; j < 9; j++) {
-               printf("%d ", squareAttackCheck(currentBoard, i * 10 + j, BLACK));
+               printf("%d ", squareAttackCheck(currentBoard, i * 10 + j, WHITE));
           }
           printf("\n");
      }
-     */
+     
 
      //  makeMove2, undoMove2 test
      /*
@@ -2743,11 +2743,12 @@ void main() {
      */
 
      //  PERFT2 TEST
-     
+     /*
      printf("PERFT TEST (DEPTH 1): %llu \n", perft2(1, WHITE));
      printf("PERFT TEST (DEPTH 2): %llu \n", perft2(2, WHITE));
      printf("PERFT TEST (DEPTH 3): %llu \n", perft2(3, WHITE));
      printf("PERFT TEST (DEPTH 4): %llu \n", perft2(4, WHITE));
-
+     */
+     
      
 }
