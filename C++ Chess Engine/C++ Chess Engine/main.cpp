@@ -1659,58 +1659,7 @@ void addMove2(int initial, int terminal, int moveType, int moveList[250][3], int
      moveList[*moveCount][2] = moveType;
      *moveCount += 1;
 }
-void pawnMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
-     if (turn == WHITE) {
-          //  if on the last row before promotion, just call promotion
-          if (A7 <= position && position <= H7) {
-               promotionMoveGeneration2(board, turn, position, moveList, moveCount);
-               return;
-          }
 
-          //  Advance 1 square
-          if (board[position - ROW] == EMPTYSQUARE) {
-               addMove2(position, position - ROW, NORMAL, moveList, moveCount);
-               //  Advance 2 squares
-               if (A2 <= position && position <= H2 &&
-                    board[position - 2 * ROW] == EMPTYSQUARE) {
-                    addMove2(position, position - 2 * ROW, NORMAL, moveList, moveCount);
-               }
-          }
-
-          //  attack diagonals
-          if (checkColor(board[position - ROW - COLUMN]) == BLACK) {
-               addMove2(position, position - ROW - COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position - ROW + COLUMN]) == BLACK) {
-               addMove2(position, position - ROW + COLUMN, NORMAL, moveList, moveCount);
-          }
-     }
-     if (turn == BLACK) {
-          //  if on the last row before promotion, just call promotion
-          if (A2 <= position && position <= H2) {
-               promotionMoveGeneration(board, turn, position, moveList, moveCount);
-               return;
-          }
-
-          //  Advance 1 square
-          if (board[position + ROW] == EMPTYSQUARE) {
-               addMove2(position, position + ROW, NORMAL, moveList, moveCount);
-               //  Advance 2 squares
-               if (A7 <= position && position <= H7 &&
-                    board[position + 2 * ROW] == EMPTYSQUARE) {
-                    addMove2(position, position + 2 * ROW, NORMAL, moveList, moveCount);
-               }
-          }
-
-          //  attack diagonals
-          if (checkColor(board[position + ROW - COLUMN]) == WHITE) {
-               addMove2(position, position - ROW - COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position + ROW + COLUMN]) == WHITE) {
-               addMove2(position, position - ROW + COLUMN, NORMAL, moveList, moveCount);
-          }
-     }
-}
 void knightMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
      if (turn == WHITE) {
           if (checkColor(board[position + ROW + 2 * COLUMN]) == BLACK ||
@@ -2111,7 +2060,58 @@ void enpassantMoveGeneration2(int board[120], int turn, int moveList[250][3], in
           }
      }
 }
+void pawnMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
+     if (turn == WHITE) {
+          //  if on the last row before promotion, just call promotion
+          if (A7 <= position && position <= H7) {
+               promotionMoveGeneration2(board, turn, position, moveList, moveCount);
+               return;
+          }
 
+          //  Advance 1 square
+          if (board[position - ROW] == EMPTYSQUARE) {
+               addMove2(position, position - ROW, NORMAL, moveList, moveCount);
+               //  Advance 2 squares
+               if (A2 <= position && position <= H2 &&
+                    board[position - 2 * ROW] == EMPTYSQUARE) {
+                    addMove2(position, position - 2 * ROW, NORMAL, moveList, moveCount);
+               }
+          }
+
+          //  attack diagonals
+          if (checkColor(board[position - ROW - COLUMN]) == BLACK) {
+               addMove2(position, position - ROW - COLUMN, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position - ROW + COLUMN]) == BLACK) {
+               addMove2(position, position - ROW + COLUMN, NORMAL, moveList, moveCount);
+          }
+     }
+     if (turn == BLACK) {
+          //  if on the last row before promotion, just call promotion
+          if (A2 <= position && position <= H2) {
+               promotionMoveGeneration(board, turn, position, moveList, moveCount);
+               return;
+          }
+
+          //  Advance 1 square
+          if (board[position + ROW] == EMPTYSQUARE) {
+               addMove2(position, position + ROW, NORMAL, moveList, moveCount);
+               //  Advance 2 squares
+               if (A7 <= position && position <= H7 &&
+                    board[position + 2 * ROW] == EMPTYSQUARE) {
+                    addMove2(position, position + 2 * ROW, NORMAL, moveList, moveCount);
+               }
+          }
+
+          //  attack diagonals
+          if (checkColor(board[position + ROW - COLUMN]) == WHITE) {
+               addMove2(position, position - ROW - COLUMN, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position + ROW + COLUMN]) == WHITE) {
+               addMove2(position, position - ROW + COLUMN, NORMAL, moveList, moveCount);
+          }
+     }
+}
 
 void moveGeneration2(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare) {
      castlingMoveGeneration2(board, turn, moveList, moveCount);
@@ -2198,6 +2198,39 @@ void main() {
      else { printf("Turn: Black\n"); }
      printf("--------------------------------------------------\n");
     
+     moveGeneration2(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare);
+     printf("Number of Moves: %d\n", currentBoardMoveCount);
+     for (int i = 0; i < currentBoardMoveCount; i++) {
+          printf("%d to %d", currentBoardMoveList[i][0], currentBoardMoveList[i][1]);
+          switch (currentBoardMoveList[i][2]) {
+          case NORMAL:
+               break;
+          case ENPASSANT:
+               printf(" - ENPASSANT");
+               break;
+          case KNIGHT_PROMOTION:
+               printf(" - KNIGHT PROMOTION");
+               break;
+          case BISHOP_PROMOTION:
+               printf(" - BISHOP PROMOTION");
+               break;
+          case ROOK_PROMOTION:
+               printf(" - ROOK PROMOTION");
+               break;
+          case QUEEN_PROMOTION:
+               printf(" - QUEEN PROMOTION");
+               break;
+          case KINGSIDE_CASTLING:
+               printf(" - KINGSIDE CASTLING");
+               break;
+          case QUEENSIDE_CASTLING:
+               printf(" - QUEENSIDE CASTLING");
+               break;
+
+          }
+          printf("\n");
+     }
+
      //  makeMove2, undoMove2 test
      /*
      
