@@ -77,7 +77,7 @@ enum fileRank120 {
      A1=91, B1, C1, D1, E1, F1, G1, H1
 };
 enum color {WHITE, BLACK, NEITHER};
-
+enum moveType {NORMAL, CASTLING, PROMOTION, ENPASSANT};
 /*                                 GLOBAL VARIABLE                            */
 int currentBoard[120];
 bool gamePlaying = true;
@@ -189,6 +189,11 @@ int depthCastlingMoveList[MAXIMUM_DEPTH + 1][2][2];
 int depthCastlingMoveCount[MAXIMUM_DEPTH + 1];
 int depthLegalMoveList[MAXIMUM_DEPTH + 1][250][2];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
+//  Uniting All Moves for less confusion / global variables
+//  initial, terminal, moveType
+int allMoveList[250][3];
+int depthAllMoveList[MAXIMUM_DEPTH + 1][250][3];
+
 
 /*                                    FUNCTION                                */
 void board120Setup() {
