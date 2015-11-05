@@ -1659,7 +1659,58 @@ void addMove2(int initial, int terminal, int moveType, int moveList[250][3], int
      moveList[*moveCount][2] = moveType;
      *moveCount += 1;
 }
-void pawnMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {}
+void pawnMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
+     if (turn == WHITE) {
+          //  if on the last row before promotion, just call promotion
+          if (A7 <= position && position <= H7) {
+               promotionMoveGeneration2(board, turn, position, moveList, moveCount);
+               return;
+          }
+
+          //  Advance 1 square
+          if (board[position - ROW] == EMPTYSQUARE) {
+               addMove2(position, position - ROW, NORMAL, moveList, moveCount);
+               //  Advance 2 squares
+               if (A2 <= position && position <= H2 &&
+                    board[position - 2 * ROW] == EMPTYSQUARE) {
+                    addMove2(position, position - 2 * ROW, NORMAL, moveList, moveCount);
+               }
+          }
+
+          //  attack diagonals
+          if (checkColor(board[position - ROW - COLUMN]) == BLACK) {
+               addMove2(position, position - ROW - COLUMN, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position - ROW + COLUMN]) == BLACK) {
+               addMove2(position, position - ROW + COLUMN, NORMAL, moveList, moveCount);
+          }
+     }
+     if (turn == BLACK) {
+          //  if on the last row before promotion, just call promotion
+          if (A2 <= position && position <= H2) {
+               promotionMoveGeneration(board, turn, position, moveList, moveCount);
+               return;
+          }
+
+          //  Advance 1 square
+          if (board[position + ROW] == EMPTYSQUARE) {
+               addMove2(position, position + ROW, NORMAL, moveList, moveCount);
+               //  Advance 2 squares
+               if (A7 <= position && position <= H7 &&
+                    board[position + 2 * ROW] == EMPTYSQUARE) {
+                    addMove2(position, position + 2 * ROW, NORMAL, moveList, moveCount);
+               }
+          }
+
+          //  attack diagonals
+          if (checkColor(board[position + ROW - COLUMN]) == WHITE) {
+               addMove2(position, position - ROW - COLUMN, NORMAL, moveList, moveCount);
+          }
+          if (checkColor(board[position + ROW + COLUMN]) == WHITE) {
+               addMove2(position, position - ROW + COLUMN, NORMAL, moveList, moveCount);
+          }
+     }
+}
 void knightMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
      if (turn == WHITE) {
           if (checkColor(board[position + ROW + 2 * COLUMN]) == BLACK ||
@@ -1985,12 +2036,87 @@ void kingMoveGeneration2(int board[120], int turn, int position, int moveList[25
           }
      }
 }
-void castlingMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {}
-void promotionMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {}
-void enpassantMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {}
+void castlingMoveGeneration2(int board[120], int turn, int moveList[250][3], int *moveCount) {
+     //  TODO: Check if king is in check during move
+
+     if (turn == WHITE) {
+          if (whiteKingsideCastling &&
+               board[F1] == EMPTYSQUARE && board[G1] == EMPTYSQUARE) {
+               addMove2(E1, H1, KINGSIDE_CASTLING, moveList, moveCount);
+          }
+          if (whiteQueensideCastling && board[B1] == EMPTYSQUARE &&
+               board[C1] == EMPTYSQUARE && board[D1] == EMPTYSQUARE) {
+               addMove2(E1, A1, QUEENSIDE_CASTLING, moveList, moveCount);
+          }
+
+     }
+     if (turn == BLACK) {
+          if (blackKingsideCastling &&
+               board[F8] == EMPTYSQUARE && board[G8] == EMPTYSQUARE) {
+               addMove2(E8, H8, KINGSIDE_CASTLING, moveList, moveCount);
+          }
+          if (blackQueensideCastling && board[B8] == EMPTYSQUARE &&
+               board[C8] == EMPTYSQUARE && board[D8] == EMPTYSQUARE) {
+               addMove2(E8, A8, QUEENSIDE_CASTLING, moveList, moveCount);
+          }
+     }
+}
+void addPromotionMove2(int initial, int terminal, int moveList[250][3], int *moveCount) {
+     addMove2(initial, terminal, KNIGHT_PROMOTION, moveList, moveCount);
+     addMove2(initial, terminal, BISHOP_PROMOTION, moveList, moveCount);
+     addMove2(initial, terminal, ROOK_PROMOTION, moveList, moveCount);
+     addMove2(initial, terminal, QUEEN_PROMOTION, moveList, moveCount);
+}
+void promotionMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
+     if (turn == WHITE) {
+          if (checkColor(board[position - ROW - COLUMN]) == BLACK) {
+               addPromotionMove2(position, position - ROW - COLUMN, moveList, moveCount);
+          }
+          if (checkColor(board[position - ROW + COLUMN]) == BLACK) {
+               addPromotionMove2(position, position - ROW + COLUMN, moveList, moveCount);
+          }
+          if (board[position - ROW] == EMPTYSQUARE) {
+               addPromotionMove2(position, position - ROW, moveList, moveCount);
+          }
+     }
+     if (turn == BLACK) {
+          if (checkColor(board[position + ROW + COLUMN]) == WHITE) {
+               addPromotionMove2(position, position + ROW + COLUMN, moveList, moveCount);
+          }
+          if (checkColor(board[position + ROW - COLUMN]) == WHITE) {
+               addPromotionMove2(position, position + ROW - COLUMN, moveList, moveCount);
+          }
+          if (board[position + ROW] == EMPTYSQUARE) {
+               addPromotionMove2(position, position + ROW, moveList, moveCount);
+          }
+     }
+}
+void enpassantMoveGeneration2(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare) {
+     if (enpassantSquare == 0) { return; }
+
+     if (turn == WHITE) {
+          if (board[enpassantSquare + ROW + COLUMN] == WHITEPAWN) {
+               addMove2(enpassantSquare + ROW + COLUMN, enpassantSquare, ENPASSANT, moveList, moveCount);
+          }
+          if (board[enpassantSquare + ROW - COLUMN] == WHITEPAWN) {
+               addMove2(enpassantSquare + ROW - COLUMN, enpassantSquare, ENPASSANT, moveList, moveCount);
+          }
+     }
+     if (turn == BLACK) {
+          if (board[enpassantSquare - ROW + COLUMN] == BLACKPAWN) {
+               addMove2(enpassantSquare - ROW + COLUMN, enpassantSquare, ENPASSANT, moveList, moveCount);
+          }
+          if (board[enpassantSquare - ROW - COLUMN] == BLACKPAWN) {
+               addMove2(enpassantSquare - ROW - COLUMN, enpassantSquare, ENPASSANT, moveList, moveCount);
+          }
+     }
+}
 
 
-void moveGeneration2(int board[120], int turn, int moveList[250][3], int *moveCount) {
+void moveGeneration2(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare) {
+     castlingMoveGeneration2(board, turn, moveList, moveCount);
+     enpassantMoveGeneration2(board, turn, moveList, moveCount, enpassantSquare);
+     
      if (turn == WHITE) {
           for (int i = 0; i < 120; i++) {
                switch (board[i]) {
@@ -2157,7 +2283,8 @@ void main() {
           printf("Endgame: %d\n", endGame);
           
           //  TODO: Make Best Move
-          
+          //  TODO: Check for enpassant square
+
           //  Change turns
           if (currentTurn == WHITE) { currentTurn = BLACK; }
           else { 
