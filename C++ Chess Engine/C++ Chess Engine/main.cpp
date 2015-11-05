@@ -192,8 +192,10 @@ int depthLegalMoveList[MAXIMUM_DEPTH + 1][250][2];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 //  Uniting All Moves for less confusion / global variables
 //  initial, terminal, moveType
-int allMoveList[250][3];
+int currentBoardMoveList[250][3];
+int currentBoardMoveCount;
 int depthAllMoveList[MAXIMUM_DEPTH + 1][250][3];
+int depthAllMoveCount[MAXIMUM_DEPTH + 1];
 
 
 /*                                    FUNCTION                                */
@@ -1651,7 +1653,73 @@ u64 perft2(int depth, int turn) {
      return node;
 }
 
+void addMove2(int initial, int terminal, int moveType, int moveList[250][3], int *moveCount) {
+     moveList[*moveCount][0] = initial;
+     moveList[*moveCount][1] = terminal;
+     moveList[*moveCount][2] = moveType;
+     *moveCount += 1;
+}
+void pawnMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {}
+void knightMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {}
+void bishopMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {}
+void rookMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {}
+void queenMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {}
+void kingMoveGeneration2(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {}
+void moveGeneration2(int board[120], int turn, int moveList[250][2], int *moveCount) {
+     if (turn == WHITE) {
+          for (int i = 0; i < 120; i++) {
+               switch (board[i]) {
+               case WHITEPAWN:
+                    pawnMoveGeneration2(board, turn, i, moveList, moveCount);
+                    break;
+               case WHITEKNIGHT:
+                    knightMoveGeneration2(board, turn, i, moveList, moveCount);
+                    break;
+               case WHITEBISHOP:
+                    bishopMoveGeneration2(board, turn, i, moveList, moveCount);
+                    break;
+               case WHITEROOK:
+                    rookMoveGeneration2(board, turn, i, moveList, moveCount);
+                    break;
+               case WHITEQUEEN:
+                    queenMoveGeneration2(board, turn, i, moveList, moveCount);
+                    break;
+               case WHITEKING:
+                    kingMoveGeneration2(board, turn, i, moveList, moveCount);
+                    break;
+               }
+          }
+     }
+     if (turn == BLACK) {
+          for (int i = 0; i < 120; i++) {
+               switch (board[i]) {
+               case BLACKPAWN:
+                    pawnMoveGeneration2(board, turn, i, moveList, moveCount);
+                    break;
+               case BLACKKNIGHT:
+                    knightMoveGeneration2(board, turn, i, moveList, moveCount);
+                    break;
+               case BLACKBISHOP:
+                    bishopMoveGeneration2(board, turn, i, moveList, moveCount);
+                    break;
+               case BLACKROOK:
+                    rookMoveGeneration2(board, turn, i, moveList, moveCount);
+                    break;
+               case BLACKQUEEN:
+                    queenMoveGeneration2(board, turn, i, moveList, moveCount);
+                    break;
+               case BLACKKING:
+                    kingMoveGeneration2(board, turn, i, moveList, moveCount);
+                    break;
+               }
+          }
+     }
+}
+
+
 //  TODO: Castling move gen - initial and terminal both show king's position
+//  TODO: create a function that checks if a square is attacked
+//  TODO: Determine checkmate? (for perft)
 
 void main() {
      //  Initialize Board
@@ -1678,7 +1746,10 @@ void main() {
      if (currentTurn == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
      printf("--------------------------------------------------\n");
-
+    
+     //  makeMove2, undoMove2 test
+     /*
+     
      int tempMove[3] = { B7, B8, QUEEN_PROMOTION };
      int tempTerminalValue;
      tempTerminalValue = makeMove2(currentBoard, tempMove);
@@ -1703,7 +1774,9 @@ void main() {
      printBoard(currentBoard);
      undoMove2(currentBoard, tempMove4, tempTerminalValue);
      printBoard(currentBoard);
-
+     */
+     
+     //  Game Loop
      /*
      while (gamePlaying) {
 
@@ -1776,8 +1849,8 @@ void main() {
      }
      */
 
-     /*
-     // PERFT TEST
+     //  PERFT TEST
+     /*  
      printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
      printf("PERFT TEST (DEPTH 3): %llu \n", perft(3, WHITE));
