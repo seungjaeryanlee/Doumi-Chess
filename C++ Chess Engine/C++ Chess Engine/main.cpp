@@ -2504,19 +2504,17 @@ u64 perft2(int depth, int turn) {
      // CHECK FOR LEGALS
      legalMoves2(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
-     printf("Before ForLoop: %d\n", node);
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
-          terminalValue = makeMove2(currentBoard, depthNormalMoveList[depth][i]);
+          terminalValue = makeMove2(currentBoard, depthAllMoveList[depth][i]);
           if (turn == WHITE) {
                node += perft2(depth - 1, BLACK);
           }
           else {
                node += perft2(depth - 1, WHITE);
           }
-          undoMove2(currentBoard, depthNormalMoveList[depth][i], terminalValue);
+          undoMove2(currentBoard, depthAllMoveList[depth][i], terminalValue);
      }
 
-     printf("After ForLoop: %d\n", node);
      return node;
      
 }
@@ -2750,8 +2748,6 @@ void main() {
      printf("PERFT TEST (DEPTH 2): %llu \n", perft2(2, WHITE));
      printf("PERFT TEST (DEPTH 3): %llu \n", perft2(3, WHITE));
      printf("PERFT TEST (DEPTH 4): %llu \n", perft2(4, WHITE));
-     printf("PERFT TEST (DEPTH 5): %llu \n", perft2(5, WHITE));
-     printf("PERFT TEST (DEPTH 6): %llu \n", perft2(6, WHITE));
 
      
 }
