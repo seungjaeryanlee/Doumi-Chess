@@ -1568,14 +1568,57 @@ int makeMove2(int board[120], int move[3]) {
      }
 }
 void undoMove2(int board[120], int move[3], int terminalValue) {
-     int initial = move[0], terminal = move[1];
-     if (move[2] == NORMAL) {
+     int initial = move[0], terminal = move[1], moveType = move[2];
+     if (moveType == NORMAL) {
           board[initial] = board[terminal];
           board[terminal] = terminalValue;
      }
-     if (move[2] == QUEENSIDE_CASTLING) {}
-     if (move[2] == KNIGHT_PROMOTION) {}
-     if (move[2] == ENPASSANT) {}
+     if (moveType == QUEENSIDE_CASTLING) {
+          //  undo king move
+          board[initial] = board[terminal];
+          board[terminal] = EMPTYSQUARE;
+
+          //  undo rook move
+          board[initial - 4 * COLUMN] = board[terminal + COLUMN];
+          board[terminal + COLUMN] = EMPTYSQUARE;
+
+     }
+     if (moveType == KINGSIDE_CASTLING) {
+          //  undo king move
+          board[initial] = board[terminal];
+          board[terminal] = EMPTYSQUARE;
+
+          //  undo rook move
+          board[terminal + COLUMN] = board[terminal - COLUMN];
+          board[terminal - COLUMN] = EMPTYSQUARE;
+     }
+     if (moveType == KNIGHT_PROMOTION || moveType == BISHOP_PROMOTION ||
+          moveType == ROOK_PROMOTION || moveType == QUEEN_PROMOTION) {
+          //  white turn
+          if (checkColor(board[terminal]) == WHITE) {
+               board[terminal] = terminalValue;
+               board[initial] = WHITEPAWN;
+          }
+          //  black turn
+          else {
+               board[terminal] = terminalValue;
+               board[initial] = BLACKPAWN;
+          }
+     }
+     if (moveType == ENPASSANT) {
+          //  white turn
+          if (board[terminal] == WHITEPAWN) {
+               board[terminal] = EMPTYSQUARE;
+               board[initial] = WHITEPAWN;
+               board[terminal + ROW] = BLACKPAWN;
+          }
+          //  black turn
+          else {
+               board[terminal] = EMPTYSQUARE;
+               board[initial] = BLACKPAWN;
+               board[terminal - ROW] = WHITEPAWN;
+          }
+     }
      
 }
 u64 perft2(int depth, int turn) {
@@ -1637,15 +1680,28 @@ void main() {
      printf("--------------------------------------------------\n");
 
      int tempMove[3] = { B7, B8, QUEEN_PROMOTION };
-     makeMove2(currentBoard, tempMove);
+     int tempTerminalValue;
+     tempTerminalValue = makeMove2(currentBoard, tempMove);
+     printBoard(currentBoard);
+     undoMove2(currentBoard, tempMove, tempTerminalValue);
      printBoard(currentBoard);
 
      int tempMove2[3] = { E1, C1, QUEENSIDE_CASTLING };
-     makeMove2(currentBoard, tempMove2);
+     tempTerminalValue = makeMove2(currentBoard, tempMove2);
+     printBoard(currentBoard);
+     undoMove2(currentBoard, tempMove2, tempTerminalValue);
      printBoard(currentBoard);
 
      int tempMove3[3] = {E5, F6, ENPASSANT};
-     makeMove2(currentBoard, tempMove3);
+     tempTerminalValue = makeMove2(currentBoard, tempMove3);
+     printBoard(currentBoard);
+     undoMove2(currentBoard, tempMove3, tempTerminalValue);
+     printBoard(currentBoard);
+
+     int tempMove4[3] = { H1, G1, NORMAL };
+     tempTerminalValue = makeMove2(currentBoard, tempMove4);
+     printBoard(currentBoard);
+     undoMove2(currentBoard, tempMove4, tempTerminalValue);
      printBoard(currentBoard);
 
      /*
