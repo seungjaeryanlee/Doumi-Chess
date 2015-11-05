@@ -77,7 +77,8 @@ enum fileRank120 {
      A1=91, B1, C1, D1, E1, F1, G1, H1
 };
 enum color {WHITE, BLACK, NEITHER};
-enum moveType {NORMAL, CASTLING, PROMOTION, ENPASSANT};
+enum moveType {NORMAL, ENPASSANT, QUEENSIDE_CASTLING, KINGSIDE_CASTLING,
+     KNIGHT_PROMOTION, BISHOP_PROMOTION, ROOK_PROMOTION, QUEEN_PROMOTION};
 /*                                 GLOBAL VARIABLE                            */
 int currentBoard[120];
 bool gamePlaying = true;
@@ -1463,16 +1464,161 @@ bool checkGameEnd(int board[120]) {
      return !(whiteKing && blackKing);
 }
 
+//  Unify moves
+int makeMove2(int board[120], int move[3]) {
+     int terminalValue;
+     int initial = move[0], terminal = move[1], moveType = move[2];
+     if (moveType == NORMAL) {
+          terminalValue = board[terminal];
+          board[terminal] = board[initial];
+          board[initial] = EMPTYSQUARE;
+          return terminalValue;
+     }
+     if (moveType == QUEENSIDE_CASTLING) {
+          //  move king
+          board[terminal] = board[initial]; 
+          board[initial] = EMPTYSQUARE;
+          //  move rook
+          board[terminal + COLUMN] = board[initial - 5 * COLUMN];
+          board[initial - 5 * COLUMN] = EMPTYSQUARE;
+          //  castling does not involve capture
+          return 0;
+     }
+     if (moveType == KINGSIDE_CASTLING) {
+          //  move king
+          board[terminal] = board[initial];
+          board[initial] = EMPTYSQUARE;
+          //  move rook
+          board[terminal - COLUMN] = board[terminal + COLUMN];
+          board[terminal + COLUMN] = EMPTYSQUARE;
+          //  castling does not involve capture
+          return 0;
+     }
+     if (moveType == KNIGHT_PROMOTION) {
+          terminalValue = board[terminal];
+          
+          //  white turn
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] = WHITEKNIGHT;
+          }
+          //  black turn
+          else {
+               board[terminal] = BLACKKNIGHT;
+          }
+          board[initial] = EMPTYSQUARE;
+          return terminalValue;
+     }
+     if (moveType == BISHOP_PROMOTION) {
+          terminalValue = board[terminal];
+
+          //  white turn
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] = WHITEBISHOP;
+          }
+          //  black turn
+          else {
+               board[terminal] = BLACKBISHOP;
+          }
+          board[initial] = EMPTYSQUARE;
+          return terminalValue;
+     }
+     if (moveType == ROOK_PROMOTION) {
+          terminalValue = board[terminal];
+
+          //  white turn
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] = WHITEROOK;
+          }
+          //  black turn
+          else {
+               board[terminal] = BLACKROOK;
+          }
+          board[initial] = EMPTYSQUARE;
+          return terminalValue;
+     }
+     if (moveType == QUEEN_PROMOTION) {
+          terminalValue = board[terminal];
+
+          //  white turn
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] = WHITEQUEEN;
+          }
+          //  black turn
+          else {
+               board[terminal] = BLACKQUEEN;
+          }
+          board[initial] = EMPTYSQUARE;
+          return terminalValue;
+     }
+     if (moveType == ENPASSANT) {
+          //  White turn
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] = board[initial];
+               board[initial] = EMPTYSQUARE;
+               board[terminal - ROW] = EMPTYSQUARE;
+               return BLACKPAWN;
+          }
+          //  Black turn
+          else {
+               board[terminal] = board[initial];
+               board[initial] = EMPTYSQUARE;
+               board[terminal + ROW] = EMPTYSQUARE;
+               return WHITEPAWN;
+          }
+     }
+}
+void undoMove2(int board[120], int move[3], int terminalValue) {
+     int initial = move[0], terminal = move[1];
+     if (move[2] == NORMAL) {
+          board[initial] = board[terminal];
+          board[terminal] = terminalValue;
+     }
+     if (move[2] == QUEENSIDE_CASTLING) {}
+     if (move[2] == KNIGHT_PROMOTION) {}
+     if (move[2] == ENPASSANT) {}
+     
+}
+u64 perft2(int depth, int turn) {
+     depthNormalMoveCount[depth] = 0;
+     depthPromotionMoveCount[depth] = 0;
+     depthLegalMoveCount[depth] = 0;
+
+     u64 node = 0;
+     int terminalValue;
+     if (depth == 0) { return 1; }
+     // MOVEGEN
+     moveGeneration(currentBoard, turn, depthNormalMoveList[depth], &depthNormalMoveCount[depth], depthPromotionMoveList[depth], &depthPromotionMoveCount[depth]);
+     // CHECK FOR LEGALS
+     legalMoves(currentBoard, turn, depthNormalMoveList[depth], depthNormalMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+
+     for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
+          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
+          if (turn == WHITE) {
+               node += perft(depth - 1, BLACK);
+          }
+          else {
+               node += perft(depth - 1, WHITE);
+          }
+          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+     }
+
+     //  TODO: Add Castling Moves
+     //  TODO: Add Promotion Moves
+     //  TODO: Add enpassant Moves
+     return node;
+}
+
+//  TODO: Castling move gen - initial and terminal both show king's position
 
 void main() {
      //  Initialize Board
      board120Setup();
-     
+
      //  FEN source:
      //  http://www.chesskit.com/training/fenkit/index.php?page=p9&d=Page%209
      //  turn has been edited
      //FENboardSetup(currentBoard, "rn6/kp3p1p/pb6/N1B5/8/7P/5PP1/2R3K1 b - - 0 1");
-     
+
      //  Custom FEN to check speical cases
      //  FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
 
@@ -1489,6 +1635,10 @@ void main() {
      if (currentTurn == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
      printf("--------------------------------------------------\n");
+
+     int tempMove[3] = { E2, E4, NORMAL };
+     makeMove2(currentBoard, tempMove);
+     printBoard(currentBoard);
 
      /*
      while (gamePlaying) {
@@ -1562,10 +1712,13 @@ void main() {
      }
      */
 
+     /*
+     // PERFT TEST
      printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
      printf("PERFT TEST (DEPTH 3): %llu \n", perft(3, WHITE));
      printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE));
      printf("PERFT TEST (DEPTH 5): %llu \n", perft(5, WHITE));
      printf("PERFT TEST (DEPTH 6): %llu \n", perft(6, WHITE));
+     */
 }
