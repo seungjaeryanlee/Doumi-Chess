@@ -516,10 +516,10 @@ void pawnMoveGeneration(int board[120], int turn, int position, int moveList[250
 
           //  attack diagonals
           if (checkColor(board[position + ROW - COLUMN]) == WHITE) {
-               addMove(position, position - ROW - COLUMN, NORMAL, moveList, moveCount);
+               addMove(position, position + ROW - COLUMN, NORMAL, moveList, moveCount);
           }
           if (checkColor(board[position + ROW + COLUMN]) == WHITE) {
-               addMove(position, position - ROW + COLUMN, NORMAL, moveList, moveCount);
+               addMove(position, position + ROW + COLUMN, NORMAL, moveList, moveCount);
           }
      }
 }
@@ -1533,6 +1533,8 @@ void main() {
      //  depth 2 is wrong by 1: seems like a good FEN to use!
      //  46, 2079, 89890, 3894594, ...
      FENboardSetup(currentBoard, "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10");
+     //  after c4e6
+     FENboardSetup(currentBoard, "r4rk1/1pp1qppp/p1npBn2/2b1p1B1/4P1b1/P1NP1N2/1PP1QPPP/R4RK1 b - - 1 1");
 
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -1750,11 +1752,8 @@ void main() {
      //printf("PERFT TEST (DEPTH 3): %llu \n", perft(3, WHITE));
      //printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE));
 
-     printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, WHITE, 2));
-     for (int i = 2; i < 10; i++) {
-          for (int j = 1; j < 9; j++) {
-               printf("%c%d ", numberToFile(i*ROW + j), numberToRank(i*ROW + j));
-          }
-          printf("\n");
-     }
+     //printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, WHITE, 2));
+     //  problem found in c4e6
+     printf("PERFT TEST (DEPTH 1): %llu \n", divide(1, BLACK, 1));
+     //  f7e6 is counted as illegal: probably because of bug in squareAttackCheck
 }
