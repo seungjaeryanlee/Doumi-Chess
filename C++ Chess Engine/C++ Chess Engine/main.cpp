@@ -1286,6 +1286,7 @@ bool squareAttackCheck(int board[120], int position, int turn) {
 }
 
 u64 perft(int depth, int turn) {
+     
      depthAllMoveCount[depth] = 0;
      depthLegalMoveCount[depth] = 0;
 
@@ -1308,11 +1309,50 @@ u64 perft(int depth, int turn) {
                node += perft(depth - 1, WHITE);
           }
           undoMove(currentBoard, depthAllMoveList[depth][i], terminalValue);
+
      }
 
+     
      return node;
      
 }
+u64 divide(int depth, int turn, int maxDepth) {
+
+     depthAllMoveCount[depth] = 0;
+     depthLegalMoveCount[depth] = 0;
+
+     u64 node = 0, individualNode = 0;
+     int terminalValue;
+     if (depth == 0) { return 1; }
+
+
+     // MOVEGEN
+     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth]);
+     // CHECK FOR LEGALS
+     legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+
+     for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
+          terminalValue = makeMove(currentBoard, depthAllMoveList[depth][i]);
+          if (turn == WHITE) {
+               node += divide(depth - 1, BLACK, maxDepth);
+               individualNode = divide(depth - 1, BLACK, maxDepth);
+          }
+          else {
+               node += divide(depth - 1, WHITE, maxDepth);
+               individualNode = divide(depth - 1, WHITE, maxDepth);
+          }
+          undoMove(currentBoard, depthAllMoveList[depth][i], terminalValue);
+          if (depth == maxDepth) {
+               printf("%d to %d nodes: %d\n", depthLegalMoveList[depth][i][0], depthLegalMoveList[depth][i][1], individualNode);
+          }
+     }
+
+
+     return node;
+
+}
+
+
 int makeMove(int board[120], int move[3]) {
      int terminalValue;
      int initial = move[0], terminal = move[1], moveType = move[2];
@@ -1693,8 +1733,10 @@ void main() {
 
      //  PERFT2 TEST
      
-     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     printf("PERFT TEST (DEPTH 3): %llu \n", perft(3, WHITE));
-     printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE));
+     //printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
+     //printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     //printf("PERFT TEST (DEPTH 3): %llu \n", perft(3, WHITE));
+     //printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE));
+
+     printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, WHITE, 2));
 }
