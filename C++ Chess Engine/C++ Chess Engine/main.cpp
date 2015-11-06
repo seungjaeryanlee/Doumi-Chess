@@ -1,84 +1,9 @@
-/*                                    DEFINITION                              */
-#define PAWNVALUE 100
-#define KNIGHTVALUE 300
-#define BISHOPVALUE 300
-#define ROOKVALUE 500
-#define QUEENVALUE 900
-#define KINGVALUE 9999
-#define ROW 10
-#define COLUMN 1
-#define MAXIMUM_DEPTH 6
+
 #include <stdio.h>
 #include <string>
-typedef unsigned long long u64;
+#include "protos.h"
+#include "defs.h"
 
-/*                              FUNCTION DECLARATION                          */
-//  This function sets up currentboard[120] for the initial position of pieces.
-void board120Setup();
-//  This functions prints the board from the parameter.
-void printBoard(int board[120]);
-//  Returns evaluation score based on parameter board given.
-void updateEvaluaton(int board[120]);
-//  Gets a position number and returns the reversed position number
-int reversePosition(int position);
-//  Gets position based on 64 and returns position based on 120
-int position64to120(int position64);
-//  Gets position based on 120 and returns position based on 64
-int position120to64(int position120);
-//  Generates all moves possible by the current turn
-void moveGeneration(int board[120], int turn, int normalMoveList[250][2], int *normalMoveCount);
-//  Gets a piece and returns the color of the piece
-int checkColor(int pieceType);
-//  functions for each piece move generation & special move generation
-void pawnMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount, int promotionMoveList[88][3], int *promotionMoveCount);
-void knightMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
-void bishopMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
-void rookMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
-void queenMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
-void kingMoveGeneration(int board[120], int turn, int position, int normalMoveList[250][2], int *normalMoveCount);
-void castlingMoveGeneration(int board[120], int turn, int castlingMoveList[2][2], int *castlingMoveCount);
-void promotionMoveGeneration(int board[120], int turn, int position, int promotionMoveList[88][3], int *promotionMoveCount);
-//  Add the input move to the array
-void addMove(int initial, int terminal, int normalMoveList[250][2], int *normalMoveCount);
-void addPromotionMove(int initial, int terminal, int turn);
-//  checks if a move is legal or not
-void legalMoves(int board[120], int turn, int normalMoveList[250][2], int normalMoveCount, int legalNormalMoveList[250][2], int *legalNormalMoveCount);
-//  receives a FEN string to setup board
-void FENboardSetup(std::string FEN);
-//  performance test function to test move generation
-u64 perft(int depth);
-//  make and undo move (used for recursion
-int makeMove(int board[120], int move[2]);
-void undoMove(int board[120], int move[2], int terminalValue);
-void makeCastlingMove(int board[120], int move[2]);
-void undoCastlingMove(int board[120], int move[2]);
-int makePromotionMove(int board[120], int move[2]);
-void undoPromotionMove(int board[120], int move[2], int terminalValue);
-void makeEnpassantgMove(int board[120], int move[2]);
-void undoEnPassantMove(int board[120], int move[2]);
-//  test Output used for debugging
-void testOutput();
-
-/*                                   ENUMERATION                              */
-enum squareType {
-     EMPTYSQUARE,
-     WHITEPAWN, WHITEKNIGHT, WHITEBISHOP, WHITEROOK, WHITEQUEEN, WHITEKING,
-     BLACKPAWN, BLACKKNIGHT, BLACKBISHOP, BLACKROOK, BLACKQUEEN, BLACKKING,
-     ERRORSQUARE
-};
-enum fileRank120 {
-     A8=21, B8, C8, D8, E8, F8, G8, H8,
-     A7=31, B7, C7, D7, E7, F7, G7, H7,
-     A6=41, B6, C6, D6, E6, F6, G6, H6,
-     A5=51, B5, C5, D5, E5, F5, G5, H5,
-     A4=61, B4, C4, D4, E4, F4, G4, H4,
-     A3=71, B3, C3, D3, E3, F3, G3, H3,
-     A2=81, B2, C2, D2, E2, F2, G2, H2,
-     A1=91, B1, C1, D1, E1, F1, G1, H1
-};
-enum color {WHITE, BLACK, NEITHER};
-enum moveType {NORMAL, ENPASSANT, QUEENSIDE_CASTLING, KINGSIDE_CASTLING,
-     KNIGHT_PROMOTION, BISHOP_PROMOTION, ROOK_PROMOTION, QUEEN_PROMOTION};
 /*                                 GLOBAL VARIABLE                            */
 int currentBoard[120];
 bool gamePlaying = true;
@@ -2536,12 +2461,10 @@ void main() {
      //  board120Setup();
 
      //  FEN source:
-     //  http://www.talkchess.com/forum/viewtopic.php?topic_view=threads&p=450354&t=42463
-     //  perft(1) = 42 
-     //  perft(2) = 1352
-     //  perft(3) = 53392
-     //  perft(4) = 1761505
-     FENboardSetup(currentBoard, "rnbqkb1r/pp1p1ppp/2p5/4P3/2B5/8/PPP1NnPP/RNBQK2R w KQkq - 0 6");
+     //  https://chessprogramming.wikispaces.com/Perft+Results : Position 6
+     //  depth 2 is wrong by 1: seems like a good FEN to use!
+     //  46, 2079, 89890, 3894594, ...
+     FENboardSetup(currentBoard, "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10");
 
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -2557,7 +2480,7 @@ void main() {
     
 
      //  LEGALMOVES2 CHECK
-     
+     /*
      moveGeneration2(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare);
      printf("Number of Moves: %d\n", currentBoardMoveCount);
      for (int i = 0; i < currentBoardMoveCount; i++) {
@@ -2627,7 +2550,8 @@ void main() {
      }
 
      printf("--------------------------------------------------\n");
-     
+     */
+
      //  Attacked Square Table
      /*
      for (int i = 2; i < 10; i++) {
@@ -2752,12 +2676,12 @@ void main() {
      */
 
      //  PERFT2 TEST
-     /*
+     
      printf("PERFT TEST (DEPTH 1): %llu \n", perft2(1, WHITE));
      printf("PERFT TEST (DEPTH 2): %llu \n", perft2(2, WHITE));
      printf("PERFT TEST (DEPTH 3): %llu \n", perft2(3, WHITE));
      printf("PERFT TEST (DEPTH 4): %llu \n", perft2(4, WHITE));
-     */
+     
      
      
 }
