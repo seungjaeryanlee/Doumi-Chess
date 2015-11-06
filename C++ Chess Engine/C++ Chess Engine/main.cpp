@@ -1343,7 +1343,8 @@ u64 divide(int depth, int turn, int maxDepth) {
           }
           undoMove(currentBoard, depthAllMoveList[depth][i], terminalValue);
           if (depth == maxDepth) {
-               printf("%d to %d nodes: %d\n", depthLegalMoveList[depth][i][0], depthLegalMoveList[depth][i][1], individualNode);
+               printf("%c%d%c%d: %d\n", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]),
+                    numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]), individualNode);
           }
      }
 
@@ -1509,6 +1510,17 @@ void undoMove(int board[120], int move[3], int terminalValue) {
      }
 
 }
+
+char numberToFile(int position) {
+     char file = 'a' + position % 10 - 1;
+     return file;
+}
+int numberToRank(int position) {
+     int rank = 10 - position / 10;
+     return rank;
+}
+
+
 
 //  TODO: DECIDE BETWEEN CASTLING: KING INITIAL/TERMINAL vs. KINGPOS/ROOKPOS
 
@@ -1739,4 +1751,10 @@ void main() {
      //printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE));
 
      printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, WHITE, 2));
+     for (int i = 2; i < 10; i++) {
+          for (int j = 1; j < 9; j++) {
+               printf("%c%d ", numberToFile(i*ROW + j), numberToRank(i*ROW + j));
+          }
+          printf("\n");
+     }
 }

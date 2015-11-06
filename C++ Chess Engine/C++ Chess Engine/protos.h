@@ -9,7 +9,8 @@ void FENboardSetup(std::string FEN);
 void printBoard(int board[120]);
 //  Gets a piece and returns the color of the piece
 int checkColor(int pieceType);
-
+char numberToFile(int position);
+int numberToRank(int position);
 
 
 /*                                MOVE GENERATION                             */
