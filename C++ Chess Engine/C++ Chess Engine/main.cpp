@@ -2470,7 +2470,16 @@ void legalMoves2(int board[120], int turn, int moveList[250][3], int moveCount, 
      for (int i = 0; i < moveCount; i++) {
           //  check if king will be moved
           if (board[moveList[i][0]] == WHITEKING || board[moveList[i][0]] == BLACKKING) {
-               changedKingPosition = moveList[i][1];
+               if (moveList[i][2] == NORMAL) {
+                    changedKingPosition = moveList[i][1];
+               }
+               if (moveList[i][2] == KINGSIDE_CASTLING) {
+                    changedKingPosition = moveList[i][0] + 2 * COLUMN;
+               }
+               if (moveList[i][2] == QUEENSIDE_CASTLING) {
+                    changedKingPosition = moveList[i][0] - 2 * COLUMN;
+               }
+               
           }
           else { changedKingPosition = kingPosition; }
 
@@ -2527,15 +2536,12 @@ void main() {
      //  board120Setup();
 
      //  FEN source:
-     //  http://www.chesskit.com/training/fenkit/index.php?page=p9&d=Page%209
-     //  turn has been edited
-     //  FENboardSetup(currentBoard, "rn6/kp3p1p/pb6/N1B5/8/7P/5PP1/2R3K1 b - - 0 1");
-
-     //  Custom FEN to check speical cases
-     //FENboardSetup(currentBoard, "8/1P5k/8/4PpP1/8/8/P6P/R3K2R w KQ c6 0 1");
-     FENboardSetup(currentBoard, "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1");
-
-     //  int evaluationScore;
+     //  http://www.talkchess.com/forum/viewtopic.php?topic_view=threads&p=450354&t=42463
+     //  perft(1) = 42 
+     //  perft(2) = 1352
+     //  perft(3) = 53392
+     //  perft(4) = 1761505
+     FENboardSetup(currentBoard, "rnbqkb1r/pp1p1ppp/2p5/4P3/2B5/8/PPP1NnPP/RNBQK2R w KQkq - 0 6");
 
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -2621,13 +2627,16 @@ void main() {
      }
 
      printf("--------------------------------------------------\n");
+     
+     //  Attacked Square Table
+     /*
      for (int i = 2; i < 10; i++) {
           for (int j = 1; j < 9; j++) {
                printf("%d ", squareAttackCheck(currentBoard, i * 10 + j, WHITE));
           }
           printf("\n");
      }
-     
+     */
 
      //  makeMove2, undoMove2 test
      /*
