@@ -286,11 +286,15 @@ int checkColor(int pieceType) {
      if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
           return WHITE;
      }
-     if (BLACKPAWN <= pieceType && pieceType <= BLACKKING) {
+     else if (BLACKPAWN <= pieceType && pieceType <= BLACKKING) {
           return BLACK;
      }
-     if (pieceType == EMPTYSQUARE || pieceType == ERRORSQUARE) {
+     else if (pieceType == EMPTYSQUARE || pieceType == ERRORSQUARE) {
           return NEITHER;
+     }
+     else {
+          printf("checkColor unreachable error\n");
+          return 0;
      }
 }
 void FENboardSetup(int board[120], std::string FEN) {
@@ -1283,6 +1287,10 @@ bool squareAttackCheck(int board[120], int position, int turn) {
 
           return false;
      }
+
+     printf("squareAttackCheck unreachable error\n");
+     return true;
+
 }
 
 u64 perft(int depth, int turn) {
@@ -1343,7 +1351,7 @@ u64 divide(int depth, int turn, int maxDepth) {
           }
           undoMove(currentBoard, depthAllMoveList[depth][i], terminalValue);
           if (depth == maxDepth) {
-               printf("%c%d%c%d: %d\n", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]),
+               printf("%c%d%c%d: %llu\n", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]),
                     numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]), individualNode);
           }
      }
@@ -1363,7 +1371,7 @@ int makeMove(int board[120], int move[3]) {
           board[initial] = EMPTYSQUARE;
           return terminalValue;
      }
-     if (moveType == QUEENSIDE_CASTLING) {
+     else if (moveType == QUEENSIDE_CASTLING) {
           //  move king
           board[terminal] = board[initial];
           board[initial] = EMPTYSQUARE;
@@ -1373,7 +1381,7 @@ int makeMove(int board[120], int move[3]) {
           //  castling does not involve capture
           return 0;
      }
-     if (moveType == KINGSIDE_CASTLING) {
+     else if (moveType == KINGSIDE_CASTLING) {
           //  move king
           board[terminal] = board[initial];
           board[initial] = EMPTYSQUARE;
@@ -1383,7 +1391,7 @@ int makeMove(int board[120], int move[3]) {
           //  castling does not involve capture
           return 0;
      }
-     if (moveType == KNIGHT_PROMOTION) {
+     else if (moveType == KNIGHT_PROMOTION) {
           terminalValue = board[terminal];
 
           //  white turn
@@ -1397,7 +1405,7 @@ int makeMove(int board[120], int move[3]) {
           board[initial] = EMPTYSQUARE;
           return terminalValue;
      }
-     if (moveType == BISHOP_PROMOTION) {
+     else if (moveType == BISHOP_PROMOTION) {
           terminalValue = board[terminal];
 
           //  white turn
@@ -1411,7 +1419,7 @@ int makeMove(int board[120], int move[3]) {
           board[initial] = EMPTYSQUARE;
           return terminalValue;
      }
-     if (moveType == ROOK_PROMOTION) {
+     else if (moveType == ROOK_PROMOTION) {
           terminalValue = board[terminal];
 
           //  white turn
@@ -1425,7 +1433,7 @@ int makeMove(int board[120], int move[3]) {
           board[initial] = EMPTYSQUARE;
           return terminalValue;
      }
-     if (moveType == QUEEN_PROMOTION) {
+     else if (moveType == QUEEN_PROMOTION) {
           terminalValue = board[terminal];
 
           //  white turn
@@ -1439,7 +1447,7 @@ int makeMove(int board[120], int move[3]) {
           board[initial] = EMPTYSQUARE;
           return terminalValue;
      }
-     if (moveType == ENPASSANT) {
+     else if (moveType == ENPASSANT) {
           //  White turn
           if (board[initial] == WHITEPAWN) {
                board[terminal] = board[initial];
@@ -1454,6 +1462,10 @@ int makeMove(int board[120], int move[3]) {
                board[terminal - ROW] = EMPTYSQUARE;
                return WHITEPAWN;
           }
+     }
+     else {
+          printf("makeMove unreachable error\n");
+          return 0;
      }
 }
 void undoMove(int board[120], int move[3], int terminalValue) {
