@@ -1653,7 +1653,8 @@ void main() {
      //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
      //  48 2039 97862 ...
      FENboardSetup(currentBoard, "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
-
+     int move[3] = { A2, A4, NORMAL };
+     makeMove(currentBoard, move);
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("White Kingside Castling: %d\n", whiteKingsideCastling);
@@ -1866,21 +1867,13 @@ void main() {
      //  PERFT2 TEST
      
      //printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
-
-
      
-     std::string FEN;    
-     
-     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
-     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
-     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
-     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
-     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
-     printBoard(currentBoard);
-     //printf("PERFT TEST (DEPTH 3): %llu \n", perft(3, WHITE));
-     //printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE));
-
-     //printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, WHITE, 2));
-     
+     printf("DIVIDE TEST (DEPTH 1): %llu \n", divide(1, BLACK, 1));
+     //CPP vs. CORRECT
+     //a2a4 43 - 44
+     //e5f7 45 - 44
+     //e5g6 43 - 42
+     //e5c6 42 - 41
+     //e5d7 46 - 45
      
 }
