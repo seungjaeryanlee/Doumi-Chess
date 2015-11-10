@@ -1866,14 +1866,22 @@ void main() {
      //printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
 
 
-     printf("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1\n");
+     
      std::string FEN;    
      FEN = boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling,
           blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
      std::cout << FEN << std::endl;
 
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     FEN = boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling,
+          blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
+     std::cout << FEN << std::endl;
+
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     FEN = boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling,
+          blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
+     std::cout << FEN << std::endl;
+
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
