@@ -966,22 +966,22 @@ void castlingMoveGeneration(int board[120], int turn, int moveList[250][3], int 
      if (turn == WHITE) {
           if (whiteKingsideCastling &&
                board[F1] == EMPTYSQUARE && board[G1] == EMPTYSQUARE) {
-               addMove(E1, H1, KINGSIDE_CASTLING, moveList, moveCount);
+               addMove(E1, G1, KINGSIDE_CASTLING, moveList, moveCount);
           }
           if (whiteQueensideCastling && board[B1] == EMPTYSQUARE &&
                board[C1] == EMPTYSQUARE && board[D1] == EMPTYSQUARE) {
-               addMove(E1, A1, QUEENSIDE_CASTLING, moveList, moveCount);
+               addMove(E1, C1, QUEENSIDE_CASTLING, moveList, moveCount);
           }
 
      }
      if (turn == BLACK) {
           if (blackKingsideCastling &&
                board[F8] == EMPTYSQUARE && board[G8] == EMPTYSQUARE) {
-               addMove(E8, H8, KINGSIDE_CASTLING, moveList, moveCount);
+               addMove(E8, G8, KINGSIDE_CASTLING, moveList, moveCount);
           }
           if (blackQueensideCastling && board[B8] == EMPTYSQUARE &&
                board[C8] == EMPTYSQUARE && board[D8] == EMPTYSQUARE) {
-               addMove(E8, A8, QUEENSIDE_CASTLING, moveList, moveCount);
+               addMove(E8, C8, QUEENSIDE_CASTLING, moveList, moveCount);
           }
      }
 }
@@ -1418,6 +1418,7 @@ u64 perft(int depth, int turn) {
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
           terminalValue = makeMove(currentBoard, depthAllMoveList[depth][i]);
+          
           if (turn == WHITE) {
                node += perft(depth - 1, BLACK);
           }
@@ -1870,6 +1871,10 @@ void main() {
      
      std::string FEN;    
      
+     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
+     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
+     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
+     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
      printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
      printBoard(currentBoard);
      //printf("PERFT TEST (DEPTH 3): %llu \n", perft(3, WHITE));
