@@ -596,7 +596,7 @@ void pawnMoveGeneration(int board[120], int turn, int position, int moveList[250
                //  Advance 2 squares
                if (A2 <= position && position <= H2 &&
                     board[position - 2 * ROW] == EMPTYSQUARE) {
-                    addMove(position, position - 2 * ROW, NORMAL, moveList, moveCount);
+                    addMove(position, position - 2 * ROW, DOUBLEMOVE, moveList, moveCount);
                }
           }
 
@@ -621,7 +621,7 @@ void pawnMoveGeneration(int board[120], int turn, int position, int moveList[250
                //  Advance 2 squares
                if (A7 <= position && position <= H7 &&
                     board[position + 2 * ROW] == EMPTYSQUARE) {
-                    addMove(position, position + 2 * ROW, NORMAL, moveList, moveCount);
+                    addMove(position, position + 2 * ROW, DOUBLEMOVE, moveList, moveCount);
                }
           }
 
@@ -1480,6 +1480,12 @@ int makeMove(int board[120], int move[3]) {
           board[initial] = EMPTYSQUARE;
           return terminalValue;
      }
+     if (moveType == DOUBLEMOVE) {
+          terminalValue = board[terminal];
+          board[terminal] = board[initial];
+          board[initial] = EMPTYSQUARE;
+          return terminalValue;
+     }
      else if (moveType == QUEENSIDE_CASTLING) {
           //  move king
           board[terminal] = board[initial];
@@ -1583,6 +1589,10 @@ void undoMove(int board[120], int move[3], int terminalValue) {
           board[initial] = board[terminal];
           board[terminal] = terminalValue;
      }
+     if (moveType == DOUBLEMOVE) {
+          board[initial] = board[terminal];
+          board[terminal] = terminalValue;
+     }
      if (moveType == QUEENSIDE_CASTLING) {
           //  undo king move
           board[initial] = board[terminal];
@@ -1642,9 +1652,6 @@ int numberToRank(int position) {
 }
 
 
-
-//  TODO: DECIDE BETWEEN CASTLING: KING INITIAL/TERMINAL vs. KINGPOS/ROOKPOS
-
 void main() {
      //  Initialize Board
      //  board120Setup();
@@ -1676,6 +1683,9 @@ void main() {
           printf("%d to %d", currentBoardMoveList[i][0], currentBoardMoveList[i][1]);
           switch (currentBoardMoveList[i][2]) {
           case NORMAL:
+               break;
+               case DOUBLEMOVE:
+               printf(" - DOUBLEMOVE");
                break;
           case ENPASSANT:
                printf(" - ENPASSANT");
@@ -1868,7 +1878,7 @@ void main() {
      
      //printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
      
-     printf("DIVIDE TEST (DEPTH 1): %llu \n", divide(1, BLACK, 1));
+     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, BLACK));
      //CPP vs. CORRECT
      //a2a4 43 - 44
      //e5f7 45 - 44
