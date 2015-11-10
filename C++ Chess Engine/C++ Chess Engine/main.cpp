@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <iostream>
 #include <string>
 #include "protos.h"
 #include "defs.h"
@@ -413,6 +414,112 @@ void FENboardSetup(int board[120], std::string FEN) {
      
 
 }
+std::string boardToFEN(int board[120], int turn, 
+     bool WKCastling, bool WQCastling, bool BKCastling, bool BQCastling,
+     int enpassantSquare, int halfMoveClock, int moveNumber) {
+     std::string FEN;
+     int emptySquareCount = 0;
+
+     for (int i = 2; i < 10; i++) {
+          for (int j = 1; j < 9; j++) {
+               if (board[i*ROW + j*COLUMN] == EMPTYSQUARE) {
+                    emptySquareCount++;
+                    continue;
+               }
+               if (board[i*ROW + j*COLUMN] != EMPTYSQUARE &&
+                    emptySquareCount != 0) {
+                    FEN += ('0' + emptySquareCount);
+                    emptySquareCount = 0;
+               }
+               switch (board[i*ROW + j*COLUMN]) {
+               case WHITEPAWN:
+                    FEN += 'P';
+                    break;
+               case WHITEKNIGHT:
+                    FEN += 'N';
+                    break;
+               case WHITEBISHOP:
+                    FEN += 'B';
+                    break;
+               case WHITEROOK:
+                    FEN += 'R';
+                    break;
+               case WHITEQUEEN:
+                    FEN += 'Q';
+                    break;
+               case WHITEKING:
+                    FEN += 'K';
+                    break;
+               case BLACKPAWN:
+                    FEN += 'p';
+                    break;
+               case BLACKKNIGHT:
+                    FEN += 'n';
+                    break;
+               case BLACKBISHOP:
+                    FEN += 'b';
+                    break;
+               case BLACKROOK:
+                    FEN += 'r';
+                    break;
+               case BLACKQUEEN:
+                    FEN += 'q';
+                    break;
+               case BLACKKING:
+                    FEN += 'k';
+                    break;
+
+               }
+          }
+          if (emptySquareCount != 0) {
+               FEN += ('0' + emptySquareCount);
+               emptySquareCount = 0;
+          }
+
+          if (i != 9) {
+               FEN += '/';
+          }
+          
+     }
+
+     FEN += ' ';
+     if (turn == WHITE) { FEN += 'w'; }
+     else { FEN += 'b'; }
+
+     FEN += ' ';
+     //  no castling available
+     if (!(WKCastling||WQCastling||BKCastling||BQCastling)) {
+          FEN += '-';
+     }
+     else {
+          if (WKCastling) {
+               FEN += 'K';
+          }
+          if (WQCastling) {
+               FEN += 'Q';
+          }
+          if (BKCastling) {
+               FEN += 'k';
+          }
+          if (BQCastling) {
+               FEN += 'q';
+          }
+     }
+
+     FEN += ' ';
+     if (enpassantSquare != 0) {
+          FEN += numberToFile(enpassantSquare);
+          FEN += ('0' + numberToRank(enpassantSquare));
+     } 
+     else { FEN += '-'; }
+
+     FEN += ' ';
+     FEN += ('0' + halfMoveClock);
+     FEN += ' ';
+     FEN += ('0' + moveNumber);
+     return FEN;
+}
+
 bool checkGameEnd(int board[120]) {
      bool whiteKing = false, blackKing = false;
      for (int i = 0; i < 120; i++) {
@@ -1544,7 +1651,7 @@ void main() {
      //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
      //  48 2039 97862 ...
      FENboardSetup(currentBoard, "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
-     
+
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("White Kingside Castling: %d\n", whiteKingsideCastling);
@@ -1757,6 +1864,14 @@ void main() {
      //  PERFT2 TEST
      
      //printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
+
+
+     printf("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1\n");
+     std::string FEN;    
+     FEN = boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling,
+          blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
+     std::cout << FEN << std::endl;
+
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
