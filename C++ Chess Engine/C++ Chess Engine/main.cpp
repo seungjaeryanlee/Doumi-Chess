@@ -1414,6 +1414,7 @@ u64 perft(int depth, int turn) {
      moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth]);
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+     
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
           terminalValue = makeMove(currentBoard, depthAllMoveList[depth][i]);
@@ -1868,24 +1869,9 @@ void main() {
 
      
      std::string FEN;    
-     FEN = boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling,
-          blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
-     std::cout << FEN << std::endl;
-
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     FEN = boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling,
-          blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
-     std::cout << FEN << std::endl;
-
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     FEN = boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling,
-          blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
-     std::cout << FEN << std::endl;
-
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     
+     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
+     printBoard(currentBoard);
      //printf("PERFT TEST (DEPTH 3): %llu \n", perft(3, WHITE));
      //printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE));
 
