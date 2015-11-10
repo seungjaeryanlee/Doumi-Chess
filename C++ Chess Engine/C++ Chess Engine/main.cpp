@@ -1541,13 +1541,10 @@ void main() {
      //  board120Setup();
 
      //  FEN source:
-     //  https://chessprogramming.wikispaces.com/Perft+Results : Position 6
-     //  depth 2 is wrong by 1: seems like a good FEN to use!
-     //  46, 2079, 89890, 3894594, ...
-     FENboardSetup(currentBoard, "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10");
-     //  after c4e6
-     FENboardSetup(currentBoard, "r4rk1/1pp1qppp/p1npBn2/2b1p1B1/4P1b1/P1NP1N2/1PP1QPPP/R4RK1 b - - 1 1");
-
+     //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
+     //  48 2039 97862 ...
+     FENboardSetup(currentBoard, "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+     
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("White Kingside Castling: %d\n", whiteKingsideCastling);
@@ -1760,12 +1757,16 @@ void main() {
      //  PERFT2 TEST
      
      //printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
-     //printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
      //printf("PERFT TEST (DEPTH 3): %llu \n", perft(3, WHITE));
      //printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE));
 
      //printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, WHITE, 2));
-     //  problem found in c4e6
-     printf("PERFT TEST (DEPTH 1): %llu \n", divide(1, BLACK, 1));
-     //  f7e6 is counted as illegal: probably because of bug in squareAttackCheck
+     
+     
 }
