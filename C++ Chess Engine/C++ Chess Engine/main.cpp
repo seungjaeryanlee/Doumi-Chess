@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <Windows.h>
 #include "protos.h"
 #include "defs.h"
 
@@ -102,6 +103,8 @@ int depthAllMoveCount[MAXIMUM_DEPTH + 1];
 int depthEnpassantSquare[MAXIMUM_DEPTH + 1];
 int depthLegalMoveList[MAXIMUM_DEPTH + 1][250][3];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
+//  added for time performance check
+LARGE_INTEGER frequency, beginTime, endTime;
 
 
 /*                                    FUNCTION                                */
@@ -964,8 +967,6 @@ void kingMoveGeneration(int board[120], int turn, int position, int moveList[250
 }
 
 void castlingMoveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount) {
-     //  TODO: Check if king is in check during move
-     
 
      if (turn == WHITE) {
           if (whiteKingsideCastling &&                                 //  neither piece moved
@@ -1426,6 +1427,7 @@ u64 perft(int depth, int turn) {
 
      u64 node = 0;
      int terminalValue;
+
      if (depth == 0) { return 1; }
 
 
@@ -1692,6 +1694,25 @@ int numberToRank(int position) {
      return rank;
 }
 
+LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime) {
+     LARGE_INTEGER frequency;  // ticks per second
+
+     // get ticks per second
+     QueryPerformanceFrequency(&frequency);
+
+     // start timer
+     QueryPerformanceCounter(beginTime);
+
+     return frequency;
+}
+void stopTimer(LARGE_INTEGER *endTime) {
+     QueryPerformanceCounter(endTime);
+}
+void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency) {
+     // in millisecond
+     double elapsedTime = (endTime.QuadPart - beginTime.QuadPart) * 1000.0 / frequency.QuadPart;
+     std::cout << "Time elapsed: " << elapsedTime << std::endl;
+}
 
 void main() {
      //  Initialize Board
@@ -1701,8 +1722,7 @@ void main() {
      //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
      //  48 2039 97862 ...
      FENboardSetup(currentBoard, "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
-     //int move[3] = { A2, A4, NORMAL };
-     //makeMove(currentBoard, move);
+
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("White Kingside Castling: %d\n", whiteKingsideCastling);
@@ -1714,122 +1734,6 @@ void main() {
      if (currentTurn == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
      printf("--------------------------------------------------\n");
-    
-
-     //  LEGALMOVES2 CHECK
-     /*
-     moveGeneration(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare);
-     printf("Number of Moves: %d\n", currentBoardMoveCount);
-     for (int i = 0; i < currentBoardMoveCount; i++) {
-          printf("%d to %d", currentBoardMoveList[i][0], currentBoardMoveList[i][1]);
-          switch (currentBoardMoveList[i][2]) {
-          case NORMAL:
-               break;
-               case DOUBLEMOVE:
-               printf(" - DOUBLEMOVE");
-               break;
-          case ENPASSANT:
-               printf(" - ENPASSANT");
-               break;
-          case KNIGHT_PROMOTION:
-               printf(" - KNIGHT PROMOTION");
-               break;
-          case BISHOP_PROMOTION:
-               printf(" - BISHOP PROMOTION");
-               break;
-          case ROOK_PROMOTION:
-               printf(" - ROOK PROMOTION");
-               break;
-          case QUEEN_PROMOTION:
-               printf(" - QUEEN PROMOTION");
-               break;
-          case KINGSIDE_CASTLING:
-               printf(" - KINGSIDE CASTLING");
-               break;
-          case QUEENSIDE_CASTLING:
-               printf(" - QUEENSIDE CASTLING");
-               break;
-
-          }
-          printf("\n");
-     }
-
-     printf("--------------------------------------------------\n");
-
-     legalMoves(currentBoard, currentTurn, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
-     printf("Number of Moves: %d\n", currentBoardLegalMoveCount);
-     for (int i = 0; i < currentBoardLegalMoveCount; i++) {
-          printf("%d to %d", currentBoardLegalMoveList[i][0], currentBoardLegalMoveList[i][1]);
-          switch (currentBoardLegalMoveList[i][2]) {
-          case NORMAL:
-               break;
-          case ENPASSANT:
-               printf(" - ENPASSANT");
-               break;
-          case KNIGHT_PROMOTION:
-               printf(" - KNIGHT PROMOTION");
-               break;
-          case BISHOP_PROMOTION:
-               printf(" - BISHOP PROMOTION");
-               break;
-          case ROOK_PROMOTION:
-               printf(" - ROOK PROMOTION");
-               break;
-          case QUEEN_PROMOTION:
-               printf(" - QUEEN PROMOTION");
-               break;
-          case KINGSIDE_CASTLING:
-               printf(" - KINGSIDE CASTLING");
-               break;
-          case QUEENSIDE_CASTLING:
-               printf(" - QUEENSIDE CASTLING");
-               break;
-
-          }
-          printf("\n");
-     }
-
-     printf("--------------------------------------------------\n");
-     */
-
-     //  Attacked Square Table
-     /*
-     for (int i = 2; i < 10; i++) {
-          for (int j = 1; j < 9; j++) {
-               printf("%d ", squareAttackCheck(currentBoard, i * 10 + j, WHITE));
-          }
-          printf("\n");
-     }
-     */
-
-     //  makeMove, undoMove test
-     /*
-     
-     int tempMove[3] = { B7, B8, QUEEN_PROMOTION };
-     int tempTerminalValue;
-     tempTerminalValue = makeMove(currentBoard, tempMove);
-     printBoard(currentBoard);
-     undoMove(currentBoard, tempMove, tempTerminalValue);
-     printBoard(currentBoard);
-
-     int tempMove2[3] = { E1, C1, QUEENSIDE_CASTLING };
-     tempTerminalValue = makeMove(currentBoard, tempMove2);
-     printBoard(currentBoard);
-     undoMove(currentBoard, tempMove2, tempTerminalValue);
-     printBoard(currentBoard);
-
-     int tempMove3[3] = {E5, F6, ENPASSANT};
-     tempTerminalValue = makeMove(currentBoard, tempMove3);
-     printBoard(currentBoard);
-     undoMove(currentBoard, tempMove3, tempTerminalValue);
-     printBoard(currentBoard);
-
-     int tempMove4[3] = { H1, G1, NORMAL };
-     tempTerminalValue = makeMove(currentBoard, tempMove4);
-     printBoard(currentBoard);
-     undoMove(currentBoard, tempMove4, tempTerminalValue);
-     printBoard(currentBoard);
-     */
      
      //  Game Loop
      /*
@@ -1914,25 +1818,6 @@ void main() {
      printf("PERFT TEST (DEPTH 5): %llu \n", perft(5, WHITE));
      printf("PERFT TEST (DEPTH 6): %llu \n", perft(6, WHITE));
      */
-
-/*
-     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
-     printBoard(currentBoard);
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE)); 
-     printBoard(currentBoard);
-     
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     */
-/*
-     int doublemove[3] = {A2, A4, DOUBLEMOVE};
-     int enpassantmove[3] = {B4, A3, ENPASSANT};
-     int termV, termV2;
-     termV = makeMove(currentBoard, doublemove);
-     termV2 = makeMove(currentBoard, enpassantmove);
-     undoMove(currentBoard, enpassantmove, termV2);
-     undoMove(currentBoard, doublemove, termV);
-     printBoard(currentBoard);
-     */
      
      //int move[3] = {E5, F7, NORMAL};
      //makeMove(currentBoard, move);
@@ -1940,12 +1825,24 @@ void main() {
      //printBoard(currentBoard);
      
      //printf("DIVIDE TEST (DEPTH 1): %llu \n", divide(1, BLACK, 1));
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(1, WHITE));
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(3, WHITE));
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(4, WHITE));
-     
 
+
+
+     //  begin timer
+     frequency = startTimer(&beginTime);
+
+     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     printf("PERFT TEST (DEPTH 3): %llu \n", perft(3, WHITE));
+     printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE));
+
+     // stop timer
+     stopTimer(&endTime);
+     //  print elapsed time
+     printElapsedTime(beginTime, endTime, frequency);
+     
+     
+     // TODO: Disable castling if king or rook moved
 
      //CPP vs. CORRECT
      

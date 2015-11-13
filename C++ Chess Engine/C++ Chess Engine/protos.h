@@ -42,6 +42,9 @@ u64 perft(int depth, int turn);
 u64 divide(int depth, int turn, int maxDepth);
 int makeMove(int board[120], int move[3]);
 void undoMove(int board[120], int move[3], int terminalValue);
+LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime);
+void stopTimer(LARGE_INTEGER *endTime);
+void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency);
 
 
 
