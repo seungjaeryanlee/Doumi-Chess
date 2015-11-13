@@ -1422,7 +1422,6 @@ u64 perft(int depth, int turn) {
      
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
-          if (depth == 2 && i != 25 && i != 26) { continue; }
 
           terminalValue = makeMove(currentBoard, depthAllMoveList[depth][i]);
           if (depthAllMoveList[depth][i][2] == DOUBLEMOVE) {
@@ -1432,10 +1431,8 @@ u64 perft(int depth, int turn) {
           else { // if not, revert it back to 0
                depthEnpassantSquare[depth - 1] = 0;
           }
-          
-          //if (depth == 2 & i == 25) {// TODO delete
-           //    flag = true;
-          //}
+
+
           if (turn == WHITE) {
                node += perft(depth - 1, BLACK);
           }
@@ -1445,21 +1442,7 @@ u64 perft(int depth, int turn) {
        
           undoMove(currentBoard, depthAllMoveList[depth][i], terminalValue);
           
-          
-          /*
-          //  PROBLEM FOUND A2 - A4. but only visualized in next move?
-          if (depth == 2) {
-               printf("%c%d to %c%d\n", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]),
-                    numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]));
-               printBoard(currentBoard);
-               
-               printf("%d\n\n", depthEnpassantSquare[depth-1]);
 
-          }
-          */
-          
-          
-          
                     
      }
 
@@ -1489,6 +1472,11 @@ u64 divide(int depth, int turn, int maxDepth) {
                depthEnpassantSquare[depth - 1] = terminalValue;
                //  this terminal value is actually enpassantSquare
           }
+          else { // if not, revert it back to 0
+               depthEnpassantSquare[depth - 1] = 0;
+          }
+
+
           if (turn == WHITE) {
                node += divide(depth - 1, BLACK, maxDepth);
                individualNode = divide(depth - 1, BLACK, maxDepth);
@@ -1932,6 +1920,9 @@ void main() {
      */
      
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, WHITE, 2));
+     printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, WHITE, 2));
      /*
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
      printBoard(currentBoard);
