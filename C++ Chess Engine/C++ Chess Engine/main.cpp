@@ -1933,23 +1933,20 @@ void main() {
      undoMove(currentBoard, doublemove, termV);
      printBoard(currentBoard);
      */
-     int move[3] = {E5, F7, NORMAL};
-     makeMove(currentBoard, move);
-     boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling, blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
-     printBoard(currentBoard);
-     printf("DIVIDE TEST (DEPTH 1): %llu \n", divide(1, BLACK, 1));
-     //e8-c8 should be forbidden due to castling
-
-     /*
+     
+     //int move[3] = {E5, F7, NORMAL};
+     //makeMove(currentBoard, move);
+     //boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling, blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
+     //printBoard(currentBoard);
+     
+     //printf("DIVIDE TEST (DEPTH 1): %llu \n", divide(1, BLACK, 1));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(1, WHITE));
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     printBoard(currentBoard);
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     */
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(3, WHITE));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(4, WHITE));
+     
 
 
      //CPP vs. CORRECT
-     //e5g6 43 - 42
-     //e5c6 42 - 41
-     //e5d7 46 - 45
      
 }
