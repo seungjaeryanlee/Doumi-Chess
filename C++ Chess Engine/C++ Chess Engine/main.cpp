@@ -1421,6 +1421,8 @@ bool squareAttackCheck(int board[120], int position, int turn) {
 
 u64 perft(int depth, int turn) {
      
+     if (depth == 0) { return 1; }
+
      depthAllMoveCount[depth] = 0;
      depthLegalMoveCount[depth] = 0;
      depthEnpassantSquare[depth - 1] = 0;
@@ -1428,15 +1430,13 @@ u64 perft(int depth, int turn) {
      u64 node = 0;
      int terminalValue;
 
-     if (depth == 0) { return 1; }
-
 
      // MOVEGEN
      moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth]);
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
      
-     
+     if (depth == 1) { return depthLegalMoveCount[depth]; }
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
 
@@ -1469,19 +1469,22 @@ u64 perft(int depth, int turn) {
 }
 u64 divide(int depth, int turn, int maxDepth) {
 
+     if (depth == 0) { return 1; }
+
      depthAllMoveCount[depth] = 0;
      depthLegalMoveCount[depth] = 0;
      depthEnpassantSquare[depth - 1] = 0;
 
      u64 node = 0, individualNode = 0;
      int terminalValue;
-     if (depth == 0) { return 1; }
-
+     
 
      // MOVEGEN
      moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth]);
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+
+     if (depth == 1) { return depthLegalMoveCount[depth]; }
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
           terminalValue = makeMove(currentBoard, depthAllMoveList[depth][i]);
