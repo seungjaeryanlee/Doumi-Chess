@@ -1418,7 +1418,10 @@ u64 perft(int depth, int turn) {
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
           terminalValue = makeMove(currentBoard, depthAllMoveList[depth][i]);
-          
+          if (depthAllMoveList[depth][i][2] == DOUBLEMOVE) {
+               depthEnpassantSquare[depth - 1] = terminalValue;
+               //  this terminal value is actually enpassantSquare
+          }
           if (turn == WHITE) {
                node += perft(depth - 1, BLACK);
           }
@@ -1450,6 +1453,10 @@ u64 divide(int depth, int turn, int maxDepth) {
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
           terminalValue = makeMove(currentBoard, depthAllMoveList[depth][i]);
+          if (depthAllMoveList[depth][i][2] == DOUBLEMOVE) {
+               depthEnpassantSquare[depth - 1] = terminalValue;
+               //  this terminal value is actually enpassantSquare
+          }
           if (turn == WHITE) {
                node += divide(depth - 1, BLACK, maxDepth);
                individualNode = divide(depth - 1, BLACK, maxDepth);
@@ -1481,10 +1488,9 @@ int makeMove(int board[120], int move[3]) {
           return terminalValue;
      }
      if (moveType == DOUBLEMOVE) {
-          terminalValue = board[terminal];
           board[terminal] = board[initial];
           board[initial] = EMPTYSQUARE;
-          return terminalValue;
+          return (terminal+initial)/2;
      }
      else if (moveType == QUEENSIDE_CASTLING) {
           //  move king
@@ -1591,7 +1597,7 @@ void undoMove(int board[120], int move[3], int terminalValue) {
      }
      if (moveType == DOUBLEMOVE) {
           board[initial] = board[terminal];
-          board[terminal] = terminalValue;
+          board[terminal] = 0;
      }
      if (moveType == QUEENSIDE_CASTLING) {
           //  undo king move
@@ -1660,8 +1666,8 @@ void main() {
      //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
      //  48 2039 97862 ...
      FENboardSetup(currentBoard, "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
-     int move[3] = { A2, A4, NORMAL };
-     makeMove(currentBoard, move);
+     //int move[3] = { A2, A4, NORMAL };
+     //makeMove(currentBoard, move);
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("White Kingside Castling: %d\n", whiteKingsideCastling);
@@ -1874,11 +1880,10 @@ void main() {
      printf("PERFT TEST (DEPTH 6): %llu \n", perft(6, WHITE));
      */
 
-     //  PERFT2 TEST
-     
-     //printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
-     
-     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, BLACK));
+     printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, WHITE, 2));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, WHITE, 2));
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
      //CPP vs. CORRECT
      //a2a4 43 - 44
      //e5f7 45 - 44
