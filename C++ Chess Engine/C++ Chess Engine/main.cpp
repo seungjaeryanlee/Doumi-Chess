@@ -517,7 +517,10 @@ std::string boardToFEN(int board[120], int turn,
      FEN += ('0' + halfMoveClock);
      FEN += ' ';
      FEN += ('0' + moveNumber);
+     
+     std::cout << FEN << std::endl;
      return FEN;
+
 }
 
 bool checkGameEnd(int board[120]) {
@@ -1404,6 +1407,7 @@ u64 perft(int depth, int turn) {
      
      depthAllMoveCount[depth] = 0;
      depthLegalMoveCount[depth] = 0;
+     depthEnpassantSquare[depth - 1] = 0;
 
      u64 node = 0;
      int terminalValue;
@@ -1415,21 +1419,48 @@ u64 perft(int depth, int turn) {
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
      
+     
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
+          if (depth == 2 && i != 25 && i != 26) { continue; }
+
           terminalValue = makeMove(currentBoard, depthAllMoveList[depth][i]);
           if (depthAllMoveList[depth][i][2] == DOUBLEMOVE) {
                depthEnpassantSquare[depth - 1] = terminalValue;
                //  this terminal value is actually enpassantSquare
           }
+          else { // if not, revert it back to 0
+               depthEnpassantSquare[depth - 1] = 0;
+          }
+          
+          //if (depth == 2 & i == 25) {// TODO delete
+           //    flag = true;
+          //}
           if (turn == WHITE) {
                node += perft(depth - 1, BLACK);
           }
           else {
                node += perft(depth - 1, WHITE);
           }
+       
           undoMove(currentBoard, depthAllMoveList[depth][i], terminalValue);
+          
+          
+          /*
+          //  PROBLEM FOUND A2 - A4. but only visualized in next move?
+          if (depth == 2) {
+               printf("%c%d to %c%d\n", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]),
+                    numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]));
+               printBoard(currentBoard);
+               
+               printf("%d\n\n", depthEnpassantSquare[depth-1]);
 
+          }
+          */
+          
+          
+          
+                    
      }
 
      
@@ -1440,6 +1471,7 @@ u64 divide(int depth, int turn, int maxDepth) {
 
      depthAllMoveCount[depth] = 0;
      depthLegalMoveCount[depth] = 0;
+     depthEnpassantSquare[depth - 1] = 0;
 
      u64 node = 0, individualNode = 0;
      int terminalValue;
@@ -1595,11 +1627,11 @@ void undoMove(int board[120], int move[3], int terminalValue) {
           board[initial] = board[terminal];
           board[terminal] = terminalValue;
      }
-     if (moveType == DOUBLEMOVE) {
+     else if (moveType == DOUBLEMOVE) {
           board[initial] = board[terminal];
-          board[terminal] = 0;
+          board[terminal] = EMPTYSQUARE;
      }
-     if (moveType == QUEENSIDE_CASTLING) {
+     else if (moveType == QUEENSIDE_CASTLING) {
           //  undo king move
           board[initial] = board[terminal];
           board[terminal] = EMPTYSQUARE;
@@ -1609,7 +1641,7 @@ void undoMove(int board[120], int move[3], int terminalValue) {
           board[terminal + COLUMN] = EMPTYSQUARE;
 
      }
-     if (moveType == KINGSIDE_CASTLING) {
+     else if (moveType == KINGSIDE_CASTLING) {
           //  undo king move
           board[initial] = board[terminal];
           board[terminal] = EMPTYSQUARE;
@@ -1618,7 +1650,7 @@ void undoMove(int board[120], int move[3], int terminalValue) {
           board[terminal + COLUMN] = board[terminal - COLUMN];
           board[terminal - COLUMN] = EMPTYSQUARE;
      }
-     if (moveType == KNIGHT_PROMOTION || moveType == BISHOP_PROMOTION ||
+     else if (moveType == KNIGHT_PROMOTION || moveType == BISHOP_PROMOTION ||
           moveType == ROOK_PROMOTION || moveType == QUEEN_PROMOTION) {
           //  white turn
           if (checkColor(board[terminal]) == WHITE) {
@@ -1631,7 +1663,7 @@ void undoMove(int board[120], int move[3], int terminalValue) {
                board[initial] = BLACKPAWN;
           }
      }
-     if (moveType == ENPASSANT) {
+     else if (moveType == ENPASSANT) {
           //  white turn
           if (board[terminal] == WHITEPAWN) {
                board[terminal] = EMPTYSQUARE;
@@ -1880,10 +1912,33 @@ void main() {
      printf("PERFT TEST (DEPTH 6): %llu \n", perft(6, WHITE));
      */
 
-     printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, WHITE, 2));
+/*
+     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
+     printBoard(currentBoard);
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE)); 
+     printBoard(currentBoard);
+     
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, WHITE, 2));
+     */
+/*
+     int doublemove[3] = {A2, A4, DOUBLEMOVE};
+     int enpassantmove[3] = {B4, A3, ENPASSANT};
+     int termV, termV2;
+     termV = makeMove(currentBoard, doublemove);
+     termV2 = makeMove(currentBoard, enpassantmove);
+     undoMove(currentBoard, enpassantmove, termV2);
+     undoMove(currentBoard, doublemove, termV);
+     printBoard(currentBoard);
+     */
+     
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     /*
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     printBoard(currentBoard);
+     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
+     */
+
+
      //CPP vs. CORRECT
      //a2a4 43 - 44
      //e5f7 45 - 44
