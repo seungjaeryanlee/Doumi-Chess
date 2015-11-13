@@ -965,25 +965,40 @@ void kingMoveGeneration(int board[120], int turn, int position, int moveList[250
 
 void castlingMoveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount) {
      //  TODO: Check if king is in check during move
+     
 
      if (turn == WHITE) {
-          if (whiteKingsideCastling &&
-               board[F1] == EMPTYSQUARE && board[G1] == EMPTYSQUARE) {
+          if (whiteKingsideCastling &&                                 //  neither piece moved
+               board[F1] == EMPTYSQUARE && board[G1] == EMPTYSQUARE && //  between them are empty
+               squareAttackCheck(board, E1, WHITE) == false &&         //  not in check
+               squareAttackCheck(board, F1, WHITE) == false &&         //  not attacked while moving
+               squareAttackCheck(board, G1, WHITE) == false) {
+              
                addMove(E1, G1, KINGSIDE_CASTLING, moveList, moveCount);
           }
           if (whiteQueensideCastling && board[B1] == EMPTYSQUARE &&
-               board[C1] == EMPTYSQUARE && board[D1] == EMPTYSQUARE) {
+               board[C1] == EMPTYSQUARE && board[D1] == EMPTYSQUARE &&
+               squareAttackCheck(board, E1, WHITE) == false &&
+               squareAttackCheck(board, C1, WHITE) == false &&         
+               squareAttackCheck(board, D1, WHITE) == false) {
                addMove(E1, C1, QUEENSIDE_CASTLING, moveList, moveCount);
           }
 
      }
      if (turn == BLACK) {
-          if (blackKingsideCastling &&
-               board[F8] == EMPTYSQUARE && board[G8] == EMPTYSQUARE) {
+          if (blackKingsideCastling &&                                 //  neither piece moved
+               board[F8] == EMPTYSQUARE && board[G8] == EMPTYSQUARE && //  between them are empty
+               squareAttackCheck(board, E8, BLACK) == false &&         //  not in check
+               squareAttackCheck(board, F8, BLACK) == false &&         //  not attacked while moving
+               squareAttackCheck(board, G8, BLACK) == false) {
+               
                addMove(E8, G8, KINGSIDE_CASTLING, moveList, moveCount);
           }
           if (blackQueensideCastling && board[B8] == EMPTYSQUARE &&
-               board[C8] == EMPTYSQUARE && board[D8] == EMPTYSQUARE) {
+               board[C8] == EMPTYSQUARE && board[D8] == EMPTYSQUARE &&
+               squareAttackCheck(board, E8, BLACK) == false &&
+               squareAttackCheck(board, C8, BLACK) == false &&
+               squareAttackCheck(board, D8, BLACK) == false) {
                addMove(E8, C8, QUEENSIDE_CASTLING, moveList, moveCount);
           }
      }
@@ -1918,11 +1933,13 @@ void main() {
      undoMove(currentBoard, doublemove, termV);
      printBoard(currentBoard);
      */
-     
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, WHITE, 2));
-     printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, WHITE, 2));
+     int move[3] = {E5, F7, NORMAL};
+     makeMove(currentBoard, move);
+     boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling, blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
+     printBoard(currentBoard);
+     printf("DIVIDE TEST (DEPTH 1): %llu \n", divide(1, BLACK, 1));
+     //e8-c8 should be forbidden due to castling
+
      /*
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
      printBoard(currentBoard);
@@ -1931,8 +1948,6 @@ void main() {
 
 
      //CPP vs. CORRECT
-     //a2a4 43 - 44
-     //e5f7 45 - 44
      //e5g6 43 - 42
      //e5c6 42 - 41
      //e5d7 46 - 45
