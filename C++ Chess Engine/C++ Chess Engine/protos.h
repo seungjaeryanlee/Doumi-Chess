@@ -16,6 +16,30 @@ char numberToFile(int position);
 int numberToRank(int position);
 
 
+
+
+
+/*                                BOARD EVALUATION                            */
+//  Returns evaluation score based on parameter board given.
+void updateEvaluaton(int board[120]);
+//  Gets a position number and returns the row-reversed position number
+int reversePosition(int position);
+//  Gets position based on 64 and returns position based on 120
+int position64to120(int position64);
+//  Gets position based on 120 and returns position based on 64
+int position120to64(int position120);
+
+
+
+
+
+/*                                   GAME CYCLE                               */
+bool checkGameEnd(int board[120]);
+
+
+
+
+
 /*                                MOVE GENERATION                             */
 void moveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare);
 void pawnMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount);
@@ -37,6 +61,8 @@ bool squareAttackCheck(int board[120], int position, int turn);
 
 
 
+
+
 /*                                   RECURSION                                */
 u64 perft(int depth, int turn);
 u64 divide(int depth, int turn, int maxDepth);
@@ -46,19 +72,3 @@ LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime);
 void stopTimer(LARGE_INTEGER *endTime);
 void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency);
 
-
-
-/*                                BOARD EVALUATION                            */
-//  Returns evaluation score based on parameter board given.
-void updateEvaluaton(int board[120]);
-//  Gets a position number and returns the row-reversed position number
-int reversePosition(int position);
-//  Gets position based on 64 and returns position based on 120
-int position64to120(int position64);
-//  Gets position based on 120 and returns position based on 64
-int position120to64(int position120);
-
-
-
-/*                                   GAME CYCLE                               */
-bool checkGameEnd(int board[120]);

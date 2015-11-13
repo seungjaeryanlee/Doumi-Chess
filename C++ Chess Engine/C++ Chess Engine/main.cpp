@@ -6,7 +6,9 @@
 #include "protos.h"
 #include "defs.h"
 
+/******************************************************************************/
 /*                                 GLOBAL VARIABLE                            */
+/******************************************************************************/
 int currentBoard[120];
 bool gamePlaying = true;
 bool endGame = false;
@@ -107,7 +109,12 @@ int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 LARGE_INTEGER frequency, beginTime, endTime;
 
 
-/*                                    FUNCTION                                */
+
+/******************************************************************************/
+/*                                  FUNCTIONS                                 */
+/******************************************************************************/
+
+/*                             BOARD SETUP FUNCTIONS                          */
 void board120Setup() {
      //  Add Empty Squares
      for (int i = 0; i < 8; i++) {
@@ -151,154 +158,6 @@ void board120Setup() {
      for (int i = 0; i < 8; i++) {
           currentBoard[A2+i] = WHITEPAWN;
           currentBoard[A7+i] = BLACKPAWN;
-     }
-}
-void printBoard(int board[120]) {
-     for (int i = 0; i < 120; i++) {
-          if (i % 10 == 0) {
-               printf("\n");
-          }
-          switch (board[i]) {
-          case ERRORSQUARE:
-               printf("X ");
-               break;
-          case EMPTYSQUARE:
-               printf("- ");
-               break;
-          case WHITEPAWN:
-               printf("P ");
-               break;
-          case WHITEKNIGHT:
-               printf("N ");
-               break;
-          case WHITEBISHOP:
-               printf("B ");
-               break;
-          case WHITEROOK:
-               printf("R ");
-               break;
-          case WHITEQUEEN:
-               printf("Q ");
-               break;
-          case WHITEKING:
-               printf("K ");
-               break;
-          case BLACKPAWN:
-               printf("p ");
-               break;
-          case BLACKKNIGHT:
-               printf("n ");
-               break;
-          case BLACKBISHOP:
-               printf("b ");
-               break;
-          case BLACKROOK:
-               printf("r ");
-               break;
-          case BLACKQUEEN:
-               printf("q ");
-               break;
-          case BLACKKING:
-               printf("k ");
-               break;
-          }
-     }
-     printf("\n");
-}
-int updateEvaluation(int board[120]) {
-     int score = 0;
-     for (int i = 0; i < 120; i++) {
-          switch (board[i]) {
-          case WHITEPAWN:
-               score += PAWNVALUE;
-               score += PAWN_PCSQTable[position120to64(i)];
-               break;
-          case WHITEKNIGHT:
-               score += KNIGHTVALUE;
-               score += KNIGHT_PCSQTable[position120to64(i)];
-               break;
-          case WHITEBISHOP:
-               score += BISHOPVALUE;
-               score += BISHOP_PCSQTable[position120to64(i)];
-               break;
-          case WHITEROOK:
-               score += ROOKVALUE;
-               score += ROOK_PCSQTable[position120to64(i)];
-               break;
-          case WHITEQUEEN:
-               score += QUEENVALUE;
-               score += QUEEN_PCSQTable[position120to64(i)];
-               break;
-          case WHITEKING:
-               score += KINGVALUE;
-               if (endGame) {
-                    score += KING_PCSQTable_ENDGAME[position120to64(i)];
-               }
-               else {
-                    score += KING_PCSQTable[position120to64(i)];
-               }
-               break;
-          case BLACKPAWN:
-               score -= PAWNVALUE;
-               score -= PAWN_PCSQTable[position120to64(reversePosition(i))];
-               break;
-          case BLACKKNIGHT:
-               score -= KNIGHTVALUE;
-               score -= KNIGHT_PCSQTable[position120to64(reversePosition(i))];
-               break;
-          case BLACKBISHOP:
-               score -= BISHOPVALUE;
-               score -= BISHOP_PCSQTable[position120to64(reversePosition(i))];
-               break;
-          case BLACKROOK:
-               score -= ROOKVALUE;
-               score -= ROOK_PCSQTable[position120to64(reversePosition(i))];
-               break;
-          case BLACKQUEEN:
-               score -= QUEENVALUE;
-               score -= QUEEN_PCSQTable[position120to64(reversePosition(i))];
-               break;
-          case BLACKKING:
-               score -= KINGVALUE;
-               if (endGame) {
-                    score -= KING_PCSQTable_ENDGAME[position120to64(reversePosition(i))];
-               }
-               else {
-                    score -= KING_PCSQTable[position120to64(reversePosition(i))];
-               }
-               break;
-          }
-     }
-     return score;
-}
-int reversePosition(int position) {
-     int row = position / 10, column = position % 10;
-     return (12 - row - 1) * 10 + column;
-}
-int position64to120(int position64) {
-     int row = position64 / 8, column = position64 % 8;
-
-     return (row + 2) * 10 + column + 1;
-     
-}
-int position120to64(int position120) {
-     int row = position120 / 10 - 2, column = position120 % 10 - 1;
-
-     return row * 8 + column;
-}
-int checkColor(int pieceType) {
-     if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
-          return WHITE;
-     }
-     else if (BLACKPAWN <= pieceType && pieceType <= BLACKKING) {
-          return BLACK;
-     }
-     else if (pieceType == EMPTYSQUARE || pieceType == ERRORSQUARE) {
-          return NEITHER;
-     }
-     else {
-          printf("checkColor unreachable error\n");
-          return 0;
      }
 }
 void FENboardSetup(int board[120], std::string FEN) {
@@ -406,18 +265,18 @@ void FENboardSetup(int board[120], std::string FEN) {
           //  get enpassant square
           enpassantSquare = ROW*(FEN.at(i) - 'a' + 2);
           i++;
-          enpassantSquare += FEN.at(i)-'0';
+          enpassantSquare += FEN.at(i) - '0';
      }
 
      i += 2;
      halfMoveClock = FEN.at(i) - '0';
-     
+
      i += 2;
      moveNumber = FEN.at(i) - '0';
-     
+
 
 }
-std::string boardToFEN(int board[120], int turn, 
+std::string boardToFEN(int board[120], int turn,
      bool WKCastling, bool WQCastling, bool BKCastling, bool BQCastling,
      int enpassantSquare, int halfMoveClock, int moveNumber) {
      std::string FEN;
@@ -482,7 +341,7 @@ std::string boardToFEN(int board[120], int turn,
           if (i != 9) {
                FEN += '/';
           }
-          
+
      }
 
      FEN += ' ';
@@ -491,7 +350,7 @@ std::string boardToFEN(int board[120], int turn,
 
      FEN += ' ';
      //  no castling available
-     if (!(WKCastling||WQCastling||BKCastling||BQCastling)) {
+     if (!(WKCastling || WQCastling || BKCastling || BQCastling)) {
           FEN += '-';
      }
      else {
@@ -513,19 +372,178 @@ std::string boardToFEN(int board[120], int turn,
      if (enpassantSquare != 0) {
           FEN += numberToFile(enpassantSquare);
           FEN += ('0' + numberToRank(enpassantSquare));
-     } 
+     }
      else { FEN += '-'; }
 
      FEN += ' ';
      FEN += ('0' + halfMoveClock);
      FEN += ' ';
      FEN += ('0' + moveNumber);
-     
+
      std::cout << FEN << std::endl;
      return FEN;
 
 }
+void printBoard(int board[120]) {
+     for (int i = 0; i < 120; i++) {
+          if (i % 10 == 0) {
+               printf("\n");
+          }
+          switch (board[i]) {
+          case ERRORSQUARE:
+               printf("X ");
+               break;
+          case EMPTYSQUARE:
+               printf("- ");
+               break;
+          case WHITEPAWN:
+               printf("P ");
+               break;
+          case WHITEKNIGHT:
+               printf("N ");
+               break;
+          case WHITEBISHOP:
+               printf("B ");
+               break;
+          case WHITEROOK:
+               printf("R ");
+               break;
+          case WHITEQUEEN:
+               printf("Q ");
+               break;
+          case WHITEKING:
+               printf("K ");
+               break;
+          case BLACKPAWN:
+               printf("p ");
+               break;
+          case BLACKKNIGHT:
+               printf("n ");
+               break;
+          case BLACKBISHOP:
+               printf("b ");
+               break;
+          case BLACKROOK:
+               printf("r ");
+               break;
+          case BLACKQUEEN:
+               printf("q ");
+               break;
+          case BLACKKING:
+               printf("k ");
+               break;
+          }
+     }
+     printf("\n");
+}
+int checkColor(int pieceType) {
+     if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
+          return WHITE;
+     }
+     else if (BLACKPAWN <= pieceType && pieceType <= BLACKKING) {
+          return BLACK;
+     }
+     else if (pieceType == EMPTYSQUARE || pieceType == ERRORSQUARE) {
+          return NEITHER;
+     }
+     else {
+          printf("checkColor unreachable error\n");
+          return 0;
+     }
+}
+char numberToFile(int position) {
+     char file = 'a' + position % 10 - 1;
+     return file;
+}
+int numberToRank(int position) {
+     int rank = 10 - position / 10;
+     return rank;
+}
 
+/*                             RECURSION FUNCTIONS                            */
+int updateEvaluation(int board[120]) {
+     int score = 0;
+     for (int i = 0; i < 120; i++) {
+          switch (board[i]) {
+          case WHITEPAWN:
+               score += PAWNVALUE;
+               score += PAWN_PCSQTable[position120to64(i)];
+               break;
+          case WHITEKNIGHT:
+               score += KNIGHTVALUE;
+               score += KNIGHT_PCSQTable[position120to64(i)];
+               break;
+          case WHITEBISHOP:
+               score += BISHOPVALUE;
+               score += BISHOP_PCSQTable[position120to64(i)];
+               break;
+          case WHITEROOK:
+               score += ROOKVALUE;
+               score += ROOK_PCSQTable[position120to64(i)];
+               break;
+          case WHITEQUEEN:
+               score += QUEENVALUE;
+               score += QUEEN_PCSQTable[position120to64(i)];
+               break;
+          case WHITEKING:
+               score += KINGVALUE;
+               if (endGame) {
+                    score += KING_PCSQTable_ENDGAME[position120to64(i)];
+               }
+               else {
+                    score += KING_PCSQTable[position120to64(i)];
+               }
+               break;
+          case BLACKPAWN:
+               score -= PAWNVALUE;
+               score -= PAWN_PCSQTable[position120to64(reversePosition(i))];
+               break;
+          case BLACKKNIGHT:
+               score -= KNIGHTVALUE;
+               score -= KNIGHT_PCSQTable[position120to64(reversePosition(i))];
+               break;
+          case BLACKBISHOP:
+               score -= BISHOPVALUE;
+               score -= BISHOP_PCSQTable[position120to64(reversePosition(i))];
+               break;
+          case BLACKROOK:
+               score -= ROOKVALUE;
+               score -= ROOK_PCSQTable[position120to64(reversePosition(i))];
+               break;
+          case BLACKQUEEN:
+               score -= QUEENVALUE;
+               score -= QUEEN_PCSQTable[position120to64(reversePosition(i))];
+               break;
+          case BLACKKING:
+               score -= KINGVALUE;
+               if (endGame) {
+                    score -= KING_PCSQTable_ENDGAME[position120to64(reversePosition(i))];
+               }
+               else {
+                    score -= KING_PCSQTable[position120to64(reversePosition(i))];
+               }
+               break;
+          }
+     }
+     return score;
+}
+int reversePosition(int position) {
+     int row = position / 10, column = position % 10;
+     return (12 - row - 1) * 10 + column;
+}
+int position64to120(int position64) {
+     int row = position64 / 8, column = position64 % 8;
+
+     return (row + 2) * 10 + column + 1;
+
+}
+int position120to64(int position120) {
+     int row = position120 / 10 - 2, column = position120 % 10 - 1;
+
+     return row * 8 + column;
+}
+
+/*                             GAME CYCLE FUNCTIONS                           */
 bool checkGameEnd(int board[120]) {
      bool whiteKing = false, blackKing = false;
      for (int i = 0; i < 120; i++) {
@@ -535,6 +553,8 @@ bool checkGameEnd(int board[120]) {
      return !(whiteKing && blackKing);
 }
 
+
+/*                          MOVE GENERATION FUNCTIONS                         */
 void moveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare) {
      castlingMoveGeneration(board, turn, moveList, moveCount);
      enpassantMoveGeneration(board, turn, moveList, moveCount, enpassantSquare);
@@ -1419,6 +1439,8 @@ bool squareAttackCheck(int board[120], int position, int turn) {
 
 }
 
+
+/*                             RECURSION FUNCTIONS                            */
 u64 perft(int depth, int turn) {
      
      if (depth == 0) { return 1; }
@@ -1688,15 +1710,6 @@ void undoMove(int board[120], int move[3], int terminalValue) {
 
 }
 
-char numberToFile(int position) {
-     char file = 'a' + position % 10 - 1;
-     return file;
-}
-int numberToRank(int position) {
-     int rank = 10 - position / 10;
-     return rank;
-}
-
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime) {
      LARGE_INTEGER frequency;  // ticks per second
 
@@ -1717,6 +1730,11 @@ void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTE
      std::cout << "Time elapsed: " << elapsedTime << std::endl;
 }
 
+
+
+/******************************************************************************/
+/*                               MAIN FUNCTION                                */
+/******************************************************************************/
 void main() {
      //  Initialize Board
      //  board120Setup();
