@@ -1710,8 +1710,10 @@ void undoMove(int board[120], int move[3], int terminalValue) {
 
 }
 
-LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime) {
+LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int *timerIndex) {
      LARGE_INTEGER frequency;  // ticks per second
+
+     printf("Timer %d starting!\n", *timerIndex);
 
      // get ticks per second
      QueryPerformanceFrequency(&frequency);
@@ -1721,13 +1723,14 @@ LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime) {
 
      return frequency;
 }
-void stopTimer(LARGE_INTEGER *endTime) {
+void stopTimer(LARGE_INTEGER *endTime, int timerIndex) {
      QueryPerformanceCounter(endTime);
+     printf("Timer %d ended!\n", timerIndex);
 }
-void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency) {
+void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex) {
      // in millisecond
      double elapsedTime = (endTime.QuadPart - beginTime.QuadPart) * 1000.0 / frequency.QuadPart;
-     std::cout << "Time elapsed: " << elapsedTime << std::endl;
+     std::cout << "Timer " << timerIndex << ": " << elapsedTime << " ms elapsed." << std::endl;
 }
 
 
@@ -1850,7 +1853,8 @@ void main() {
 
 
      //  begin timer
-     frequency = startTimer(&beginTime);
+     int timerIndex = 1;
+     frequency = startTimer(&beginTime, &timerIndex);
 
      printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
@@ -1858,9 +1862,9 @@ void main() {
      printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE));
 
      // stop timer
-     stopTimer(&endTime);
+     stopTimer(&endTime, timerIndex);
      //  print elapsed time
-     printElapsedTime(beginTime, endTime, frequency);
+     printElapsedTime(beginTime, endTime, frequency, timerIndex);
      
      
      // TODO: Disable castling if king or rook moved
