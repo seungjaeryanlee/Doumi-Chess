@@ -180,7 +180,7 @@ void FENboardSetup(int board[120], std::string FEN) {
      }
 
      int currentSquare = 21;
-     int i;
+     unsigned int i;
      for (i = 0; i < FEN.length(); i++) {
           if (FEN.at(i) == ' ') { break; }
           if (FEN.at(i) == '/') {
