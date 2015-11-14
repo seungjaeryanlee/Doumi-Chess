@@ -41,7 +41,7 @@ bool checkGameEnd(int board[120]);
 
 
 /*                                MOVE GENERATION                             */
-void moveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare);
+void moveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare, bool castlingCheck[4]);
 void pawnMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount);
 void knightMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount);
 void bishopMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount);
@@ -49,7 +49,7 @@ void rookMoveGeneration(int board[120], int turn, int position, int moveList[250
 void queenMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount);
 void kingMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount);
 
-void castlingMoveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount);
+void castlingMoveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, bool castlingCheck[4]);
 void promotionMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount);
 void enpassantMoveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare);
 
@@ -64,8 +64,8 @@ bool squareAttackCheck(int board[120], int position, int turn);
 
 
 /*                                   RECURSION                                */
-u64 perft(int depth, int turn);
-u64 divide(int depth, int turn, int maxDepth);
+u64 perft(int depth, int turn, int castlingCheck[4]);
+u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4]);
 int makeMove(int board[120], int move[3]);
 void undoMove(int board[120], int move[3], int terminalValue);
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int *timerIndex);
