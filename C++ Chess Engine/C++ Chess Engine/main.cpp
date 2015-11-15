@@ -1802,7 +1802,7 @@ void main() {
      //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
      //  48 2039 97862 ...
      //FENboardSetup(currentBoard, "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
-     //  16 157 2700, 29493...
+     //  16 157 2700, 29493, 524433, 6151396
      FENboardSetup(currentBoard, "3nk3/3ppp2/8/8/8/8/8/R3K3 w Q - 0 1");
 
      printBoard(currentBoard);
@@ -1918,6 +1918,16 @@ void main() {
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling;
      printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE, castlingCheck));
+     castlingCheck[WKCASTLING] = whiteKingsideCastling;
+     castlingCheck[WQCASTLING] = whiteQueensideCastling;
+     castlingCheck[BKCASTLING] = blackKingsideCastling;
+     castlingCheck[BQCASTLING] = blackQueensideCastling;
+     printf("PERFT TEST (DEPTH 5): %llu \n", perft(5, WHITE, castlingCheck));
+     castlingCheck[WKCASTLING] = whiteKingsideCastling;
+     castlingCheck[WQCASTLING] = whiteQueensideCastling;
+     castlingCheck[BKCASTLING] = blackKingsideCastling;
+     castlingCheck[BQCASTLING] = blackQueensideCastling;
+     printf("PERFT TEST (DEPTH 6): %llu \n", perft(6, WHITE, castlingCheck));
      
      //  stop timer
      stopTimer(&endTime, timerIndex);
