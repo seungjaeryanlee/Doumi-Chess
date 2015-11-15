@@ -1800,11 +1800,8 @@ void main() {
 
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
-     //  48 2039 97862 ...
-     //FENboardSetup(currentBoard, "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
-     //  16 157 2700, 29493, 524433, 6151396
-     FENboardSetup(currentBoard, "3nk3/3ppp2/8/8/8/8/8/R3K3 w Q - 0 1");
-
+     FENboardSetup(currentBoard, "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+     //(CPP vs CORRECT) A2A4 44 vs. 43
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("White Kingside Castling: %d\n", whiteKingsideCastling);
@@ -1902,6 +1899,14 @@ void main() {
      castlingCheck[WQCASTLING] = whiteQueensideCastling;
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling;
+     printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
+
+     /*
+     bool castlingCheck[4];
+     castlingCheck[WKCASTLING] = whiteKingsideCastling;
+     castlingCheck[WQCASTLING] = whiteQueensideCastling;
+     castlingCheck[BKCASTLING] = blackKingsideCastling;
+     castlingCheck[BQCASTLING] = blackQueensideCastling;
      printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE, castlingCheck));
      castlingCheck[WKCASTLING] = whiteKingsideCastling;
      castlingCheck[WQCASTLING] = whiteQueensideCastling;
@@ -1927,8 +1932,9 @@ void main() {
      castlingCheck[WQCASTLING] = whiteQueensideCastling;
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling;
-     printf("PERFT TEST (DEPTH 6): %llu \n", perft(6, WHITE, castlingCheck));
-     
+     //printf("PERFT TEST (DEPTH 6): %llu \n", perft(6, WHITE, castlingCheck));
+     */
+
      //  stop timer
      stopTimer(&endTime, timerIndex);
      //  print elapsed time
