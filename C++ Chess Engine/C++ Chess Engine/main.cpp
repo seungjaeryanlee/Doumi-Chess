@@ -1796,7 +1796,7 @@ void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTE
 /******************************************************************************/
 void main() {
      //  Initialize Board
-     //  board120Setup();
+     //board120Setup();
 
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
@@ -1890,58 +1890,18 @@ void main() {
 
      }
      */
-
-     //  PERFT TEST
-     /*
-     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
-     printf("PERFT TEST (DEPTH 3): %llu \n", perft(3, WHITE));
-     printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE));
-     printf("PERFT TEST (DEPTH 5): %llu \n", perft(5, WHITE));
-     printf("PERFT TEST (DEPTH 6): %llu \n", perft(6, WHITE));
-     */
-
-     //int move[3] = {E5, F7, NORMAL};
-     //makeMove(currentBoard, move);
+ 
      //boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling, blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
-     //printBoard(currentBoard);
-
-     //printf("DIVIDE TEST (DEPTH 1): %llu \n", divide(1, BLACK, 1));
-
-
 
      //  begin timer
-     //int timerIndex = 1;
-     //frequency = startTimer(&beginTime, &timerIndex);
+     int timerIndex = 1;
+     frequency = startTimer(&beginTime, &timerIndex);
+     
      bool castlingCheck[4];
      castlingCheck[WKCASTLING] = whiteKingsideCastling;
      castlingCheck[WQCASTLING] = whiteQueensideCastling;
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling;
-
-     int move[3] = { A1, A8, NORMAL };
-     int terminalValue = makeMove(currentBoard, move);
-     //int move2[3] = { E8, F8, NORMAL };
-     //int terminalValue2 = makeMove(currentBoard, move2);
-     castlingCheck[WKCASTLING] = false;
-     castlingCheck[WQCASTLING] = false;
-     castlingCheck[BKCASTLING] = false;
-     castlingCheck[BQCASTLING] = false;
-
-     printBoard(currentBoard);
-
-     printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, BLACK, 1, castlingCheck));
-     //printf("DIVIDE TEST (DEPTH 1): %llu \n", divide(1, WHITE, 1, castlingCheck));
-     //printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE, castlingCheck));
-     //undoMove(currentBoard, move2, terminalValue);
-     undoMove(currentBoard, move, terminalValue);
-     // CPP vs. CORRECT
-     // a1a8: 108 vs. 105
-     // ...e8f8 16 vs. 15
-     // ...d7d6 16 vs. 15
-     // ...d7d5 16 vs. 15
-
-     /*
      printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE, castlingCheck));
      castlingCheck[WKCASTLING] = whiteKingsideCastling;
      castlingCheck[WQCASTLING] = whiteQueensideCastling;
@@ -1958,15 +1918,9 @@ void main() {
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling;
      printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE, castlingCheck));
-     */
-     // stop timer
-     //stopTimer(&endTime, timerIndex);
+     
+     //  stop timer
+     stopTimer(&endTime, timerIndex);
      //  print elapsed time
-     //printElapsedTime(beginTime, endTime, frequency, timerIndex);
-     
-     
-     // TODO: Disable castling if king or rook moved
-
-     //CPP vs. CORRECT
-     
+     printElapsedTime(beginTime, endTime, frequency, timerIndex);
 }
