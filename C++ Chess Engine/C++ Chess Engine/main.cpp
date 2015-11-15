@@ -1534,7 +1534,7 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4]) {
      if (depth == 1) { return depthLegalMoveCount[depth]; }
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
-          terminalValue = makeMove(currentBoard, depthAllMoveList[depth][i]);
+         
           
           //  TODO: update castling values
           if (currentBoard[depthAllMoveList[depth][i][0]] == WHITEKING) {
@@ -1570,6 +1570,7 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4]) {
                depthEnpassantSquare[depth - 1] = 0;
           }
 
+          terminalValue = makeMove(currentBoard, depthAllMoveList[depth][i]);
 
           if (turn == WHITE) {
                node += divide(depth - 1, BLACK, maxDepth, castlingCheck);
@@ -1914,8 +1915,12 @@ void main() {
      castlingCheck[WQCASTLING] = whiteQueensideCastling;
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling;
-
      
+     printf("DIVIDE TEST (DEPTH 3): %llu \n", divide(3, WHITE, 3, castlingCheck));
+     // CPP vs. CORRECT
+     // a1a8: 108 vs. 105
+
+     /*
      printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE, castlingCheck));
      castlingCheck[WKCASTLING] = whiteKingsideCastling;
      castlingCheck[WQCASTLING] = whiteQueensideCastling;
@@ -1932,7 +1937,7 @@ void main() {
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling;
      printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE, castlingCheck));
-
+     */
      // stop timer
      stopTimer(&endTime, timerIndex);
      //  print elapsed time
