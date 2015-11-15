@@ -1463,33 +1463,33 @@ u64 perft(int depth, int turn, bool castlingCheck[4]) {
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
           //  TODO: update castling values
-          if (currentBoard[depthAllMoveList[depth][i][0]] == WHITEKING) {
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEKING) {
                castlingCheck[WKCASTLING] = false;
                castlingCheck[WQCASTLING] = false;
           }
-          if (currentBoard[depthAllMoveList[depth][i][0]] == BLACKKING) {
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKKING) {
                castlingCheck[BKCASTLING] = false;
                castlingCheck[BQCASTLING] = false;
           }
-          if (currentBoard[depthAllMoveList[depth][i][0]] == WHITEROOK) {
-               if (depthAllMoveList[depth][i][0] == A1) {
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEROOK) {
+               if (depthLegalMoveList[depth][i][0] == A1) {
                     castlingCheck[WQCASTLING] = false;
                }
-               if (depthAllMoveList[depth][i][0] == H1) {
+               if (depthLegalMoveList[depth][i][0] == H1) {
                     castlingCheck[WKCASTLING] = false;
                }
           }
-          if (currentBoard[depthAllMoveList[depth][i][0]] == BLACKROOK) {
-               if (depthAllMoveList[depth][i][0] == A8) {
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKROOK) {
+               if (depthLegalMoveList[depth][i][0] == A8) {
                     castlingCheck[BQCASTLING] = false;
                }
-               if (depthAllMoveList[depth][i][0] == H8) {
+               if (depthLegalMoveList[depth][i][0] == H8) {
                     castlingCheck[BKCASTLING] = false;
                }
           }
 
 
-          if (depthAllMoveList[depth][i][2] == DOUBLEMOVE) {
+          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
                depthEnpassantSquare[depth - 1] = terminalValue;
                //  this terminal value is actually enpassantSquare
           }
@@ -1497,7 +1497,7 @@ u64 perft(int depth, int turn, bool castlingCheck[4]) {
                depthEnpassantSquare[depth - 1] = 0;
           }
 
-          terminalValue = makeMove(currentBoard, depthAllMoveList[depth][i]);
+          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
 
           if (turn == WHITE) {
                node += perft(depth - 1, BLACK, castlingCheck);
@@ -1506,7 +1506,7 @@ u64 perft(int depth, int turn, bool castlingCheck[4]) {
                node += perft(depth - 1, WHITE, castlingCheck);
           }
        
-          undoMove(currentBoard, depthAllMoveList[depth][i], terminalValue);
+          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
                     
      }
 
@@ -1537,32 +1537,32 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4]) {
          
           
           //  TODO: update castling values
-          if (currentBoard[depthAllMoveList[depth][i][0]] == WHITEKING) {
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEKING) {
                castlingCheck[WKCASTLING] = false;
                castlingCheck[WQCASTLING] = false;
           }
-          if (currentBoard[depthAllMoveList[depth][i][0]] == BLACKKING) {
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKKING) {
                castlingCheck[BKCASTLING] = false;
                castlingCheck[BQCASTLING] = false;
           }
-          if (currentBoard[depthAllMoveList[depth][i][0]] == WHITEROOK) {
-               if (depthAllMoveList[depth][i][0] == A1) {
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEROOK) {
+               if (depthLegalMoveList[depth][i][0] == A1) {
                     castlingCheck[WQCASTLING] = false;
                }
-               if (depthAllMoveList[depth][i][0] == H1) {
+               if (depthLegalMoveList[depth][i][0] == H1) {
                     castlingCheck[WKCASTLING] = false;
                }
           }
-          if (currentBoard[depthAllMoveList[depth][i][0]] == BLACKROOK) {
-               if (depthAllMoveList[depth][i][0] == A8) {
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKROOK) {
+               if (depthLegalMoveList[depth][i][0] == A8) {
                     castlingCheck[BQCASTLING] = false;
                }
-               if (depthAllMoveList[depth][i][0] == H8) {
+               if (depthLegalMoveList[depth][i][0] == H8) {
                     castlingCheck[BKCASTLING] = false;
                }
           }
 
-          if (depthAllMoveList[depth][i][2] == DOUBLEMOVE) {
+          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
                depthEnpassantSquare[depth - 1] = terminalValue;
                //  this terminal value is actually enpassantSquare
           }
@@ -1570,8 +1570,10 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4]) {
                depthEnpassantSquare[depth - 1] = 0;
           }
 
-          terminalValue = makeMove(currentBoard, depthAllMoveList[depth][i]);
+          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
 
+          //printBoard(currentBoard);
+          //printf("%c%d %c%d\n", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]), numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]));
           if (turn == WHITE) {
                node += divide(depth - 1, BLACK, maxDepth, castlingCheck);
                individualNode = divide(depth - 1, BLACK, maxDepth, castlingCheck);
@@ -1580,8 +1582,9 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4]) {
                node += divide(depth - 1, WHITE, maxDepth, castlingCheck);
                individualNode = divide(depth - 1, WHITE, maxDepth, castlingCheck);
           }
-          undoMove(currentBoard, depthAllMoveList[depth][i], terminalValue);
-          if (depth == maxDepth) {
+          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+          if (depth >= maxDepth) {
+               for (int i = 0; i < 2-depth; i++) { printf("  "); }
                printf("%c%d%c%d: %llu\n", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]),
                     numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]), individualNode);
           }
@@ -1813,7 +1816,7 @@ void main() {
      if (currentTurn == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
      printf("--------------------------------------------------\n");
-     
+
      //  Game Loop
      /*
      while (gamePlaying) {
@@ -1826,9 +1829,9 @@ void main() {
           printf("Total Normal Moves: %d\n", normalMoveCount);
           legalMoves(currentBoard, currentTurn, allNormalMoves, normalMoveCount, allLegalNormalMoves, &legalNormalMoveCount);
           printf("Legal Normal Moves: %d\n", legalNormalMoveCount);
-          
+
           printf("--------------------------------------------------\n");
-          
+
           printf("Total Promotion Moves: %d\n", promotionMoveCount);
           for (int i = 0; i < promotionMoveCount; i++) {
                printf("%d to %d: Piece Change to %d\n",
@@ -1836,23 +1839,23 @@ void main() {
           }
 
           printf("--------------------------------------------------\n");
-          
+
           enpassantMoveGeneration(currentBoard, currentTurn, enpassantMoves, &enpassantMoveCount, enpassantSquare);
           printf("Total Enpassant Moves: %d\n", enpassantMoveCount);
           for (int i = 0; i < enpassantMoveCount; i++) {
                printf("%d to %d\n",
                     enpassantMoves[i][0], enpassantMoves[i][1]);
           }
-          
+
           printf("--------------------------------------------------\n");
-         
+
           printf("Total Castling Moves: %d\n", castlingMoveCount);
           castlingMoveGeneration(currentBoard, currentTurn, castlingMoves, &castlingMoveCount);
           for (int i = 0; i < castlingMoveCount; i++) {
                printf("%d to %d\n",
                     castlingMoves[i][0], castlingMoves[i][1]);
           }
-          
+
           printf("--------------------------------------------------\n");
 
           if (!endGame) {
@@ -1868,14 +1871,14 @@ void main() {
                }
           }
           printf("Endgame: %d\n", endGame);
-          
+
           //  TODO: Make Best Move
           //  TODO: Check for enpassant square
 
           //  Change turns
           if (currentTurn == WHITE) { currentTurn = BLACK; }
-          else { 
-               currentTurn = WHITE; 
+          else {
+               currentTurn = WHITE;
                moveNumber++;
           }
 
@@ -1884,12 +1887,12 @@ void main() {
           //  gamePlaying = !checkGameEnd(currentBoard);
 
           //  TODO: Check Fifty move rule
-          
+
      }
      */
 
      //  PERFT TEST
-     /*  
+     /*
      printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE));
      printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE));
      printf("PERFT TEST (DEPTH 3): %llu \n", perft(3, WHITE));
@@ -1897,28 +1900,46 @@ void main() {
      printf("PERFT TEST (DEPTH 5): %llu \n", perft(5, WHITE));
      printf("PERFT TEST (DEPTH 6): %llu \n", perft(6, WHITE));
      */
-     
+
      //int move[3] = {E5, F7, NORMAL};
      //makeMove(currentBoard, move);
      //boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling, blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
      //printBoard(currentBoard);
-     
+
      //printf("DIVIDE TEST (DEPTH 1): %llu \n", divide(1, BLACK, 1));
 
 
 
      //  begin timer
-     int timerIndex = 1;
-     frequency = startTimer(&beginTime, &timerIndex);
+     //int timerIndex = 1;
+     //frequency = startTimer(&beginTime, &timerIndex);
      bool castlingCheck[4];
      castlingCheck[WKCASTLING] = whiteKingsideCastling;
      castlingCheck[WQCASTLING] = whiteQueensideCastling;
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling;
-     
-     printf("DIVIDE TEST (DEPTH 3): %llu \n", divide(3, WHITE, 3, castlingCheck));
+
+     int move[3] = { A1, A8, NORMAL };
+     int terminalValue = makeMove(currentBoard, move);
+     //int move2[3] = { E8, F8, NORMAL };
+     //int terminalValue2 = makeMove(currentBoard, move2);
+     castlingCheck[WKCASTLING] = false;
+     castlingCheck[WQCASTLING] = false;
+     castlingCheck[BKCASTLING] = false;
+     castlingCheck[BQCASTLING] = false;
+
+     printBoard(currentBoard);
+
+     printf("DIVIDE TEST (DEPTH 2): %llu \n", divide(2, BLACK, 1, castlingCheck));
+     //printf("DIVIDE TEST (DEPTH 1): %llu \n", divide(1, WHITE, 1, castlingCheck));
+     //printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE, castlingCheck));
+     //undoMove(currentBoard, move2, terminalValue);
+     undoMove(currentBoard, move, terminalValue);
      // CPP vs. CORRECT
      // a1a8: 108 vs. 105
+     // ...e8f8 16 vs. 15
+     // ...d7d6 16 vs. 15
+     // ...d7d5 16 vs. 15
 
      /*
      printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE, castlingCheck));
@@ -1939,9 +1960,9 @@ void main() {
      printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE, castlingCheck));
      */
      // stop timer
-     stopTimer(&endTime, timerIndex);
+     //stopTimer(&endTime, timerIndex);
      //  print elapsed time
-     printElapsedTime(beginTime, endTime, frequency, timerIndex);
+     //printElapsedTime(beginTime, endTime, frequency, timerIndex);
      
      
      // TODO: Disable castling if king or rook moved
