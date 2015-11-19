@@ -1441,21 +1441,20 @@ bool squareAttackCheck(int board[120], int position, int turn) {
 
 
 /*                             RECURSION FUNCTIONS                            */
-u64 perft(int depth, int turn, bool castlingCheck[4]) {
+u64 perft(int depth, int turn, bool castlingCheck[4], int givenEnpassantSquare) {
      
      if (depth == 0) { return 1; }
 
      depthAllMoveCount[depth] = 0;
      depthLegalMoveCount[depth] = 0;
-     depthEnpassantSquare[depth - 1] = 0;
 
      u64 node = 0;
      int terminalValue;
-
+	 int currentEnpassantSquare = 0;
 
      
      // MOVEGEN
-     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], castlingCheck);
+     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], givenEnpassantSquare, castlingCheck);
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
      
@@ -1490,20 +1489,17 @@ u64 perft(int depth, int turn, bool castlingCheck[4]) {
 
 
           if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
-               depthEnpassantSquare[depth - 1] = terminalValue;
+			  currentEnpassantSquare = terminalValue;
                //  this terminal value is actually enpassantSquare
-          }
-          else { // if not, revert it back to 0
-               depthEnpassantSquare[depth - 1] = 0;
           }
 
           terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
 
           if (turn == WHITE) {
-               node += perft(depth - 1, BLACK, castlingCheck);
+               node += perft(depth - 1, BLACK, castlingCheck, currentEnpassantSquare);
           }
           else {
-               node += perft(depth - 1, WHITE, castlingCheck);
+               node += perft(depth - 1, WHITE, castlingCheck, currentEnpassantSquare);
           }
        
           undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
@@ -1899,11 +1895,12 @@ void main() {
      castlingCheck[WQCASTLING] = whiteQueensideCastling;
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
-	 //int move[3] = {E1, G1, NORMAL};
-	 //makeMove(currentBoard, move);
+	 int move[3] = {A2, A4, DOUBLEMOVE};
+	 makeMove(currentBoard, move);
 
-     printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
-	 //printf("DIVIDE TEST (DEPTH 1) : %llu \n", divide(1, BLACK, 1, castlingCheck));
+	 //printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
+	 printf("DIVIDE TEST (DEPTH 1) : %llu \n", divide(1, BLACK, 1, castlingCheck));
+	 printf("PERFT TEST (DEPTH 1) : %llu \n", perft(1, BLACK, castlingCheck, A3));
 
      /*
      bool castlingCheck[4];
