@@ -1531,7 +1531,7 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4]) {
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
-     if (depth == 1) { return depthLegalMoveCount[depth]; }
+     //if (depth == 1) { return depthLegalMoveCount[depth]; }
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
          
@@ -1800,7 +1800,7 @@ void main() {
 
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
-     FENboardSetup(currentBoard, "4k3/8/8/8/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+     FENboardSetup(currentBoard, "4k3/8/8/8/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQ - 0 1");
      //(CPP vs CORRECT) A2A4 44 vs. 43
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -1899,7 +1899,11 @@ void main() {
      castlingCheck[WQCASTLING] = whiteQueensideCastling;
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
+	 //int move[3] = {E1, G1, NORMAL};
+	 //makeMove(currentBoard, move);
+
      printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
+	 //printf("DIVIDE TEST (DEPTH 1) : %llu \n", divide(1, BLACK, 1, castlingCheck));
 
      /*
      bool castlingCheck[4];
