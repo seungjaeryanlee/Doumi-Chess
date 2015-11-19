@@ -1801,7 +1801,7 @@ void main() {
 
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
-     FENboardSetup(currentBoard, "4k3/8/8/8/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQ - 0 1");
+     FENboardSetup(currentBoard, "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
      //(CPP vs CORRECT) A2A4 44 vs. 43
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -1901,10 +1901,16 @@ void main() {
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
 	
-	printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
-     printBoard(currentBoard);
-     printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
-     //e1g1, e1c1 disappears (castlings)
+     int move[3] = {D5, D6, NORMAL};
+     int terminalValue = makeMove(currentBoard, move);
+
+	//printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
+
+     printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, BLACK, 2, castlingCheck));
+     //  97862 (CORRECT) vs. 94700 (CPP)
+     //  d5d6: 1991 vs. 1912
+     //  d5e6: 2241 vs. 2152
+     //  a2a3: 2186 vs. 2101 ...
 
 
      /*
