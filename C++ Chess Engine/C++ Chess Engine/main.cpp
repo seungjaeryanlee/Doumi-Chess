@@ -1441,27 +1441,26 @@ bool squareAttackCheck(int board[120], int position, int turn) {
 
 
 /*                             RECURSION FUNCTIONS                            */
-u64 perft(int depth, int turn, bool castlingCheck[4], int givenEnpassantSquare) {
+u64 perft(int depth, int turn, bool castlingCheck[4]) {
      
      if (depth == 0) { return 1; }
 
      depthAllMoveCount[depth] = 0;
      depthLegalMoveCount[depth] = 0;
+     depthEnpassantSquare[depth - 1] = 0;
 
      u64 node = 0;
      int terminalValue;
-	 int currentEnpassantSquare = 0;
 
      
      // MOVEGEN
-     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], givenEnpassantSquare, castlingCheck);
+     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], castlingCheck);
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
      
      if (depth == 1) { return depthLegalMoveCount[depth]; }
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
-          //  TODO: update castling values
           if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEKING) {
                castlingCheck[WKCASTLING] = false;
                castlingCheck[WQCASTLING] = false;
@@ -1487,19 +1486,21 @@ u64 perft(int depth, int turn, bool castlingCheck[4], int givenEnpassantSquare) 
                }
           }
 
-
-          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
-			  currentEnpassantSquare = terminalValue;
-               //  this terminal value is actually enpassantSquare
-          }
-
           terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
 
-          if (turn == WHITE) {
-               node += perft(depth - 1, BLACK, castlingCheck, currentEnpassantSquare);
+          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
+               depthEnpassantSquare[depth - 1] = terminalValue;
+               //  this terminal value is actually enpassantSquare
           }
           else {
-               node += perft(depth - 1, WHITE, castlingCheck, currentEnpassantSquare);
+               depthEnpassantSquare[depth - 1] = 0;
+          }
+
+          if (turn == WHITE) {
+               node += perft(depth - 1, BLACK, castlingCheck);
+          }
+          else {
+               node += perft(depth - 1, WHITE, castlingCheck);
           }
        
           undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
@@ -1558,6 +1559,8 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4]) {
                }
           }
 
+          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
+
           if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
                depthEnpassantSquare[depth - 1] = terminalValue;
                //  this terminal value is actually enpassantSquare
@@ -1565,8 +1568,6 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4]) {
           else { // if not, revert it back to 0
                depthEnpassantSquare[depth - 1] = 0;
           }
-
-          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
 
           //printBoard(currentBoard);
           //printf("%c%d %c%d\n", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]), numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]));
@@ -1895,12 +1896,10 @@ void main() {
      castlingCheck[WQCASTLING] = whiteQueensideCastling;
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
-	 int move[3] = {A2, A4, DOUBLEMOVE};
-	 makeMove(currentBoard, move);
-
-	 //printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
-	 printf("DIVIDE TEST (DEPTH 1) : %llu \n", divide(1, BLACK, 1, castlingCheck));
-	 printf("PERFT TEST (DEPTH 1) : %llu \n", perft(1, BLACK, castlingCheck, A3));
+	
+	printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
+     printf("PERFT TEST (DEPTH 2) : %llu \n", perft(2, WHITE, castlingCheck));
+     printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
 
      /*
      bool castlingCheck[4];
