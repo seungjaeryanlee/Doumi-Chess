@@ -1767,10 +1767,10 @@ void undoMove(int board[120], int move[3], int terminalValue) {
 
 }
 
-LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int *timerIndex) {
+LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex) {
      LARGE_INTEGER frequency;  // ticks per second
 
-     printf("Timer %d starting!\n", *timerIndex);
+     printf("Timer %d starting!\n", timerIndex);
 
      // get ticks per second
      QueryPerformanceFrequency(&frequency);
@@ -1801,8 +1801,8 @@ void main() {
 
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
-     FENboardSetup(currentBoard, "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
-     //(CPP vs CORRECT) A2A4 44 vs. 43
+     FENboardSetup(currentBoard, "4k3/8/8/3P4/8/PPPPPPPP/8/R3K2R w KQkq - 0 1");
+
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("White Kingside Castling: %d\n", whiteKingsideCastling);
@@ -1893,7 +1893,7 @@ void main() {
 
      //  begin timer
      int timerIndex = 1;
-     frequency = startTimer(&beginTime, &timerIndex);
+     frequency = startTimer(&beginTime, timerIndex);
      
      bool castlingCheck[4];
      castlingCheck[WKCASTLING] = whiteKingsideCastling;
@@ -1901,12 +1901,16 @@ void main() {
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
 	
+
+
+     printf("DIVIDE TEST (DEPTH 3) : %llu \n", divide(3, WHITE, 3, castlingCheck));
      int move[3] = {D5, D6, NORMAL};
      int terminalValue = makeMove(currentBoard, move);
-
 	//printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
 
-     printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, BLACK, 2, castlingCheck));
+     
+     printf("PERFT TEST (DEPTH 2) : %llu \n", perft(2, BLACK, castlingCheck));
+     //printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, BLACK, 2, castlingCheck));
      //  97862 (CORRECT) vs. 94700 (CPP)
      //  d5d6: 1991 vs. 1912
      //  d5e6: 2241 vs. 2152

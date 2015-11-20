@@ -68,7 +68,7 @@ u64 perft(int depth, int turn, int castlingCheck[4]);
 u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4]);
 int makeMove(int board[120], int move[3]);
 void undoMove(int board[120], int move[3], int terminalValue);
-LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int *timerIndex);
+LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex);
 void stopTimer(LARGE_INTEGER *endTime, int timerIndex);
 void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex);
 
