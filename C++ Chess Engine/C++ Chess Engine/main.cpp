@@ -1441,78 +1441,7 @@ bool squareAttackCheck(int board[120], int position, int turn) {
 
 
 /*                             RECURSION FUNCTIONS                            */
-u64 perft(int depth, int turn, bool castlingCheck[4]) {
-     bool copyCastlingCheck[4];
-     for (int i = 0; i < 4; i++) { copyCastlingCheck[i] = castlingCheck[i]; }
-     if (depth == 0) { return 1; }
-
-     depthAllMoveCount[depth] = 0;
-     depthLegalMoveCount[depth] = 0;
-     depthEnpassantSquare[depth - 1] = 0;
-
-     u64 node = 0, individualNode = 0;
-     int terminalValue;
-
-
-     // MOVEGEN
-     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], castlingCheck);
-     // CHECK FOR LEGALS
-     legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
-
-     //if (depth == 1) { return depthLegalMoveCount[depth]; }
-
-     for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
-
-
-          //  TODO: update castling values
-          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEKING) {
-               copyCastlingCheck[WKCASTLING] = false;
-               copyCastlingCheck[WQCASTLING] = false;
-          }
-          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKKING) {
-               copyCastlingCheck[BKCASTLING] = false;
-               copyCastlingCheck[BQCASTLING] = false;
-          }
-          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEROOK) {
-               if (depthLegalMoveList[depth][i][0] == A1) {
-                    copyCastlingCheck[WQCASTLING] = false;
-               }
-               if (depthLegalMoveList[depth][i][0] == H1) {
-                    copyCastlingCheck[WKCASTLING] = false;
-               }
-          }
-          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKROOK) {
-               if (depthLegalMoveList[depth][i][0] == A8) {
-                    copyCastlingCheck[BQCASTLING] = false;
-               }
-               if (depthLegalMoveList[depth][i][0] == H8) {
-                    copyCastlingCheck[BKCASTLING] = false;
-               }
-          }
-
-          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
-
-          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
-               depthEnpassantSquare[depth - 1] = terminalValue;
-               //  this terminal value is actually enpassantSquare
-          }
-          else { // if not, revert it back to 0
-               depthEnpassantSquare[depth - 1] = 0;
-          }
-
-          //printBoard(currentBoard);
-          //printf("%c%d %c%d\n", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]), numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]));
-          if (turn == WHITE) {
-               node += perft(depth - 1, BLACK, copyCastlingCheck);
-          }
-          else {
-               node += perft(depth - 1, WHITE, copyCastlingCheck);
-          }
-          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
-     }
-     return node;
-}
-u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4]) {
+u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOutput) {
 
      bool copyCastlingCheck[4];
      for (int i = 0; i < 4; i++) { copyCastlingCheck[i] = castlingCheck[i]; }
@@ -1532,7 +1461,7 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4]) {
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
-     if (depth == 1) { return depthLegalMoveCount[depth]; }
+     //if (depth == 1) { return depthLegalMoveCount[depth]; }
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
          
@@ -1576,16 +1505,16 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4]) {
           //printBoard(currentBoard);
           //printf("%c%d %c%d\n", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]), numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]));
           if (turn == WHITE) {
-               node += divide(depth - 1, BLACK, maxDepth, copyCastlingCheck);
-               individualNode = divide(depth - 1, BLACK, maxDepth, copyCastlingCheck);
+               node += divide(depth - 1, BLACK, maxDepth, copyCastlingCheck, showOutput);
+               individualNode = divide(depth - 1, BLACK, maxDepth, copyCastlingCheck, false);
           }
           else {
-               node += divide(depth - 1, WHITE, maxDepth, copyCastlingCheck);
-               individualNode = divide(depth - 1, WHITE, maxDepth, copyCastlingCheck);
+               node += divide(depth - 1, WHITE, maxDepth, copyCastlingCheck, showOutput);
+               individualNode = divide(depth - 1, WHITE, maxDepth, copyCastlingCheck, false);
           }
           undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
-          if (depth >= maxDepth) {
-               for (int i = 0; i < 2-depth; i++) { printf("  "); }
+          if (depth >= maxDepth && showOutput) {
+               for (int i = 0; i < 3-depth; i++) { printf("  "); }
                printf("%c%d%c%d: %llu\n", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]),
                     numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]), individualNode);
           }
@@ -1801,7 +1730,7 @@ void main() {
 
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
-     FENboardSetup(currentBoard, "4k3/8/8/3P4/8/PPPPPPPP/8/R3K2R w KQkq - 0 1");
+     FENboardSetup(currentBoard, "4k3/8/8/3P4/8/4PPPP/8/4K2R w KQ - 0 1");
 
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -1903,14 +1832,16 @@ void main() {
 	
 
 
-     printf("DIVIDE TEST (DEPTH 3) : %llu \n", divide(3, WHITE, 3, castlingCheck));
+     printf("DIVIDE TEST (DEPTH 3) : %llu \n", divide(3, WHITE, 2, castlingCheck, true));
      int move[3] = {D5, D6, NORMAL};
      int terminalValue = makeMove(currentBoard, move);
 	//printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
 
      
-     printf("PERFT TEST (DEPTH 2) : %llu \n", perft(2, BLACK, castlingCheck));
-     //printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, BLACK, 2, castlingCheck));
+     printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, BLACK, 2, castlingCheck, true));
+     //printf("PERFT TEST (DEPTH 2) : %llu \n", divide(2, BLACK, 0, castlingCheck, false));
+     //  51 (cpp) vs. 59 (correct)
+     
      //  97862 (CORRECT) vs. 94700 (CPP)
      //  d5d6: 1991 vs. 1912
      //  d5e6: 2241 vs. 2152
