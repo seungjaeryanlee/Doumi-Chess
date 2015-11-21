@@ -38,5 +38,5 @@ I plan to use Negamax algorithm for this engine.
 The Piece Square Tables of this version is from the following link:   https://chessprogramming.wikispaces.com/Simplified+evaluation+function  
 
 We used / plan to use perft tests from these websites:  
-https://chessprogramming.wikispaces.com/Test-Positions  
+https://chessprogramming.wikispaces.com/Perft+Results  
 http://www.chesskit.com/training/fenkit/index.php?page=p9&d=Page%209
