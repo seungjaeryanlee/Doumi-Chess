@@ -1447,9 +1447,6 @@ bool squareAttackCheck(int board[120], int position, int turn) {
 /*                              RECURSION FUNCTIONS                            */
 u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOutput) {
 
-     bool copyCastlingCheck[4];
-     
-
      if (depth == 0) { return 1; }
 
      depthAllMoveCount[depth] = 0;
@@ -1458,7 +1455,7 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOu
 
      u64 node = 0, individualNode = 0;
      int terminalValue;
-
+     bool copyCastlingCheck[4];
 
      // MOVEGEN
      moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], castlingCheck);
@@ -1469,12 +1466,7 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOu
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
           for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
-          if (depth == 3 && i != 0 && i != 1) {
-               continue;
-          }
-          if (depth == 3 && (i == 0 || i == 1)) {
-               printf("%d %d %d %d\n", copyCastlingCheck[0], copyCastlingCheck[1], copyCastlingCheck[2], copyCastlingCheck[3]);
-          }
+
           if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEKING) {
                copyCastlingCheck[WKCASTLING] = false;
                copyCastlingCheck[WQCASTLING] = false;
@@ -1510,8 +1502,6 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOu
                depthEnpassantSquare[depth - 1] = 0;
           }
 
-          //printBoard(currentBoard);
-          //printf("%c%d %c%d\n", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]), numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]));
           if (turn == WHITE) {
                node += divide(depth - 1, BLACK, maxDepth, copyCastlingCheck, showOutput);
                if (showOutput) {
@@ -1529,7 +1519,6 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOu
                for (int i = 0; i < 3-depth; i++) { printf("  "); }
                printf("%c%d%c%d: %llu", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]),
                     numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]), individualNode);
-               //printf(" %d %d %d %d", copyCastlingCheck[0], copyCastlingCheck[1], copyCastlingCheck[2], copyCastlingCheck[3]);
                printf("\n");
           }
 
@@ -1748,7 +1737,7 @@ void main() {
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
      //FENboardSetup(currentBoard, "4k3/8/8/3P4/8/4PPPP/8/4K2R w K - 0 1");
-     FENboardSetup(currentBoard, "kn6/pp6/8/8/8/8/7P/4K2R w K - 0 1");
+     FENboardSetup(currentBoard, "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
 
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -1849,22 +1838,10 @@ void main() {
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
 	
 
-     //  h2h3: 63 (CPP) vs. 70 (CORRECT)
-     //  h2h4: 70 (CPP) vs. 77 (CORRECT)
-     printf("DIVIDE TEST (DEPTH 3) : %llu \n", divide(3, WHITE, 3, castlingCheck, true));
+     printf("PERFT TEST (DEPTH 3) : %llu \n", divide(3, WHITE, 0, castlingCheck, false));
+     printf("PERFT TEST (DEPTH 4) : %llu \n", divide(4, WHITE, 0, castlingCheck, false));
      int move[3] = {H2, H4, DOUBLEMOVE};
      int terminalValue = makeMove(currentBoard, move);
-	//printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
-
-     
-     printf("PERFT TEST (DEPTH 2) : %llu \n", divide(2, BLACK, 0, castlingCheck, false));
-     //printf("PERFT TEST (DEPTH 2) : %llu \n", divide(2, BLACK, 0, castlingCheck, false));
-
-     //  97862 (CORRECT) vs. 94700 (CPP)
-     //  d5d6: 1991 vs. 1912
-     //  d5e6: 2241 vs. 2152
-     //  a2a3: 2186 vs. 2101 ...
-
 
      /*
      bool castlingCheck[4];
