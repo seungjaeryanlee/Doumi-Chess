@@ -1444,11 +1444,11 @@ bool squareAttackCheck(int board[120], int position, int turn) {
 }
 
 
-/*                             RECURSION FUNCTIONS                            */
+/*                              RECURSION FUNCTIONS                            */
 u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOutput) {
 
      bool copyCastlingCheck[4];
-     for (int i = 0; i < 4; i++) { copyCastlingCheck[i] = castlingCheck[i]; }
+     
 
      if (depth == 0) { return 1; }
 
@@ -1458,19 +1458,23 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOu
 
      u64 node = 0, individualNode = 0;
      int terminalValue;
-     
+
 
      // MOVEGEN
-     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], copyCastlingCheck);
+     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], castlingCheck);
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
-     //if (depth == 1) { return depthLegalMoveCount[depth]; }
+     if (depth == 1) { return depthLegalMoveCount[depth]; }
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
-         
-          
-          //  TODO: update castling values
+          for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
+          if (depth == 3 && i != 0 && i != 1) {
+               continue;
+          }
+          if (depth == 3 && (i == 0 || i == 1)) {
+               printf("%d %d %d %d\n", copyCastlingCheck[0], copyCastlingCheck[1], copyCastlingCheck[2], copyCastlingCheck[3]);
+          }
           if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEKING) {
                copyCastlingCheck[WKCASTLING] = false;
                copyCastlingCheck[WQCASTLING] = false;
@@ -1848,7 +1852,7 @@ void main() {
      //  h2h3: 63 (CPP) vs. 70 (CORRECT)
      //  h2h4: 70 (CPP) vs. 77 (CORRECT)
      printf("DIVIDE TEST (DEPTH 3) : %llu \n", divide(3, WHITE, 3, castlingCheck, true));
-     int move[3] = {H2, H3, NORMAL};
+     int move[3] = {H2, H4, DOUBLEMOVE};
      int terminalValue = makeMove(currentBoard, move);
 	//printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
 
