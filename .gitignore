@@ -230,4 +230,5 @@ _Pvt_Extensions
 .fake/
 *.lastbuildstate
 *.tlog
-C++ Chess Engine/C++ Chess Engine/output.txt
+
+output.txt

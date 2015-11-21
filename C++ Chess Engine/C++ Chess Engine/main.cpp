@@ -992,7 +992,8 @@ void kingMoveGeneration(int board[120], int turn, int position, int moveList[250
 void castlingMoveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, bool castlingCheck[4]) {
 
      if (turn == WHITE) {
-          if (castlingCheck[WKCASTLING] &&                                 //  neither piece moved
+          if (castlingCheck[WKCASTLING] &&                             //  neither piece moved
+               board[E1] == BLACKKING && board[H1] == BLACKROOK &&     //  both pieces exists on board
                board[F1] == EMPTYSQUARE && board[G1] == EMPTYSQUARE && //  between them are empty
                squareAttackCheck(board, E1, WHITE) == false &&         //  not in check
                squareAttackCheck(board, F1, WHITE) == false &&         //  not attacked while moving
@@ -1002,6 +1003,7 @@ void castlingMoveGeneration(int board[120], int turn, int moveList[250][3], int 
           }
           if (castlingCheck[WQCASTLING] && board[B1] == EMPTYSQUARE &&
                board[C1] == EMPTYSQUARE && board[D1] == EMPTYSQUARE &&
+               board[E1] == WHITEKING && board[A1] == WHITEROOK &&
                squareAttackCheck(board, E1, WHITE) == false &&
                squareAttackCheck(board, C1, WHITE) == false &&         
                squareAttackCheck(board, D1, WHITE) == false) {
@@ -1010,7 +1012,8 @@ void castlingMoveGeneration(int board[120], int turn, int moveList[250][3], int 
 
      }
      if (turn == BLACK) {
-          if (castlingCheck[BKCASTLING] &&                                 //  neither piece moved
+          if (castlingCheck[BKCASTLING] &&                             //  neither piece moved
+               board[E8] == BLACKKING && board[H8] == BLACKROOK &&     //  both pieces exists on board
                board[F8] == EMPTYSQUARE && board[G8] == EMPTYSQUARE && //  between them are empty
                squareAttackCheck(board, E8, BLACK) == false &&         //  not in check
                squareAttackCheck(board, F8, BLACK) == false &&         //  not attacked while moving
@@ -1020,6 +1023,7 @@ void castlingMoveGeneration(int board[120], int turn, int moveList[250][3], int 
           }
           if (castlingCheck[BQCASTLING] && board[B8] == EMPTYSQUARE &&
                board[C8] == EMPTYSQUARE && board[D8] == EMPTYSQUARE &&
+               board[E8] == BLACKKING && board[A8] == BLACKROOK &&
                squareAttackCheck(board, E8, BLACK) == false &&
                squareAttackCheck(board, C8, BLACK) == false &&
                squareAttackCheck(board, D8, BLACK) == false) {
@@ -1547,7 +1551,7 @@ u64 divide2(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showO
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
-     if (depth == 1) { return depthLegalMoveCount[depth]; }
+     //if (depth == 1) { return depthLegalMoveCount[depth]; }
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
           for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
@@ -1918,9 +1922,20 @@ void main() {
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
 	
-     printf("DIVIDE2 TEST (DEPTH 4) : %llu \n", divide2(4, WHITE, 4, castlingCheck, true));
+     //printf("DIVIDE2 TEST (DEPTH 4) : %llu \n", divide2(4, WHITE, 4, castlingCheck, true));
+
+     int move[3] = { E5, G6, NORMAL };
+     int terminalValue = makeMove(currentBoard, move);
+     //printf("DIVIDE2 TEST (DEPTH 3) : %llu \n", divide2(3, BLACK, 3, castlingCheck, true));
+     int move2[3] = { C7, C6, NORMAL };
+     int terminalValue2 = makeMove(currentBoard, move2);
+
      //e5g6: 83896 (CPP) vs. 83866 (CORRECT)
      //e5f7: 88825 (CPP) vs. 88799 (CORRECT)
+
+     //printf("DIVIDE2 TEST (DEPTH 2) : %llu \n", divide2(2, WHITE, 2, castlingCheck, true));
+     //c7c6: 2023 (CPP) vs. 2022 (CORRECT)
+     //g6h8: 38 (CPP) vs. 37 (CORRECT)
      /*
      bool castlingCheck[4];
      castlingCheck[WKCASTLING] = whiteKingsideCastling;
@@ -1955,6 +1970,10 @@ void main() {
      //printf("PERFT TEST (DEPTH 6): %llu \n", perft(6, WHITE, castlingCheck));
      */
 
+     int move3[3] = { G6, H8, NORMAL };
+     int terminalValue3 = makeMove(currentBoard, move3);
+     printf("DIVIDE2 TEST (DEPTH 1) : %llu \n", divide2(1, BLACK, 1, castlingCheck, true));
+     printBoard(currentBoard);
      //  stop timer
      stopTimer(&endTime, timerIndex);
      //  print elapsed time
