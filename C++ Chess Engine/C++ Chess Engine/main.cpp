@@ -1819,9 +1819,14 @@ void main() {
      //board120Setup();
 
      //  FEN source:
-     //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
-     //FENboardSetup(currentBoard, "4k3/8/8/3P4/8/4PPPP/8/4K2R w K - 0 1");
-     FENboardSetup(currentBoard, "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+     //  https://chessprogramming.wikispaces.com/Perft+Results
+     //  - Position 1: Perft 6 Correct
+     //  - Position 2: Perft 5 Correct
+     //  - Position 3: Perft 6 Correct, Perft 7 makeMove unreachable error, doesn't end
+     //  - Position 4: Perft 5 Correct
+     //  - Position 5: Perft 5 Correct
+     //  - Position 6: Perft 5 Correct
+     FENboardSetup(currentBoard, "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10");
 
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -1921,7 +1926,13 @@ void main() {
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
 	
-     printf("PERFT TEST (DEPTH 5) : %llu \n", divide(5, WHITE, 0, castlingCheck, false));
+     printf("PERFT TEST (DEPTH 1) : %llu \n", divide(1, currentTurn, 0, castlingCheck, false));
+     printf("PERFT TEST (DEPTH 2) : %llu \n", divide(2, currentTurn, 0, castlingCheck, false));
+     printf("PERFT TEST (DEPTH 3) : %llu \n", divide(3, currentTurn, 0, castlingCheck, false));
+     printf("PERFT TEST (DEPTH 4) : %llu \n", divide(4, currentTurn, 0, castlingCheck, false));
+     printf("PERFT TEST (DEPTH 5) : %llu \n", divide(5, currentTurn, 0, castlingCheck, false));
+     printf("PERFT TEST (DEPTH 6) : %llu \n", divide(6, currentTurn, 0, castlingCheck, false));
+     printf("PERFT TEST (DEPTH 7) : %llu \n", divide(7, currentTurn, 0, castlingCheck, false));
      
      //  stop timer
      stopTimer(&endTime, timerIndex);
