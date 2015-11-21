@@ -3,8 +3,11 @@
 #include <iostream>
 #include <string>
 #include <Windows.h>
+#include <fstream>
 #include "protos.h"
 #include "defs.h"
+
+using namespace std;
 
 /******************************************************************************/
 /*                                 GLOBAL VARIABLE                            */
@@ -107,6 +110,7 @@ int depthLegalMoveList[MAXIMUM_DEPTH + 1][250][3];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 //  added for time performance check
 LARGE_INTEGER frequency, beginTime, endTime;
+//  output text file for large output
 
 
 
@@ -1457,7 +1461,7 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOu
      
 
      // MOVEGEN
-     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], castlingCheck);
+     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], copyCastlingCheck);
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
@@ -1506,21 +1510,27 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOu
           //printf("%c%d %c%d\n", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]), numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]));
           if (turn == WHITE) {
                node += divide(depth - 1, BLACK, maxDepth, copyCastlingCheck, showOutput);
-               individualNode = divide(depth - 1, BLACK, maxDepth, copyCastlingCheck, false);
+               if (showOutput) {
+                    individualNode = divide(depth - 1, BLACK, maxDepth, copyCastlingCheck, false);
+               }
           }
           else {
                node += divide(depth - 1, WHITE, maxDepth, copyCastlingCheck, showOutput);
-               individualNode = divide(depth - 1, WHITE, maxDepth, copyCastlingCheck, false);
+               if (showOutput) {
+                    individualNode = divide(depth - 1, WHITE, maxDepth, copyCastlingCheck, false);
+               }
           }
-          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+          
           if (depth >= maxDepth && showOutput) {
                for (int i = 0; i < 3-depth; i++) { printf("  "); }
-               printf("%c%d%c%d: %llu\n", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]),
+               printf("%c%d%c%d: %llu", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]),
                     numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]), individualNode);
+               //printf(" %d %d %d %d", copyCastlingCheck[0], copyCastlingCheck[1], copyCastlingCheck[2], copyCastlingCheck[3]);
+               printf("\n");
           }
+
+          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
      }
-
-
      return node;
 
 }
@@ -1725,12 +1735,16 @@ void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTE
 /*                               MAIN FUNCTION                                */
 /******************************************************************************/
 void main() {
+     ofstream output;
+     output.open("output.txt");
+     
      //  Initialize Board
      //board120Setup();
 
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results : Position 2
-     FENboardSetup(currentBoard, "4k3/8/8/3P4/8/4PPPP/8/4K2R w KQ - 0 1");
+     //FENboardSetup(currentBoard, "4k3/8/8/3P4/8/4PPPP/8/4K2R w K - 0 1");
+     FENboardSetup(currentBoard, "kn6/pp6/8/8/8/8/7P/4K2R w K - 0 1");
 
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -1831,17 +1845,17 @@ void main() {
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
 	
 
-
-     printf("DIVIDE TEST (DEPTH 3) : %llu \n", divide(3, WHITE, 2, castlingCheck, true));
-     int move[3] = {D5, D6, NORMAL};
+     //  h2h3: 63 (CPP) vs. 70 (CORRECT)
+     //  h2h4: 70 (CPP) vs. 77 (CORRECT)
+     printf("DIVIDE TEST (DEPTH 3) : %llu \n", divide(3, WHITE, 3, castlingCheck, true));
+     int move[3] = {H2, H3, NORMAL};
      int terminalValue = makeMove(currentBoard, move);
 	//printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, WHITE, 2, castlingCheck));
 
      
-     printf("DIVIDE TEST (DEPTH 2) : %llu \n", divide(2, BLACK, 2, castlingCheck, true));
+     printf("PERFT TEST (DEPTH 2) : %llu \n", divide(2, BLACK, 0, castlingCheck, false));
      //printf("PERFT TEST (DEPTH 2) : %llu \n", divide(2, BLACK, 0, castlingCheck, false));
-     //  51 (cpp) vs. 59 (correct)
-     
+
      //  97862 (CORRECT) vs. 94700 (CPP)
      //  d5d6: 1991 vs. 1912
      //  d5e6: 2241 vs. 2152
@@ -1886,4 +1900,6 @@ void main() {
      stopTimer(&endTime, timerIndex);
      //  print elapsed time
      printElapsedTime(beginTime, endTime, frequency, timerIndex);
+
+     output.close();
 }
