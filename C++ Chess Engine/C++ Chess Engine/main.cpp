@@ -110,6 +110,8 @@ int depthLegalMoveList[MAXIMUM_DEPTH + 1][250][3];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 //  added for time performance check
 LARGE_INTEGER frequency, beginTime, endTime;
+//  for storing best moves
+int depthBestMoves[MAXIMUM_DEPTH + 1][3];
 
 
 
@@ -545,79 +547,18 @@ int position120to64(int position120) {
 
      return row * 8 + column;
 }
-int recursiveEvaluation(int depth, int turn, bool castlingCheck[4]) {
 
-     int evaluationScore = 0;
-     int maximumScore = 0; // TODO: Return only maximum score
-
-     if (depth == 1) { return boardEvaluation(currentBoard); }
-
-     depthAllMoveCount[depth] = 0;
-     depthLegalMoveCount[depth] = 0;
-     depthEnpassantSquare[depth - 1] = 0;
-
-     int terminalValue;
-     bool copyCastlingCheck[4];
-
-     // MOVEGEN
-     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], castlingCheck);
-     // CHECK FOR LEGALS
-     legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
-
-     if (depth == 1) { return depthLegalMoveCount[depth]; }
-
-     for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
-          for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
-
-          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEKING) {
-               copyCastlingCheck[WKCASTLING] = false;
-               copyCastlingCheck[WQCASTLING] = false;
-          }
-          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKKING) {
-               copyCastlingCheck[BKCASTLING] = false;
-               copyCastlingCheck[BQCASTLING] = false;
-          }
-          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEROOK) {
-               if (depthLegalMoveList[depth][i][0] == A1) {
-                    copyCastlingCheck[WQCASTLING] = false;
-               }
-               if (depthLegalMoveList[depth][i][0] == H1) {
-                    copyCastlingCheck[WKCASTLING] = false;
-               }
-          }
-          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKROOK) {
-               if (depthLegalMoveList[depth][i][0] == A8) {
-                    copyCastlingCheck[BQCASTLING] = false;
-               }
-               if (depthLegalMoveList[depth][i][0] == H8) {
-                    copyCastlingCheck[BKCASTLING] = false;
-               }
-          }
-
-          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
-
-          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
-               depthEnpassantSquare[depth - 1] = terminalValue;
-               //  this terminal value is actually enpassantSquare
-          }
-          else { // if not, revert it back to 0
-               depthEnpassantSquare[depth - 1] = 0;
-          }
-
-          if (turn == WHITE) {
-               evaluationScore = recursiveEvaluation(depth - 1, BLACK, copyCastlingCheck);
-
-          }
-          else {
-               evaluationScore = recursiveEvaluation(depth - 1, WHITE, copyCastlingCheck);
-          }
-
-          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+int negaMax(int depth, int turn) {
+     if (depth == 0) {
+          if (turn == WHITE) { return boardEvaluation(currentBoard); }
+          else if (turn == BLACK) { return -boardEvaluation(currentBoard); }
+          else { printf("Negamax unreachable color error\n"); }
      }
-     
-     return evaluationScore;
-}
 
+     int maxScore = INT_MIN;
+
+
+}
 
 /*                             GAME CYCLE FUNCTIONS                           */
 bool checkGameEnd(int board[120]) {
@@ -1998,6 +1939,7 @@ void main() {
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
 	
+     // PERFT TEST
      /*
      printf("PERFT TEST (DEPTH 1) : %llu \n", divide(1, currentTurn, 0, castlingCheck, false));
      printf("PERFT TEST (DEPTH 2) : %llu \n", divide(2, currentTurn, 0, castlingCheck, false));
@@ -2009,7 +1951,13 @@ void main() {
      */
 
      //  best move
-     printf("Evaluation (Depth 6): %d\n", recursiveEvaluation(6, currentTurn, castlingCheck));
+     int depth = 4;
+     
+
+     //  print the moves
+     for (int i = depth; i >= 1; i--) {
+          printf("%d: %c%d %c%d\n", depth - i + 1, numberToFile(depthBestMoves[i][0]), numberToRank(depthBestMoves[i][0]), numberToFile(depthBestMoves[i][1]), numberToRank(depthBestMoves[i][1]));
+     }
 
      //  stop timer
      stopTimer(&endTime, timerIndex);

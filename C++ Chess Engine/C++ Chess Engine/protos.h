@@ -22,7 +22,7 @@ int numberToRank(int position);
 
 /*                                BOARD EVALUATION                            */
 //  Returns evaluation score based on parameter board given.
-void boardEvaluaton(int board[120]);
+int boardEvaluation(int board[120]);
 //  Gets a position number and returns the row-reversed position number
 int reversePosition(int position);
 //  Gets position based on 64 and returns position based on 120
