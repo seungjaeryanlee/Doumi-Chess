@@ -110,7 +110,6 @@ int depthLegalMoveList[MAXIMUM_DEPTH + 1][250][3];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 //  added for time performance check
 LARGE_INTEGER frequency, beginTime, endTime;
-//  output text file for large output
 
 
 
@@ -1527,7 +1526,90 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOu
      return node;
 
 }
+u64 divide2(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOutput) {
 
+     if (depth == 0) { return 1; }
+
+     //  output text file for large output
+     ofstream output;
+     output.open("output.txt");
+
+     depthAllMoveCount[depth] = 0;
+     depthLegalMoveCount[depth] = 0;
+     depthEnpassantSquare[depth - 1] = 0;
+
+     u64 node = 0, individualNode = 0;
+     int terminalValue;
+     bool copyCastlingCheck[4];
+
+     // MOVEGEN
+     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], castlingCheck);
+     // CHECK FOR LEGALS
+     legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+
+     if (depth == 1) { return depthLegalMoveCount[depth]; }
+
+     for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
+          for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
+
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEKING) {
+               copyCastlingCheck[WKCASTLING] = false;
+               copyCastlingCheck[WQCASTLING] = false;
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKKING) {
+               copyCastlingCheck[BKCASTLING] = false;
+               copyCastlingCheck[BQCASTLING] = false;
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEROOK) {
+               if (depthLegalMoveList[depth][i][0] == A1) {
+                    copyCastlingCheck[WQCASTLING] = false;
+               }
+               if (depthLegalMoveList[depth][i][0] == H1) {
+                    copyCastlingCheck[WKCASTLING] = false;
+               }
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKROOK) {
+               if (depthLegalMoveList[depth][i][0] == A8) {
+                    copyCastlingCheck[BQCASTLING] = false;
+               }
+               if (depthLegalMoveList[depth][i][0] == H8) {
+                    copyCastlingCheck[BKCASTLING] = false;
+               }
+          }
+
+          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
+
+          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
+               depthEnpassantSquare[depth - 1] = terminalValue;
+               //  this terminal value is actually enpassantSquare
+          }
+          else { // if not, revert it back to 0
+               depthEnpassantSquare[depth - 1] = 0;
+          }
+
+          if (turn == WHITE) {
+               node += divide(depth - 1, BLACK, maxDepth, copyCastlingCheck, showOutput);
+               if (showOutput) {
+                    individualNode = divide(depth - 1, BLACK, maxDepth, copyCastlingCheck, false);
+               }
+          }
+          else {
+               node += divide(depth - 1, WHITE, maxDepth, copyCastlingCheck, showOutput);
+               if (showOutput) {
+                    individualNode = divide(depth - 1, WHITE, maxDepth, copyCastlingCheck, false);
+               }
+          }
+
+          if (depth >= maxDepth && showOutput) {
+               output << numberToFile(depthLegalMoveList[depth][i][0]) << numberToRank(depthLegalMoveList[depth][i][0]) <<
+                    numberToFile(depthLegalMoveList[depth][i][1]) << numberToRank(depthLegalMoveList[depth][i][1]) << ": " << individualNode << std::endl;
+          }
+
+          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+     }
+     return node;
+     output.close();
+}
 
 int makeMove(int board[120], int move[3]) {
      int terminalValue;
@@ -1728,8 +1810,7 @@ void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTE
 /*                               MAIN FUNCTION                                */
 /******************************************************************************/
 void main() {
-     ofstream output;
-     output.open("output.txt");
+
      
      //  Initialize Board
      //board120Setup();
@@ -1837,12 +1918,9 @@ void main() {
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
 	
-
-     printf("PERFT TEST (DEPTH 3) : %llu \n", divide(3, WHITE, 0, castlingCheck, false));
-     printf("PERFT TEST (DEPTH 4) : %llu \n", divide(4, WHITE, 0, castlingCheck, false));
-     int move[3] = {H2, H4, DOUBLEMOVE};
-     int terminalValue = makeMove(currentBoard, move);
-
+     printf("DIVIDE2 TEST (DEPTH 4) : %llu \n", divide2(4, WHITE, 4, castlingCheck, true));
+     //e5g6: 83896 (CPP) vs. 83866 (CORRECT)
+     //e5f7: 88825 (CPP) vs. 88799 (CORRECT)
      /*
      bool castlingCheck[4];
      castlingCheck[WKCASTLING] = whiteKingsideCastling;
@@ -1882,5 +1960,4 @@ void main() {
      //  print elapsed time
      printElapsedTime(beginTime, endTime, frequency, timerIndex);
 
-     output.close();
 }
