@@ -1,3 +1,4 @@
+#pragma once
 #include "defs.h"
 
 /*                                  BOARD SETUP                               */
@@ -70,4 +71,3 @@ void undoMove(int board[120], int move[3], int terminalValue);
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex);
 void stopTimer(LARGE_INTEGER *endTime, int timerIndex);
 void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex);
-

@@ -1815,7 +1815,6 @@ void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTE
 /******************************************************************************/
 void main() {
 
-     
      //  Initialize Board
      //board120Setup();
 
