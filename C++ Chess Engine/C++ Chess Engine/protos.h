@@ -36,7 +36,8 @@ int position120to64(int position120);
 
 /*                                   GAME CYCLE                               */
 bool checkGameEnd(int board[120]);
-
+//  returns opposite color of input (WHITE -> BLACK, BLACK -> WHITE)
+int negateColor(int color);
 
 
 
