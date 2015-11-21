@@ -463,8 +463,8 @@ int numberToRank(int position) {
      return rank;
 }
 
-/*                             RECURSION FUNCTIONS                            */
-int updateEvaluation(int board[120]) {
+/*                             EVALUATION FUNCTIONS                           */
+int boardEvaluation(int board[120]) {
      int score = 0;
      for (int i = 0; i < 120; i++) {
           switch (board[i]) {
@@ -545,6 +545,79 @@ int position120to64(int position120) {
 
      return row * 8 + column;
 }
+int recursiveEvaluation(int depth, int turn, bool castlingCheck[4]) {
+
+     int evaluationScore = 0;
+     int maximumScore = 0; // TODO: Return only maximum score
+
+     if (depth == 1) { return boardEvaluation(currentBoard); }
+
+     depthAllMoveCount[depth] = 0;
+     depthLegalMoveCount[depth] = 0;
+     depthEnpassantSquare[depth - 1] = 0;
+
+     int terminalValue;
+     bool copyCastlingCheck[4];
+
+     // MOVEGEN
+     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], castlingCheck);
+     // CHECK FOR LEGALS
+     legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+
+     if (depth == 1) { return depthLegalMoveCount[depth]; }
+
+     for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
+          for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
+
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEKING) {
+               copyCastlingCheck[WKCASTLING] = false;
+               copyCastlingCheck[WQCASTLING] = false;
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKKING) {
+               copyCastlingCheck[BKCASTLING] = false;
+               copyCastlingCheck[BQCASTLING] = false;
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEROOK) {
+               if (depthLegalMoveList[depth][i][0] == A1) {
+                    copyCastlingCheck[WQCASTLING] = false;
+               }
+               if (depthLegalMoveList[depth][i][0] == H1) {
+                    copyCastlingCheck[WKCASTLING] = false;
+               }
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKROOK) {
+               if (depthLegalMoveList[depth][i][0] == A8) {
+                    copyCastlingCheck[BQCASTLING] = false;
+               }
+               if (depthLegalMoveList[depth][i][0] == H8) {
+                    copyCastlingCheck[BKCASTLING] = false;
+               }
+          }
+
+          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
+
+          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
+               depthEnpassantSquare[depth - 1] = terminalValue;
+               //  this terminal value is actually enpassantSquare
+          }
+          else { // if not, revert it back to 0
+               depthEnpassantSquare[depth - 1] = 0;
+          }
+
+          if (turn == WHITE) {
+               evaluationScore = recursiveEvaluation(depth - 1, BLACK, copyCastlingCheck);
+
+          }
+          else {
+               evaluationScore = recursiveEvaluation(depth - 1, WHITE, copyCastlingCheck);
+          }
+
+          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+     }
+     
+     return evaluationScore;
+}
+
 
 /*                             GAME CYCLE FUNCTIONS                           */
 bool checkGameEnd(int board[120]) {
@@ -557,7 +630,7 @@ bool checkGameEnd(int board[120]) {
 }
 
 
-/*                          MOVE GENERATION FUNCTIONS                         */
+/*                           MOVE GENERATION FUNCTIONS                        */
 void moveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare, bool castlingCheck[4]) {
      castlingMoveGeneration(board, turn, moveList, moveCount, castlingCheck);
      enpassantMoveGeneration(board, turn, moveList, moveCount, enpassantSquare);
@@ -1447,7 +1520,7 @@ bool squareAttackCheck(int board[120], int position, int turn) {
 }
 
 
-/*                              RECURSION FUNCTIONS                            */
+/*                             RECURSION FUNCTIONS                             */
 u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOutput) {
 
      if (depth == 0) { return 1; }
@@ -1816,7 +1889,7 @@ void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTE
 void main() {
 
      //  Initialize Board
-     //board120Setup();
+     board120Setup();
 
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results
@@ -1826,7 +1899,6 @@ void main() {
      //  - Position 4: Perft 5 Correct
      //  - Position 5: Perft 5 Correct
      //  - Position 6: Perft 5 Correct
-     FENboardSetup(currentBoard, "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10");
 
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -1926,6 +1998,7 @@ void main() {
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
 	
+     /*
      printf("PERFT TEST (DEPTH 1) : %llu \n", divide(1, currentTurn, 0, castlingCheck, false));
      printf("PERFT TEST (DEPTH 2) : %llu \n", divide(2, currentTurn, 0, castlingCheck, false));
      printf("PERFT TEST (DEPTH 3) : %llu \n", divide(3, currentTurn, 0, castlingCheck, false));
@@ -1933,7 +2006,11 @@ void main() {
      printf("PERFT TEST (DEPTH 5) : %llu \n", divide(5, currentTurn, 0, castlingCheck, false));
      printf("PERFT TEST (DEPTH 6) : %llu \n", divide(6, currentTurn, 0, castlingCheck, false));
      printf("PERFT TEST (DEPTH 7) : %llu \n", divide(7, currentTurn, 0, castlingCheck, false));
-     
+     */
+
+     //  best move
+     printf("Evaluation (Depth 6): %d\n", recursiveEvaluation(6, currentTurn, castlingCheck));
+
      //  stop timer
      stopTimer(&endTime, timerIndex);
      //  print elapsed time
