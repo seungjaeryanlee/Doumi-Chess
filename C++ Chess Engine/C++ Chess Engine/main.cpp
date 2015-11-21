@@ -1922,58 +1922,7 @@ void main() {
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
 	
-     printf("PERFT TEST (DEPTH 4) : %llu \n", divide(4, WHITE, 0, castlingCheck, false));
-     //printf("DIVIDE2 TEST (DEPTH 4) : %llu \n", divide2(4, WHITE, 4, castlingCheck, true));
-
-     int move[3] = { E5, G6, NORMAL };
-     int terminalValue = makeMove(currentBoard, move);
-     //printf("DIVIDE2 TEST (DEPTH 3) : %llu \n", divide2(3, BLACK, 3, castlingCheck, true));
-     int move2[3] = { C7, C6, NORMAL };
-     int terminalValue2 = makeMove(currentBoard, move2);
-
-     //e5g6: 83896 (CPP) vs. 83866 (CORRECT)
-     //e5f7: 88825 (CPP) vs. 88799 (CORRECT)
-
-     printf("DIVIDE2 TEST (DEPTH 2) : %llu \n", divide2(2, WHITE, 2, castlingCheck, true));
-     //c7c6: 2023 (CPP) vs. 2022 (CORRECT)
-     //g6h8: 38 (CPP) vs. 37 (CORRECT)
-     /*
-     bool castlingCheck[4];
-     castlingCheck[WKCASTLING] = whiteKingsideCastling;
-     castlingCheck[WQCASTLING] = whiteQueensideCastling;
-     castlingCheck[BKCASTLING] = blackKingsideCastling;
-     castlingCheck[BQCASTLING] = blackQueensideCastling;
-     printf("PERFT TEST (DEPTH 1): %llu \n", perft(1, WHITE, castlingCheck));
-     castlingCheck[WKCASTLING] = whiteKingsideCastling;
-     castlingCheck[WQCASTLING] = whiteQueensideCastling;
-     castlingCheck[BKCASTLING] = blackKingsideCastling;
-     castlingCheck[BQCASTLING] = blackQueensideCastling;
-     printf("PERFT TEST (DEPTH 2): %llu \n", perft(2, WHITE, castlingCheck));
-     castlingCheck[WKCASTLING] = whiteKingsideCastling;
-     castlingCheck[WQCASTLING] = whiteQueensideCastling;
-     castlingCheck[BKCASTLING] = blackKingsideCastling;
-     castlingCheck[BQCASTLING] = blackQueensideCastling;
-     printf("PERFT TEST (DEPTH 3): %llu \n", perft(3, WHITE, castlingCheck));
-     castlingCheck[WKCASTLING] = whiteKingsideCastling;
-     castlingCheck[WQCASTLING] = whiteQueensideCastling;
-     castlingCheck[BKCASTLING] = blackKingsideCastling;
-     castlingCheck[BQCASTLING] = blackQueensideCastling;
-     printf("PERFT TEST (DEPTH 4): %llu \n", perft(4, WHITE, castlingCheck));
-     castlingCheck[WKCASTLING] = whiteKingsideCastling;
-     castlingCheck[WQCASTLING] = whiteQueensideCastling;
-     castlingCheck[BKCASTLING] = blackKingsideCastling;
-     castlingCheck[BQCASTLING] = blackQueensideCastling;
-     printf("PERFT TEST (DEPTH 5): %llu \n", perft(5, WHITE, castlingCheck));
-     castlingCheck[WKCASTLING] = whiteKingsideCastling;
-     castlingCheck[WQCASTLING] = whiteQueensideCastling;
-     castlingCheck[BKCASTLING] = blackKingsideCastling;
-     castlingCheck[BQCASTLING] = blackQueensideCastling;
-     //printf("PERFT TEST (DEPTH 6): %llu \n", perft(6, WHITE, castlingCheck));
-     */
-
-     int move3[3] = { G6, H8, NORMAL };
-     int terminalValue3 = makeMove(currentBoard, move3);
-     printf("DIVIDE2 TEST (DEPTH 1) : %llu \n", divide2(1, BLACK, 1, castlingCheck, true));
+     printf("PERFT TEST (DEPTH 5) : %llu \n", divide(5, WHITE, 0, castlingCheck, false));
      
      //  stop timer
      stopTimer(&endTime, timerIndex);
