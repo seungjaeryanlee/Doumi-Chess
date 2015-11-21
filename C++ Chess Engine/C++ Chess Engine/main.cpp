@@ -993,7 +993,7 @@ void castlingMoveGeneration(int board[120], int turn, int moveList[250][3], int 
 
      if (turn == WHITE) {
           if (castlingCheck[WKCASTLING] &&                             //  neither piece moved
-               board[E1] == BLACKKING && board[H1] == BLACKROOK &&     //  both pieces exists on board
+               board[E1] == WHITEKING && board[H1] == WHITEROOK &&     //  both pieces exists on board
                board[F1] == EMPTYSQUARE && board[G1] == EMPTYSQUARE && //  between them are empty
                squareAttackCheck(board, E1, WHITE) == false &&         //  not in check
                squareAttackCheck(board, F1, WHITE) == false &&         //  not attacked while moving
@@ -1922,6 +1922,7 @@ void main() {
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
 	
+     printf("PERFT TEST (DEPTH 4) : %llu \n", divide(4, WHITE, 0, castlingCheck, false));
      //printf("DIVIDE2 TEST (DEPTH 4) : %llu \n", divide2(4, WHITE, 4, castlingCheck, true));
 
      int move[3] = { E5, G6, NORMAL };
@@ -1933,7 +1934,7 @@ void main() {
      //e5g6: 83896 (CPP) vs. 83866 (CORRECT)
      //e5f7: 88825 (CPP) vs. 88799 (CORRECT)
 
-     //printf("DIVIDE2 TEST (DEPTH 2) : %llu \n", divide2(2, WHITE, 2, castlingCheck, true));
+     printf("DIVIDE2 TEST (DEPTH 2) : %llu \n", divide2(2, WHITE, 2, castlingCheck, true));
      //c7c6: 2023 (CPP) vs. 2022 (CORRECT)
      //g6h8: 38 (CPP) vs. 37 (CORRECT)
      /*
@@ -1973,7 +1974,7 @@ void main() {
      int move3[3] = { G6, H8, NORMAL };
      int terminalValue3 = makeMove(currentBoard, move3);
      printf("DIVIDE2 TEST (DEPTH 1) : %llu \n", divide2(1, BLACK, 1, castlingCheck, true));
-     printBoard(currentBoard);
+     
      //  stop timer
      stopTimer(&endTime, timerIndex);
      //  print elapsed time
