@@ -95,7 +95,7 @@ int halfMoveClock = 0;
 //  Current Move Number, starts at 1
 int moveNumber = 1;
 //  WHITE or BLACK
-int currentTurn; 
+int currentTurn = WHITE; 
 //  0 if double move did not happen, square value (ex. F3) otherwise
 int enpassantSquare = 0; 
 //  move[3]: initial, terminal, moveType
@@ -121,6 +121,9 @@ int depthBestMoves[MAXIMUM_DEPTH + 1][3];
 
 /*                             BOARD SETUP FUNCTIONS                          */
 void board120Setup() {
+     //  set turn to WHITE
+     currentTurn = WHITE;
+     
      //  Add Empty Squares
      for (int i = 0; i < 8; i++) {
           for (int j = 0; j < 8; j++) {
@@ -746,73 +749,37 @@ void pawnMoveGeneration(int board[120], int turn, int position, int moveList[250
      }
 }
 void knightMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
-     if (turn == WHITE) {
-          if (checkColor(board[position + ROW + 2 * COLUMN]) == BLACK ||
-               board[position + ROW + 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + ROW + 2 * COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position + ROW - 2 * COLUMN]) == BLACK ||
-               board[position + ROW - 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + ROW - 2 * COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position - ROW + 2 * COLUMN]) == BLACK ||
-               board[position - ROW + 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - ROW + 2 * COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position - ROW - 2 * COLUMN]) == BLACK ||
-               board[position - ROW - 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - ROW - 2 * COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position + 2 * ROW + COLUMN]) == BLACK ||
-               board[position + 2 * ROW + COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + 2 * ROW + COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position + 2 * ROW - COLUMN]) == BLACK ||
-               board[position + 2 * ROW - COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + 2 * ROW - COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position - 2 * ROW + COLUMN]) == BLACK ||
-               board[position - 2 * ROW + COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - 2 * ROW + COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position - 2 * ROW - COLUMN]) == BLACK ||
-               board[position - 2 * ROW - COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - 2 * ROW - COLUMN, NORMAL, moveList, moveCount);
-          }
+     if (checkColor(board[position + ROW + 2 * COLUMN]) == -turn ||
+          board[position + ROW + 2 * COLUMN] == EMPTYSQUARE) {
+          addMove(position, position + ROW + 2 * COLUMN, NORMAL, moveList, moveCount);
      }
-     if (turn == BLACK) {
-          if (checkColor(board[position + ROW + 2 * COLUMN]) == WHITE ||
-               board[position + ROW + 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + ROW + 2 * COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position + ROW - 2 * COLUMN]) == WHITE ||
-               board[position + ROW - 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + ROW - 2 * COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position - ROW + 2 * COLUMN]) == WHITE ||
-               board[position - ROW + 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - ROW + 2 * COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position - ROW - 2 * COLUMN]) == WHITE ||
-               board[position - ROW - 2 * COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - ROW - 2 * COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position + 2 * ROW + COLUMN]) == WHITE ||
-               board[position + 2 * ROW + COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + 2 * ROW + COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position + 2 * ROW - COLUMN]) == WHITE ||
-               board[position + 2 * ROW - COLUMN] == EMPTYSQUARE) {
-               addMove(position, position + 2 * ROW - COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position - 2 * ROW + COLUMN]) == WHITE ||
-               board[position - 2 * ROW + COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - 2 * ROW + COLUMN, NORMAL, moveList, moveCount);
-          }
-          if (checkColor(board[position - 2 * ROW - COLUMN]) == WHITE ||
-               board[position - 2 * ROW - COLUMN] == EMPTYSQUARE) {
-               addMove(position, position - 2 * ROW - COLUMN, NORMAL, moveList, moveCount);
-          }
+     if (checkColor(board[position + ROW - 2 * COLUMN]) == -turn ||
+          board[position + ROW - 2 * COLUMN] == EMPTYSQUARE) {
+          addMove(position, position + ROW - 2 * COLUMN, NORMAL, moveList, moveCount);
+     }
+     if (checkColor(board[position - ROW + 2 * COLUMN]) == -turn ||
+          board[position - ROW + 2 * COLUMN] == EMPTYSQUARE) {
+          addMove(position, position - ROW + 2 * COLUMN, NORMAL, moveList, moveCount);
+     }
+     if (checkColor(board[position - ROW - 2 * COLUMN]) == -turn ||
+          board[position - ROW - 2 * COLUMN] == EMPTYSQUARE) {
+          addMove(position, position - ROW - 2 * COLUMN, NORMAL, moveList, moveCount);
+     }
+     if (checkColor(board[position + 2 * ROW + COLUMN]) == -turn ||
+          board[position + 2 * ROW + COLUMN] == EMPTYSQUARE) {
+          addMove(position, position + 2 * ROW + COLUMN, NORMAL, moveList, moveCount);
+     }
+     if (checkColor(board[position + 2 * ROW - COLUMN]) == -turn ||
+          board[position + 2 * ROW - COLUMN] == EMPTYSQUARE) {
+          addMove(position, position + 2 * ROW - COLUMN, NORMAL, moveList, moveCount);
+     }
+     if (checkColor(board[position - 2 * ROW + COLUMN]) == -turn ||
+          board[position - 2 * ROW + COLUMN] == EMPTYSQUARE) {
+          addMove(position, position - 2 * ROW + COLUMN, NORMAL, moveList, moveCount);
+     }
+     if (checkColor(board[position - 2 * ROW - COLUMN]) == -turn ||
+          board[position - 2 * ROW - COLUMN] == EMPTYSQUARE) {
+          addMove(position, position - 2 * ROW - COLUMN, NORMAL, moveList, moveCount);
      }
 }
 void bishopMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
@@ -1673,17 +1640,9 @@ u64 divide2(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showO
                depthEnpassantSquare[depth - 1] = 0;
           }
 
-          if (turn == WHITE) {
-               node += divide(depth - 1, BLACK, maxDepth, copyCastlingCheck, showOutput);
-               if (showOutput) {
-                    individualNode = divide(depth - 1, BLACK, maxDepth, copyCastlingCheck, false);
-               }
-          }
-          else {
-               node += divide(depth - 1, WHITE, maxDepth, copyCastlingCheck, showOutput);
-               if (showOutput) {
-                    individualNode = divide(depth - 1, WHITE, maxDepth, copyCastlingCheck, false);
-               }
+          node += divide(depth - 1, -turn, maxDepth, copyCastlingCheck, showOutput);
+          if (showOutput) {
+               individualNode = divide(depth - 1, -turn, maxDepth, copyCastlingCheck, false);
           }
 
           if (depth >= maxDepth && showOutput) {
@@ -2008,7 +1967,7 @@ void main() {
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
 	
      // PERFT TEST
-     /*
+     
      printf("PERFT TEST (DEPTH 1) : %llu \n", divide(1, currentTurn, 0, castlingCheck, false));
      printf("PERFT TEST (DEPTH 2) : %llu \n", divide(2, currentTurn, 0, castlingCheck, false));
      printf("PERFT TEST (DEPTH 3) : %llu \n", divide(3, currentTurn, 0, castlingCheck, false));
@@ -2016,12 +1975,12 @@ void main() {
      printf("PERFT TEST (DEPTH 5) : %llu \n", divide(5, currentTurn, 0, castlingCheck, false));
      printf("PERFT TEST (DEPTH 6) : %llu \n", divide(6, currentTurn, 0, castlingCheck, false));
      printf("PERFT TEST (DEPTH 7) : %llu \n", divide(7, currentTurn, 0, castlingCheck, false));
-     */
+     
 
      //  best move
-     int depth = 4;
-     int negaMaxValue = negaMax(depth, currentTurn, castlingCheck);
-     printf("Depth %d Negamax Value: %d\n", depth, negaMaxValue);
+     //int depth = 4;
+     //int negaMaxValue = negaMax(depth, currentTurn, castlingCheck);
+     //printf("Depth %d Negamax Value: %d\n", depth, negaMaxValue);
 
      //  print the moves
      /*
