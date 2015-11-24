@@ -31,9 +31,9 @@ enum fileRank120 {
      A2 = 81, B2, C2, D2, E2, F2, G2, H2,
      A1 = 91, B1, C1, D1, E1, F1, G1, H1
 };
-enum color { WHITE = 1, 
-             BLACK = -1, 
-             NEITHER = 2
+enum color { BLACK = -1, 
+             NEITHER = 0,
+             WHITE = 1
 };
 enum moveType {
      NORMAL, DOUBLEMOVE, ENPASSANT, QUEENSIDE_CASTLING, KINGSIDE_CASTLING,

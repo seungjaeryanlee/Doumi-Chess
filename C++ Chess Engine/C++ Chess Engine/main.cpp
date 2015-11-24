@@ -548,16 +548,75 @@ int position120to64(int position120) {
      return row * 8 + column;
 }
 
-int negaMax(int depth, int turn) {
+int negaMax(int depth, int turn, bool castlingCheck[4]) {
+     //  TODO: Return also if game is over
      if (depth == 0) {
-          if (turn == WHITE) { return boardEvaluation(currentBoard); }
-          else if (turn == BLACK) { return -boardEvaluation(currentBoard); }
-          else { printf("Negamax unreachable color error\n"); }
+          return turn * boardEvaluation(currentBoard);
      }
 
      int maxScore = INT_MIN;
 
+     if (depth == 0) { return 1; }
 
+     depthAllMoveCount[depth] = 0;
+     depthLegalMoveCount[depth] = 0;
+     depthEnpassantSquare[depth - 1] = 0;
+
+     int terminalValue;
+     bool copyCastlingCheck[4];
+
+     // MOVEGEN
+     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], castlingCheck);
+     // CHECK FOR LEGALS
+     legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+
+     for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
+          for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
+
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEKING) {
+               copyCastlingCheck[WKCASTLING] = false;
+               copyCastlingCheck[WQCASTLING] = false;
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKKING) {
+               copyCastlingCheck[BKCASTLING] = false;
+               copyCastlingCheck[BQCASTLING] = false;
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEROOK) {
+               if (depthLegalMoveList[depth][i][0] == A1) {
+                    copyCastlingCheck[WQCASTLING] = false;
+               }
+               if (depthLegalMoveList[depth][i][0] == H1) {
+                    copyCastlingCheck[WKCASTLING] = false;
+               }
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKROOK) {
+               if (depthLegalMoveList[depth][i][0] == A8) {
+                    copyCastlingCheck[BQCASTLING] = false;
+               }
+               if (depthLegalMoveList[depth][i][0] == H8) {
+                    copyCastlingCheck[BKCASTLING] = false;
+               }
+          }
+
+          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
+
+          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
+               depthEnpassantSquare[depth - 1] = terminalValue;
+               //  this terminal value is actually enpassantSquare
+          }
+          else { // if not, revert it back to 0
+               depthEnpassantSquare[depth - 1] = 0;
+          }
+
+          int score = -negaMax(depth - 1, -turn, copyCastlingCheck);
+          if (score > maxScore) {
+               maxScore = score;
+               // TODO: record best move
+          }
+
+          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+     }
+     return maxScore;
 }
 
 /*                             GAME CYCLE FUNCTIONS                           */
@@ -1961,12 +2020,15 @@ void main() {
 
      //  best move
      int depth = 4;
-     
+     int negaMaxValue = negaMax(depth, currentTurn, castlingCheck);
+     printf("Depth %d Negamax Value: %d\n", depth, negaMaxValue);
 
      //  print the moves
+     /*
      for (int i = depth; i >= 1; i--) {
           printf("%d: %c%d %c%d\n", depth - i + 1, numberToFile(depthBestMoves[i][0]), numberToRank(depthBestMoves[i][0]), numberToFile(depthBestMoves[i][1]), numberToRank(depthBestMoves[i][1]));
      }
+     */
 
      //  stop timer
      stopTimer(&endTime, timerIndex);
