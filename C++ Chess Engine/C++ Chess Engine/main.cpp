@@ -953,14 +953,27 @@ void castlingMoveGeneration(int board[120], int turn, int moveList[250][3], int 
      }
 }
 void promotionMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
-     if (checkColor(board[position - ROW - COLUMN]) == -turn) {
-          addPromotionMove(position, position - ROW - COLUMN, moveList, moveCount);
+     if (turn == WHITE) {
+          if (checkColor(board[position - ROW - COLUMN]) == -turn) {
+               addPromotionMove(position, position - ROW - COLUMN, moveList, moveCount);
+          }
+          if (checkColor(board[position - ROW + COLUMN]) == -turn) {
+               addPromotionMove(position, position - ROW + COLUMN, moveList, moveCount);
+          }
+          if (board[position - ROW] == EMPTYSQUARE) {
+               addPromotionMove(position, position - ROW, moveList, moveCount);
+          }
      }
-     if (checkColor(board[position - ROW + COLUMN]) == -turn) {
-          addPromotionMove(position, position - ROW + COLUMN, moveList, moveCount);
-     }
-     if (board[position - ROW] == EMPTYSQUARE) {
-          addPromotionMove(position, position - ROW, moveList, moveCount);
+     if (turn == BLACK) {
+          if (checkColor(board[position + ROW - COLUMN]) == -turn) {
+               addPromotionMove(position, position + ROW - COLUMN, moveList, moveCount);
+          }
+          if (checkColor(board[position + ROW + COLUMN]) == -turn) {
+               addPromotionMove(position, position + ROW + COLUMN, moveList, moveCount);
+          }
+          if (board[position + ROW] == EMPTYSQUARE) {
+               addPromotionMove(position, position + ROW, moveList, moveCount);
+          }
      }
 }
 void enpassantMoveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare) {
