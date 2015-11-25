@@ -29,15 +29,14 @@ int reversePosition(int position);
 int position64to120(int position64);
 //  Gets position based on 120 and returns position based on 64
 int position120to64(int position120);
-
-
+//  negaMax implemented for board evaluation
+int negaMax(int depth, int turn, bool castlingCheck[4]);
 
 
 
 /*                                   GAME CYCLE                               */
 bool checkGameEnd(int board[120]);
-//  returns opposite color of input (WHITE -> BLACK, BLACK -> WHITE)
-int negateColor(int color);
+
 
 
 
@@ -67,6 +66,7 @@ bool squareAttackCheck(int board[120], int position, int turn);
 
 /*                                   RECURSION                                */
 u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOutput);
+u64 divide2(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOutput);
 int makeMove(int board[120], int move[3]);
 void undoMove(int board[120], int move[3], int terminalValue);
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex);

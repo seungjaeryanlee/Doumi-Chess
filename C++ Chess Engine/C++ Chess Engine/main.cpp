@@ -631,16 +631,7 @@ bool checkGameEnd(int board[120]) {
      }
      return !(whiteKing && blackKing);
 }
-int negateColor(int color) {
-     if (color == WHITE) {
-          return BLACK;
-     }
-     if (color == BLACK) {
-          return WHITE;
-     }
-     printf("negateColor unreachable color error.\n");
-     return NEITHER;
-}
+
 
 /*                           MOVE GENERATION FUNCTIONS                        */
 void moveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare, bool castlingCheck[4]) {
