@@ -953,27 +953,14 @@ void castlingMoveGeneration(int board[120], int turn, int moveList[250][3], int 
      }
 }
 void promotionMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
-     if (turn == WHITE) {
-          if (checkColor(board[position - ROW - COLUMN]) == BLACK) {
-               addPromotionMove(position, position - ROW - COLUMN, moveList, moveCount);
-          }
-          if (checkColor(board[position - ROW + COLUMN]) == BLACK) {
-               addPromotionMove(position, position - ROW + COLUMN, moveList, moveCount);
-          }
-          if (board[position - ROW] == EMPTYSQUARE) {
-               addPromotionMove(position, position - ROW, moveList, moveCount);
-          }
+     if (checkColor(board[position - ROW - COLUMN]) == -turn) {
+          addPromotionMove(position, position - ROW - COLUMN, moveList, moveCount);
      }
-     if (turn == BLACK) {
-          if (checkColor(board[position + ROW + COLUMN]) == WHITE) {
-               addPromotionMove(position, position + ROW + COLUMN, moveList, moveCount);
-          }
-          if (checkColor(board[position + ROW - COLUMN]) == WHITE) {
-               addPromotionMove(position, position + ROW - COLUMN, moveList, moveCount);
-          }
-          if (board[position + ROW] == EMPTYSQUARE) {
-               addPromotionMove(position, position + ROW, moveList, moveCount);
-          }
+     if (checkColor(board[position - ROW + COLUMN]) == -turn) {
+          addPromotionMove(position, position - ROW + COLUMN, moveList, moveCount);
+     }
+     if (board[position - ROW] == EMPTYSQUARE) {
+          addPromotionMove(position, position - ROW, moveList, moveCount);
      }
 }
 void enpassantMoveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare) {
@@ -1426,17 +1413,9 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOu
                depthEnpassantSquare[depth - 1] = 0;
           }
 
-          if (turn == WHITE) {
-               node += divide(depth - 1, BLACK, maxDepth, copyCastlingCheck, showOutput);
-               if (showOutput) {
-                    individualNode = divide(depth - 1, BLACK, maxDepth, copyCastlingCheck, false);
-               }
-          }
-          else {
-               node += divide(depth - 1, WHITE, maxDepth, copyCastlingCheck, showOutput);
-               if (showOutput) {
-                    individualNode = divide(depth - 1, WHITE, maxDepth, copyCastlingCheck, false);
-               }
+          node += divide(depth - 1, -turn, maxDepth, copyCastlingCheck, showOutput);
+          if (showOutput) {
+               individualNode = divide(depth - 1, -turn, maxDepth, copyCastlingCheck, false);
           }
           
           if (depth >= maxDepth && showOutput) {
@@ -1729,7 +1708,8 @@ void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTE
 void main() {
 
      //  Initialize Board
-     board120Setup();
+     //  board120Setup();
+     FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
 
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results
