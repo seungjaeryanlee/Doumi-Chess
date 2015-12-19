@@ -271,9 +271,9 @@ void FENboardSetup(int board[120], std::string FEN) {
 
      if (FEN.at(i) != '-') {
           //  get enpassant square
-          enpassantSquare = ROW*(FEN.at(i) - 'a' + 2);
+          enpassantSquare = COLUMN*(FEN.at(i) - 'a' + 1);
           i++;
-          enpassantSquare += FEN.at(i) - '0';
+          enpassantSquare += ROW*('9' - FEN.at(i) + 1);
      }
 
      i += 2;
@@ -1460,7 +1460,7 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOu
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
-     // if (depth == 1) { return depthLegalMoveCount[depth]; }
+     if (depth == 1) { return depthLegalMoveCount[depth]; }
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
           for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
