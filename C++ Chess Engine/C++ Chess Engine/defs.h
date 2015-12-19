@@ -9,6 +9,7 @@
 #define ROW 10
 #define COLUMN 1
 #define MAXIMUM_DEPTH 6
+#define EVAL_DEPTH 4
 
 typedef unsigned long long u64;
 

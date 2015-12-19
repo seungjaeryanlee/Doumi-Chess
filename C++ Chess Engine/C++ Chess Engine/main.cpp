@@ -619,6 +619,10 @@ int blueValue(int depth, int turn, bool castlingCheck[4]) {
           
           if (score > max_Score) {
                max_Score = score;
+               //  TODO: save all moves leading to this
+               depthBestMoves[depth][0] = depthLegalMoveList[depth][i][0];
+               depthBestMoves[depth][1] = depthLegalMoveList[depth][i][1];
+               depthBestMoves[depth][2] = depthLegalMoveList[depth][i][2];
           }
 
           undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
@@ -689,6 +693,9 @@ int redValue(int depth, int turn, bool castlingCheck[4]) {
           score = blueValue(depth - 1, -turn, copyCastlingCheck);
           if (score < min_Score) {
                min_Score = score;
+               depthBestMoves[depth][0] = depthLegalMoveList[depth][i][0];
+               depthBestMoves[depth][1] = depthLegalMoveList[depth][i][1];
+               depthBestMoves[depth][2] = depthLegalMoveList[depth][i][2];
           }
 
           undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
@@ -1812,50 +1819,37 @@ void main() {
      else { printf("Turn: Black\n"); }
      printf("--------------------------------------------------\n");
 
+     bool castlingCheck[4];
+     castlingCheck[WKCASTLING] = whiteKingsideCastling;
+     castlingCheck[WQCASTLING] = whiteQueensideCastling;
+     castlingCheck[BKCASTLING] = blackKingsideCastling;
+     castlingCheck[BQCASTLING] = blackQueensideCastling;
+
+     //  begin timer
+     int timerIndex = 1;
+     frequency = startTimer(&beginTime, timerIndex);
+
      //  Game Loop
-     /*
-     while (gamePlaying) {
+     // while (gamePlaying) {
+     for (int k = 0; k < 4; k++) {
+     
+          // MINIMAX TEST
+          printf("Current Board Eval: %d\n", boardEvaluation(currentBoard));
+          int minimaxValue = blueValue(EVAL_DEPTH, currentTurn, castlingCheck);
+          printf("Minimax Value: %d\n", minimaxValue);
 
-          //  evaluationScore = updateEvaluation(currentBoard);
-          //  printf("Evaluation Score: %d\n\n", evaluationScore);
-
-
-          moveGeneration(currentBoard, currentTurn, allNormalMoves, &normalMoveCount, promotionMoves, &promotionMoveCount);
-          printf("Total Normal Moves: %d\n", normalMoveCount);
-          legalMoves(currentBoard, currentTurn, allNormalMoves, normalMoveCount, allLegalNormalMoves, &legalNormalMoveCount);
-          printf("Legal Normal Moves: %d\n", legalNormalMoveCount);
-
-          printf("--------------------------------------------------\n");
-
-          printf("Total Promotion Moves: %d\n", promotionMoveCount);
-          for (int i = 0; i < promotionMoveCount; i++) {
-               printf("%d to %d: Piece Change to %d\n",
-                    promotionMoves[i][0], promotionMoves[i][1], promotionMoves[i][2]);
+          // Print best moves and result
+          for (int i = EVAL_DEPTH; i > 0; i--) {
+               printf("%d: %c%d %c%d (%d)\n", EVAL_DEPTH + 1 - i, numberToFile(depthBestMoves[i][0]), numberToRank(depthBestMoves[i][0]), numberToFile(depthBestMoves[i][1]), numberToRank(depthBestMoves[i][1]), depthBestMoves[i][2]);
           }
+          
+          makeMove(currentBoard, depthBestMoves[EVAL_DEPTH]);
+          printBoard(currentBoard);
 
-          printf("--------------------------------------------------\n");
-
-          enpassantMoveGeneration(currentBoard, currentTurn, enpassantMoves, &enpassantMoveCount, enpassantSquare);
-          printf("Total Enpassant Moves: %d\n", enpassantMoveCount);
-          for (int i = 0; i < enpassantMoveCount; i++) {
-               printf("%d to %d\n",
-                    enpassantMoves[i][0], enpassantMoves[i][1]);
-          }
-
-          printf("--------------------------------------------------\n");
-
-          printf("Total Castling Moves: %d\n", castlingMoveCount);
-          castlingMoveGeneration(currentBoard, currentTurn, castlingMoves, &castlingMoveCount);
-          for (int i = 0; i < castlingMoveCount; i++) {
-               printf("%d to %d\n",
-                    castlingMoves[i][0], castlingMoves[i][1]);
-          }
-
-          printf("--------------------------------------------------\n");
 
           if (!endGame) {
                //  if no queens are on the board
-               int queenCount=0;
+               int queenCount = 0;
                for (int i = 0; i < 120; i++) {
                     if (currentBoard[i] == WHITEQUEEN || currentBoard[i] == BLACKQUEEN) {
                          queenCount++;
@@ -1867,37 +1861,21 @@ void main() {
           }
           printf("Endgame: %d\n", endGame);
 
-          //  TODO: Make Best Move
           //  TODO: Check for enpassant square
 
-          //  Change turns
-          if (currentTurn == WHITE) { currentTurn = BLACK; }
-          else {
-               currentTurn = WHITE;
-               moveNumber++;
-          }
+          //  Change turns and increment move
+          currentTurn = -currentTurn;
+          if (currentTurn == WHITE) { moveNumber++; }
 
-          //  This should be deleted for non-test cases
-          gamePlaying = false;
           //  gamePlaying = !checkGameEnd(currentBoard);
 
           //  TODO: Check Fifty move rule
 
      }
-     */
+     
  
      //boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling, blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
 
-     //  begin timer
-     int timerIndex = 1;
-     frequency = startTimer(&beginTime, timerIndex);
-     
-     bool castlingCheck[4];
-     castlingCheck[WKCASTLING] = whiteKingsideCastling;
-     castlingCheck[WQCASTLING] = whiteQueensideCastling;
-     castlingCheck[BKCASTLING] = blackKingsideCastling;
-     castlingCheck[BQCASTLING] = blackQueensideCastling; 
-	
      // PERFT TEST
      /*
      printf("PERFT TEST (DEPTH 1) : %llu \n", divide(1, currentTurn, 0, castlingCheck, false));
@@ -1909,22 +1887,8 @@ void main() {
      printf("PERFT TEST (DEPTH 7) : %llu \n", divide(7, currentTurn, 0, castlingCheck, false));
      */
 
-     // MINIMAX TEST
-     printf("Current Board Eval: %d\n", boardEvaluation(currentBoard));
-     int minimaxValue = blueValue(4, currentTurn, castlingCheck);
-     printf("Minimax Value: %d\n", minimaxValue);
-
-     //  print the moves
-     /*
-     for (int i = depth; i >= 1; i--) {
-          printf("%d: %c%d %c%d\n", depth - i + 1, numberToFile(depthBestMoves[i][0]), numberToRank(depthBestMoves[i][0]), numberToFile(depthBestMoves[i][1]), numberToRank(depthBestMoves[i][1]));
-     }
-     */
-
      //  stop timer
      stopTimer(&endTime, timerIndex);
      //  print elapsed time
      printElapsedTime(beginTime, endTime, frequency, timerIndex);
-
-     printBoard(currentBoard);
 }
