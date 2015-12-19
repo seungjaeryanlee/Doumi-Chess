@@ -1795,10 +1795,9 @@ void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTE
 void main() {
 
      //  Initialize Board
-     //board120Setup();
+     board120Setup();
      //  FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
-     FENboardSetup(currentBoard, "8/8/8/8/Pp6/8/8/8 b - a3 0 1");
-
+     
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results
      //  - Position 1: Perft 6 Correct
@@ -1831,10 +1830,12 @@ void main() {
      frequency = startTimer(&beginTime, timerIndex);
 
      //  Game Loop
-     /*
-     // while (gamePlaying) {
-     for (int k = 0; k < 4; k++) {
+     ///*
+     while (gamePlaying) {
      
+          // copy ep Square: needs to be done before any recursion
+          depthEnpassantSquare[EVAL_DEPTH] = enpassantSquare; 
+
           printf("Current Board Eval: %d\n", boardEvaluation(currentBoard));
           int minimaxValue = blueValue(EVAL_DEPTH, currentTurn, castlingCheck);
           printf("Minimax Value: %d\n", minimaxValue);
@@ -1848,7 +1849,6 @@ void main() {
           printBoard(currentBoard);
 
           //  Update enpassant square
-          //  TODO: check if this value is used
           if (depthBestMoves[EVAL_DEPTH][2] == DOUBLEMOVE) {
                enpassantSquare = (depthBestMoves[EVAL_DEPTH][0] + depthBestMoves[EVAL_DEPTH][1]) / 2;
           }
@@ -1880,13 +1880,11 @@ void main() {
           //  TODO: Check Fifty move rule
 
      }
-     */
+     //*/
  
      //boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling, blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
 
-     depthEnpassantSquare[1] = enpassantSquare;
-     printf("PERFT TEST (DEPTH 1) : %llu \n", divide(1, currentTurn, 0, castlingCheck, true));
-
+     
      // PERFT TEST
      /*
      printf("PERFT TEST (DEPTH 1) : %llu \n", divide(1, currentTurn, 0, castlingCheck, false));
