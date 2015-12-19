@@ -1460,7 +1460,7 @@ u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOu
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
-     if (depth == 1) { return depthLegalMoveCount[depth]; }
+     // if (depth == 1) { return depthLegalMoveCount[depth]; }
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
           for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
@@ -1795,8 +1795,9 @@ void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTE
 void main() {
 
      //  Initialize Board
-     board120Setup();
+     //board120Setup();
      //  FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
+     FENboardSetup(currentBoard, "8/8/8/8/Pp6/8/8/8 b - a3 0 1");
 
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results
@@ -1830,10 +1831,10 @@ void main() {
      frequency = startTimer(&beginTime, timerIndex);
 
      //  Game Loop
+     /*
      // while (gamePlaying) {
      for (int k = 0; k < 4; k++) {
      
-          // MINIMAX TEST
           printf("Current Board Eval: %d\n", boardEvaluation(currentBoard));
           int minimaxValue = blueValue(EVAL_DEPTH, currentTurn, castlingCheck);
           printf("Minimax Value: %d\n", minimaxValue);
@@ -1846,7 +1847,14 @@ void main() {
           makeMove(currentBoard, depthBestMoves[EVAL_DEPTH]);
           printBoard(currentBoard);
 
+          //  Update enpassant square
+          //  TODO: check if this value is used
+          if (depthBestMoves[EVAL_DEPTH][2] == DOUBLEMOVE) {
+               enpassantSquare = (depthBestMoves[EVAL_DEPTH][0] + depthBestMoves[EVAL_DEPTH][1]) / 2;
+          }
+          else { enpassantSquare = 0; }
 
+          //  Check endgame
           if (!endGame) {
                //  if no queens are on the board
                int queenCount = 0;
@@ -1859,22 +1867,25 @@ void main() {
                     endGame = true;
                }
           }
-          printf("Endgame: %d\n", endGame);
-
-          //  TODO: Check for enpassant square
+          if (!endGame) { printf("NOT ENDGAME\n"); }
+          else { printf("ENDGAME\n"); }
 
           //  Change turns and increment move
           currentTurn = -currentTurn;
           if (currentTurn == WHITE) { moveNumber++; }
 
-          //  gamePlaying = !checkGameEnd(currentBoard);
+          //  Check if game is over
+          gamePlaying = !checkGameEnd(currentBoard);
 
           //  TODO: Check Fifty move rule
 
      }
-     
+     */
  
      //boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling, blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
+
+     depthEnpassantSquare[1] = enpassantSquare;
+     printf("PERFT TEST (DEPTH 1) : %llu \n", divide(1, currentTurn, 0, castlingCheck, true));
 
      // PERFT TEST
      /*
