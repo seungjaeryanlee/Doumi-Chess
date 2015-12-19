@@ -554,6 +554,7 @@ int position120to64(int position120) {
 //  implementation of minimax using pseudocode from this link:
 //  http://www.hamedahmadi.com/gametree/
 int blueValue(int depth, int turn, bool castlingCheck[4]) {
+     printf("Blue called\n");
      if (depth > 5) {
           return turn * boardEvaluation(currentBoard);
      }
@@ -624,6 +625,7 @@ int blueValue(int depth, int turn, bool castlingCheck[4]) {
      return max_Score;
 }
 int redValue(int depth, int turn, bool castlingCheck[4]) {
+     printf("Red called\n");
      if (depth > 5) {
           return turn * boardEvaluation(currentBoard);
      }
