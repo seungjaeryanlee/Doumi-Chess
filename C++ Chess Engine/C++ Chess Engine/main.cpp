@@ -554,7 +554,6 @@ int position120to64(int position120) {
 //  implementation of minimax using pseudocode from this link:
 //  http://www.hamedahmadi.com/gametree/
 int blueValue(int depth, int turn, bool castlingCheck[4]) {
-     printf("Blue called\n");
      if (depth <= 0) {
           return turn * boardEvaluation(currentBoard);
      }
@@ -576,9 +575,7 @@ int blueValue(int depth, int turn, bool castlingCheck[4]) {
 
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
-          
-          printBoard(currentBoard);
-
+     
           //  defensive copy of castlingCheck
           for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
 
@@ -607,10 +604,8 @@ int blueValue(int depth, int turn, bool castlingCheck[4]) {
                }
           }
 
-          printBoard(currentBoard);
           terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
-          printBoard(currentBoard);
-
+     
           if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
                depthEnpassantSquare[depth - 1] = terminalValue;
                //  this terminal value is actually enpassantSquare
@@ -632,7 +627,6 @@ int blueValue(int depth, int turn, bool castlingCheck[4]) {
      return max_Score;
 }
 int redValue(int depth, int turn, bool castlingCheck[4]) {
-     printf("Red called\n");
      if (depth <= 0) {
           return turn * boardEvaluation(currentBoard);
      }
@@ -702,8 +696,6 @@ int redValue(int depth, int turn, bool castlingCheck[4]) {
 
      return min_Score;
 }
-
-
 
 
 /*                             GAME CYCLE FUNCTIONS                           */
@@ -1796,8 +1788,8 @@ void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTE
 void main() {
 
      //  Initialize Board
-     //  board120Setup();
-     FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
+     board120Setup();
+     //  FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
 
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results
@@ -1919,7 +1911,7 @@ void main() {
 
      // MINIMAX TEST
      printf("Current Board Eval: %d\n", boardEvaluation(currentBoard));
-     int minimaxValue = blueValue(1, currentTurn, castlingCheck);
+     int minimaxValue = blueValue(4, currentTurn, castlingCheck);
      printf("Minimax Value: %d\n", minimaxValue);
 
      //  print the moves
