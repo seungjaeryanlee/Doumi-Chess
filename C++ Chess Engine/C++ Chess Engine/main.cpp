@@ -576,6 +576,9 @@ int blueValue(int depth, int turn, bool castlingCheck[4]) {
 
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
+          
+          printBoard(currentBoard);
+
           //  defensive copy of castlingCheck
           for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
 
@@ -587,7 +590,7 @@ int blueValue(int depth, int turn, bool castlingCheck[4]) {
                copyCastlingCheck[BKCASTLING] = false;
                copyCastlingCheck[BQCASTLING] = false;
           }
-          if (currentBoard[depthLegalMoveList[depth][i][0]] = WHITEROOK) {
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEROOK) {
                if (depthLegalMoveList[depth][i][0] == A1) {
                     copyCastlingCheck[WQCASTLING] = false;
                }
@@ -604,7 +607,9 @@ int blueValue(int depth, int turn, bool castlingCheck[4]) {
                }
           }
 
+          printBoard(currentBoard);
           terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
+          printBoard(currentBoard);
 
           if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
                depthEnpassantSquare[depth - 1] = terminalValue;
@@ -615,7 +620,8 @@ int blueValue(int depth, int turn, bool castlingCheck[4]) {
           }
 
           score = redValue(depth - 1, -turn, copyCastlingCheck);
-          printf("blueValue Score Print %d\n", score); // TODO: Delete this after debugging
+          // printf("blueValue Score Print %d\n", score); // TODO: Delete this after debugging
+          
           if (score > max_Score) {
                max_Score = score;
           }
@@ -659,7 +665,7 @@ int redValue(int depth, int turn, bool castlingCheck[4]) {
                copyCastlingCheck[BKCASTLING] = false;
                copyCastlingCheck[BQCASTLING] = false;
           }
-          if (currentBoard[depthLegalMoveList[depth][i][0]] = WHITEROOK) {
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEROOK) {
                if (depthLegalMoveList[depth][i][0] == A1) {
                     copyCastlingCheck[WQCASTLING] = false;
                }
@@ -1913,7 +1919,7 @@ void main() {
 
      // MINIMAX TEST
      printf("Current Board Eval: %d\n", boardEvaluation(currentBoard));
-     int minimaxValue = blueValue(0, currentTurn, castlingCheck);
+     int minimaxValue = blueValue(1, currentTurn, castlingCheck);
      printf("Minimax Value: %d\n", minimaxValue);
 
      //  print the moves
