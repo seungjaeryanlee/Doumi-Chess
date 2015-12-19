@@ -555,7 +555,7 @@ int position120to64(int position120) {
 //  http://www.hamedahmadi.com/gametree/
 int blueValue(int depth, int turn, bool castlingCheck[4]) {
      printf("Blue called\n");
-     if (depth > 5) {
+     if (depth > 0) {
           return turn * boardEvaluation(currentBoard);
      }
      //  TODO: Use infinity for safety
@@ -615,6 +615,7 @@ int blueValue(int depth, int turn, bool castlingCheck[4]) {
           }
 
           score = redValue(depth + 1, -turn, copyCastlingCheck);
+          printf("blueValue Score Print %d\n", score); // TODO: Delete this after debugging
           if (score > max_Score) {
                max_Score = score;
           }
@@ -626,7 +627,7 @@ int blueValue(int depth, int turn, bool castlingCheck[4]) {
 }
 int redValue(int depth, int turn, bool castlingCheck[4]) {
      printf("Red called\n");
-     if (depth > 5) {
+     if (depth > 0) {
           return turn * boardEvaluation(currentBoard);
      }
      //  TODO: Use infinity for safety
@@ -1911,6 +1912,7 @@ void main() {
      */
 
      // MINIMAX TEST
+     printf("Current Board Eval: %d\n", boardEvaluation(currentBoard));
      int minimaxValue = blueValue(0, currentTurn, castlingCheck);
      printf("Minimax Value: %d\n", minimaxValue);
 
@@ -1926,4 +1928,5 @@ void main() {
      //  print elapsed time
      printElapsedTime(beginTime, endTime, frequency, timerIndex);
 
+     printBoard(currentBoard);
 }
