@@ -551,16 +551,16 @@ int position120to64(int position120) {
      return row * 8 + column;
 }
 
-int negaMax(int depth, int turn, bool castlingCheck[4]) {
-     //  TODO: Return also if game is over
-     if (depth == 0) {
+//  implementation of minimax using pseudocode from this link:
+//  http://www.hamedahmadi.com/gametree/
+int blueValue(int depth, int turn, bool castlingCheck[4]) {
+     if (depth > 5) {
           return turn * boardEvaluation(currentBoard);
      }
-
-     int maxScore = INT_MIN;
-
-     if (depth == 0) { return 1; }
-
+     //  TODO: Use infinity for safety
+     int max_Score = -100000;
+     int score;
+     
      depthAllMoveCount[depth] = 0;
      depthLegalMoveCount[depth] = 0;
      depthEnpassantSquare[depth - 1] = 0;
@@ -573,7 +573,9 @@ int negaMax(int depth, int turn, bool castlingCheck[4]) {
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
+
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
+          //  defensive copy of castlingCheck
           for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
 
           if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEKING) {
@@ -584,7 +586,7 @@ int negaMax(int depth, int turn, bool castlingCheck[4]) {
                copyCastlingCheck[BKCASTLING] = false;
                copyCastlingCheck[BQCASTLING] = false;
           }
-          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEROOK) {
+          if (currentBoard[depthLegalMoveList[depth][i][0]] = WHITEROOK) {
                if (depthLegalMoveList[depth][i][0] == A1) {
                     copyCastlingCheck[WQCASTLING] = false;
                }
@@ -611,16 +613,89 @@ int negaMax(int depth, int turn, bool castlingCheck[4]) {
                depthEnpassantSquare[depth - 1] = 0;
           }
 
-          int score = -negaMax(depth - 1, -turn, copyCastlingCheck);
-          if (score > maxScore) {
-               maxScore = score;
-               // TODO: record best move
+          score = redValue(depth + 1, -turn, copyCastlingCheck);
+          if (score > max_Score) {
+               max_Score = score;
           }
 
           undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
      }
-     return maxScore;
+     
+     return max_Score;
 }
+int redValue(int depth, int turn, bool castlingCheck[4]) {
+     if (depth > 5) {
+          return turn * boardEvaluation(currentBoard);
+     }
+     //  TODO: Use infinity for safety
+     int min_Score = 100000;
+     int score;
+
+     depthAllMoveCount[depth] = 0;
+     depthLegalMoveCount[depth] = 0;
+     depthEnpassantSquare[depth - 1] = 0;
+
+     int terminalValue;
+     bool copyCastlingCheck[4];
+
+     // MOVEGEN
+     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], castlingCheck);
+     // CHECK FOR LEGALS
+     legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+
+
+     for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
+          //  defensive copy of castlingCheck
+          for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
+
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEKING) {
+               copyCastlingCheck[WKCASTLING] = false;
+               copyCastlingCheck[WQCASTLING] = false;
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKKING) {
+               copyCastlingCheck[BKCASTLING] = false;
+               copyCastlingCheck[BQCASTLING] = false;
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] = WHITEROOK) {
+               if (depthLegalMoveList[depth][i][0] == A1) {
+                    copyCastlingCheck[WQCASTLING] = false;
+               }
+               if (depthLegalMoveList[depth][i][0] == H1) {
+                    copyCastlingCheck[WKCASTLING] = false;
+               }
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKROOK) {
+               if (depthLegalMoveList[depth][i][0] == A8) {
+                    copyCastlingCheck[BQCASTLING] = false;
+               }
+               if (depthLegalMoveList[depth][i][0] == H8) {
+                    copyCastlingCheck[BKCASTLING] = false;
+               }
+          }
+
+          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
+
+          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
+               depthEnpassantSquare[depth - 1] = terminalValue;
+               //  this terminal value is actually enpassantSquare
+          }
+          else { // if not, revert it back to 0
+               depthEnpassantSquare[depth - 1] = 0;
+          }
+
+          score = blueValue(depth + 1, -turn, copyCastlingCheck);
+          if (score < min_Score) {
+               min_Score = score;
+          }
+
+          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+     }
+
+     return min_Score;
+}
+
+
+
 
 /*                             GAME CYCLE FUNCTIONS                           */
 bool checkGameEnd(int board[120]) {
@@ -1823,7 +1898,7 @@ void main() {
      castlingCheck[BQCASTLING] = blackQueensideCastling; 
 	
      // PERFT TEST
-     
+     /*
      printf("PERFT TEST (DEPTH 1) : %llu \n", divide(1, currentTurn, 0, castlingCheck, false));
      printf("PERFT TEST (DEPTH 2) : %llu \n", divide(2, currentTurn, 0, castlingCheck, false));
      printf("PERFT TEST (DEPTH 3) : %llu \n", divide(3, currentTurn, 0, castlingCheck, false));
@@ -1831,12 +1906,11 @@ void main() {
      printf("PERFT TEST (DEPTH 5) : %llu \n", divide(5, currentTurn, 0, castlingCheck, false));
      printf("PERFT TEST (DEPTH 6) : %llu \n", divide(6, currentTurn, 0, castlingCheck, false));
      printf("PERFT TEST (DEPTH 7) : %llu \n", divide(7, currentTurn, 0, castlingCheck, false));
-     
+     */
 
-     //  best move
-     //int depth = 4;
-     //int negaMaxValue = negaMax(depth, currentTurn, castlingCheck);
-     //printf("Depth %d Negamax Value: %d\n", depth, negaMaxValue);
+     // MINIMAX TEST
+     int minimaxValue = blueValue(0, currentTurn, castlingCheck);
+     printf("Minimax Value: %d\n", minimaxValue);
 
      //  print the moves
      /*

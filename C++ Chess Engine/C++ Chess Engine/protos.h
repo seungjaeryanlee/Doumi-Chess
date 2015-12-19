@@ -31,7 +31,9 @@ int position64to120(int position64);
 int position120to64(int position120);
 //  negaMax implemented for board evaluation
 int negaMax(int depth, int turn, bool castlingCheck[4]);
-
+//  miniMax implemented for board evaluation
+int blueValue(int depth, int turn, bool castlingCheck[4]);
+int redValue(int depth, int turn, bool castlingCheck[4]);
 
 
 /*                                   GAME CYCLE                               */
