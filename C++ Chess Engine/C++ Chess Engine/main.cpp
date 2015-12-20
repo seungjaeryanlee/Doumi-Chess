@@ -286,7 +286,7 @@ void FENboardSetup(int board[120], std::string FEN) {
 
 
 }
-std::string boardToFEN(int board[120], int turn,
+string boardToFEN(int board[120], int turn,
      bool WKCastling, bool WQCastling, bool BKCastling, bool BQCastling,
      int enpassantSquare, int halfMoveClock, int moveNumber) {
      std::string FEN;
@@ -390,7 +390,7 @@ std::string boardToFEN(int board[120], int turn,
      FEN += ' ';
      FEN += ('0' + moveNumber);
 
-     std::cout << FEN << std::endl;
+     cout << FEN << endl;
      return FEN;
 
 }
@@ -1800,6 +1800,7 @@ void main() {
      board120Setup();
      //  FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
      
+
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results
      //  - Position 1: Perft 6 Correct
@@ -1819,7 +1820,10 @@ void main() {
      printf("Move number: %d\n", moveNumber);
      if (currentTurn == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
+     boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling, blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
      printf("--------------------------------------------------\n");
+
+     
 
      bool castlingCheck[4];
      castlingCheck[WKCASTLING] = whiteKingsideCastling;
@@ -1848,16 +1852,15 @@ void main() {
           }
           
           //  Increment or reset Fifty move count
-          //  TODO: Add 50 Move Rule option in move selection
+          //  TODO: Add 50 Move Rule option in move generation / selection
           if (currentBoard[depthBestMoves[EVAL_DEPTH][1]] == EMPTYSQUARE
                && currentBoard[depthBestMoves[EVAL_DEPTH][0]] != WHITEPAWN
                && currentBoard[depthBestMoves[EVAL_DEPTH][0]] != BLACKPAWN) {
                fiftyMoveCount++;
           }
           else { fiftyMoveCount = 0; }
-          printf("Fiftymovecount: %d\n", fiftyMoveCount);
-          printf("%d %d %d\n", (currentBoard[depthBestMoves[EVAL_DEPTH][1]] == EMPTYSQUARE), (currentBoard[depthBestMoves[EVAL_DEPTH][0]] != WHITEPAWN), (currentBoard[depthBestMoves[EVAL_DEPTH][0]] != BLACKPAWN));
 
+          //  Make best move and print board
           makeMove(currentBoard, depthBestMoves[EVAL_DEPTH]);
           printBoard(currentBoard);
 
@@ -1920,7 +1923,7 @@ void main() {
      }
      //*/
  
-     //boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling, blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
+     
 
      
      // PERFT TEST
