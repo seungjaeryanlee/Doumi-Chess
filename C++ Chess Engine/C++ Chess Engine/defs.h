@@ -8,6 +8,8 @@
 #define KINGVALUE 9999
 #define ROW 10
 #define COLUMN 1
+#define MAX_MOVEGEN_COUNT 250
+#define MAX_MOVENUMBER 200
 #define MAXIMUM_DEPTH 6
 #define EVAL_DEPTH 4
 

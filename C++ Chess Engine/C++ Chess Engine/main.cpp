@@ -99,14 +99,14 @@ int currentTurn = WHITE;
 //  0 if double move did not happen, square value (ex. F3) otherwise
 int enpassantSquare = 0; 
 //  move[3]: initial, terminal, moveType
-int currentBoardMoveList[250][3];
+int currentBoardMoveList[MAX_MOVEGEN_COUNT][3];
 int currentBoardMoveCount;
-int currentBoardLegalMoveList[250][3];
+int currentBoardLegalMoveList[MAX_MOVEGEN_COUNT][3];
 int currentBoardLegalMoveCount;
-int depthAllMoveList[MAXIMUM_DEPTH + 1][250][3];
+int depthAllMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT][3];
 int depthAllMoveCount[MAXIMUM_DEPTH + 1];
 int depthEnpassantSquare[MAXIMUM_DEPTH + 1];
-int depthLegalMoveList[MAXIMUM_DEPTH + 1][250][3];
+int depthLegalMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT][3];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 //  added for time performance check
 LARGE_INTEGER frequency, beginTime, endTime;
@@ -116,6 +116,10 @@ int depthBestMoves[MAXIMUM_DEPTH + 1][3];
 int fiftyMoveCount = 0;
 //  Records the result of the game
 int gameResult = 0;
+//  Stores Board and Board States for threefold repetition
+int savedBoard[MAX_MOVENUMBER + 1][120];
+int savedCastling[MAX_MOVENUMBER + 1][4];
+int savedEnpassant[MAX_MOVENUMBER + 1];
 
 /******************************************************************************/
 /*                                  FUNCTIONS                                 */
