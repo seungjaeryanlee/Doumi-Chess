@@ -112,8 +112,10 @@ int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 LARGE_INTEGER frequency, beginTime, endTime;
 //  for storing best moves
 int depthBestMoves[MAXIMUM_DEPTH + 1][3];
-
-
+//  Counter to check Fifty Move rule and 75 Move Rule
+int fiftyMoveCount = 0;
+//  Records the result of the game
+int gameResult = 0;
 
 /******************************************************************************/
 /*                                  FUNCTIONS                                 */
@@ -1877,8 +1879,36 @@ void main() {
           //  Check if game is over
           gamePlaying = !checkGameEnd(currentBoard);
 
-          //  TODO: Check Fifty move rule
+          //  TODO: Check Threefold repetition
 
+          //  Increment or reset Fifty move count
+          //  TODO: Add 50 Move Rule option in move selection
+          if (depthBestMoves[EVAL_DEPTH][1] == EMPTYSQUARE 
+               && depthBestMoves[EVAL_DEPTH][0] != WHITEPAWN 
+               && depthBestMoves[EVAL_DEPTH][0] != BLACKPAWN) { 
+               fiftyMoveCount++; 
+          }
+          else { fiftyMoveCount = 0; }
+
+          //  75 Move Rule Implement
+          if (fiftyMoveCount >= 75) {
+               gamePlaying = false;
+               gameResult = TIE;
+          }
+     }
+
+     //  Output Game Result
+     printf("Game Result : ");
+     switch (gameResult) {
+     case BLACK_WIN:
+          printf("0-1\n");
+          break;
+     case TIE:
+          printf("1/2-1/2\n");
+          break;
+     case WHITE_WIN:
+          printf("1-0\n");
+          break;
      }
      //*/
  
