@@ -2,29 +2,34 @@
 ## Contributor
 sjlee235
 ## Code Explained (In construction)
-1. Board Representation
-2. Board Evaluation
-3. Move Generation
+1. Board Representation  
+I use size 120 array to represent a board. The 12x10 array uses the middle 8x8 as the chessboard, and all the other squares are declared error squares. With these error squares, it is easier to generate moves for bishop, rook, queen and knight.
+2. Board Evaluation  
+3. Move Generation  
 4. Recursion  
 I plan to use Negamax algorithm for this engine.
 
 ## Current Progress
-1. Board Representation - **Complete**
-2. Board Evaluation - **Complete**
-3. Move Generation - *In progress*
-  - Normal Move Generation - **Complete**
+1. Board Representation - **Complete**  
+2. Board Evaluation - **Complete**  
+3. Move Generation - **Complete**  
+  - Normal Move Generation - **Complete**  
   - Special Move Generation (Promotion, Enpassant, Castling) - **Complete**
   - Legal Move Check - **Complete**  
-  - Performance Test (a.k.a. perft test) - *In progress*  
+  - Performance Test (a.k.a. perft test) - **Complete**  
     - Change Existing Functions for pointer arguments - **Complete**  
-4. Recursion
+4. Recursion - *In progress*  
+  - Implement Minimax - *Complete*  
   - Implement Negamax
-  - Test Recursion
+  - Test Recursion - *In progress*  
 5. Other Minor Details  
-  - Stalemate rules  
+  - Stalemate rules - *In progress*  
+    - Threefold Repetition (FIDE 9.2)
+    - Fifty Move Rule (FIDE 9.3) - *In progress*  
+    - 75 Move Rule (FIDE 9.6) - **Complete**  
   - Resignation  
 
-## TODOs (In construction)
+## TODOs  
 
 ## Non-necessary Addition to Chess Engine
 1. Opening Book  
