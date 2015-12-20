@@ -94,6 +94,8 @@ blackKingsideCastling = true, blackQueensideCastling = true;
 int halfMoveClock = 0;
 //  Current Move Number, starts at 1
 int moveNumber = 1;
+//  Current Half Move Number, starts at 0
+int halfMoveCount = 0;
 //  WHITE or BLACK
 int currentTurn = WHITE; 
 //  0 if double move did not happen, square value (ex. F3) otherwise
@@ -120,6 +122,7 @@ int gameResult = 0;
 int savedBoard[MAX_MOVENUMBER + 1][120];
 int savedCastling[MAX_MOVENUMBER + 1][4];
 int savedEnpassant[MAX_MOVENUMBER + 1];
+int repetitionCount[MAX_MOVENUMBER + 1];
 
 /******************************************************************************/
 /*                                  FUNCTIONS                                 */
@@ -1843,6 +1846,15 @@ void main() {
      ///*
      while (gamePlaying) {
      
+          //  Save Board state for threefold repetition check
+          for (int i = 0; i < 120; i++) {
+               savedBoard[halfMoveCount][i] = currentBoard[i];
+          }
+          for (int i = 0; i < 4; i++) {
+               savedCastling[halfMoveCount][i] = castlingCheck[i];
+          }
+          savedEnpassant[halfMoveCount] = enpassantSquare;
+
           // copy ep Square: needs to be done before any recursion
           depthEnpassantSquare[EVAL_DEPTH] = enpassantSquare; 
 
@@ -1896,13 +1908,13 @@ void main() {
           //  Change turns and increment move
           currentTurn = -currentTurn;
           if (currentTurn == WHITE) { moveNumber++; }
+          halfMoveCount++;
 
           //  Check if game is over
           gamePlaying = !checkGameEnd(currentBoard);
           if (!gamePlaying) { break; }
 
           //  TODO: Check Threefold repetition
-
           
           //  75 Move Rule Implement (unless checkmate)
           if (fiftyMoveCount >= 75) {
