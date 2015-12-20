@@ -1847,6 +1847,17 @@ void main() {
                printf("%d: %c%d %c%d (%d)\n", EVAL_DEPTH + 1 - i, numberToFile(depthBestMoves[i][0]), numberToRank(depthBestMoves[i][0]), numberToFile(depthBestMoves[i][1]), numberToRank(depthBestMoves[i][1]), depthBestMoves[i][2]);
           }
           
+          //  Increment or reset Fifty move count
+          //  TODO: Add 50 Move Rule option in move selection
+          if (currentBoard[depthBestMoves[EVAL_DEPTH][1]] == EMPTYSQUARE
+               && currentBoard[depthBestMoves[EVAL_DEPTH][0]] != WHITEPAWN
+               && currentBoard[depthBestMoves[EVAL_DEPTH][0]] != BLACKPAWN) {
+               fiftyMoveCount++;
+          }
+          else { fiftyMoveCount = 0; }
+          printf("Fiftymovecount: %d\n", fiftyMoveCount);
+          printf("%d %d %d\n", (currentBoard[depthBestMoves[EVAL_DEPTH][1]] == EMPTYSQUARE), (currentBoard[depthBestMoves[EVAL_DEPTH][0]] != WHITEPAWN), (currentBoard[depthBestMoves[EVAL_DEPTH][0]] != BLACKPAWN));
+
           makeMove(currentBoard, depthBestMoves[EVAL_DEPTH]);
           printBoard(currentBoard);
 
@@ -1872,28 +1883,25 @@ void main() {
           if (!endGame) { printf("NOT ENDGAME\n"); }
           else { printf("ENDGAME\n"); }
 
+          //  Print out move and move number
+          printf("%d: %c%d %c%d (%d)\n", moveNumber, numberToFile(depthBestMoves[EVAL_DEPTH][0]), numberToRank(depthBestMoves[EVAL_DEPTH][0]), numberToFile(depthBestMoves[EVAL_DEPTH][1]), numberToRank(depthBestMoves[EVAL_DEPTH][1]), depthBestMoves[EVAL_DEPTH][2]);
+
           //  Change turns and increment move
           currentTurn = -currentTurn;
           if (currentTurn == WHITE) { moveNumber++; }
 
           //  Check if game is over
           gamePlaying = !checkGameEnd(currentBoard);
+          if (!gamePlaying) { break; }
 
           //  TODO: Check Threefold repetition
 
-          //  Increment or reset Fifty move count
-          //  TODO: Add 50 Move Rule option in move selection
-          if (depthBestMoves[EVAL_DEPTH][1] == EMPTYSQUARE 
-               && depthBestMoves[EVAL_DEPTH][0] != WHITEPAWN 
-               && depthBestMoves[EVAL_DEPTH][0] != BLACKPAWN) { 
-               fiftyMoveCount++; 
-          }
-          else { fiftyMoveCount = 0; }
-
-          //  75 Move Rule Implement
+          
+          //  75 Move Rule Implement (unless checkmate)
           if (fiftyMoveCount >= 75) {
                gamePlaying = false;
                gameResult = TIE;
+               break;
           }
      }
 
