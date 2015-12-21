@@ -478,6 +478,13 @@ int numberToRank(int position) {
      int rank = 10 - position / 10;
      return rank;
 }
+int filerankToNumber(char file, int rank) {
+     //  TODO: include output for non-position120 number?
+     
+     int position120;
+     position120 = COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - '1'));
+     return position120;
+}
 
 /*                             EVALUATION FUNCTIONS                           */
 int boardEvaluation(int board[120]) {
@@ -1949,10 +1956,11 @@ void main() {
                string userCommand;
                std::getline(cin, userCommand);
                //  TODO: include error check
-               int initialSquare = (userCommand.at(0) - 'a' + 1)*ROW + (10 - (userCommand.at(1) - '0'))*COLUMN;
-               int terminalSquare = (userCommand.at(2) - 'a' + 1)*ROW + (10 - (userCommand.at(3) - '0'))*COLUMN;
+               int initialSquare = filerankToNumber(userCommand.at(0), userCommand.at(1));
+               int terminalSquare = filerankToNumber(userCommand.at(2), userCommand.at(3));
                //  TODO: check movetype
                //  TODO: check legality
+               //  TODO: Add different commands (display board, FEN, etc...)
                //  TODO: check if there is anything else to check :D
                int userMove[3] = { initialSquare, terminalSquare, 0 };
                makeMove(currentBoard, userMove);

@@ -15,6 +15,7 @@ void printBoard(int board[120]);
 int checkColor(int pieceType);
 char numberToFile(int position);
 int numberToRank(int position);
+int filerankToNumber(char file, int rank);
 
 
 
