@@ -1956,115 +1956,134 @@ void main() {
      //  Game Loop: Player vs COM
      while (gamePlaying) {
           if (currentTurn == WHITE) {
+               string userCommand; 
+               //  TODO: Check size also!
                bool correctInput = false;
                int initialSquare, terminalSquare;
+               int commandType = ERROR_COMMAND;
                while (!correctInput) {
-                    printf("Please enter your move: ");
-                    string userCommand;
-                    std::getline(cin, userCommand); // do I want to get the entire command?
-                    
-                    initialSquare = filerankToNumber(userCommand.at(0), userCommand.at(1));
-                    terminalSquare = filerankToNumber(userCommand.at(2), userCommand.at(3));
-                    
-                    //  Check if Filerank format is correct
-                    if (initialSquare != ERROR_INTEGER && terminalSquare != ERROR_INTEGER) {
+                    printf("%d: Make move\n", MOVE);
+                    printf("%d: Display Board\n", DISPLAY_BOARD);
+                    printf("%d: Display FEN\n", DISPLAY_FEN);
+                    printf("Please choose command: ");
+                    std::getline(cin, userCommand);
+
+                    commandType = userCommand.at(0) - '0';
+                    if (1 <= commandType && commandType <= 3) {
                          correctInput = true;
                          break;
                     }
-                    else {
-                         printf("Wrong format: correct format is [char][int][char][int]\n");
-                         continue;
-                    }
-
-                    //  TODO: include error check
-                    //  TODO: check movetype
-                    //  TODO: check legality
-                    //  TODO: Add different commands (display board, FEN, etc...)
-                    //  TODO: check if there is anything else to check :D
-                    
                }
-               int userMove[3] = { initialSquare, terminalSquare, 0 };
-               makeMove(currentBoard, userMove);
-               currentTurn = -currentTurn;
-               continue;
-               
+
+               if (commandType == MOVE) {
+                    correctInput = false;
+                    while (!correctInput) {
+                         printf("Please enter your move: ");
+                         std::getline(cin, userCommand); // do I want to get the entire command?
+
+                         initialSquare = filerankToNumber(userCommand.at(0), userCommand.at(1));
+                         terminalSquare = filerankToNumber(userCommand.at(2), userCommand.at(3));
+
+                         //  Check if Filerank format is correct
+                         if (initialSquare != ERROR_INTEGER && terminalSquare != ERROR_INTEGER) {
+                              correctInput = true;
+                              break;
+                         }
+                         else {
+                              printf("Wrong format: correct format is [char][int][char][int].\n");
+                              continue;
+                         }
+
+                         //  TODO: include error check
+                         //  TODO: check movetype
+                         //  TODO: check legality
+                         //  TODO: Add different commands (display board, FEN, etc...)
+                         //  TODO: check if there is anything else to check :D
+
+                    }
+                    int userMove[3] = { initialSquare, terminalSquare, 0 };
+                    makeMove(currentBoard, userMove);
+                    currentTurn = -currentTurn;
+                    continue;
+               }
           }
-
-          //  Save Board state for threefold repetition check
-          for (int i = 0; i < 120; i++) {
-               savedBoard[halfMoveCount][i] = currentBoard[i];
-          }
-          for (int i = 0; i < 4; i++) {
-               savedCastling[halfMoveCount][i] = castlingCheck[i];
-          }
-          savedEnpassant[halfMoveCount] = enpassantSquare;
-
-          // copy ep Square: needs to be done before any recursion
-          depthEnpassantSquare[EVAL_DEPTH] = enpassantSquare;
-
-          printf("Current Board Eval: %d\n", boardEvaluation(currentBoard));
-          int minimaxValue = blueValue(EVAL_DEPTH, currentTurn, castlingCheck);
-          printf("Minimax Value: %d\n", minimaxValue);
-
-          // Print best moves and result
-          for (int i = EVAL_DEPTH; i > 0; i--) {
-               printf("%d: %c%d %c%d (%d)\n", EVAL_DEPTH + 1 - i, numberToFile(depthBestMoves[i][0]), numberToRank(depthBestMoves[i][0]), numberToFile(depthBestMoves[i][1]), numberToRank(depthBestMoves[i][1]), depthBestMoves[i][2]);
-          }
-
-          //  Increment or reset Fifty move count
-          //  TODO: Add 50 Move Rule option in move generation / selection
-          if (currentBoard[depthBestMoves[EVAL_DEPTH][1]] == EMPTYSQUARE
-               && currentBoard[depthBestMoves[EVAL_DEPTH][0]] != WHITEPAWN
-               && currentBoard[depthBestMoves[EVAL_DEPTH][0]] != BLACKPAWN) {
-               fiftyMoveCount++;
-          }
-          else { fiftyMoveCount = 0; }
-
-          //  Make best move and print board
-          makeMove(currentBoard, depthBestMoves[EVAL_DEPTH]);
-          printBoard(currentBoard);
-
-          //  Update enpassant square
-          if (depthBestMoves[EVAL_DEPTH][2] == DOUBLEMOVE) {
-               enpassantSquare = (depthBestMoves[EVAL_DEPTH][0] + depthBestMoves[EVAL_DEPTH][1]) / 2;
-          }
-          else { enpassantSquare = 0; }
-
-          //  Check endgame
-          if (!endGame) {
-               //  if no queens are on the board
-               int queenCount = 0;
+          else if (currentTurn == BLACK) {
+               //  Save Board state for threefold repetition check
                for (int i = 0; i < 120; i++) {
-                    if (currentBoard[i] == WHITEQUEEN || currentBoard[i] == BLACKQUEEN) {
-                         queenCount++;
+                    savedBoard[halfMoveCount][i] = currentBoard[i];
+               }
+               for (int i = 0; i < 4; i++) {
+                    savedCastling[halfMoveCount][i] = castlingCheck[i];
+               }
+               savedEnpassant[halfMoveCount] = enpassantSquare;
+
+               // copy ep Square: needs to be done before any recursion
+               depthEnpassantSquare[EVAL_DEPTH] = enpassantSquare;
+
+               printf("Current Board Eval: %d\n", boardEvaluation(currentBoard));
+               int minimaxValue = blueValue(EVAL_DEPTH, currentTurn, castlingCheck);
+               printf("Minimax Value: %d\n", minimaxValue);
+
+               // Print best moves and result
+               for (int i = EVAL_DEPTH; i > 0; i--) {
+                    printf("%d: %c%d %c%d (%d)\n", EVAL_DEPTH + 1 - i, numberToFile(depthBestMoves[i][0]), numberToRank(depthBestMoves[i][0]), numberToFile(depthBestMoves[i][1]), numberToRank(depthBestMoves[i][1]), depthBestMoves[i][2]);
+               }
+
+               //  Increment or reset Fifty move count
+               //  TODO: Add 50 Move Rule option in move generation / selection
+               if (currentBoard[depthBestMoves[EVAL_DEPTH][1]] == EMPTYSQUARE
+                    && currentBoard[depthBestMoves[EVAL_DEPTH][0]] != WHITEPAWN
+                    && currentBoard[depthBestMoves[EVAL_DEPTH][0]] != BLACKPAWN) {
+                    fiftyMoveCount++;
+               }
+               else { fiftyMoveCount = 0; }
+
+               //  Make best move and print board
+               makeMove(currentBoard, depthBestMoves[EVAL_DEPTH]);
+               printBoard(currentBoard);
+
+               //  Update enpassant square
+               if (depthBestMoves[EVAL_DEPTH][2] == DOUBLEMOVE) {
+                    enpassantSquare = (depthBestMoves[EVAL_DEPTH][0] + depthBestMoves[EVAL_DEPTH][1]) / 2;
+               }
+               else { enpassantSquare = 0; }
+
+               //  Check endgame
+               if (!endGame) {
+                    //  if no queens are on the board
+                    int queenCount = 0;
+                    for (int i = 0; i < 120; i++) {
+                         if (currentBoard[i] == WHITEQUEEN || currentBoard[i] == BLACKQUEEN) {
+                              queenCount++;
+                         }
+                    }
+                    if (queenCount == 0) {
+                         endGame = true;
                     }
                }
-               if (queenCount == 0) {
-                    endGame = true;
+               if (!endGame) { printf("NOT ENDGAME\n"); }
+               else { printf("ENDGAME\n"); }
+
+               //  Print out move and move number
+               printf("%d: %c%d %c%d (%d)\n", moveNumber, numberToFile(depthBestMoves[EVAL_DEPTH][0]), numberToRank(depthBestMoves[EVAL_DEPTH][0]), numberToFile(depthBestMoves[EVAL_DEPTH][1]), numberToRank(depthBestMoves[EVAL_DEPTH][1]), depthBestMoves[EVAL_DEPTH][2]);
+
+               //  Change turns and increment move
+               currentTurn = -currentTurn;
+               if (currentTurn == WHITE) { moveNumber++; }
+               halfMoveCount++;
+
+               //  Check if game is over
+               gamePlaying = !checkGameEnd(currentBoard);
+               if (!gamePlaying) { break; }
+
+               //  TODO: Check Threefold repetition
+
+               //  75 Move Rule Implement (unless checkmate)
+               if (fiftyMoveCount >= 75) {
+                    gamePlaying = false;
+                    gameResult = TIE;
+                    break;
                }
-          }
-          if (!endGame) { printf("NOT ENDGAME\n"); }
-          else { printf("ENDGAME\n"); }
-
-          //  Print out move and move number
-          printf("%d: %c%d %c%d (%d)\n", moveNumber, numberToFile(depthBestMoves[EVAL_DEPTH][0]), numberToRank(depthBestMoves[EVAL_DEPTH][0]), numberToFile(depthBestMoves[EVAL_DEPTH][1]), numberToRank(depthBestMoves[EVAL_DEPTH][1]), depthBestMoves[EVAL_DEPTH][2]);
-
-          //  Change turns and increment move
-          currentTurn = -currentTurn;
-          if (currentTurn == WHITE) { moveNumber++; }
-          halfMoveCount++;
-
-          //  Check if game is over
-          gamePlaying = !checkGameEnd(currentBoard);
-          if (!gamePlaying) { break; }
-
-          //  TODO: Check Threefold repetition
-
-          //  75 Move Rule Implement (unless checkmate)
-          if (fiftyMoveCount >= 75) {
-               gamePlaying = false;
-               gameResult = TIE;
-               break;
           }
      }
 
