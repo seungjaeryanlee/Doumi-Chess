@@ -479,8 +479,11 @@ int numberToRank(int position) {
      return rank;
 }
 int filerankToNumber(char file, int rank) {
-     //  TODO: include output for non-position120 number?
-     
+     //  if it is not a correct filerank format, return error
+     if ('a' > file || file > 'h' || '0' > rank || rank > '8' ) {
+          return ERROR_INTEGER;
+     }
+
      int position120;
      position120 = COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - '1'));
      return position120;

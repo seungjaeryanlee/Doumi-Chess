@@ -12,6 +12,7 @@
 #define MAX_MOVENUMBER 200
 #define MAXIMUM_DEPTH 6
 #define EVAL_DEPTH 4
+#define ERROR_INTEGER 970201
 
 typedef unsigned long long u64;
 
