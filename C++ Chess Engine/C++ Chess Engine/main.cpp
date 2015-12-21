@@ -1956,19 +1956,38 @@ void main() {
      //  Game Loop: Player vs COM
      while (gamePlaying) {
           if (currentTurn == WHITE) {
-               string userCommand;
-               std::getline(cin, userCommand);
-               //  TODO: include error check
-               int initialSquare = filerankToNumber(userCommand.at(0), userCommand.at(1));
-               int terminalSquare = filerankToNumber(userCommand.at(2), userCommand.at(3));
-               //  TODO: check movetype
-               //  TODO: check legality
-               //  TODO: Add different commands (display board, FEN, etc...)
-               //  TODO: check if there is anything else to check :D
+               bool correctInput = false;
+               int initialSquare, terminalSquare;
+               while (!correctInput) {
+                    printf("Please enter your move: ");
+                    string userCommand;
+                    std::getline(cin, userCommand); // do I want to get the entire command?
+                    
+                    initialSquare = filerankToNumber(userCommand.at(0), userCommand.at(1));
+                    terminalSquare = filerankToNumber(userCommand.at(2), userCommand.at(3));
+                    
+                    //  Check if Filerank format is correct
+                    if (initialSquare != ERROR_INTEGER && terminalSquare != ERROR_INTEGER) {
+                         correctInput = true;
+                         break;
+                    }
+                    else {
+                         printf("Wrong format: correct format is [char][int][char][int]\n");
+                         continue;
+                    }
+
+                    //  TODO: include error check
+                    //  TODO: check movetype
+                    //  TODO: check legality
+                    //  TODO: Add different commands (display board, FEN, etc...)
+                    //  TODO: check if there is anything else to check :D
+                    
+               }
                int userMove[3] = { initialSquare, terminalSquare, 0 };
                makeMove(currentBoard, userMove);
                currentTurn = -currentTurn;
                continue;
+               
           }
 
           //  Save Board state for threefold repetition check
