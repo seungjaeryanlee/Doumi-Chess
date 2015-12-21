@@ -88,9 +88,11 @@ int KING_PCSQTable_ENDGAME[64] = {
      -50,-30,-30,-30,-30,-30,-30,-50
 };
 //  true if king/rook did not move, false if it moved
+//  TODO: Unify this with castlingCheck
 bool whiteKingsideCastling = true, whiteQueensideCastling = true,
 blackKingsideCastling = true, blackQueensideCastling = true;
 //  clock for fifty move rule
+//  TODO: Unify this with fiftyMoveCount
 int halfMoveClock = 0;
 //  Current Move Number, starts at 1
 int moveNumber = 1;
@@ -1838,12 +1840,14 @@ void main() {
      castlingCheck[BKCASTLING] = blackKingsideCastling;
      castlingCheck[BQCASTLING] = blackQueensideCastling;
 
+     
+
      //  begin timer
      int timerIndex = 1;
      frequency = startTimer(&beginTime, timerIndex);
 
-     //  Game Loop
-     ///*
+     //  Game Loop: COM vs COM
+     /*
      while (gamePlaying) {
      
           //  Save Board state for threefold repetition check
@@ -1937,11 +1941,117 @@ void main() {
           printf("1-0\n");
           break;
      }
-     //*/
- 
+     */
      
+     //  Game Loop: Player vs COM
+     while (gamePlaying) {
+          if (currentTurn == WHITE) {
+               string userCommand;
+               std::getline(cin, userCommand);
+               //  TODO: include error check
+               int initialSquare = (userCommand.at(0) - 'a' + 1)*ROW + (10 - (userCommand.at(1) - '0'))*COLUMN;
+               int terminalSquare = (userCommand.at(2) - 'a' + 1)*ROW + (10 - (userCommand.at(3) - '0'))*COLUMN;
+               //  TODO: check movetype
+               //  TODO: check legality
+               //  TODO: check if there is anything else to check :D
+               int userMove[3] = { initialSquare, terminalSquare, 0 };
+               makeMove(currentBoard, userMove);
+               currentTurn = -currentTurn;
+               continue;
+          }
 
-     
+          //  Save Board state for threefold repetition check
+          for (int i = 0; i < 120; i++) {
+               savedBoard[halfMoveCount][i] = currentBoard[i];
+          }
+          for (int i = 0; i < 4; i++) {
+               savedCastling[halfMoveCount][i] = castlingCheck[i];
+          }
+          savedEnpassant[halfMoveCount] = enpassantSquare;
+
+          // copy ep Square: needs to be done before any recursion
+          depthEnpassantSquare[EVAL_DEPTH] = enpassantSquare;
+
+          printf("Current Board Eval: %d\n", boardEvaluation(currentBoard));
+          int minimaxValue = blueValue(EVAL_DEPTH, currentTurn, castlingCheck);
+          printf("Minimax Value: %d\n", minimaxValue);
+
+          // Print best moves and result
+          for (int i = EVAL_DEPTH; i > 0; i--) {
+               printf("%d: %c%d %c%d (%d)\n", EVAL_DEPTH + 1 - i, numberToFile(depthBestMoves[i][0]), numberToRank(depthBestMoves[i][0]), numberToFile(depthBestMoves[i][1]), numberToRank(depthBestMoves[i][1]), depthBestMoves[i][2]);
+          }
+
+          //  Increment or reset Fifty move count
+          //  TODO: Add 50 Move Rule option in move generation / selection
+          if (currentBoard[depthBestMoves[EVAL_DEPTH][1]] == EMPTYSQUARE
+               && currentBoard[depthBestMoves[EVAL_DEPTH][0]] != WHITEPAWN
+               && currentBoard[depthBestMoves[EVAL_DEPTH][0]] != BLACKPAWN) {
+               fiftyMoveCount++;
+          }
+          else { fiftyMoveCount = 0; }
+
+          //  Make best move and print board
+          makeMove(currentBoard, depthBestMoves[EVAL_DEPTH]);
+          printBoard(currentBoard);
+
+          //  Update enpassant square
+          if (depthBestMoves[EVAL_DEPTH][2] == DOUBLEMOVE) {
+               enpassantSquare = (depthBestMoves[EVAL_DEPTH][0] + depthBestMoves[EVAL_DEPTH][1]) / 2;
+          }
+          else { enpassantSquare = 0; }
+
+          //  Check endgame
+          if (!endGame) {
+               //  if no queens are on the board
+               int queenCount = 0;
+               for (int i = 0; i < 120; i++) {
+                    if (currentBoard[i] == WHITEQUEEN || currentBoard[i] == BLACKQUEEN) {
+                         queenCount++;
+                    }
+               }
+               if (queenCount == 0) {
+                    endGame = true;
+               }
+          }
+          if (!endGame) { printf("NOT ENDGAME\n"); }
+          else { printf("ENDGAME\n"); }
+
+          //  Print out move and move number
+          printf("%d: %c%d %c%d (%d)\n", moveNumber, numberToFile(depthBestMoves[EVAL_DEPTH][0]), numberToRank(depthBestMoves[EVAL_DEPTH][0]), numberToFile(depthBestMoves[EVAL_DEPTH][1]), numberToRank(depthBestMoves[EVAL_DEPTH][1]), depthBestMoves[EVAL_DEPTH][2]);
+
+          //  Change turns and increment move
+          currentTurn = -currentTurn;
+          if (currentTurn == WHITE) { moveNumber++; }
+          halfMoveCount++;
+
+          //  Check if game is over
+          gamePlaying = !checkGameEnd(currentBoard);
+          if (!gamePlaying) { break; }
+
+          //  TODO: Check Threefold repetition
+
+          //  75 Move Rule Implement (unless checkmate)
+          if (fiftyMoveCount >= 75) {
+               gamePlaying = false;
+               gameResult = TIE;
+               break;
+          }
+     }
+
+     //  Output Game Result
+     printf("Game Result : ");
+     switch (gameResult) {
+     case BLACK_WIN:
+          printf("0-1\n");
+          break;
+     case TIE:
+          printf("1/2-1/2\n");
+          break;
+     case WHITE_WIN:
+          printf("1-0\n");
+          break;
+     }
+
      // PERFT TEST
      /*
      printf("PERFT TEST (DEPTH 1) : %llu \n", divide(1, currentTurn, 0, castlingCheck, false));
