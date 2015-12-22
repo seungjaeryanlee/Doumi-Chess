@@ -30,6 +30,13 @@ I plan to use Negamax algorithm for this engine.
   - Resignation  
 
 ## TODOs  
+1. Unify halfMoveClock and fiftyMoveCount
+2. Add Undo Move command Player vs. COM
+3. Add COM Make Move command in Player vs. COM
+4. Create a function for COM making one move and stopping
+5. Add 50 Move Rule option in moveGen
+6. Check Threefold Repetition
+7. Use Integer Infinity in Minimax for Safety
 
 ## Non-necessary Addition to Chess Engine
 1. Opening Book  
