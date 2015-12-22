@@ -1973,6 +1973,7 @@ void main() {
                     printf("%d: Display Board\n", DISPLAY_BOARD);
                     printf("%d: Display FEN\n", DISPLAY_FEN);
                     printf("%d: Reset Board\n", BOARD_RESET);
+                    printf("%d: Perft Test\n: ", PERFT);
                     printf("Please choose command: ");
                     std::getline(cin, userCommand);
 
@@ -1981,7 +1982,7 @@ void main() {
                          continue;
                     }
                     commandType = userCommand.at(0) - '0';
-                    if (1 <= commandType && commandType <= 4) {
+                    if (1 <= commandType && commandType <= 5) {
                          correctInput = true;
                          break;
                     }
@@ -2034,6 +2035,22 @@ void main() {
                     board120Setup();
                     printBoard(currentBoard);
                     continue;
+               }
+               else if (commandType == PERFT) {
+                    correctInput = false;
+                    while (!correctInput) {
+                         printf("What depth? (1~%d): ", MAXIMUM_DEPTH);
+                         std::getline(cin, userCommand);
+                         if (userCommand.size() == 0 || userCommand.at(0) - '0' < 1 || userCommand.at(0) - '0' > MAXIMUM_DEPTH) {
+                              printf("Wrong Input!\n");
+                              continue;
+                         }
+                         else {
+                              //divide(userCommand.at(0), currentTurn, 0, castlingCheck[4], false);
+                              correctInput = true;
+                              break;
+                         }
+                    }
                }
                //  TODO: UNDO MOVE
                //  TODO: COM MAKE MOVE
