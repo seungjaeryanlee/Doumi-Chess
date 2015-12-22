@@ -132,8 +132,15 @@ int repetitionCount[MAX_MOVENUMBER + 1];
 
 /*                             BOARD SETUP FUNCTIONS                          */
 void board120Setup() {
-     //  set turn to WHITE
      currentTurn = WHITE;
+     enpassantSquare = 0;
+     whiteKingsideCastling = true;
+     whiteQueensideCastling = true;
+     blackKingsideCastling = true;
+     blackQueensideCastling = true;
+     moveNumber = 1;
+     fiftyMoveCount = 0;
+     halfMoveClock = 0;
      
      //  Add Empty Squares
      for (int i = 0; i < 8; i++) {
