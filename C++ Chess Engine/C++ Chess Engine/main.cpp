@@ -2016,6 +2016,15 @@ void main() {
                     currentTurn = -currentTurn;
                     continue;
                }
+               else if (commandType == DISPLAY_BOARD) {
+                    printBoard(currentBoard);
+                    continue;
+               }
+               else if (commandType == DISPLAY_FEN) {
+                    boardToFEN(currentBoard, currentTurn, castlingCheck[0], castlingCheck[1], castlingCheck[2], castlingCheck[3], enpassantSquare, fiftyMoveCount, moveNumber);
+                    continue;
+               }
+               
           }
           else if (currentTurn == BLACK) {
                //  Save Board state for threefold repetition check
