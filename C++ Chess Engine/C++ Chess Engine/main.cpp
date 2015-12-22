@@ -736,7 +736,17 @@ bool checkGameEnd(int board[120]) {
      }
      return !(whiteKing && blackKing);
 }
+void saveCurrentState() {
+          for (int i = 0; i < 120; i++) {
+          savedBoard[halfMoveCount][i] = currentBoard[i];
+     }
+     for (int i = 0; i < 4; i++) {
+          savedCastling[halfMoveCount][i] = castlingCheck[i];
+     }
+     savedEnpassant[halfMoveCount] = enpassantSquare;
 
+     halfMoveCount++;
+}
 
 /*                           MOVE GENERATION FUNCTIONS                        */
 void moveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare, bool castlingCheck[4]) {
@@ -1852,13 +1862,7 @@ void main() {
      while (gamePlaying) {
      
           //  Save Board state for threefold repetition check
-          for (int i = 0; i < 120; i++) {
-               savedBoard[halfMoveCount][i] = currentBoard[i];
-          }
-          for (int i = 0; i < 4; i++) {
-               savedCastling[halfMoveCount][i] = castlingCheck[i];
-          }
-          savedEnpassant[halfMoveCount] = enpassantSquare;
+          saveCurrentState();
 
           // copy ep Square: needs to be done before any recursion
           depthEnpassantSquare[EVAL_DEPTH] = enpassantSquare; 
@@ -1913,7 +1917,6 @@ void main() {
           //  Change turns and increment move
           currentTurn = -currentTurn;
           if (currentTurn == WHITE) { moveNumber++; }
-          halfMoveCount++;
 
           //  Check if game is over
           gamePlaying = !checkGameEnd(currentBoard);
@@ -2002,6 +2005,7 @@ void main() {
                          //  TODO: check if there is anything else to check :D
 
                     }
+                    saveCurrentState();
                     int userMove[3] = { initialSquare, terminalSquare, 0 };
                     makeMove(currentBoard, userMove);
                     currentTurn = -currentTurn;
@@ -2041,14 +2045,8 @@ void main() {
                //  TODO: PERFT/DIVIDE
           }
           else if (currentTurn == BLACK) {
-               //  Save Board state for threefold repetition check
-               for (int i = 0; i < 120; i++) {
-                    savedBoard[halfMoveCount][i] = currentBoard[i];
-               }
-               for (int i = 0; i < 4; i++) {
-                    savedCastling[halfMoveCount][i] = castlingCheck[i];
-               }
-               savedEnpassant[halfMoveCount] = enpassantSquare;
+               
+               saveCurrentState();
 
                // copy ep Square: needs to be done before any recursion
                depthEnpassantSquare[EVAL_DEPTH] = enpassantSquare;
@@ -2103,7 +2101,6 @@ void main() {
                //  Change turns and increment move
                currentTurn = -currentTurn;
                if (currentTurn == WHITE) { moveNumber++; }
-               halfMoveCount++;
 
                //  Check if game is over
                gamePlaying = !checkGameEnd(currentBoard);

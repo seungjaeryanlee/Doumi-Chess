@@ -37,8 +37,8 @@ int redValue(int depth, int turn, bool castlingCheck[4]);
 
 /*                                   GAME CYCLE                               */
 bool checkGameEnd(int board[120]);
-
-
+//  Save Board state for threefold repetition check
+void saveCurrentState();
 
 
 
