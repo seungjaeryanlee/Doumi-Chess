@@ -1965,6 +1965,7 @@ void main() {
                     printf("%d: Make move\n", MOVE);
                     printf("%d: Display Board\n", DISPLAY_BOARD);
                     printf("%d: Display FEN\n", DISPLAY_FEN);
+                    printf("%d: Reset Board\n", BOARD_RESET);
                     printf("Please choose command: ");
                     std::getline(cin, userCommand);
 
@@ -1973,7 +1974,7 @@ void main() {
                          continue;
                     }
                     commandType = userCommand.at(0) - '0';
-                    if (1 <= commandType && commandType <= 3) {
+                    if (1 <= commandType && commandType <= 4) {
                          correctInput = true;
                          break;
                     }
@@ -2004,10 +2005,8 @@ void main() {
                               continue;
                          }
 
-                         //  TODO: include error check
                          //  TODO: check movetype
                          //  TODO: check legality
-                         //  TODO: Add different commands (display board, FEN, etc...)
                          //  TODO: check if there is anything else to check :D
 
                     }
@@ -2024,7 +2023,14 @@ void main() {
                     boardToFEN(currentBoard, currentTurn, castlingCheck[0], castlingCheck[1], castlingCheck[2], castlingCheck[3], enpassantSquare, fiftyMoveCount, moveNumber);
                     continue;
                }
-               
+               else if (commandType == BOARD_RESET) {
+                    board120Setup();
+                    printBoard(currentBoard);
+                    continue;
+               }
+               //  TODO: UNDO MOVE
+               //  TODO: COM MAKE MOVE
+               //  TODO: PERFT/DIVIDE
           }
           else if (currentTurn == BLACK) {
                //  Save Board state for threefold repetition check
