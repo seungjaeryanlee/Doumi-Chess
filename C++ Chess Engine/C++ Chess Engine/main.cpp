@@ -112,7 +112,7 @@ int depthBestMoves[MAXIMUM_DEPTH + 1][3];
 //  Counter to check Fifty Move rule and 75 Move Rule
 int fiftyMoveCount = 0;
 //  Records the result of the game
-int gameResult = 0;
+int gameResult = NOT_FINISHED;
 //  Stores Board and Board States for threefold repetition
 int savedBoard[MAX_MOVENUMBER + 1][120];
 int savedCastling[MAX_MOVENUMBER + 1][4];
@@ -1829,8 +1829,7 @@ void main() {
      //  Initialize Board
      board120Setup();
      //  FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
-     
-
+ 
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results
      //  - Position 1: Perft 6 Correct
@@ -1960,7 +1959,8 @@ void main() {
                     printf("%d: Display Board\n", DISPLAY_BOARD);
                     printf("%d: Display FEN\n", DISPLAY_FEN);
                     printf("%d: Reset Board\n", BOARD_RESET);
-                    printf("%d: Perft Test\n: ", PERFT);
+                    printf("%d: Perft Test\n", PERFT);
+                    printf("%d: Quit\n", QUIT);
                     printf("Please choose command: ");
                     std::getline(cin, userCommand);
 
@@ -1969,7 +1969,7 @@ void main() {
                          continue;
                     }
                     commandType = userCommand.at(0) - '0';
-                    if (1 <= commandType && commandType <= 5) {
+                    if (1 <= commandType && commandType <= 6) {
                          correctInput = true;
                          break;
                     }
@@ -2000,13 +2000,14 @@ void main() {
                               continue;
                          }
 
-                         //  TODO: check movetype
                          //  TODO: check legality
+                         //  TODO: check movetype
                          //  TODO: check if there is anything else to check :D
 
                     }
+                    int moveType = NORMAL;
                     saveCurrentState();
-                    int userMove[3] = { initialSquare, terminalSquare, 0 };
+                    int userMove[3] = { initialSquare, terminalSquare, moveType};
                     makeMove(currentBoard, userMove);
                     currentTurn = -currentTurn;
                     continue;
@@ -2039,6 +2040,10 @@ void main() {
                               break;
                          }
                     }
+               }
+               else if (commandType == QUIT) {
+                    gamePlaying = false;
+                    break;
                }
                //  TODO: UNDO MOVE
                //  TODO: COM MAKE MOVE
@@ -2129,6 +2134,8 @@ void main() {
      case WHITE_WIN:
           printf("1-0\n");
           break;
+     case NOT_FINISHED:
+          printf("0-0: Game not finished\n");
      }
 
      // PERFT TEST
