@@ -1950,7 +1950,7 @@ void main() {
      while (gamePlaying) {
           if (currentTurn == WHITE) {
                string userCommand; 
-               //  TODO: Check size also!
+
                bool correctInput = false;
                int initialSquare, terminalSquare;
                int commandType = ERROR_COMMAND;
@@ -1961,6 +1961,7 @@ void main() {
                     printf("%d: Reset Board\n", BOARD_RESET);
                     printf("%d: Perft Test\n", PERFT);
                     printf("%d: Quit\n", QUIT);
+                    printf("%d: Divide Perft Test\n", DIVIDE);
                     printf("Please choose command: ");
                     std::getline(cin, userCommand);
 
@@ -1969,7 +1970,7 @@ void main() {
                          continue;
                     }
                     commandType = userCommand.at(0) - '0';
-                    if (1 <= commandType && commandType <= 6) {
+                    if (1 <= commandType && commandType <= 7) {
                          correctInput = true;
                          break;
                     }
@@ -2063,9 +2064,24 @@ void main() {
                     gamePlaying = false;
                     break;
                }
+               else if (commandType == DIVIDE) {
+                    correctInput = false;
+                    while (!correctInput) {
+                         printf("What depth? (1~%d): ", MAXIMUM_DEPTH);
+                         std::getline(cin, userCommand);
+                         if (userCommand.size() == 0 || userCommand.at(0) - '0' < 1 || userCommand.at(0) - '0' > MAXIMUM_DEPTH) {
+                              printf("Wrong Input!\n");
+                              continue;
+                         }
+                         else {
+                              printf("Divide (Depth %c): %llu\n", userCommand.at(0), divide(userCommand.at(0) - '0', currentTurn, userCommand.at(0) - '0', castlingCheck, true));
+                              correctInput = true;
+                              break;
+                         }
+                    }
+               }
                //  TODO: UNDO MOVE
                //  TODO: COM MAKE MOVE
-               //  TODO: PERFT/DIVIDE
           }
           else if (currentTurn == BLACK) {
                
