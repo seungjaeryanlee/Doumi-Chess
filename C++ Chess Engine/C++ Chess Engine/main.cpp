@@ -87,10 +87,6 @@ int KING_PCSQTable_ENDGAME[64] = {
      -30,-30,  0,  0,  0,  0,-30,-30,
      -50,-30,-30,-30,-30,-30,-30,-50
 };
-//  true if king/rook did not move, false if it moved
-//  TODO: Unify this with castlingCheck
-bool whiteKingsideCastling = true, whiteQueensideCastling = true,
-blackKingsideCastling = true, blackQueensideCastling = true;
 //  clock for fifty move rule
 //  TODO: Unify this with fiftyMoveCount
 int halfMoveClock = 0;
@@ -125,6 +121,8 @@ int savedBoard[MAX_MOVENUMBER + 1][120];
 int savedCastling[MAX_MOVENUMBER + 1][4];
 int savedEnpassant[MAX_MOVENUMBER + 1];
 int repetitionCount[MAX_MOVENUMBER + 1];
+//  The castling states of the current Board
+bool castlingCheck[4];
 
 /******************************************************************************/
 /*                                  FUNCTIONS                                 */
@@ -134,13 +132,12 @@ int repetitionCount[MAX_MOVENUMBER + 1];
 void board120Setup() {
      currentTurn = WHITE;
      enpassantSquare = 0;
-     whiteKingsideCastling = true;
-     whiteQueensideCastling = true;
-     blackKingsideCastling = true;
-     blackQueensideCastling = true;
      moveNumber = 1;
      fiftyMoveCount = 0;
      halfMoveClock = 0;
+     for (int i = 0; i < 4; i++) {
+          castlingCheck[i] = true;
+     }
      
      //  Add Empty Squares
      for (int i = 0; i < 8; i++) {
@@ -187,10 +184,9 @@ void board120Setup() {
      }
 }
 void FENboardSetup(int board[120], std::string FEN) {
-     whiteKingsideCastling = false;
-     whiteQueensideCastling = false;
-     blackKingsideCastling = false;
-     blackQueensideCastling = false;
+     for (int i = 0; i < 4; i++) {
+          castlingCheck[i] = false;
+     }
      enpassantSquare = 0;
 
      for (int i = 0; i < 10; i++) {
@@ -270,16 +266,16 @@ void FENboardSetup(int board[120], std::string FEN) {
      if (FEN.at(i) != '-') {
           while (FEN.at(i) != ' ') {
                if (FEN.at(i) == 'K') {
-                    whiteKingsideCastling = true;
+                    castlingCheck[WKCASTLING] = true;
                }
                if (FEN.at(i) == 'Q') {
-                    whiteQueensideCastling = true;
+                    castlingCheck[WQCASTLING] = true;
                }
                if (FEN.at(i) == 'k') {
-                    blackKingsideCastling = true;
+                    castlingCheck[BKCASTLING] = true;
                }
                if (FEN.at(i) == 'q') {
-                    blackQueensideCastling = true;
+                    castlingCheck[BQCASTLING] = true;
                }
                i++;
           }
@@ -1838,26 +1834,16 @@ void main() {
 
      printBoard(currentBoard);
      printf("--------------------------------------------------\n");
-     printf("White Kingside Castling: %d\n", whiteKingsideCastling);
-     printf("White Queenside Castling: %d\n", whiteQueensideCastling);
-     printf("Black Kingside Castling: %d\n", blackKingsideCastling);
-     printf("Black Queenside Castling: %d\n", blackQueensideCastling);
+     printf("White Kingside Castling: %d\n", castlingCheck[WKCASTLING]);
+     printf("White Queenside Castling: %d\n", castlingCheck[WQCASTLING]);
+     printf("Black Kingside Castling: %d\n", castlingCheck[BKCASTLING]);
+     printf("Black Queenside Castling: %d\n", castlingCheck[BQCASTLING]);
      printf("En passant Square: %d\n", enpassantSquare);
      printf("Move number: %d\n", moveNumber);
      if (currentTurn == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
-     boardToFEN(currentBoard, currentTurn, whiteKingsideCastling, whiteQueensideCastling, blackKingsideCastling, blackQueensideCastling, enpassantSquare, halfMoveClock, moveNumber);
+     boardToFEN(currentBoard, currentTurn, castlingCheck[WKCASTLING], castlingCheck[WQCASTLING], castlingCheck[BKCASTLING], castlingCheck[BQCASTLING], enpassantSquare, halfMoveClock, moveNumber);
      printf("--------------------------------------------------\n");
-
-     
-
-     bool castlingCheck[4];
-     castlingCheck[WKCASTLING] = whiteKingsideCastling;
-     castlingCheck[WQCASTLING] = whiteQueensideCastling;
-     castlingCheck[BKCASTLING] = blackKingsideCastling;
-     castlingCheck[BQCASTLING] = blackQueensideCastling;
-
-     
 
      //  begin timer
      int timerIndex = 1;
@@ -2046,7 +2032,7 @@ void main() {
                               continue;
                          }
                          else {
-                              //divide(userCommand.at(0), currentTurn, 0, castlingCheck[4], false);
+                              printf("Perft (Depth %c): %llu\n", userCommand.at(0), divide(userCommand.at(0) - '0', currentTurn, 0, castlingCheck, false));
                               correctInput = true;
                               break;
                          }
