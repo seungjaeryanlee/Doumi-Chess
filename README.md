@@ -30,13 +30,11 @@ I plan to use Negamax algorithm for this engine.
   - Resignation  
 
 ## TODOs  
-1. Unify halfMoveClock and fiftyMoveCount
-2. Add Undo Move command Player vs. COM
-3. Add COM Make Move command in Player vs. COM
-4. Create a function for COM making one move and stopping
-5. Add 50 Move Rule option in moveGen
-6. Check Threefold Repetition
-7. Use Integer Infinity in Minimax for Safety
+1. Add Undo Move command Player vs. COM
+2. Add COM Make Move command in Player vs. COM
+3. Create a function for COM making one move and stopping
+4. Add 50 Move Rule option in moveGen
+5. Check Threefold Repetition
 
 ## Non-necessary Addition to Chess Engine
 1. Opening Book  
@@ -44,7 +42,7 @@ I plan to use Negamax algorithm for this engine.
 3. Endgame Book  
 4. WinBoard or UCI  
 5. Create own GUI  
-6. *These will be worked on after the basic chess engine is completed. (Not in order)*  
+*These will be worked on after the basic chess engine is completed. (Not in order)*  
 
 ## References  
 The Piece Square Tables of this version is from the following link:   https://chessprogramming.wikispaces.com/Simplified+evaluation+function  
