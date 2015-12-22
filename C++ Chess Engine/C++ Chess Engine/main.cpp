@@ -87,9 +87,6 @@ int KING_PCSQTable_ENDGAME[64] = {
      -30,-30,  0,  0,  0,  0,-30,-30,
      -50,-30,-30,-30,-30,-30,-30,-50
 };
-//  clock for fifty move rule
-//  TODO: Unify this with fiftyMoveCount
-int halfMoveClock = 0;
 //  Current Move Number, starts at 1
 int moveNumber = 1;
 //  Current Half Move Number, starts at 0
@@ -134,7 +131,6 @@ void board120Setup() {
      enpassantSquare = 0;
      moveNumber = 1;
      fiftyMoveCount = 0;
-     halfMoveClock = 0;
      for (int i = 0; i < 4; i++) {
           castlingCheck[i] = true;
      }
@@ -291,14 +287,14 @@ void FENboardSetup(int board[120], std::string FEN) {
      }
 
      i += 2;
-     halfMoveClock = FEN.at(i) - '0';
+     fiftyMoveCount = FEN.at(i) - '0';
 
      i += 2;
      moveNumber = FEN.at(i) - '0';
 
 
 }
-string boardToFEN(int board[120], int turn, bool castlingCheck[4], int enpassantSquare, int halfMoveClock, int moveNumber) {
+string boardToFEN(int board[120], int turn, bool castlingCheck[4], int enpassantSquare, int fiftyMoveCount, int moveNumber) {
      std::string FEN;
      int emptySquareCount = 0;
 
@@ -400,7 +396,7 @@ string boardToFEN(int board[120], int turn, bool castlingCheck[4], int enpassant
      else { FEN += '-'; }
 
      FEN += ' ';
-     FEN += ('0' + halfMoveClock);
+     FEN += ('0' + fiftyMoveCount);
      FEN += ' ';
      FEN += ('0' + moveNumber);
 
@@ -1844,7 +1840,7 @@ void main() {
      printf("Move number: %d\n", moveNumber);
      if (currentTurn == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
-     boardToFEN(currentBoard, currentTurn, castlingCheck, enpassantSquare, halfMoveClock, moveNumber);
+     boardToFEN(currentBoard, currentTurn, castlingCheck, enpassantSquare, fiftyMoveCount, moveNumber);
      printf("--------------------------------------------------\n");
 
      //  begin timer
