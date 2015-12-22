@@ -1976,6 +1976,14 @@ void main() {
                }
 
                if (commandType == MOVE) {
+                    //  Movelist used for legality/movetype check
+                    currentBoardMoveCount = 0;
+                    currentBoardLegalMoveCount = 0;
+                    moveGeneration(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare, castlingCheck);
+                    legalMoves(currentBoard, currentTurn, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
+
+                    int moveType = NORMAL;
+
                     correctInput = false;
                     while (!correctInput) {
                          printf("Please enter your move: ");
@@ -1983,7 +1991,7 @@ void main() {
 
                          //  Check size
                          if (userCommand.size() < 4) {
-                              printf("Wrong format: correct format is [char][int][char][int].\n");
+                              printf("Wrong format: correct format is [a-h][1-8][a-h][1-8].\n");
                               continue;
                          }
 
@@ -1991,24 +1999,34 @@ void main() {
                          terminalSquare = filerankToNumber(userCommand.at(2), userCommand.at(3));
 
                          //  Check if Filerank format is correct
-                         if (initialSquare != ERROR_INTEGER && terminalSquare != ERROR_INTEGER) {
-                              correctInput = true;
-                              break;
-                         }
-                         else {
+                         if (initialSquare == ERROR_INTEGER || terminalSquare == ERROR_INTEGER) {
                               printf("Wrong format: correct format is [char][int][char][int].\n");
                               continue;
                          }
 
-                         //  TODO: check legality
-                         //  TODO: check movetype
+                         //  Check legality & movetype
+                         bool legal = false;
+                         for (int i = 0; i < currentBoardLegalMoveCount; i++) {
+                              if (initialSquare == currentBoardLegalMoveList[i][0] && terminalSquare == currentBoardLegalMoveList[i][1]) {
+                                   legal = true;
+                                   moveType = currentBoardLegalMoveList[i][2];
+                                   break;
+                              }
+                         }
+                         if (legal == false) {
+                              printf("The move is illegal!\n");
+                              continue;
+                         }
+                         else {
+                              correctInput = true;
+                         }
                          //  TODO: check if there is anything else to check :D
 
                     }
-                    int moveType = NORMAL;
                     saveCurrentState();
                     int userMove[3] = { initialSquare, terminalSquare, moveType};
                     makeMove(currentBoard, userMove);
+                    // save terminalValue for undoMove;
                     currentTurn = -currentTurn;
                     continue;
                }
