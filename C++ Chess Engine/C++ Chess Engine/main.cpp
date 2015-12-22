@@ -1968,6 +1968,10 @@ void main() {
                     printf("Please choose command: ");
                     std::getline(cin, userCommand);
 
+                    if (userCommand.size() == 0) {
+                         printf("You must enter a number!\n");
+                         continue;
+                    }
                     commandType = userCommand.at(0) - '0';
                     if (1 <= commandType && commandType <= 3) {
                          correctInput = true;
@@ -1980,6 +1984,12 @@ void main() {
                     while (!correctInput) {
                          printf("Please enter your move: ");
                          std::getline(cin, userCommand); // do I want to get the entire command?
+
+                         //  Check size
+                         if (userCommand.size() < 4) {
+                              printf("Wrong format: correct format is [char][int][char][int].\n");
+                              continue;
+                         }
 
                          initialSquare = filerankToNumber(userCommand.at(0), userCommand.at(1));
                          terminalSquare = filerankToNumber(userCommand.at(2), userCommand.at(3));
