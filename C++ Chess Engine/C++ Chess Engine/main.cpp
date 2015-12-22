@@ -298,9 +298,7 @@ void FENboardSetup(int board[120], std::string FEN) {
 
 
 }
-string boardToFEN(int board[120], int turn,
-     bool WKCastling, bool WQCastling, bool BKCastling, bool BQCastling,
-     int enpassantSquare, int halfMoveClock, int moveNumber) {
+string boardToFEN(int board[120], int turn, bool castlingCheck[4], int enpassantSquare, int halfMoveClock, int moveNumber) {
      std::string FEN;
      int emptySquareCount = 0;
 
@@ -372,6 +370,10 @@ string boardToFEN(int board[120], int turn,
 
      FEN += ' ';
      //  no castling available
+     bool WKCastling = castlingCheck[WKCASTLING];
+     bool WQCastling = castlingCheck[WQCASTLING];
+     bool BKCastling = castlingCheck[BKCASTLING];
+     bool BQCastling = castlingCheck[BQCASTLING];
      if (!(WKCastling || WQCastling || BKCastling || BQCastling)) {
           FEN += '-';
      }
@@ -1842,7 +1844,7 @@ void main() {
      printf("Move number: %d\n", moveNumber);
      if (currentTurn == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
-     boardToFEN(currentBoard, currentTurn, castlingCheck[WKCASTLING], castlingCheck[WQCASTLING], castlingCheck[BKCASTLING], castlingCheck[BQCASTLING], enpassantSquare, halfMoveClock, moveNumber);
+     boardToFEN(currentBoard, currentTurn, castlingCheck, enpassantSquare, halfMoveClock, moveNumber);
      printf("--------------------------------------------------\n");
 
      //  begin timer
@@ -2014,7 +2016,7 @@ void main() {
                     continue;
                }
                else if (commandType == DISPLAY_FEN) {
-                    boardToFEN(currentBoard, currentTurn, castlingCheck[0], castlingCheck[1], castlingCheck[2], castlingCheck[3], enpassantSquare, fiftyMoveCount, moveNumber);
+                    boardToFEN(currentBoard, currentTurn, castlingCheck, enpassantSquare, fiftyMoveCount, moveNumber);
                     continue;
                }
                else if (commandType == BOARD_RESET) {
