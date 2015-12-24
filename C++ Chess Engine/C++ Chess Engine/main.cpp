@@ -120,6 +120,8 @@ int savedEnpassant[MAX_MOVENUMBER + 1];
 int repetitionCount[MAX_MOVENUMBER + 1];
 //  The castling states of the current Board
 bool castlingCheck[4];
+//  Which color user plays
+int userColor = ERROR_INTEGER;
 
 /******************************************************************************/
 /*                                  FUNCTIONS                                 */
@@ -1950,13 +1952,39 @@ void main() {
      //  Game Loop: Player vs COM
      int lastTerminalValue = ERROR_INTEGER; // data input in makemove, used in undomove
      int lastMove[3] = { ERROR_INTEGER, ERROR_INTEGER, ERROR_INTEGER }; // data input in makemove, used in undomove
-     while (gamePlaying) {
-          if (currentTurn == WHITE) {
-               string userCommand; 
+     bool correctInput = false;
+     string userCommand;
 
-               bool correctInput = false;
+     while (gamePlaying) {
+          //  Let user determine color to play in first loop
+          while (!correctInput && userColor == ERROR_INTEGER) {
+               printf("Which color would you like to play? (W or B): ");
+               std::getline(cin, userCommand);
+               if (userCommand.size() == 0) {
+                    printf("You must enter W or B!\n");
+                    continue;
+               }
+               if (userCommand.at(0) == 'W') {
+                    userColor = WHITE;
+                    correctInput = true;
+                    break;
+               }
+               else if (userCommand.at(0) == 'B') {
+                    userColor = BLACK;
+                    correctInput = true;
+                    break;
+               }
+               else {
+                    printf("Wrong input! Write W or B.\n");
+                    continue;
+               }
+          }
+          if (currentTurn == userColor) {
+               
                int initialSquare, terminalSquare;
                int commandType = ERROR_COMMAND;
+               
+               correctInput = false;
                while (!correctInput) {
                     printf("%d: Make move\n", MOVE);
                     printf("%d: Display Board\n", DISPLAY_BOARD);
@@ -2104,7 +2132,7 @@ void main() {
                
                //  TODO: COM MAKE MOVE
           }
-          else if (currentTurn == BLACK) {
+          else if (currentTurn == -userColor) {
                
                saveCurrentState();
 
