@@ -9,6 +9,8 @@ void FENboardSetup(std::string FEN);
 std::string boardToFEN(int board[120], int turn, bool castlingCheck[4], int enpassantSquare, int halfMoveClock, int moveNumber);
 //  This functions prints the board from the parameter.
 void printBoard(int board[120]);
+//  This functions prints simple version of the board from the parameter.
+void printSimpleBoard(int board[120]);
 //  Gets a piece and returns the color of the piece
 int checkColor(int pieceType);
 char numberToFile(int position);

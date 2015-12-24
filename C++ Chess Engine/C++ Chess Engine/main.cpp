@@ -458,6 +458,59 @@ void printBoard(int board[120]) {
      }
      printf("\n");
 }
+void printSimpleBoard(int board[120]) {
+     for (int i = 2; i < 10; i++) {
+          printf("%d ", 10 - i);
+          for (int j = 1; j < 9; j++) {
+               switch (board[i*ROW+COLUMN]) {
+               case ERRORSQUARE:
+                    printf("X ");
+                    break;
+               case EMPTYSQUARE:
+                    printf("- ");
+                    break;
+               case WHITEPAWN:
+                    printf("P ");
+                    break;
+               case WHITEKNIGHT:
+                    printf("N ");
+                    break;
+               case WHITEBISHOP:
+                    printf("B ");
+                    break;
+               case WHITEROOK:
+                    printf("R ");
+                    break;
+               case WHITEQUEEN:
+                    printf("Q ");
+                    break;
+               case WHITEKING:
+                    printf("K ");
+                    break;
+               case BLACKPAWN:
+                    printf("p ");
+                    break;
+               case BLACKKNIGHT:
+                    printf("n ");
+                    break;
+               case BLACKBISHOP:
+                    printf("b ");
+                    break;
+               case BLACKROOK:
+                    printf("r ");
+                    break;
+               case BLACKQUEEN:
+                    printf("q ");
+                    break;
+               case BLACKKING:
+                    printf("k ");
+                    break;
+               }
+          }
+          printf("\n");
+     }
+     printf("  A B C D E F G H\n");
+}
 int checkColor(int pieceType) {
      if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
           return WHITE;
@@ -1954,7 +2007,7 @@ void main() {
      int lastMove[3] = { ERROR_INTEGER, ERROR_INTEGER, ERROR_INTEGER }; // data input in makemove, used in undomove
      bool correctInput = false;
      string userCommand;
-
+     printSimpleBoard(currentBoard);
      while (gamePlaying) {
           //  Let user determine color to play in first loop
           while (!correctInput && userColor == ERROR_INTEGER) {
