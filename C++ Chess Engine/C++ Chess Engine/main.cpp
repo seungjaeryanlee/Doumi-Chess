@@ -460,9 +460,9 @@ void printBoard(int board[120]) {
 }
 void printSimpleBoard(int board[120]) {
      for (int i = 2; i < 10; i++) {
-          printf("%d ", 10 - i);
+          printf("%d| ", 10 - i);
           for (int j = 1; j < 9; j++) {
-               switch (board[i*ROW+COLUMN]) {
+               switch (board[i*ROW+j*COLUMN]) {
                case ERRORSQUARE:
                     printf("X ");
                     break;
@@ -509,7 +509,8 @@ void printSimpleBoard(int board[120]) {
           }
           printf("\n");
      }
-     printf("  A B C D E F G H\n");
+     printf("  ----------------\n");
+     printf("   a b c d e f g h\n");
 }
 int checkColor(int pieceType) {
      if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
@@ -1895,7 +1896,7 @@ void main() {
      //  - Position 5: Perft 5 Correct
      //  - Position 6: Perft 5 Correct
 
-     printBoard(currentBoard);
+     printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("White Kingside Castling: %d\n", castlingCheck[WKCASTLING]);
      printf("White Queenside Castling: %d\n", castlingCheck[WQCASTLING]);
@@ -1909,8 +1910,7 @@ void main() {
      printf("--------------------------------------------------\n");
 
      //  begin timer
-     int timerIndex = 1;
-     frequency = startTimer(&beginTime, timerIndex);
+     //frequency = startTimer(&beginTime, 1);
 
      //  Game Loop: COM vs COM
      /*
@@ -2007,7 +2007,7 @@ void main() {
      int lastMove[3] = { ERROR_INTEGER, ERROR_INTEGER, ERROR_INTEGER }; // data input in makemove, used in undomove
      bool correctInput = false;
      string userCommand;
-     printSimpleBoard(currentBoard);
+
      while (gamePlaying) {
           //  Let user determine color to play in first loop
           while (!correctInput && userColor == ERROR_INTEGER) {
@@ -2217,7 +2217,7 @@ void main() {
                     lastMove[i] = depthBestMoves[EVAL_DEPTH][i];
                }
                
-               printBoard(currentBoard);
+               printSimpleBoard(currentBoard);
 
                //  Update enpassant square
                if (depthBestMoves[EVAL_DEPTH][2] == DOUBLEMOVE) {
@@ -2291,7 +2291,7 @@ void main() {
      */
 
      //  stop timer
-     stopTimer(&endTime, timerIndex);
+     //stopTimer(&endTime, 1);
      //  print elapsed time
-     printElapsedTime(beginTime, endTime, frequency, timerIndex);
+     //printElapsedTime(beginTime, endTime, frequency, 1);
 }
