@@ -1638,6 +1638,7 @@ int makeMove(int board[120], int move[3]) {
      if (moveType == DOUBLEMOVE) {
           board[terminal] = board[initial];
           board[initial] = EMPTYSQUARE;
+          //  TODO: Check why this exists
           return (terminal+initial)/2;
      }
      else if (moveType == QUEENSIDE_CASTLING) {
@@ -1947,6 +1948,8 @@ void main() {
      */
      
      //  Game Loop: Player vs COM
+     int lastTerminalValue = ERROR_INTEGER; // data input in makemove, used in undomove
+     int lastMove[3] = { ERROR_INTEGER, ERROR_INTEGER, ERROR_INTEGER }; // data input in makemove, used in undomove
      while (gamePlaying) {
           if (currentTurn == WHITE) {
                string userCommand; 
@@ -1962,6 +1965,7 @@ void main() {
                     printf("%d: Perft Test\n", PERFT);
                     printf("%d: Quit\n", QUIT);
                     printf("%d: Divide Perft Test\n", DIVIDE);
+                    printf("%d: Undo move\n", UNDO_MOVE);
                     printf("Please choose command: ");
                     std::getline(cin, userCommand);
 
@@ -1970,7 +1974,7 @@ void main() {
                          continue;
                     }
                     commandType = userCommand.at(0) - '0';
-                    if (1 <= commandType && commandType <= 7) {
+                    if (1 <= commandType && commandType <= 8) {
                          correctInput = true;
                          break;
                     }
@@ -2026,7 +2030,10 @@ void main() {
                     }
                     saveCurrentState();
                     int userMove[3] = { initialSquare, terminalSquare, moveType};
-                    makeMove(currentBoard, userMove);
+                    lastTerminalValue = makeMove(currentBoard, userMove);
+                    for (int i = 0; i < 3; i++) {
+                         lastMove[i] = userMove[i];
+                    }
                     // save terminalValue for undoMove;
                     currentTurn = -currentTurn;
                     continue;
@@ -2080,7 +2087,21 @@ void main() {
                          }
                     }
                }
-               //  TODO: UNDO MOVE
+               else if (commandType == UNDO_MOVE) {
+                    //  TODO: UNDO MOVE
+                    //  TerminalSquare needs to be saved
+                    if (lastTerminalValue == ERROR_INTEGER) {
+                         printf("No move can be undone!\n");
+                         continue;
+                    }
+                    else {
+                         undoMove(currentBoard, lastMove, lastTerminalValue);
+                    }
+
+                    // TODO: update moveNumber, fiftyMoveCount etc...
+                    currentTurn = -currentTurn;
+               }
+               
                //  TODO: COM MAKE MOVE
           }
           else if (currentTurn == BLACK) {
@@ -2109,7 +2130,12 @@ void main() {
                else { fiftyMoveCount = 0; }
 
                //  Make best move and print board
-               makeMove(currentBoard, depthBestMoves[EVAL_DEPTH]);
+               lastTerminalValue = makeMove(currentBoard, depthBestMoves[EVAL_DEPTH]);
+               //  Save move for undoMove
+               for (int i = 0; i < 3; i++) {
+                    lastMove[i] = depthBestMoves[EVAL_DEPTH][i];
+               }
+               
                printBoard(currentBoard);
 
                //  Update enpassant square
