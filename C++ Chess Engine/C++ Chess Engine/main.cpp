@@ -122,6 +122,8 @@ int repetitionCount[MAX_MOVENUMBER + 1];
 bool castlingCheck[4];
 //  Which color user plays
 int userColor = ERROR_INTEGER;
+//  To create a log of moves
+ofstream logtext;
 
 /******************************************************************************/
 /*                                  FUNCTIONS                                 */
@@ -1610,8 +1612,8 @@ u64 divide2(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showO
      if (depth == 0) { return 1; }
 
      //  output text file for large output
-     ofstream output;
-     output.open("output.txt");
+     ofstream output2;
+     output2.open("divide.txt");
 
      depthAllMoveCount[depth] = 0;
      depthLegalMoveCount[depth] = 0;
@@ -1672,14 +1674,14 @@ u64 divide2(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showO
           }
 
           if (depth >= maxDepth && showOutput) {
-               output << numberToFile(depthLegalMoveList[depth][i][0]) << numberToRank(depthLegalMoveList[depth][i][0]) <<
+               output2 << numberToFile(depthLegalMoveList[depth][i][0]) << numberToRank(depthLegalMoveList[depth][i][0]) <<
                     numberToFile(depthLegalMoveList[depth][i][1]) << numberToRank(depthLegalMoveList[depth][i][1]) << ": " << individualNode << std::endl;
           }
 
           undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
      }
      return node;
-     output.close();
+     output2.close();
 }
 
 int makeMove(int board[120], int move[3]) {
@@ -1875,7 +1877,10 @@ void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTE
      double elapsedTime = (endTime.QuadPart - beginTime.QuadPart) * 1000.0 / frequency.QuadPart;
      std::cout << "Timer " << timerIndex << ": " << elapsedTime << " ms elapsed." << std::endl;
 }
-
+double elapsedTime (LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex) {
+     // in millisecond
+     return (endTime.QuadPart - beginTime.QuadPart) * 1000.0 / frequency.QuadPart;
+}
 
 
 /******************************************************************************/
@@ -1883,6 +1888,8 @@ void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTE
 /******************************************************************************/
 void main() {
 
+     logtext.open("log.txt");
+     
      //  Initialize Board
      board120Setup();
      //  FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
@@ -1910,7 +1917,7 @@ void main() {
      printf("--------------------------------------------------\n");
 
      //  begin timer
-     //frequency = startTimer(&beginTime, 1);
+     frequency = startTimer(&beginTime, 1);
 
      //  Game Loop: COM vs COM
      /*
@@ -2117,6 +2124,10 @@ void main() {
                     }
                     // save terminalValue for undoMove;
                     currentTurn = -currentTurn;
+
+                    // add to log file
+                    logtext << moveNumber << ": " << numberToFile(userMove[0]) << numberToRank(userMove[0]) << " " << numberToFile(userMove[1]) << numberToRank(userMove[1]) << endl;
+
                     continue;
                }
                else if (commandType == DISPLAY_BOARD) {
@@ -2216,7 +2227,8 @@ void main() {
                for (int i = 0; i < 3; i++) {
                     lastMove[i] = depthBestMoves[EVAL_DEPTH][i];
                }
-               
+               logtext << moveNumber << ": " << numberToFile(depthBestMoves[EVAL_DEPTH][0]) << numberToRank(depthBestMoves[EVAL_DEPTH][0]) << " " << numberToFile(depthBestMoves[EVAL_DEPTH][1]) << numberToRank(depthBestMoves[EVAL_DEPTH][1]) << endl;
+
                printSimpleBoard(currentBoard);
 
                //  Update enpassant square
@@ -2291,7 +2303,9 @@ void main() {
      */
 
      //  stop timer
-     //stopTimer(&endTime, 1);
+     stopTimer(&endTime, 1);
      //  print elapsed time
-     //printElapsedTime(beginTime, endTime, frequency, 1);
+     printElapsedTime(beginTime, endTime, frequency, 1);
+
+     logtext << "Total Time: " << elapsedTime(beginTime, endTime, frequency, 1) << endl;
 }
