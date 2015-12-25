@@ -2193,7 +2193,6 @@ void main() {
                     // TODO: update moveNumber, fiftyMoveCount etc...
                     currentTurn = -currentTurn;
                }
-               
                //  TODO: COM MAKE MOVE
           }
           else if (currentTurn == -userColor) {
@@ -2276,19 +2275,24 @@ void main() {
      }
 
      //  Output Game Result
-     printf("Game Result : ");
+     printf("Game Result: ");
+     logtext << "Game Result: ";
      switch (gameResult) {
      case BLACK_WIN:
           printf("0-1\n");
+          logtext << "0-1" << endl;
           break;
      case TIE:
           printf("1/2-1/2\n");
+          logtext << "1/2-1/2" << endl;
           break;
      case WHITE_WIN:
           printf("1-0\n");
+          logtext << "1-0" << endl;
           break;
      case NOT_FINISHED:
           printf("0-0: Game not finished\n");
+          logtext << "0-0: Game not finished" << endl;
      }
 
      // PERFT TEST
@@ -2307,5 +2311,5 @@ void main() {
      //  print elapsed time
      printElapsedTime(beginTime, endTime, frequency, 1);
 
-     logtext << "Total Time: " << elapsedTime(beginTime, endTime, frequency, 1) << endl;
+     logtext << "Total Time: " << elapsedTime(beginTime, endTime, frequency, 1) << "ms" << endl;
 }
