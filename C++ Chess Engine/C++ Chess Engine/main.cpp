@@ -2054,6 +2054,7 @@ void main() {
                     printf("%d: Quit\n", QUIT);
                     printf("%d: Divide Perft Test\n", DIVIDE);
                     printf("%d: Undo move\n", UNDO_MOVE);
+                    printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
                     printf("Please choose command: ");
                     std::getline(cin, userCommand);
 
@@ -2062,7 +2063,7 @@ void main() {
                          continue;
                     }
                     commandType = userCommand.at(0) - '0';
-                    if (1 <= commandType && commandType <= 8) {
+                    if (1 <= commandType && commandType <= 9) {
                          correctInput = true;
                          break;
                     }
@@ -2193,7 +2194,10 @@ void main() {
                     // TODO: update moveNumber, fiftyMoveCount etc...
                     currentTurn = -currentTurn;
                }
-               //  TODO: COM MAKE MOVE
+               else if (commandType == COM_MAKE_MOVE) {
+                    userColor = -userColor;
+                    continue;
+               }
           }
           else if (currentTurn == -userColor) {
                
@@ -2202,7 +2206,7 @@ void main() {
                // copy ep Square: needs to be done before any recursion
                depthEnpassantSquare[EVAL_DEPTH] = enpassantSquare;
 
-               printf("Current Board Eval: %d\n", boardEvaluation(currentBoard));
+               printf("Current Board Evaluation: %d\n", boardEvaluation(currentBoard));
                int minimaxValue = blueValue(EVAL_DEPTH, currentTurn, castlingCheck);
                printf("Minimax Value: %d\n", minimaxValue);
 
@@ -2249,8 +2253,6 @@ void main() {
                          endGame = true;
                     }
                }
-               if (!endGame) { printf("NOT ENDGAME\n"); }
-               else { printf("ENDGAME\n"); }
 
                //  Print out move and move number
                printf("%d: %c%d %c%d (%d)\n", moveNumber, numberToFile(depthBestMoves[EVAL_DEPTH][0]), numberToRank(depthBestMoves[EVAL_DEPTH][0]), numberToFile(depthBestMoves[EVAL_DEPTH][1]), numberToRank(depthBestMoves[EVAL_DEPTH][1]), depthBestMoves[EVAL_DEPTH][2]);
