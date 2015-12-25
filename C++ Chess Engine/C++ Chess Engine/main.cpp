@@ -1905,11 +1905,8 @@ void main() {
 
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
-     printf("White Kingside Castling: %d\n", castlingCheck[WKCASTLING]);
-     printf("White Queenside Castling: %d\n", castlingCheck[WQCASTLING]);
-     printf("Black Kingside Castling: %d\n", castlingCheck[BKCASTLING]);
-     printf("Black Queenside Castling: %d\n", castlingCheck[BQCASTLING]);
-     printf("En passant Square: %d\n", enpassantSquare);
+     printf("Castling - WK:%d WQ:%d BK:%d BQ:%d\n", castlingCheck[WKCASTLING], castlingCheck[WQCASTLING], castlingCheck[BKCASTLING], castlingCheck[BQCASTLING]);
+     printf("en passant Square: %d\n", enpassantSquare);
      printf("Move number: %d\n", moveNumber);
      if (currentTurn == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
@@ -2117,6 +2114,7 @@ void main() {
                          //  TODO: check if there is anything else to check :D
 
                     }
+                    //  TODO: Implement Promotion
                     saveCurrentState();
                     int userMove[3] = { initialSquare, terminalSquare, moveType};
                     lastTerminalValue = makeMove(currentBoard, userMove);
