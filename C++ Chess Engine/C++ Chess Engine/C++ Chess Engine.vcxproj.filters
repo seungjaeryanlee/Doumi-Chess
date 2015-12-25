@@ -28,6 +28,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="output.txt" />
+    <Text Include="log.txt" />
   </ItemGroup>
 </Project>

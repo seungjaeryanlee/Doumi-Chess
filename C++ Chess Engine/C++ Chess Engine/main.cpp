@@ -2255,7 +2255,15 @@ void main() {
                }
 
                //  Print out move and move number
-               printf("%d: %c%d %c%d (%d)\n", moveNumber, numberToFile(depthBestMoves[EVAL_DEPTH][0]), numberToRank(depthBestMoves[EVAL_DEPTH][0]), numberToFile(depthBestMoves[EVAL_DEPTH][1]), numberToRank(depthBestMoves[EVAL_DEPTH][1]), depthBestMoves[EVAL_DEPTH][2]);
+               if (depthBestMoves[EVAL_DEPTH][2] == KINGSIDE_CASTLING) {
+                    printf("%d: O-O\n", moveNumber);
+               }
+               else if (depthBestMoves[EVAL_DEPTH][2] == QUEENSIDE_CASTLING) {
+                    printf("%d: O-O-O\n", moveNumber);
+               }
+               else {
+                    printf("%d: %c%d %c%d (%d)\n", moveNumber, numberToFile(depthBestMoves[EVAL_DEPTH][0]), numberToRank(depthBestMoves[EVAL_DEPTH][0]), numberToFile(depthBestMoves[EVAL_DEPTH][1]), numberToRank(depthBestMoves[EVAL_DEPTH][1]), depthBestMoves[EVAL_DEPTH][2]);
+               }
 
                //  Change turns and increment move
                currentTurn = -currentTurn;
