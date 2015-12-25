@@ -2012,6 +2012,11 @@ void main() {
      bool correctInput = false;
      string userCommand;
 
+     // Repetition count reset
+     for (int i = 0; i < MAX_MOVENUMBER; i++) {
+          repetitionCount[i] = 0;
+     }
+
      while (gamePlaying) {
           //  Let user determine color to play in first loop
           while (!correctInput && userColor == ERROR_INTEGER) {
@@ -2272,6 +2277,35 @@ void main() {
                if (!gamePlaying) { break; }
 
                //  TODO: Check Threefold repetition
+               bool repetition = false;
+               for (int i = 0; i < halfMoveCount; i++) {
+                    bool sameState = false;
+                    for (int j = 0; j < 120; j++) {
+                         if (savedBoard[i][j] != currentBoard[j]) {
+                              sameState = false;
+                              break;
+                         }
+                    }
+                    for (int j = 0; j < 4; j++) {
+                         if (savedCastling[i][j] != castlingCheck[j]) {
+                              sameState = false;
+                              break;
+                         }
+                    }
+                    if (savedEnpassant[i] != enpassantSquare) {
+                         sameState = false;
+                         break;
+                    }
+                    if (sameState == true) {
+                         repetitionCount[i]++;
+                         repetition = true;
+                         break;
+                    }
+               }
+               if (repetition == false) {
+                    repetitionCount[halfMoveCount] = 1;
+               }
+
 
                //  75 Move Rule Implement (unless checkmate)
                if (fiftyMoveCount >= 75) {
