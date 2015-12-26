@@ -2046,7 +2046,8 @@ void main() {
                
                int initialSquare, terminalSquare;
                int commandType = ERROR_COMMAND;
-               
+               int commandType2 = ERROR_COMMAND;
+
                correctInput = false;
                while (!correctInput) {
                     printf("%d: Make move\n", MOVE);
@@ -2058,12 +2059,18 @@ void main() {
                     printf("%d: Divide Perft Test\n", DIVIDE);
                     printf("%d: Undo move\n", UNDO_MOVE);
                     printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
+                    printf("A: Print Possible Moves\n", PRINT_ALL_MOVES);
                     printf("Please choose command: ");
                     std::getline(cin, userCommand);
 
                     if (userCommand.size() == 0) {
                          printf("You must enter a number!\n");
                          continue;
+                    }
+                    if (userCommand.at(0) == 'A') {
+                         commandType = 10;
+                         correctInput = true;
+                         break;
                     }
                     commandType = userCommand.at(0) - '0';
                     if (1 <= commandType && commandType <= 9) {
@@ -2200,6 +2207,16 @@ void main() {
                }
                else if (commandType == COM_MAKE_MOVE) {
                     userColor = -userColor;
+                    continue;
+               }
+               else if (commandType == PRINT_ALL_MOVES) {
+                    moveGeneration(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare, castlingCheck);
+                    legalMoves(currentBoard, currentTurn, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
+
+                    printf("Movecount: %d\n", currentBoardLegalMoveCount);
+                    for (int i = 0; i < currentBoardLegalMoveCount; i++) {
+                         printf("%d: %c%d %c%d (MoveType %d)\n", i + 1, numberToFile(currentBoardLegalMoveList[i][0]), numberToRank(currentBoardLegalMoveList[i][0]), numberToFile(currentBoardLegalMoveList[i][1]), numberToRank(currentBoardLegalMoveList[i][1]), currentBoardLegalMoveList[i][2]);
+                    }
                     continue;
                }
           }
