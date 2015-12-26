@@ -115,7 +115,7 @@ int fiftyMoveCount = 0;
 int gameResult = NOT_FINISHED;
 //  Stores Board and Board States for threefold repetition
 int savedBoard[MAX_MOVENUMBER + 1][120];
-int savedCastling[MAX_MOVENUMBER + 1][4];
+bool savedCastling[MAX_MOVENUMBER + 1][4];
 int savedEnpassant[MAX_MOVENUMBER + 1];
 int repetitionCount[MAX_MOVENUMBER + 1];
 //  The castling states of the current Board
