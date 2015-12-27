@@ -2235,6 +2235,7 @@ void main() {
 
                correctInput = false;
                while (!correctInput) {
+                    printf("--------------------------------------------------\n");
                     printf("%d: Make move\n", MOVE);
                     printf("%d: Display Board\n", DISPLAY_BOARD);
                     printf("%d: Display FEN\n", DISPLAY_FEN);
@@ -2245,6 +2246,7 @@ void main() {
                     printf("%d: Undo move\n", UNDO_MOVE);
                     printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
                     printf("A: Print Possible Moves\n");
+                    printf("--------------------------------------------------\n");
                     printf("Please choose command: ");
                     std::getline(cin, userCommand);
 
@@ -2337,7 +2339,7 @@ void main() {
                }
                else if (commandType == BOARD_RESET) {
                     board120Setup();
-                    printBoard(currentBoard);
+                    printSimpleBoard(currentBoard);
                     continue;
                }
                else if (commandType == PERFT) {
@@ -2400,7 +2402,8 @@ void main() {
 
                     printf("Movecount: %d\n", currentBoardLegalMoveCount);
                     for (int i = 0; i < currentBoardLegalMoveCount; i++) {
-                         printf("%d: %c%d %c%d (MoveType %d)\n", i + 1, numberToFile(currentBoardLegalMoveList[i][0]), numberToRank(currentBoardLegalMoveList[i][0]), numberToFile(currentBoardLegalMoveList[i][1]), numberToRank(currentBoardLegalMoveList[i][1]), currentBoardLegalMoveList[i][2]);
+                         printf("%d: ", i + 1);
+                         printMove(currentBoardLegalMoveList[i]);
                     }
                     continue;
                }

@@ -16,8 +16,8 @@ int checkColor(int pieceType);
 char numberToFile(int position);
 int numberToRank(int position);
 int filerankToNumber(char file, int rank);
-
-
+std::string numberToFilerank(int position);
+void printMove(int move[3]);
 
 
 
