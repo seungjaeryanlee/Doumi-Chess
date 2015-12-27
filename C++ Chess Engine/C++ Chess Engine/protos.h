@@ -35,6 +35,10 @@ int negaMax(int depth, int turn, bool castlingCheck[4]);
 //  miniMax implemented for board evaluation
 int blueValue(int depth, int turn, bool castlingCheck[4]);
 int redValue(int depth, int turn, bool castlingCheck[4]);
+//  negaMax implemented
+int negaMax(int depth, int turn, bool castlingCheck[4]);
+//  function to call negaMax. bestMoves is the output
+int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], int bestMoves[3]);
 
 
 /*                                   GAME CYCLE                               */

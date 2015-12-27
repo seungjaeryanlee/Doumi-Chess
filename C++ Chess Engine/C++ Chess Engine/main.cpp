@@ -844,7 +844,7 @@ int negaMax(int depth, int turn, bool castlingCheck[4]) {
                depthEnpassantSquare[depth - 1] = 0;
           }
 
-          score = -negaMax(depth-1, -turn, copyCastlingCheck, movesMade);
+          score = -negaMax(depth-1, -turn, copyCastlingCheck);
 
           if (score > max_Score) {
                max_Score = score;
@@ -855,7 +855,72 @@ int negaMax(int depth, int turn, bool castlingCheck[4]) {
 
      return max_Score;
 }
+int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], int bestMove[3]) {
 
+     int max_Score = -1000000;
+     int score;
+     int terminalValue;
+     bool copyCastlingCheck[4];
+
+     depthEnpassantSquare[maxDepth - 1] = 0;
+
+     moveGeneration(currentBoard, turn, depthAllMoveList[maxDepth], &depthAllMoveCount[maxDepth], depthEnpassantSquare[maxDepth], castlingCheck);
+     legalMoves(currentBoard, turn, depthAllMoveList[maxDepth], depthAllMoveCount[maxDepth], depthLegalMoveList[maxDepth], &depthLegalMoveCount[maxDepth]);
+
+     for (int i = 0; i < depthLegalMoveCount[maxDepth]; i++) {
+          //  defensive copy of castlingCheck
+          for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
+
+          if (currentBoard[depthLegalMoveList[maxDepth][i][0]] == WHITEKING) {
+               copyCastlingCheck[WKCASTLING] = false;
+               copyCastlingCheck[WQCASTLING] = false;
+          }
+          if (currentBoard[depthLegalMoveList[maxDepth][i][0]] == BLACKKING) {
+               copyCastlingCheck[BKCASTLING] = false;
+               copyCastlingCheck[BQCASTLING] = false;
+          }
+          if (currentBoard[depthLegalMoveList[maxDepth][i][0]] == WHITEROOK) {
+               if (depthLegalMoveList[maxDepth][i][0] == A1) {
+                    copyCastlingCheck[WQCASTLING] = false;
+               }
+               if (depthLegalMoveList[maxDepth][i][0] == H1) {
+                    copyCastlingCheck[WKCASTLING] = false;
+               }
+          }
+          if (currentBoard[depthLegalMoveList[maxDepth][i][0]] == BLACKROOK) {
+               if (depthLegalMoveList[maxDepth][i][0] == A8) {
+                    copyCastlingCheck[BQCASTLING] = false;
+               }
+               if (depthLegalMoveList[maxDepth][i][0] == H8) {
+                    copyCastlingCheck[BKCASTLING] = false;
+               }
+          }
+
+          terminalValue = makeMove(currentBoard, depthLegalMoveList[maxDepth][i]);
+
+          if (depthLegalMoveList[maxDepth][i][2] == DOUBLEMOVE) {
+               depthEnpassantSquare[maxDepth - 1] = terminalValue;
+               //  this terminal value is actually enpassantSquare
+          }
+          else { // if not, revert it back to 0
+               depthEnpassantSquare[maxDepth - 1] = 0;
+          }
+
+          score = -negaMax(maxDepth - 1, -turn, copyCastlingCheck);
+
+          if (score > max_Score) {
+               max_Score = score;
+               bestMove[0] = depthLegalMoveList[maxDepth][i][0];
+               bestMove[1] = depthLegalMoveList[maxDepth][i][1];
+               bestMove[2] = depthLegalMoveList[maxDepth][i][2];
+
+          }
+
+          undoMove(currentBoard, depthLegalMoveList[maxDepth][i], terminalValue);
+     }
+
+     return max_Score;
+}
 
 /*                             GAME CYCLE FUNCTIONS                           */
 bool checkGameEnd(int board[120]) {
@@ -2337,10 +2402,52 @@ void main() {
                depthEnpassantSquare[EVAL_DEPTH] = enpassantSquare;
 
                printf("Current Board Evaluation: %d\n", boardEvaluation(currentBoard));
-               //int minimaxValue = blueValue(EVAL_DEPTH, currentTurn, castlingCheck);
-               int negamaxValue = negaMax(EVAL_DEPTH, currentTurn, castlingCheck);
+               int negaMaxMove[3];
+               int negamaxValue = rootNegaMax(EVAL_DEPTH, currentTurn, castlingCheck, negaMaxMove);
                printf("Negamax Value: %d\n", negamaxValue);
+               // Print best move and result
+               printf("Best Move: %c%d %c%d (%d)\n", numberToFile(negaMaxMove[0]), numberToRank(negaMaxMove[0]), numberToFile(negaMaxMove[1]), numberToRank(negaMaxMove[1]), negaMaxMove[2]);
 
+               //  Increment or reset Fifty move count
+               //  TODO: Add 50 Move Rule option in move generation / selection
+               if (currentBoard[negaMaxMove[1]] == EMPTYSQUARE
+                    && currentBoard[negaMaxMove[0]] != WHITEPAWN
+                    && currentBoard[negaMaxMove[0]] != BLACKPAWN) {
+                    fiftyMoveCount++;
+               }
+               else { fiftyMoveCount = 0; }
+
+               //  Make best move and print board
+               lastTerminalValue = makeMove(currentBoard, negaMaxMove);
+               //  Save move for undoMove
+               for (int i = 0; i < 3; i++) {
+                    lastMove[i] = negaMaxMove[i];
+               }
+               logtext << moveNumber << ": " << numberToFile(negaMaxMove[0]) << numberToRank(negaMaxMove[0]) << " " << numberToFile(negaMaxMove[1]) << numberToRank(negaMaxMove[1]) << endl;
+
+               printSimpleBoard(currentBoard);
+
+               //  Update enpassant square
+               if (negaMaxMove[2] == DOUBLEMOVE) {
+                    enpassantSquare = (negaMaxMove[0] + negaMaxMove[1]) / 2;
+               }
+               else { enpassantSquare = 0; }
+
+               //  Print out move and move number
+               if (negaMaxMove[2] == KINGSIDE_CASTLING) {
+                    printf("%d: O-O\n", moveNumber);
+               }
+               else if (negaMaxMove[2] == QUEENSIDE_CASTLING) {
+                    printf("%d: O-O-O\n", moveNumber);
+               }
+               else {
+                    printf("%d: %c%d %c%d (%d)\n", moveNumber, numberToFile(negaMaxMove[0]), numberToRank(negaMaxMove[0]), numberToFile(negaMaxMove[1]), numberToRank(negaMaxMove[1]), negaMaxMove[2]);
+               }
+
+               //  Output using depthBestMoves
+               /*
+                              printf("Current Board Evaluation: %d\n", boardEvaluation(currentBoard));
+               int minimaxValue = blueValue(EVAL_DEPTH, currentTurn, castlingCheck);
                // Print best moves and result
                for (int i = EVAL_DEPTH; i > 0; i--) {
                     printf("%d: %c%d %c%d (%d)\n", EVAL_DEPTH + 1 - i, numberToFile(depthBestMoves[i][0]), numberToRank(depthBestMoves[i][0]), numberToFile(depthBestMoves[i][1]), numberToRank(depthBestMoves[i][1]), depthBestMoves[i][2]);
@@ -2371,6 +2478,19 @@ void main() {
                }
                else { enpassantSquare = 0; }
 
+               //  Print out move and move number
+               if (depthBestMoves[EVAL_DEPTH][2] == KINGSIDE_CASTLING) {
+                    printf("%d: O-O\n", moveNumber);
+               }
+               else if (depthBestMoves[EVAL_DEPTH][2] == QUEENSIDE_CASTLING) {
+                    printf("%d: O-O-O\n", moveNumber);
+               }
+               else {
+                    printf("%d: %c%d %c%d (%d)\n", moveNumber, numberToFile(depthBestMoves[EVAL_DEPTH][0]), numberToRank(depthBestMoves[EVAL_DEPTH][0]), numberToFile(depthBestMoves[EVAL_DEPTH][1]), numberToRank(depthBestMoves[EVAL_DEPTH][1]), depthBestMoves[EVAL_DEPTH][2]);
+               }
+               */
+
+
                //  Check endgame
                if (!endGame) {
                     //  if no queens are on the board
@@ -2383,17 +2503,6 @@ void main() {
                     if (queenCount == 0) {
                          endGame = true;
                     }
-               }
-
-               //  Print out move and move number
-               if (depthBestMoves[EVAL_DEPTH][2] == KINGSIDE_CASTLING) {
-                    printf("%d: O-O\n", moveNumber);
-               }
-               else if (depthBestMoves[EVAL_DEPTH][2] == QUEENSIDE_CASTLING) {
-                    printf("%d: O-O-O\n", moveNumber);
-               }
-               else {
-                    printf("%d: %c%d %c%d (%d)\n", moveNumber, numberToFile(depthBestMoves[EVAL_DEPTH][0]), numberToRank(depthBestMoves[EVAL_DEPTH][0]), numberToFile(depthBestMoves[EVAL_DEPTH][1]), numberToRank(depthBestMoves[EVAL_DEPTH][1]), depthBestMoves[EVAL_DEPTH][2]);
                }
 
                //  Change turns and increment move
