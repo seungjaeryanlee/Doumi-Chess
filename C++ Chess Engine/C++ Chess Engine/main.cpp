@@ -653,27 +653,8 @@ int blueValue(int depth, int turn, bool castlingCheck[4]) {
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
-     //  TODO: Detect Checkmate
+     //  TODO: Detect Checkmate/Stalemate
      if (depthLegalMoveCount[depth] == 0) {
-          int kingPosition = ERROR_INTEGER;
-          for (int i = 0; i < 120; i++) {
-               if (turn == WHITE && currentBoard[i] == WHITEKING) {
-                    kingPosition = i;
-                    break;
-               }
-               if (turn == BLACK && currentBoard[i] == BLACKKING) {
-                    kingPosition = i;
-                    break;
-               }
-          }
-          //  Checkmate
-          if (squareAttackCheck(currentBoard, kingPosition, currentTurn)) {
-               return CHECKMATE_SCORE;
-          }
-          //  Stalemate
-          else {
-               return 0;
-          }
      }
      
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
@@ -752,27 +733,8 @@ int redValue(int depth, int turn, bool castlingCheck[4]) {
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
-     //  TODO: Detect Checkmate
+     //  Detect Checkmate/Stalemate
      if (depthLegalMoveCount[depth] == 0) {
-          int kingPosition = ERROR_INTEGER;
-          for (int i = 0; i < 120; i++) {
-               if (turn == WHITE && currentBoard[i] == WHITEKING) {
-                    kingPosition = i;
-                    break;
-               }
-               if (turn == BLACK && currentBoard[i] == BLACKKING) {
-                    kingPosition = i;
-                    break;
-               }
-          }
-          //  Checkmate
-          if (squareAttackCheck(currentBoard, kingPosition, currentTurn)) {
-               return CHECKMATE_SCORE;
-          }
-          //  Stalemate
-          else {
-               return 0;
-          }
      }
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
