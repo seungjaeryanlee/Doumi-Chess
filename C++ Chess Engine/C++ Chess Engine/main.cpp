@@ -653,7 +653,29 @@ int blueValue(int depth, int turn, bool castlingCheck[4]) {
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
-
+     //  TODO: Detect Checkmate
+     if (depthLegalMoveCount == 0) {
+          int kingPosition = ERROR_INTEGER;
+          for (int i = 0; i < 120; i++) {
+               if (turn == WHITE && currentBoard[i] == WHITEKING) {
+                    kingPosition = i;
+                    break;
+               }
+               if (turn == BLACK && currentBoard[i] == BLACKKING) {
+                    kingPosition = i;
+                    break;
+               }
+          }
+          //  Checkmate
+          if (squareAttackCheck(currentBoard, kingPosition, currentTurn)) {
+               return CHECKMATE_SCORE;
+          }
+          //  Stalemate
+          else {
+               return 0;
+          }
+     }
+     
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
      
           //  defensive copy of castlingCheck
@@ -730,6 +752,28 @@ int redValue(int depth, int turn, bool castlingCheck[4]) {
      // CHECK FOR LEGALS
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
+     //  TODO: Detect Checkmate
+     if (depthLegalMoveCount == 0) {
+          int kingPosition = ERROR_INTEGER;
+          for (int i = 0; i < 120; i++) {
+               if (turn == WHITE && currentBoard[i] == WHITEKING) {
+                    kingPosition = i;
+                    break;
+               }
+               if (turn == BLACK && currentBoard[i] == BLACKKING) {
+                    kingPosition = i;
+                    break;
+               }
+          }
+          //  Checkmate
+          if (squareAttackCheck(currentBoard, kingPosition, currentTurn)) {
+               return CHECKMATE_SCORE;
+          }
+          //  Stalemate
+          else {
+               return 0;
+          }
+     }
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
           //  defensive copy of castlingCheck
@@ -771,6 +815,8 @@ int redValue(int depth, int turn, bool castlingCheck[4]) {
           }
 
           score = blueValue(depth - 1, -turn, copyCastlingCheck);
+
+
           if (score < min_Score) {
                min_Score = score;
                depthBestMoves[depth][0] = depthLegalMoveList[depth][i][0];
@@ -2059,7 +2105,7 @@ void main() {
                     printf("%d: Divide Perft Test\n", DIVIDE);
                     printf("%d: Undo move\n", UNDO_MOVE);
                     printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
-                    printf("A: Print Possible Moves\n", PRINT_ALL_MOVES);
+                    printf("A: Print Possible Moves\n");
                     printf("Please choose command: ");
                     std::getline(cin, userCommand);
 
@@ -2143,7 +2189,7 @@ void main() {
                     continue;
                }
                else if (commandType == DISPLAY_BOARD) {
-                    printBoard(currentBoard);
+                    printSimpleBoard(currentBoard);
                     continue;
                }
                else if (commandType == DISPLAY_FEN) {
