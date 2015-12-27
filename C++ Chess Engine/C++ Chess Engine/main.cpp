@@ -854,6 +854,8 @@ void saveCurrentState() {
 
 /*                           MOVE GENERATION FUNCTIONS                        */
 void moveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare, bool castlingCheck[4]) {
+     *moveCount = 0;
+
      castlingMoveGeneration(board, turn, moveList, moveCount, castlingCheck);
      enpassantMoveGeneration(board, turn, moveList, moveCount, enpassantSquare);
 
@@ -1221,6 +1223,8 @@ void addPromotionMove(int initial, int terminal, int moveList[250][3], int *move
 }
 
 void legalMoves(int board[120], int turn, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount) {
+     *legalMoveCount = 0;
+
      //  find king position
      int kingPosition = 0, changedKingPosition = 0;
      int terminalValue;
@@ -2065,6 +2069,40 @@ void main() {
      }
 
      while (gamePlaying) {
+          //  Detect Checkmate/Stalemate
+          moveGeneration(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare, castlingCheck);
+          legalMoves(currentBoard, currentTurn, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
+          if (currentBoardLegalMoveCount == 0) {
+               printf("Flag!\n");
+               int kingPosition = ERROR_INTEGER;
+               for (int i = 0; i < 120; i++) {
+                    if (currentBoard[i] == WHITEKING && currentTurn == WHITE ||
+                         currentBoard[i] == BLACKKING && currentTurn == BLACK) {
+                         kingPosition = i;
+                         break;
+                    }
+               }
+               if (kingPosition == ERROR_INTEGER) {
+                    printf("Something went wrong!\n");
+                    break;
+               }
+               if (squareAttackCheck(currentBoard, kingPosition, currentTurn)) {
+                    gamePlaying = false;
+                    if (currentTurn == WHITE) {
+                         gameResult = BLACK_WIN;
+                    }
+                    if (currentTurn == BLACK) {
+                         gameResult = WHITE_WIN;
+                    }
+                    break;
+               }
+               else {
+                    gamePlaying = false;
+                    gameResult = TIE;
+                    break;
+               }
+          }
+          
           //  Let user determine color to play in first loop
           while (!correctInput && userColor == ERROR_INTEGER) {
                printf("Which color would you like to play? (W or B): ");
