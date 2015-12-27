@@ -547,6 +547,17 @@ int filerankToNumber(char file, int rank) {
      position120 = COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - '1'));
      return position120;
 }
+string numberToFilerank(int position) {
+     string fileRank = "";
+     char file = 'a' + position % 10 - 1; 
+     int rank = 10 - position / 10;
+     fileRank += file;
+     fileRank += std::to_string(rank);
+     return fileRank;
+}
+void printMove(int move[3]) {
+     cout << numberToFilerank(move[0]) << " " << numberToFilerank(move[1]) << " (" << move[2] << ")" << endl;
+}
 
 /*                             EVALUATION FUNCTIONS                           */
 int boardEvaluation(int board[120]) {
@@ -2405,9 +2416,9 @@ void main() {
                int negaMaxMove[3];
                int negamaxValue = rootNegaMax(EVAL_DEPTH, currentTurn, castlingCheck, negaMaxMove);
                printf("Negamax Value: %d\n", negamaxValue);
-               // Print best move and result
-               printf("Best Move: %c%d %c%d (%d)\n", numberToFile(negaMaxMove[0]), numberToRank(negaMaxMove[0]), numberToFile(negaMaxMove[1]), numberToRank(negaMaxMove[1]), negaMaxMove[2]);
-
+               // Print best move
+               printf("Best Move: ");
+               printMove(negaMaxMove);
                //  Increment or reset Fifty move count
                //  TODO: Add 50 Move Rule option in move generation / selection
                if (currentBoard[negaMaxMove[1]] == EMPTYSQUARE
@@ -2423,7 +2434,7 @@ void main() {
                for (int i = 0; i < 3; i++) {
                     lastMove[i] = negaMaxMove[i];
                }
-               logtext << moveNumber << ": " << numberToFile(negaMaxMove[0]) << numberToRank(negaMaxMove[0]) << " " << numberToFile(negaMaxMove[1]) << numberToRank(negaMaxMove[1]) << endl;
+               logtext << moveNumber << ": " << numberToFilerank(negaMaxMove[0]) << " " << numberToFilerank(negaMaxMove[1]) << endl;
 
                printSimpleBoard(currentBoard);
 
@@ -2441,7 +2452,8 @@ void main() {
                     printf("%d: O-O-O\n", moveNumber);
                }
                else {
-                    printf("%d: %c%d %c%d (%d)\n", moveNumber, numberToFile(negaMaxMove[0]), numberToRank(negaMaxMove[0]), numberToFile(negaMaxMove[1]), numberToRank(negaMaxMove[1]), negaMaxMove[2]);
+                    printf("%d: ", moveNumber);
+                    printMove(negaMaxMove);
                }
 
                //  Output using depthBestMoves
