@@ -654,7 +654,7 @@ int blueValue(int depth, int turn, bool castlingCheck[4]) {
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
      //  TODO: Detect Checkmate
-     if (depthLegalMoveCount == 0) {
+     if (depthLegalMoveCount[depth] == 0) {
           int kingPosition = ERROR_INTEGER;
           for (int i = 0; i < 120; i++) {
                if (turn == WHITE && currentBoard[i] == WHITEKING) {
@@ -753,7 +753,7 @@ int redValue(int depth, int turn, bool castlingCheck[4]) {
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
      //  TODO: Detect Checkmate
-     if (depthLegalMoveCount == 0) {
+     if (depthLegalMoveCount[depth] == 0) {
           int kingPosition = ERROR_INTEGER;
           for (int i = 0; i < 120; i++) {
                if (turn == WHITE && currentBoard[i] == WHITEKING) {
@@ -2073,7 +2073,6 @@ void main() {
           moveGeneration(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare, castlingCheck);
           legalMoves(currentBoard, currentTurn, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
           if (currentBoardLegalMoveCount == 0) {
-               printf("Flag!\n");
                int kingPosition = ERROR_INTEGER;
                for (int i = 0; i < 120; i++) {
                     if (currentBoard[i] == WHITEKING && currentTurn == WHITE ||
