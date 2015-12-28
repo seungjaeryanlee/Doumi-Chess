@@ -562,6 +562,10 @@ void printMove(int move[3]) {
 
 /*                             EVALUATION FUNCTIONS                           */
 int boardEvaluation(int board[120]) {
+     //  TODO: Add Piece Combination
+     //  TODO: Add Open Rank Rook
+     //  TODO: Add Passed/Isolated Pawn
+
      int score = 0;
      for (int i = 0; i < 120; i++) {
           switch (board[i]) {
@@ -932,6 +936,74 @@ int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], int bestMove[3]) 
      }
 
      return max_Score;
+}
+
+int alphabeta(int depth, int turn, bool castlingCheck[4], int alpha, int beta) {
+     if (depth == 0) {
+          return turn * boardEvaluation(currentBoard);
+     }
+
+     int score;
+     int terminalValue;
+     bool copyCastlingCheck[4];
+
+     depthEnpassantSquare[depth - 1] = 0;
+
+     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], castlingCheck);
+     legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+
+     for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
+          //  defensive copy of castlingCheck
+          for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
+
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEKING) {
+               copyCastlingCheck[WKCASTLING] = false;
+               copyCastlingCheck[WQCASTLING] = false;
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKKING) {
+               copyCastlingCheck[BKCASTLING] = false;
+               copyCastlingCheck[BQCASTLING] = false;
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEROOK) {
+               if (depthLegalMoveList[depth][i][0] == A1) {
+                    copyCastlingCheck[WQCASTLING] = false;
+               }
+               if (depthLegalMoveList[depth][i][0] == H1) {
+                    copyCastlingCheck[WKCASTLING] = false;
+               }
+          }
+          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKROOK) {
+               if (depthLegalMoveList[depth][i][0] == A8) {
+                    copyCastlingCheck[BQCASTLING] = false;
+               }
+               if (depthLegalMoveList[depth][i][0] == H8) {
+                    copyCastlingCheck[BKCASTLING] = false;
+               }
+          }
+
+          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
+
+          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
+               depthEnpassantSquare[depth - 1] = terminalValue;
+               //  this terminal value is actually enpassantSquare
+          }
+          else { // if not, revert it back to 0
+               depthEnpassantSquare[depth - 1] = 0;
+          }
+
+          score = -alphabeta(depth - 1, -turn, copyCastlingCheck, -beta, -alpha);
+
+          if (score >= beta) {
+               return beta;
+          }
+          if (score > alpha) {
+               alpha = score;
+          }
+
+          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+     }
+
+     return alpha;
 }
 
 /*                             GAME CYCLE FUNCTIONS                           */
@@ -2044,8 +2116,8 @@ void main() {
      logtext.open("log.txt");
      
      //  Initialize Board
-     //board120Setup();
-     FENboardSetup(currentBoard, "k7/8/8/8/8/8/8/5RRK w - - 0 1");
+     board120Setup();
+     //FENboardSetup(currentBoard, "k7/8/8/8/8/8/8/5RRK w - - 0 1");
      //  FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
  
      //  FEN source:
@@ -2420,6 +2492,8 @@ void main() {
                int negaMaxMove[3];
                int negamaxValue = rootNegaMax(EVAL_DEPTH, currentTurn, castlingCheck, negaMaxMove);
                printf("Negamax Value: %d\n", negamaxValue);
+               int alphabetaValue = alphabeta(EVAL_DEPTH, currentTurn, castlingCheck, INT_MIN, INT_MAX);
+               printf("Alphabeta Value: %d\n", alphabetaValue);
                // Print best move
                printf("Best Move: ");
                printMove(negaMaxMove);
