@@ -4,6 +4,7 @@
 #include <string>
 #include <Windows.h>
 #include <fstream>
+#include <climits>
 #include "protos.h"
 #include "defs.h"
 
@@ -806,7 +807,7 @@ int negaMax(int depth, int turn, bool castlingCheck[4]) {
      if (depth == 0) {
           return turn * boardEvaluation(currentBoard);
      }
-     int max_Score = -1000000;
+     int max_Score = INT_MIN;
      int score;
      int terminalValue;
      bool copyCastlingCheck[4];
@@ -868,7 +869,7 @@ int negaMax(int depth, int turn, bool castlingCheck[4]) {
 }
 int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], int bestMove[3]) {
 
-     int max_Score = -1000000;
+     int max_Score = INT_MIN;
      int score;
      int terminalValue;
      bool copyCastlingCheck[4];
