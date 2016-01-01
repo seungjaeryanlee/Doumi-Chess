@@ -1960,7 +1960,7 @@ void main() {
      
      //  Initialize Board
      //board120Setup();
-     FENboardSetup(currentBoard, "k7/7P/8/8/8/8/8/7K w - - 0 1");
+     FENboardSetup(currentBoard, "k7/pppppppp/8/8/8/8/8/R3K3 w Q - 0 1");
      //FENboardSetup(currentBoard, "k7/8/8/8/8/8/8/5RRK w - - 0 1");
      //  FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
  
@@ -1989,6 +1989,8 @@ void main() {
      //  Game Loop: Player vs COM
      int lastTerminalValue = ERROR_INTEGER; // data input in makemove, used in undomove
      int lastMove[3] = { ERROR_INTEGER, ERROR_INTEGER, ERROR_INTEGER }; // data input in makemove, used in undomove
+     bool lastCastlingCheck[4];
+     int lastEnpassantSquare = 0;
      bool correctInput = false;
      string userCommand;
 
@@ -2251,7 +2253,6 @@ void main() {
                     }
                }
                else if (commandType == UNDO_MOVE) {
-                    //  TODO: UNDO MOVE
                     //  TerminalSquare needs to be saved
                     if (lastTerminalValue == ERROR_INTEGER) {
                          printf("No move can be undone!\n");
@@ -2261,8 +2262,21 @@ void main() {
                          undoMove(currentBoard, lastMove, lastTerminalValue);
                     }
 
-                    // TODO: update moveNumber, fiftyMoveCount etc...
+                    // Update castlingCheck, enpassantSquare, currentTurn, moveNumber, fiftyMoveCount
+                    for (int i = 0; i < 4; i++) {
+                         castlingCheck[i]  = lastCastlingCheck[i];
+                    }
+                    enpassantSquare = lastEnpassantSquare;
+                    if (fiftyMoveCount > 0) {
+                         fiftyMoveCount--;
+                    }
+                    if (currentTurn == WHITE) {
+                         moveNumber--;
+                    }
                     currentTurn = -currentTurn;
+                    
+                    // Now user makes the next move
+                    userColor = -userColor;
                }
                else if (commandType == COM_MAKE_MOVE) {
                     userColor = -userColor;
@@ -2323,6 +2337,40 @@ void main() {
                }
                else { fiftyMoveCount = 0; }
 
+               //  Save castlingCheck for undoMove
+               for (int i = 0; i < 4; i++) {
+                    lastCastlingCheck[i] = castlingCheck[i];
+               }
+               //  Update castlingCheck
+               if (currentBoard[negaMaxMove[0]] == WHITEROOK && negaMaxMove[0] == A1) {
+                    castlingCheck[WQCASTLING] = false;
+               }
+               else if (currentBoard[negaMaxMove[0]] == WHITEROOK && negaMaxMove[0] == H1) {
+                    castlingCheck[WKCASTLING] = false;
+               }
+               else if (currentBoard[negaMaxMove[0]] == BLACKROOK && negaMaxMove[0] == A8) {
+                    castlingCheck[BQCASTLING] = false;
+               }
+               else if (currentBoard[negaMaxMove[0]] == BLACKROOK && negaMaxMove[0] == H8) {
+                    castlingCheck[BKCASTLING] = false;
+               }
+               else if (currentBoard[negaMaxMove[0]] == WHITEKING && negaMaxMove[0] == E1) {
+                    castlingCheck[WKCASTLING] = false;
+                    castlingCheck[WQCASTLING] = false;
+               }
+               else if (currentBoard[negaMaxMove[0]] == BLACKKING && negaMaxMove[0] == E8) {
+                    castlingCheck[BKCASTLING] = false;
+                    castlingCheck[BQCASTLING] = false;
+               }
+
+               //  Save enpassantSquare for undoMove
+               lastEnpassantSquare = enpassantSquare;
+               //  Update enpassant square
+               if (negaMaxMove[2] == DOUBLEMOVE) {
+                    enpassantSquare = (negaMaxMove[0] + negaMaxMove[1]) / 2;
+               }
+               else { enpassantSquare = 0; }
+
                //  Make best move and print board
                lastTerminalValue = makeMove(currentBoard, negaMaxMove);
                //  Save move for undoMove
@@ -2333,11 +2381,6 @@ void main() {
 
                printSimpleBoard(currentBoard);
 
-               //  Update enpassant square
-               if (negaMaxMove[2] == DOUBLEMOVE) {
-                    enpassantSquare = (negaMaxMove[0] + negaMaxMove[1]) / 2;
-               }
-               else { enpassantSquare = 0; }
 
                //  Print out move and move number
                if (negaMaxMove[2] == KINGSIDE_CASTLING) {
