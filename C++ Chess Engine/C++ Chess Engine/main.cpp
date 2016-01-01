@@ -844,6 +844,74 @@ int alphabeta(int depth, int turn, bool castlingCheck[4], int alpha, int beta) {
 
      return alpha;
 }
+int rootAlphabeta(int maxDepth, int turn, bool castlingCheck[4], int alpha, int beta, int bestMove[3]) {
+     int score;
+     int terminalValue;
+     bool copyCastlingCheck[4];
+
+     depthEnpassantSquare[maxDepth - 1] = 0;
+
+     moveGeneration(currentBoard, turn, depthAllMoveList[maxDepth], &depthAllMoveCount[maxDepth], depthEnpassantSquare[maxDepth], castlingCheck);
+     legalMoves(currentBoard, turn, depthAllMoveList[maxDepth], depthAllMoveCount[maxDepth], depthLegalMoveList[maxDepth], &depthLegalMoveCount[maxDepth]);
+
+     for (int i = 0; i < depthLegalMoveCount[maxDepth]; i++) {
+          for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
+
+          if (currentBoard[depthLegalMoveList[maxDepth][i][0]] == WHITEKING) {
+               copyCastlingCheck[WKCASTLING] = false;
+               copyCastlingCheck[WQCASTLING] = false;
+          }
+          if (currentBoard[depthLegalMoveList[maxDepth][i][0]] == BLACKKING) {
+               copyCastlingCheck[BKCASTLING] = false;
+               copyCastlingCheck[BQCASTLING] = false;
+          }
+          if (currentBoard[depthLegalMoveList[maxDepth][i][0]] == WHITEROOK) {
+               if (depthLegalMoveList[maxDepth][i][0] == A1) {
+                    copyCastlingCheck[WQCASTLING] = false;
+               }
+               if (depthLegalMoveList[maxDepth][i][0] == H1) {
+                    copyCastlingCheck[WKCASTLING] = false;
+               }
+          }
+          if (currentBoard[depthLegalMoveList[maxDepth][i][0]] == BLACKROOK) {
+               if (depthLegalMoveList[maxDepth][i][0] == A8) {
+                    copyCastlingCheck[BQCASTLING] = false;
+               }
+               if (depthLegalMoveList[maxDepth][i][0] == H8) {
+                    copyCastlingCheck[BKCASTLING] = false;
+               }
+          }
+
+          terminalValue = makeMove(currentBoard, depthLegalMoveList[maxDepth][i]);
+
+          if (depthLegalMoveList[maxDepth][i][2] == DOUBLEMOVE) {
+               depthEnpassantSquare[maxDepth - 1] = terminalValue;
+               //  this terminal value is actually enpassantSquare
+          }
+          else { // if not, revert it back to 0
+               depthEnpassantSquare[maxDepth - 1] = 0;
+          }
+
+          score = -alphabeta(maxDepth - 1, -turn, copyCastlingCheck, -beta, -alpha);
+
+          // TODO: Check if this is needed and change it
+          if (score >= beta) {
+
+               undoMove(currentBoard, depthLegalMoveList[maxDepth][i], terminalValue);
+               return beta;
+          }
+
+          if (score > alpha) {
+               alpha = score;
+               bestMove[0] = depthLegalMoveList[maxDepth][i][0];
+               bestMove[1] = depthLegalMoveList[maxDepth][i][1];
+               bestMove[2] = depthLegalMoveList[maxDepth][i][2];
+          }
+          undoMove(currentBoard, depthLegalMoveList[maxDepth][i], terminalValue);
+     }
+
+     return alpha;
+}
 
 /*                             GAME CYCLE FUNCTIONS                           */
 bool checkGameEnd(int board[120]) {
@@ -1236,6 +1304,7 @@ void addPromotionMove(int initial, int terminal, int moveList[250][3], int *move
      addMove(initial, terminal, QUEEN_PROMOTION, moveList, moveCount);
 }
 
+//  TODO: Check if king attacking king is allowed (it shouldn't be)
 void legalMoves(int board[120], int turn, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount) {
      *legalMoveCount = 0;
 
@@ -2332,12 +2401,15 @@ void main() {
                int negaMaxMove[3];
                int negamaxValue = rootNegaMax(EVAL_DEPTH, currentTurn, castlingCheck, negaMaxMove);
                printf("Negamax Value: %d\n", negamaxValue);
-               int alphabetaValue = alphabeta(EVAL_DEPTH, currentTurn, castlingCheck, -999999, 999999);
+               int alphabetaMove[3];
+               int alphabetaValue = rootAlphabeta(EVAL_DEPTH, currentTurn, castlingCheck, -999999, 999999, alphabetaMove);
                printf("Alphabeta Value: %d\n", alphabetaValue);
 
                // Print best move
-               printf("Best Move: ");
+               printf("NegaMax Move: ");
                printMove(negaMaxMove);
+               printf("Alphabeta Move: ");
+               printMove(alphabetaMove);
 
                //  Increment or reset Fifty move count
                //  TODO: Add 50 Move Rule option in move generation / selection
