@@ -2320,6 +2320,7 @@ void main() {
                     printf("%d: Undo move\n", UNDO_MOVE);
                     printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
                     printf("A: Print Possible Moves\n");
+                    printf("B: Efficiency Test of Alphabeta Pruning\n");
                     printf("--------------------------------------------------\n");
                     printf("Please choose command: ");
                     std::getline(cin, userCommand);
@@ -2328,8 +2329,8 @@ void main() {
                          printf("You must enter a number!\n");
                          continue;
                     }
-                    if (userCommand.at(0) == 'A') {
-                         commandType = 10;
+                    if ('A' <= userCommand.at(0) && userCommand.at(0) <= 'B') {
+                         commandType = userCommand.at(0) - 'A' + 10;
                          correctInput = true;
                          break;
                     }
@@ -2480,6 +2481,23 @@ void main() {
                          printMove(currentBoardLegalMoveList[i]);
                     }
                     continue;
+               }
+               else if (commandType == ALPHABETA_COMPARE) {
+
+                    LARGE_INTEGER frequency2, beginTime2, endTime2;
+                    
+                    frequency2 = startTimer(&beginTime2, 2);
+                    int negamaxValue = negaMax(EVAL_DEPTH, currentTurn, castlingCheck);
+                    stopTimer(&endTime2, 2);
+                    printf("Negamax Value: %d\n", negamaxValue);
+                    std::cout << "Negamax timer " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
+
+                    frequency2 = startTimer(&beginTime2, 2);
+                    int alphabetaValue = alphabeta(EVAL_DEPTH, currentTurn, castlingCheck, -999999, 999999);
+                    stopTimer(&endTime2, 2);
+                    printf("Alphabeta Value: %d\n", alphabetaValue);
+                    std::cout << "Alphabeta timer : " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
+
                }
           }
           else if (currentTurn == -userColor) {
