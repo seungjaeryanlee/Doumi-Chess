@@ -2000,6 +2000,20 @@ void main() {
      }
 
      while (gamePlaying) {
+          //  Check endgame
+          if (!endGame) {
+               //  if no queens are on the board
+               int queenCount = 0;
+               for (int i = 0; i < 120; i++) {
+                    if (currentBoard[i] == WHITEQUEEN || currentBoard[i] == BLACKQUEEN) {
+                         queenCount++;
+                    }
+               }
+               if (queenCount == 0) {
+                    endGame = true;
+               }
+          }
+
           //  Detect Checkmate/Stalemate
           moveGeneration(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare, castlingCheck);
           legalMoves(currentBoard, currentTurn, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
@@ -2439,21 +2453,6 @@ void main() {
                     printf("%d: %c%d %c%d (%d)\n", moveNumber, numberToFile(depthBestMoves[EVAL_DEPTH][0]), numberToRank(depthBestMoves[EVAL_DEPTH][0]), numberToFile(depthBestMoves[EVAL_DEPTH][1]), numberToRank(depthBestMoves[EVAL_DEPTH][1]), depthBestMoves[EVAL_DEPTH][2]);
                }
                */
-
-
-               //  Check endgame
-               if (!endGame) {
-                    //  if no queens are on the board
-                    int queenCount = 0;
-                    for (int i = 0; i < 120; i++) {
-                         if (currentBoard[i] == WHITEQUEEN || currentBoard[i] == BLACKQUEEN) {
-                              queenCount++;
-                         }
-                    }
-                    if (queenCount == 0) {
-                         endGame = true;
-                    }
-               }
 
                //  Change turns and increment move
                currentTurn = -currentTurn;
