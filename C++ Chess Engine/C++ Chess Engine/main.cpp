@@ -993,11 +993,14 @@ int alphabeta(int depth, int turn, bool castlingCheck[4], int alpha, int beta) {
 
           score = -alphabeta(depth - 1, -turn, copyCastlingCheck, -beta, -alpha);
 
+          printf("Score: %d\n", score);
           if (score >= beta) {
                return beta;
           }
+          
           if (score > alpha) {
                alpha = score;
+               printf("Alpha: %d\n", alpha);
           }
 
           undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
@@ -2492,7 +2495,7 @@ void main() {
                int negaMaxMove[3];
                int negamaxValue = rootNegaMax(EVAL_DEPTH, currentTurn, castlingCheck, negaMaxMove);
                printf("Negamax Value: %d\n", negamaxValue);
-               int alphabetaValue = alphabeta(EVAL_DEPTH, currentTurn, castlingCheck, INT_MIN, INT_MAX);
+               int alphabetaValue = alphabeta(EVAL_DEPTH, currentTurn, castlingCheck, -999999, 999999);
                printf("Alphabeta Value: %d\n", alphabetaValue);
                // Print best move
                printf("Best Move: ");
