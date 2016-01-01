@@ -19,9 +19,10 @@ I plan to use Negamax algorithm for this engine.
   - Performance Test (a.k.a. perft test) - **Complete**  
     - Change Existing Functions for pointer arguments - **Complete**  
 4. Recursion - *In progress*  
-  - Implement Minimax - *Complete*  
-  - Implement Negamax
+  - Implement Negamax - **Complete**  
+  - Implement Alphabeta Pruning - **Complete**  
   - Test Recursion - *In progress*  
+  - Consider Edge Cases (Checkmate, Stalemate) - *In progress*
 5. Other Minor Details  
   - Stalemate rules - *In progress*  
     - Threefold Repetition (FIDE 9.2)
@@ -31,10 +32,8 @@ I plan to use Negamax algorithm for this engine.
 
 ## TODOs  
 1. Add Undo Move command Player vs. COM
-2. Add COM Make Move command in Player vs. COM
-3. Create a function for COM making one move and stopping
-4. Add 50 Move Rule option in moveGen
-5. Check Threefold Repetition
+2. Add 50 Move Rule option in moveGen
+3. Check Threefold Repetition
 
 ## Non-necessary Addition to Chess Engine
 1. Opening Book  
@@ -42,6 +41,7 @@ I plan to use Negamax algorithm for this engine.
 3. Endgame Book  
 4. WinBoard or UCI  
 5. Create own GUI  
+6. Complex heuristic for Board Evaluation  
 *These will be worked on after the basic chess engine is completed. (Not in order)*  
 
 ## References  
