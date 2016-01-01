@@ -564,10 +564,6 @@ void printMove(int move[3]) {
 
 /*                             EVALUATION FUNCTIONS                           */
 int boardEvaluation(int board[120]) {
-     //  TODO: Add Piece Combination
-     //  TODO: Add Open Rank Rook
-     //  TODO: Add Passed/Isolated Pawn
-
      int score = 0;
      for (int i = 0; i < 120; i++) {
           switch (board[i]) {
@@ -1764,7 +1760,7 @@ int makeMove(int board[120], int move[3]) {
      if (moveType == DOUBLEMOVE) {
           board[terminal] = board[initial];
           board[initial] = EMPTYSQUARE;
-          //  TODO: Check why this exists
+          //  terminalValue is actually enpassantSquare
           return (terminal+initial)/2;
      }
      else if (moveType == QUEENSIDE_CASTLING) {
@@ -2342,6 +2338,7 @@ void main() {
                // Print best move
                printf("Best Move: ");
                printMove(negaMaxMove);
+
                //  Increment or reset Fifty move count
                //  TODO: Add 50 Move Rule option in move generation / selection
                if (currentBoard[negaMaxMove[1]] == EMPTYSQUARE
@@ -2522,17 +2519,6 @@ void main() {
           printf("0-0: Game not finished\n");
           logtext << "0-0: Game not finished" << endl;
      }
-
-     // PERFT TEST
-     /*
-     printf("PERFT TEST (DEPTH 1) : %llu \n", divide(1, currentTurn, 0, castlingCheck, false));
-     printf("PERFT TEST (DEPTH 2) : %llu \n", divide(2, currentTurn, 0, castlingCheck, false));
-     printf("PERFT TEST (DEPTH 3) : %llu \n", divide(3, currentTurn, 0, castlingCheck, false));
-     printf("PERFT TEST (DEPTH 4) : %llu \n", divide(4, currentTurn, 0, castlingCheck, false));
-     printf("PERFT TEST (DEPTH 5) : %llu \n", divide(5, currentTurn, 0, castlingCheck, false));
-     printf("PERFT TEST (DEPTH 6) : %llu \n", divide(6, currentTurn, 0, castlingCheck, false));
-     printf("PERFT TEST (DEPTH 7) : %llu \n", divide(7, currentTurn, 0, castlingCheck, false));
-     */
 
      //  stop timer
      stopTimer(&endTime, 1);
