@@ -938,6 +938,7 @@ int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], int bestMove[3]) 
      return max_Score;
 }
 
+int tempCnt = 0;
 int alphabeta(int depth, int turn, bool castlingCheck[4], int alpha, int beta) {
      if (depth == 0) {
           return turn * boardEvaluation(currentBoard);
@@ -953,6 +954,8 @@ int alphabeta(int depth, int turn, bool castlingCheck[4], int alpha, int beta) {
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
+          printf("tempcnt: %d\n", tempCnt);
+          tempCnt++;
           //  defensive copy of castlingCheck
           for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
 
@@ -2495,8 +2498,12 @@ void main() {
                int negaMaxMove[3];
                int negamaxValue = rootNegaMax(EVAL_DEPTH, currentTurn, castlingCheck, negaMaxMove);
                printf("Negamax Value: %d\n", negamaxValue);
+               printSimpleBoard(currentBoard);
                int alphabetaValue = alphabeta(EVAL_DEPTH, currentTurn, castlingCheck, -999999, 999999);
                printf("Alphabeta Value: %d\n", alphabetaValue);
+
+               printSimpleBoard(currentBoard);
+
                // Print best move
                printf("Best Move: ");
                printMove(negaMaxMove);
