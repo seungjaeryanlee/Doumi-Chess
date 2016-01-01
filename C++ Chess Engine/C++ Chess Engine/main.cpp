@@ -125,6 +125,8 @@ bool castlingCheck[4];
 int userColor = ERROR_INTEGER;
 //  To create a log of moves
 ofstream logtext;
+//  if true, the game is between two computers
+bool spectate = false;
 
 /******************************************************************************/
 /*                                  FUNCTIONS                                 */
@@ -2120,7 +2122,7 @@ void main() {
           
           //  Let user determine color to play in first loop
           while (!correctInput && userColor == ERROR_INTEGER) {
-               printf("Which color would you like to play? (W or B): ");
+               printf("Which color would you like to play? (W, B or N): ");
                std::getline(cin, userCommand);
                if (userCommand.size() == 0) {
                     printf("You must enter W or B!\n");
@@ -2136,12 +2138,17 @@ void main() {
                     correctInput = true;
                     break;
                }
+               else if (userCommand.at(0) == 'N') {
+                    spectate = true;
+                    correctInput = true;
+                    break;
+               }
                else {
-                    printf("Wrong input! Write W or B.\n");
+                    printf("Wrong input! Write W, B or N.\n");
                     continue;
                }
           }
-          if (currentTurn == userColor) {
+          if (currentTurn == userColor && spectate == false) {
                
                int initialSquare, terminalSquare;
                int commandType = ERROR_COMMAND;
@@ -2340,7 +2347,7 @@ void main() {
 
                }
           }
-          else if (currentTurn == -userColor) {
+          else if (currentTurn == -userColor || spectate == true) {
                
                saveCurrentState();
 
