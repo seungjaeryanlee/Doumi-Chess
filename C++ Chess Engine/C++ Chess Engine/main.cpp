@@ -2041,16 +2041,19 @@ void main() {
                if (userCommand.at(0) == 'W') {
                     userColor = WHITE;
                     correctInput = true;
+                    logtext << "Player (White) vs. COM (Black)" << endl;
                     break;
                }
                else if (userCommand.at(0) == 'B') {
                     userColor = BLACK;
                     correctInput = true;
+                    logtext << "COM (White) vs. Player (Black)" << endl;
                     break;
                }
                else if (userCommand.at(0) == 'N') {
                     spectate = true;
                     correctInput = true;
+                    logtext << "COM (White) vs. COM (Black)" << endl;
                     break;
                }
                else {
@@ -2270,8 +2273,6 @@ void main() {
                printf("Negamax Value: %d\n", negamaxValue);
                int alphabetaValue = alphabeta(EVAL_DEPTH, currentTurn, castlingCheck, -999999, 999999);
                printf("Alphabeta Value: %d\n", alphabetaValue);
-
-               printSimpleBoard(currentBoard);
 
                // Print best move
                printf("Best Move: ");
