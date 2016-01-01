@@ -938,7 +938,7 @@ int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], int bestMove[3]) 
      return max_Score;
 }
 
-int tempCnt = 0;
+//int tempCnt = 0;
 int alphabeta(int depth, int turn, bool castlingCheck[4], int alpha, int beta) {
      if (depth == 0) {
           return turn * boardEvaluation(currentBoard);
@@ -954,8 +954,8 @@ int alphabeta(int depth, int turn, bool castlingCheck[4], int alpha, int beta) {
      legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
-          printf("tempcnt: %d\n", tempCnt);
-          tempCnt++;
+          //printf("tempcnt: %d\n", tempCnt);
+          //tempCnt++;
           //  defensive copy of castlingCheck
           for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
 
@@ -995,18 +995,25 @@ int alphabeta(int depth, int turn, bool castlingCheck[4], int alpha, int beta) {
           }
 
           score = -alphabeta(depth - 1, -turn, copyCastlingCheck, -beta, -alpha);
-
-          printf("Score: %d\n", score);
+          printf("Depth: %d, Turn: %d\n", depth, turn);
+          if (depth == 1 && i == 0) {
+               printf("%d\n", depthLegalMoveCount[1]);
+          }
+          //printf("Score: %d\n", score);
           if (score >= beta) {
+
+               undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
                return beta;
           }
           
           if (score > alpha) {
                alpha = score;
-               printf("Alpha: %d\n", alpha);
+               //printf("Alpha: %d\n", alpha);
           }
 
+          printSimpleBoard(currentBoard);
           undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+          
      }
 
      return alpha;
@@ -2498,7 +2505,6 @@ void main() {
                int negaMaxMove[3];
                int negamaxValue = rootNegaMax(EVAL_DEPTH, currentTurn, castlingCheck, negaMaxMove);
                printf("Negamax Value: %d\n", negamaxValue);
-               printSimpleBoard(currentBoard);
                int alphabetaValue = alphabeta(EVAL_DEPTH, currentTurn, castlingCheck, -999999, 999999);
                printf("Alphabeta Value: %d\n", alphabetaValue);
 
