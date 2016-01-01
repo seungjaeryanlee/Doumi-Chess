@@ -1959,7 +1959,8 @@ void main() {
      logtext.open("log.txt");
      
      //  Initialize Board
-     board120Setup();
+     //board120Setup();
+     FENboardSetup(currentBoard, "k7/7P/8/8/8/8/8/7K w - - 0 1");
      //FENboardSetup(currentBoard, "k7/8/8/8/8/8/8/5RRK w - - 0 1");
      //  FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
  
@@ -2031,6 +2032,7 @@ void main() {
           }
           
           //  Let user determine color to play in first loop
+          correctInput = false;
           while (!correctInput && userColor == ERROR_INTEGER) {
                printf("Which color would you like to play? (W, B or N): ");
                std::getline(cin, userCommand);
@@ -2147,18 +2149,53 @@ void main() {
                               correctInput = true;
                          }
                          //  TODO: check if there is anything else to check :D
-
                     }
-                    //  TODO: Implement Promotion
+                    // Check Promotion
+                    if (currentBoard[initialSquare] == WHITEPAWN && A8 <= terminalSquare && terminalSquare <= H8 ||
+                         currentBoard[initialSquare] == BLACKPAWN && A1 <= terminalSquare && terminalSquare <= H1) {
+                         correctInput = false;
+                         while (!correctInput) {
+                              printf("Please pick a piece to promote to (N, B, R, Q): ");
+                              std::getline(cin, userCommand); // do I want to get the entire command?
+
+                              //  Check size
+                              if (userCommand.size() != 1) {
+                                   printf("Just one letter: N, B, R, Q\n");
+                                   continue;
+                              }
+                              if (userCommand.at(0) != 'N' && userCommand.at(0) != 'B' && userCommand.at(0) != 'R' && userCommand.at(0) != 'Q') {
+                                   printf("Wrong letter: just N, B, R, Q\n");
+                                   continue;
+                              }
+
+                              switch (userCommand.at(0)) {
+                              case 'N':
+                                   moveType = KNIGHT_PROMOTION;
+                                   correctInput = true;
+                                   break;
+                              case 'B':
+                                   moveType = BISHOP_PROMOTION;
+                                   correctInput = true;
+                                   break;
+                              case 'R':
+                                   moveType = ROOK_PROMOTION;
+                                   correctInput = true;
+                                   break;
+                              case 'Q':
+                                   moveType = QUEEN_PROMOTION;
+                                   correctInput = true;
+                                   break;
+                              }
+                         }
+                    }
                     saveCurrentState();
                     int userMove[3] = { initialSquare, terminalSquare, moveType};
+                    // save terminalValue for undoMove;
                     lastTerminalValue = makeMove(currentBoard, userMove);
                     for (int i = 0; i < 3; i++) {
                          lastMove[i] = userMove[i];
                     }
-                    // save terminalValue for undoMove;
                     currentTurn = -currentTurn;
-
                     // add to log file
                     logtext << moveNumber << ": " << numberToFile(userMove[0]) << numberToRank(userMove[0]) << " " << numberToFile(userMove[1]) << numberToRank(userMove[1]) << endl;
 
