@@ -2024,8 +2024,8 @@ void main() {
      logtext.open("log.txt");
      
      //  Initialize Board
-     //board120Setup();
-     FENboardSetup(currentBoard, "k7/pppppppp/8/8/8/8/8/R3K3 w Q - 0 1");
+     board120Setup();
+     //FENboardSetup(currentBoard, "k7/pppppppp/8/8/8/8/8/R3K3 w Q - 0 1");
      //FENboardSetup(currentBoard, "k7/8/8/8/8/8/8/5RRK w - - 0 1");
      //  FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
  
@@ -2136,6 +2136,7 @@ void main() {
                else if (userCommand.at(0) == 'N') {
                     spectate = true;
                     correctInput = true;
+                    userColor = NEITHER;
                     logtext << "COM (White) vs. COM (Black)" << endl;
                     break;
                }
@@ -2397,25 +2398,31 @@ void main() {
                // copy ep Square: needs to be done before any recursion
                depthEnpassantSquare[EVAL_DEPTH] = enpassantSquare;
 
-               printf("Current Board Evaluation: %d\n", boardEvaluation(currentBoard));
-               int negaMaxMove[3];
-               int negamaxValue = rootNegaMax(EVAL_DEPTH, currentTurn, castlingCheck, negaMaxMove);
-               printf("Negamax Value: %d\n", negamaxValue);
+               //printf("Current Board Evaluation: %d\n", boardEvaluation(currentBoard));
+               //int negaMaxMove[3];
+               //int negamaxValue = rootNegaMax(EVAL_DEPTH, currentTurn, castlingCheck, negaMaxMove);
+               //printf("Negamax Value: %d\n", negamaxValue);
                int alphabetaMove[3];
                int alphabetaValue = rootAlphabeta(EVAL_DEPTH, currentTurn, castlingCheck, -999999, 999999, alphabetaMove);
                printf("Alphabeta Value: %d\n", alphabetaValue);
 
                // Print best move
-               printf("NegaMax Move: ");
-               printMove(negaMaxMove);
+               //printf("NegaMax Move: ");
+               //printMove(negaMaxMove);
                printf("Alphabeta Move: ");
                printMove(alphabetaMove);
 
+               int moveToMake[3];
+               for (int i = 0; i < 3; i++) {
+                    //moveToMake[i] = negaMaxMove[i];
+                    moveToMake[i] = alphabetaMove[i];
+               }
+
                //  Increment or reset Fifty move count
                //  TODO: Add 50 Move Rule option in move generation / selection
-               if (currentBoard[negaMaxMove[1]] == EMPTYSQUARE
-                    && currentBoard[negaMaxMove[0]] != WHITEPAWN
-                    && currentBoard[negaMaxMove[0]] != BLACKPAWN) {
+               if (currentBoard[moveToMake[1]] == EMPTYSQUARE
+                    && currentBoard[moveToMake[0]] != WHITEPAWN
+                    && currentBoard[moveToMake[0]] != BLACKPAWN) {
                     fiftyMoveCount++;
                }
                else { fiftyMoveCount = 0; }
@@ -2425,23 +2432,23 @@ void main() {
                     lastCastlingCheck[i] = castlingCheck[i];
                }
                //  Update castlingCheck
-               if (currentBoard[negaMaxMove[0]] == WHITEROOK && negaMaxMove[0] == A1) {
+               if (currentBoard[moveToMake[0]] == WHITEROOK && moveToMake[0] == A1) {
                     castlingCheck[WQCASTLING] = false;
                }
-               else if (currentBoard[negaMaxMove[0]] == WHITEROOK && negaMaxMove[0] == H1) {
+               else if (currentBoard[moveToMake[0]] == WHITEROOK && moveToMake[0] == H1) {
                     castlingCheck[WKCASTLING] = false;
                }
-               else if (currentBoard[negaMaxMove[0]] == BLACKROOK && negaMaxMove[0] == A8) {
+               else if (currentBoard[moveToMake[0]] == BLACKROOK && moveToMake[0] == A8) {
                     castlingCheck[BQCASTLING] = false;
                }
-               else if (currentBoard[negaMaxMove[0]] == BLACKROOK && negaMaxMove[0] == H8) {
+               else if (currentBoard[moveToMake[0]] == BLACKROOK && moveToMake[0] == H8) {
                     castlingCheck[BKCASTLING] = false;
                }
-               else if (currentBoard[negaMaxMove[0]] == WHITEKING && negaMaxMove[0] == E1) {
+               else if (currentBoard[moveToMake[0]] == WHITEKING && moveToMake[0] == E1) {
                     castlingCheck[WKCASTLING] = false;
                     castlingCheck[WQCASTLING] = false;
                }
-               else if (currentBoard[negaMaxMove[0]] == BLACKKING && negaMaxMove[0] == E8) {
+               else if (currentBoard[moveToMake[0]] == BLACKKING && moveToMake[0] == E8) {
                     castlingCheck[BKCASTLING] = false;
                     castlingCheck[BQCASTLING] = false;
                }
@@ -2449,32 +2456,32 @@ void main() {
                //  Save enpassantSquare for undoMove
                lastEnpassantSquare = enpassantSquare;
                //  Update enpassant square
-               if (negaMaxMove[2] == DOUBLEMOVE) {
-                    enpassantSquare = (negaMaxMove[0] + negaMaxMove[1]) / 2;
+               if (moveToMake[2] == DOUBLEMOVE) {
+                    enpassantSquare = (moveToMake[0] + moveToMake[1]) / 2;
                }
                else { enpassantSquare = 0; }
 
                //  Make best move and print board
-               lastTerminalValue = makeMove(currentBoard, negaMaxMove);
+               lastTerminalValue = makeMove(currentBoard, moveToMake);
                //  Save move for undoMove
                for (int i = 0; i < 3; i++) {
-                    lastMove[i] = negaMaxMove[i];
+                    lastMove[i] = moveToMake[i];
                }
-               logtext << moveNumber << ": " << numberToFilerank(negaMaxMove[0]) << " " << numberToFilerank(negaMaxMove[1]) << endl;
+               logtext << moveNumber << ": " << numberToFilerank(moveToMake[0]) << " " << numberToFilerank(moveToMake[1]) << endl;
 
                printSimpleBoard(currentBoard);
 
 
                //  Print out move and move number
-               if (negaMaxMove[2] == KINGSIDE_CASTLING) {
+               if (moveToMake[2] == KINGSIDE_CASTLING) {
                     printf("%d: O-O\n", moveNumber);
                }
-               else if (negaMaxMove[2] == QUEENSIDE_CASTLING) {
+               else if (moveToMake[2] == QUEENSIDE_CASTLING) {
                     printf("%d: O-O-O\n", moveNumber);
                }
                else {
                     printf("%d: ", moveNumber);
-                    printMove(negaMaxMove);
+                    printMove(moveToMake);
                }
 
                //  Output using depthBestMoves
