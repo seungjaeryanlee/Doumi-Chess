@@ -339,22 +339,22 @@ void FENboardSetup(std::string FEN) {
 
 
 }
-string boardToFEN(int board[120], int turn, bool castlingCheck[4], int enpassantSquare, int fiftyMoveCount, int moveNumber) {
+string boardToFEN(Board board) {
      std::string FEN;
      int emptySquareCount = 0;
 
      for (int i = 2; i < 10; i++) {
           for (int j = 1; j < 9; j++) {
-               if (board[i*ROW + j*COLUMN] == EMPTYSQUARE) {
+               if (board.getSquare(i*ROW + j*COLUMN) == EMPTYSQUARE) {
                     emptySquareCount++;
                     continue;
                }
-               if (board[i*ROW + j*COLUMN] != EMPTYSQUARE &&
+               if (board.getSquare(i*ROW + j*COLUMN) != EMPTYSQUARE &&
                     emptySquareCount != 0) {
                     FEN += ('0' + emptySquareCount);
                     emptySquareCount = 0;
                }
-               switch (board[i*ROW + j*COLUMN]) {
+               switch (board.getSquare(i*ROW + j*COLUMN)) {
                case WHITEPAWN:
                     FEN += 'P';
                     break;
@@ -406,15 +406,15 @@ string boardToFEN(int board[120], int turn, bool castlingCheck[4], int enpassant
      }
 
      FEN += ' ';
-     if (turn == WHITE) { FEN += 'w'; }
+     if (board.getTurn() == WHITE) { FEN += 'w'; }
      else { FEN += 'b'; }
 
      FEN += ' ';
      //  no castling available
-     bool WKCastling = castlingCheck[WKCASTLING];
-     bool WQCastling = castlingCheck[WQCASTLING];
-     bool BKCastling = castlingCheck[BKCASTLING];
-     bool BQCastling = castlingCheck[BQCASTLING];
+     bool WKCastling = board.getCastling(WKCASTLING);
+     bool WQCastling = board.getCastling(WQCASTLING);
+     bool BKCastling = board.getCastling(BKCASTLING);
+     bool BQCastling = board.getCastling(BQCASTLING);
      if (!(WKCastling || WQCastling || BKCastling || BQCastling)) {
           FEN += '-';
      }
@@ -434,9 +434,9 @@ string boardToFEN(int board[120], int turn, bool castlingCheck[4], int enpassant
      }
 
      FEN += ' ';
-     if (enpassantSquare != 0) {
-          FEN += numberToFile(enpassantSquare);
-          FEN += ('0' + numberToRank(enpassantSquare));
+     if (board.getEnpassantSquare() != 0) {
+          FEN += numberToFile(board.getEnpassantSquare());
+          FEN += ('0' + numberToRank(board.getEnpassantSquare()));
      }
      else { FEN += '-'; }
 
@@ -449,12 +449,12 @@ string boardToFEN(int board[120], int turn, bool castlingCheck[4], int enpassant
      return FEN;
 
 }
-void printBoard(int board[120]) {
+void printBoard(Board board) {
      for (int i = 0; i < 120; i++) {
           if (i % 10 == 0) {
                printf("\n");
           }
-          switch (board[i]) {
+          switch (board.getSquare(i)) {
           case ERRORSQUARE:
                printf("X ");
                break;
@@ -501,11 +501,11 @@ void printBoard(int board[120]) {
      }
      printf("\n");
 }
-void printSimpleBoard(int board[120]) {
+void printSimpleBoard(Board board) {
      for (int i = 2; i < 10; i++) {
           printf("%d| ", 10 - i);
           for (int j = 1; j < 9; j++) {
-               switch (board[i*ROW+j*COLUMN]) {
+               switch (board.getSquare(i*ROW+j*COLUMN)) {
                case ERRORSQUARE:
                     printf("X ");
                     break;
@@ -952,11 +952,11 @@ int rootAlphabeta(int maxDepth, int turn, bool castlingCheck[4], int alpha, int 
 }
 
 /*                             GAME CYCLE FUNCTIONS                           */
-bool checkGameEnd(int board[120]) {
+bool checkGameEnd(Board board) {
      bool whiteKing = false, blackKing = false;
      for (int i = 0; i < 120; i++) {
-          if (board[i] == WHITEKING) { whiteKing = true; }
-          if (board[i] == BLACKKING) { blackKing = true; }
+          if (board.getSquare(i) == WHITEKING) { whiteKing = true; }
+          if (board.getSquare(i) == BLACKKING) { blackKing = true; }
      }
      return !(whiteKing && blackKing);
 }
@@ -2086,12 +2086,12 @@ void main() {
 
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
-     printf("Castling - WK:%d WQ:%d BK:%d BQ:%d\n", castlingCheck[WKCASTLING], castlingCheck[WQCASTLING], castlingCheck[BKCASTLING], castlingCheck[BQCASTLING]);
+     printf("Castling - WK:%d WQ:%d BK:%d BQ:%d\n", currentBoard.getCastling(WKCASTLING), currentBoard.getCastling(WQCASTLING), currentBoard.getCastling(BKCASTLING), currentBoard.getCastling(BQCASTLING));
      printf("en passant Square: %d\n", enpassantSquare);
      printf("Move number: %d\n", moveNumber);
      if (currentTurn == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
-     boardToFEN(currentBoard, currentTurn, castlingCheck, enpassantSquare, fiftyMoveCount, moveNumber);
+     boardToFEN(currentBoard);
      printf("--------------------------------------------------\n");
 
      //  begin timer
@@ -2116,7 +2116,7 @@ void main() {
                //  if no queens are on the board
                int queenCount = 0;
                for (int i = 0; i < 120; i++) {
-                    if (currentBoard[i] == WHITEQUEEN || currentBoard[i] == BLACKQUEEN) {
+                    if (currentBoard.getSquare(i) == WHITEQUEEN || currentBoard.getSquare(i) == BLACKQUEEN) {
                          queenCount++;
                     }
                }
@@ -2126,13 +2126,13 @@ void main() {
           }
 
           //  Detect Checkmate/Stalemate
-          moveGeneration(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare, castlingCheck);
-          legalMoves(currentBoard, currentTurn, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
+          moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare);
+          legalMoves(currentBoard, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
           if (currentBoardLegalMoveCount == 0) {
                int kingPosition = ERROR_INTEGER;
                for (int i = 0; i < 120; i++) {
-                    if (currentBoard[i] == WHITEKING && currentTurn == WHITE ||
-                         currentBoard[i] == BLACKKING && currentTurn == BLACK) {
+                    if (currentBoard.getSquare(i) == WHITEKING && currentTurn == WHITE ||
+                         currentBoard.getSquare(i) == BLACKKING && currentTurn == BLACK) {
                          kingPosition = i;
                          break;
                     }
@@ -2141,7 +2141,7 @@ void main() {
                     printf("Something went wrong!\n");
                     break;
                }
-               if (squareAttackCheck(currentBoard, kingPosition, currentTurn)) {
+               if (squareAttackCheck(currentBoard, kingPosition)) {
                     gamePlaying = false;
                     if (currentTurn == WHITE) {
                          gameResult = BLACK_WIN;
@@ -2236,8 +2236,8 @@ void main() {
                     //  Movelist used for legality/movetype check
                     currentBoardMoveCount = 0;
                     currentBoardLegalMoveCount = 0;
-                    moveGeneration(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare, castlingCheck);
-                    legalMoves(currentBoard, currentTurn, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
+                    moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare);
+                    legalMoves(currentBoard, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
 
                     int moveType = NORMAL;
 
@@ -2280,8 +2280,8 @@ void main() {
                          //  TODO: check if there is anything else to check :D
                     }
                     // Check Promotion
-                    if (currentBoard[initialSquare] == WHITEPAWN && A8 <= terminalSquare && terminalSquare <= H8 ||
-                         currentBoard[initialSquare] == BLACKPAWN && A1 <= terminalSquare && terminalSquare <= H1) {
+                    if (currentBoard.getSquare(initialSquare) == WHITEPAWN && A8 <= terminalSquare && terminalSquare <= H8 ||
+                         currentBoard.getSquare(initialSquare) == BLACKPAWN && A1 <= terminalSquare && terminalSquare <= H1) {
                          correctInput = false;
                          while (!correctInput) {
                               printf("Please pick a piece to promote to (N, B, R, Q): ");
@@ -2335,7 +2335,7 @@ void main() {
                     continue;
                }
                else if (commandType == DISPLAY_FEN) {
-                    boardToFEN(currentBoard, currentTurn, castlingCheck, enpassantSquare, fiftyMoveCount, moveNumber);
+                    boardToFEN(currentBoard);
                     continue;
                }
                else if (commandType == BOARD_RESET) {
@@ -2410,8 +2410,8 @@ void main() {
                     continue;
                }
                else if (commandType == PRINT_ALL_MOVES) {
-                    moveGeneration(currentBoard, currentTurn, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare, castlingCheck);
-                    legalMoves(currentBoard, currentTurn, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
+                    moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare);
+                    legalMoves(currentBoard, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
 
                     printf("Movecount: %d\n", currentBoardLegalMoveCount);
                     for (int i = 0; i < currentBoardLegalMoveCount; i++) {
@@ -2471,9 +2471,9 @@ void main() {
 
                //  Increment or reset Fifty move count
                //  TODO: Add 50 Move Rule option in move generation / selection
-               if (currentBoard[moveToMake[1]] == EMPTYSQUARE
-                    && currentBoard[moveToMake[0]] != WHITEPAWN
-                    && currentBoard[moveToMake[0]] != BLACKPAWN) {
+               if (currentBoard.getSquare(moveToMake[1]) == EMPTYSQUARE
+                    && currentBoard.getSquare(moveToMake[0]) != WHITEPAWN
+                    && currentBoard.getSquare(moveToMake[0]) != BLACKPAWN) {
                     fiftyMoveCount++;
                }
                else { fiftyMoveCount = 0; }
@@ -2483,29 +2483,29 @@ void main() {
                     lastCastlingCheck[i] = castlingCheck[i];
                }
                //  Update castlingCheck
-               if (currentBoard[moveToMake[0]] == WHITEROOK && moveToMake[0] == A1) {
-                    castlingCheck[WQCASTLING] = false;
+               if (currentBoard.getSquare(moveToMake[0]) == WHITEROOK && moveToMake[0] == A1) {
+                    currentBoard.setCastling(WQCASTLING, false);
                }
-               else if (currentBoard[moveToMake[0]] == WHITEROOK && moveToMake[0] == H1) {
-                    castlingCheck[WKCASTLING] = false;
+               else if (currentBoard.getSquare(moveToMake[0]) == WHITEROOK && moveToMake[0] == H1) {
+                    currentBoard.setCastling(WKCASTLING, false);
                }
-               else if (currentBoard[moveToMake[0]] == BLACKROOK && moveToMake[0] == A8) {
-                    castlingCheck[BQCASTLING] = false;
+               else if (currentBoard.getSquare(moveToMake[0]) == BLACKROOK && moveToMake[0] == A8) {
+                    currentBoard.setCastling(BQCASTLING, false);
                }
-               else if (currentBoard[moveToMake[0]] == BLACKROOK && moveToMake[0] == H8) {
-                    castlingCheck[BKCASTLING] = false;
+               else if (currentBoard.getSquare(moveToMake[0]) == BLACKROOK && moveToMake[0] == H8) {
+                    currentBoard.setCastling(BKCASTLING, false);
                }
-               else if (currentBoard[moveToMake[0]] == WHITEKING && moveToMake[0] == E1) {
-                    castlingCheck[WKCASTLING] = false;
-                    castlingCheck[WQCASTLING] = false;
+               else if (currentBoard.getSquare(moveToMake[0]) == WHITEKING && moveToMake[0] == E1) {
+                    currentBoard.setCastling(WKCASTLING, false);
+                    currentBoard.setCastling(WQCASTLING, false);
                }
-               else if (currentBoard[moveToMake[0]] == BLACKKING && moveToMake[0] == E8) {
-                    castlingCheck[BKCASTLING] = false;
-                    castlingCheck[BQCASTLING] = false;
+               else if (currentBoard.getSquare(moveToMake[0]) == BLACKKING && moveToMake[0] == E8) {
+                    currentBoard.setCastling(BKCASTLING, false);
+                    currentBoard.setCastling(BQCASTLING, false);
                }
 
                //  Save enpassantSquare for undoMove
-               lastEnpassantSquare = enpassantSquare;
+               lastEnpassantSquare = currentBoard.getEnpassantSquare();
                //  Update enpassant square
                if (moveToMake[2] == DOUBLEMOVE) {
                     enpassantSquare = (moveToMake[0] + moveToMake[1]) / 2;
@@ -2594,18 +2594,18 @@ void main() {
                for (int i = 0; i < halfMoveCount; i++) {
                     bool sameState = false;
                     for (int j = 0; j < 120; j++) {
-                         if (savedBoard[i][j] != currentBoard[j]) {
+                         if (savedBoard[i].getSquare(j) != currentBoard.getSquare(j)) {
                               sameState = false;
                               break;
                          }
                     }
                     for (int j = 0; j < 4; j++) {
-                         if (savedCastling[i][j] != castlingCheck[j]) {
+                         if (savedBoard[i].getCastling(j) != currentBoard.getCastling(j)) {
                               sameState = false;
                               break;
                          }
                     }
-                    if (savedEnpassant[i] != enpassantSquare) {
+                    if (savedBoard[i].getEnpassantSquare() != currentBoard.getEnpassantSquare()) {
                          sameState = false;
                          break;
                     }

@@ -27,7 +27,7 @@ public:
      array<int, 120> getBoard() { return board; }
      int getSquare(int square) { return board.at(square); }
      array<bool, 4> getCastlingArray() { return castlingCheck; }
-     int getCastling(int index) { return castlingCheck.at(index); }
+     bool getCastling(int index) { return castlingCheck.at(index); }
      int getTurn() { return turn; }
      int getEnpassantSquare() { return enpassantSquare; }
      int getFiftyMoveCount() { return fiftyMoveCount; }
@@ -54,12 +54,12 @@ public:
 //  This function sets up currentboard[120] for the initial position of pieces.
 void board120Setup();
 //  receives a FEN string to setup board
-void FENboardSetup(std::string FEN);
-std::string boardToFEN(int board[120], int turn, bool castlingCheck[4], int enpassantSquare, int halfMoveClock, int moveNumber);
+void FENboardSetup(string FEN);
+string boardToFEN(Board board);
 //  This functions prints the board from the parameter.
-void printBoard(int board[120]);
+void printBoard(Board board);
 //  This functions prints simple version of the board from the parameter.
-void printSimpleBoard(int board[120]);
+void printSimpleBoard(Board board);
 //  Gets a piece and returns the color of the piece
 int checkColor(int pieceType);
 char numberToFile(int position);
@@ -91,7 +91,7 @@ int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], int bestMoves[3])
 
 
 /*                                   GAME CYCLE                               */
-bool checkGameEnd(int board[120]);
+bool checkGameEnd(Board board);
 //  Save Board state for threefold repetition check
 void saveCurrentState();
 
