@@ -82,16 +82,7 @@ void printMove(int move[3]);
 int boardEvaluation(Board board);
 //  Gets a position number and returns the row-reversed position number
 int reversePosition(int position);
-//  Gets position based on 64 and returns position based on 120
-int position64to120(int position64);
-//  Gets position based on 120 and returns position based on 64
-int position120to64(int position120);
 //  negaMax implemented for board evaluation
-int negaMax(int depth, int turn, bool castlingCheck[4]);
-//  miniMax implemented for board evaluation
-int blueValue(int depth, int turn, bool castlingCheck[4]);
-int redValue(int depth, int turn, bool castlingCheck[4]);
-//  negaMax implemented
 int negaMax(int depth, int turn, bool castlingCheck[4]);
 //  function to call negaMax. bestMoves is the output
 int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], int bestMoves[3]);

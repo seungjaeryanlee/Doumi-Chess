@@ -655,17 +655,6 @@ int reversePosition(int position) {
      int row = position / 10, column = position % 10;
      return (12 - row - 1) * 10 + column;
 }
-int position64to120(int position64) {
-     int row = position64 / 8, column = position64 % 8;
-
-     return (row + 2) * 10 + column + 1;
-
-}
-int position120to64(int position120) {
-     int row = position120 / 10 - 2, column = position120 % 10 - 1;
-
-     return row * 8 + column;
-}
 
 int negaMax(int depth, Board board) {
      if (depth == 0) {
@@ -1297,7 +1286,6 @@ void addPromotionMove(int initial, int terminal, int moveList[250][3], int *move
      addMove(initial, terminal, QUEEN_PROMOTION, moveList, moveCount);
 }
 
-//  TODO: Check if king attacking king is allowed (it shouldn't be)
 void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount) {
      *legalMoveCount = 0;
 
@@ -2033,10 +2021,6 @@ void main() {
      
      //  Initialize Board
      board120Setup();
-     //FENboardSetup("k7/8/p7/8/8/7P/8/7K w - - 0 1");
-     //FENboardSetup(currentBoard, "k7/pppppppp/8/8/8/8/8/R3K3 w Q - 0 1");
-     //FENboardSetup(currentBoard, "k7/8/8/8/8/8/8/5RRK w - - 0 1");
-     //  FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
  
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results
