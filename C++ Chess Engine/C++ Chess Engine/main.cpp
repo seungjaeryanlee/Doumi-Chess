@@ -563,7 +563,7 @@ int checkColor(int pieceType) {
 char numberToFile(int position) {
      char file = 'a' + position % 10 - 1;
      return file;
-}
+}    
 int numberToRank(int position) {
      int rank = 10 - position / 10;
      return rank;
@@ -1839,7 +1839,7 @@ u64 divide2(int depth, int maxDepth, Board board, bool showOutput) {
      output2.close();
 }
 
-int makeMove(Board board, int move[3]) {
+int makeMove(Board &board, int move[3]) {
      int terminalValue;
      int initial = move[0], terminal = move[1], moveType = move[2];
      if (moveType == NORMAL) {
@@ -1951,7 +1951,7 @@ int makeMove(Board board, int move[3]) {
           return 0;
      }
 }
-void undoMove(Board board, int move[3], int terminalValue) {
+void undoMove(Board &board, int move[3], int terminalValue) {
      int initial = move[0], terminal = move[1], moveType = move[2];
      if (moveType == NORMAL) {
           board.setSquare(initial, board.getSquare(terminal));
