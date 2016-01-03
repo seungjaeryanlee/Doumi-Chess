@@ -5,10 +5,31 @@
 #include <Windows.h>
 #include <fstream>
 #include <climits>
+#include <array>
 #include "protos.h"
 #include "defs.h"
 
 using namespace std;
+
+class Board {
+private:
+     array<int, 120> board;
+     array<bool, 4> castlingCheck;
+     int turn;
+     int enpassantSquare;
+public:
+     // Sets
+     void setBoard(array<int, 120> board()) {}
+     void setCastlingCheck(array<int, 4> castlingCheck()) {}
+     void setTurn(int turn) {}
+     void setEnpassantSquare(int enpassantSquare) {}
+
+     //  Accessors
+     array<int, 120> getBoard() { return board; }
+     array<bool, 4> getCastlingCheck() { return castlingCheck; }
+     int getTurn() { return turn; }
+     int getEnpassantSquare() { return enpassantSquare; }
+};
 
 /******************************************************************************/
 /*                                 GLOBAL VARIABLE                            */
