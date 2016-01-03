@@ -198,9 +198,7 @@ int fiftyMoveCount = 0;
 //  Records the result of the game
 int gameResult = NOT_FINISHED;
 //  Stores Board and Board States for threefold repetition
-int savedBoard[MAX_MOVENUMBER + 1][120];
-bool savedCastling[MAX_MOVENUMBER + 1][4];
-int savedEnpassant[MAX_MOVENUMBER + 1];
+Board savedBoard[MAX_MOVENUMBER + 1];
 int repetitionCount[MAX_MOVENUMBER + 1];
 //  The castling states of the current Board
 bool castlingCheck[4];
@@ -1007,13 +1005,14 @@ bool checkGameEnd(int board[120]) {
 }
 void saveCurrentState() {
      for (int i = 0; i < 120; i++) {
-          savedBoard[halfMoveCount][i] = currentBoard[i];
+          savedBoard[halfMoveCount].setSquare(i, currentBoard[i]);
      }
      for (int i = 0; i < 4; i++) {
-          savedCastling[halfMoveCount][i] = castlingCheck[i];
+          savedBoard[halfMoveCount].setCastling(i, castlingCheck[i]);
      }
-     savedEnpassant[halfMoveCount] = enpassantSquare;
+     savedBoard[halfMoveCount].setEnpassantSquare(enpassantSquare);
 
+     //  Better place might be elsewhere
      halfMoveCount++;
 }
 
