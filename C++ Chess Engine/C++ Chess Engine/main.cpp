@@ -23,7 +23,9 @@ private:
 public:
      // Sets
      void setBoard(array<int, 120> b) { board = b; }
-     void setCastlingCheck(array<bool, 4> cc) { castlingCheck = cc; }
+     void setSquare(int square, int value) { board.at(square) = value; }
+     void setCastlingArray(array<bool, 4> cc) { castlingCheck = cc; }
+     void setCastling(int index, bool value) { castlingCheck.at(index) = value; }
      void setTurn(int t) { turn = t; }
      void setEnpassantSquare(int e) { enpassantSquare = e; }
      void setFiftyMoveCount(int f) { fiftyMoveCount = f; }
@@ -31,7 +33,9 @@ public:
 
      //  Accessors
      array<int, 120> getBoard() { return board; }
-     array<bool, 4> getCastlingCheck() { return castlingCheck; }
+     int getSquare(int square) { return board.at(square); }
+     array<bool, 4> getCastlingArray() { return castlingCheck; }
+     int getCastling(int index) { return castlingCheck.at(index); }
      int getTurn() { return turn; }
      int getEnpassantSquare() { return enpassantSquare; }
      int getFiftyMoveCount() { return fiftyMoveCount; }
@@ -1002,7 +1006,7 @@ bool checkGameEnd(int board[120]) {
      return !(whiteKing && blackKing);
 }
 void saveCurrentState() {
-          for (int i = 0; i < 120; i++) {
+     for (int i = 0; i < 120; i++) {
           savedBoard[halfMoveCount][i] = currentBoard[i];
      }
      for (int i = 0; i < 4; i++) {
