@@ -632,60 +632,60 @@ int boardEvaluation(int board[120]) {
           switch (board[i]) {
           case WHITEPAWN:
                score += PAWNVALUE;
-               score += PAWN_PCSQTable[position120to64(i)];
+               score += PAWN_PCSQTable.at(i);
                break;
           case WHITEKNIGHT:
                score += KNIGHTVALUE;
-               score += KNIGHT_PCSQTable[position120to64(i)];
+               score += KNIGHT_PCSQTable.at(i);
                break;
           case WHITEBISHOP:
                score += BISHOPVALUE;
-               score += BISHOP_PCSQTable[position120to64(i)];
+               score += BISHOP_PCSQTable.at(i);
                break;
           case WHITEROOK:
                score += ROOKVALUE;
-               score += ROOK_PCSQTable[position120to64(i)];
+               score += ROOK_PCSQTable.at(i);
                break;
           case WHITEQUEEN:
                score += QUEENVALUE;
-               score += QUEEN_PCSQTable[position120to64(i)];
+               score += QUEEN_PCSQTable.at(i);
                break;
           case WHITEKING:
                score += KINGVALUE;
                if (endGame) {
-                    score += KING_PCSQTable_ENDGAME[position120to64(i)];
+                    score += KING_PCSQTable_ENDGAME.at(i);
                }
                else {
-                    score += KING_PCSQTable[position120to64(i)];
+                    score += KING_PCSQTable.at(i);
                }
                break;
           case BLACKPAWN:
                score -= PAWNVALUE;
-               score -= PAWN_PCSQTable[position120to64(reversePosition(i))];
+               score -= PAWN_PCSQTable.at(reversePosition(i));
                break;
           case BLACKKNIGHT:
                score -= KNIGHTVALUE;
-               score -= KNIGHT_PCSQTable[position120to64(reversePosition(i))];
+               score -= KNIGHT_PCSQTable.at(reversePosition(i));
                break;
           case BLACKBISHOP:
                score -= BISHOPVALUE;
-               score -= BISHOP_PCSQTable[position120to64(reversePosition(i))];
+               score -= BISHOP_PCSQTable.at(reversePosition(i));
                break;
           case BLACKROOK:
                score -= ROOKVALUE;
-               score -= ROOK_PCSQTable[position120to64(reversePosition(i))];
+               score -= ROOK_PCSQTable.at(reversePosition(i));
                break;
           case BLACKQUEEN:
                score -= QUEENVALUE;
-               score -= QUEEN_PCSQTable[position120to64(reversePosition(i))];
+               score -= QUEEN_PCSQTable.at(reversePosition(i));
                break;
           case BLACKKING:
                score -= KINGVALUE;
                if (endGame) {
-                    score -= KING_PCSQTable_ENDGAME[position120to64(reversePosition(i))];
+                    score -= KING_PCSQTable_ENDGAME.at(reversePosition(i));
                }
                else {
-                    score -= KING_PCSQTable[position120to64(reversePosition(i))];
+                    score -= KING_PCSQTable.at(reversePosition(i));
                }
                break;
           }
@@ -2228,6 +2228,7 @@ void main() {
                     printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
                     printf("A: Print Possible Moves\n");
                     printf("B: Efficiency Test of Alphabeta Pruning\n");
+                    printf("C: Evaluate Board\n");
                     printf("--------------------------------------------------\n");
                     printf("Please choose command: ");
                     std::getline(cin, userCommand);
@@ -2236,7 +2237,7 @@ void main() {
                          printf("You must enter a number!\n");
                          continue;
                     }
-                    if ('A' <= userCommand.at(0) && userCommand.at(0) <= 'B') {
+                    if ('A' <= userCommand.at(0) && userCommand.at(0) <= 'C') {
                          commandType = userCommand.at(0) - 'A' + 10;
                          correctInput = true;
                          break;
@@ -2452,6 +2453,10 @@ void main() {
                     printf("Alphabeta Value: %d\n", alphabetaValue);
                     std::cout << "Alphabeta timer : " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
 
+               }
+               else if (commandType == EVALUATE_BOARD) {
+                    printf("Current Board Evaluation: %d\n", boardEvaluation(currentBoard));
+                    continue;
                }
           }
           else if (currentTurn == -userColor || spectate == true) {
