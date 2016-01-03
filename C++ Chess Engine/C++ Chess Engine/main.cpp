@@ -1863,110 +1863,110 @@ u64 divide2(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showO
      output2.close();
 }
 
-int makeMove(int board[120], int move[3]) {
+int makeMove(Board board, int move[3]) {
      int terminalValue;
      int initial = move[0], terminal = move[1], moveType = move[2];
      if (moveType == NORMAL) {
-          terminalValue = board[terminal];
-          board[terminal] = board[initial];
-          board[initial] = EMPTYSQUARE;
+          terminalValue = board.getSquare(terminal);
+          board.setSquare(terminal, board.getSquare(initial));
+          board.setSquare(initial, EMPTYSQUARE);
           return terminalValue;
      }
      if (moveType == DOUBLEMOVE) {
-          board[terminal] = board[initial];
-          board[initial] = EMPTYSQUARE;
+          board.setSquare(terminal, board.getSquare(initial));
+          board.setSquare(initial, EMPTYSQUARE);
           //  terminalValue is actually enpassantSquare
           return (terminal+initial)/2;
      }
      else if (moveType == QUEENSIDE_CASTLING) {
           //  move king
-          board[terminal] = board[initial];
-          board[initial] = EMPTYSQUARE;
+          board.setSquare(terminal, board.getSquare(initial));
+          board.setSquare(initial, EMPTYSQUARE);
           //  move rook
-          board[terminal + COLUMN] = board[initial - 4 * COLUMN];
-          board[initial - 4 * COLUMN] = EMPTYSQUARE;
+          board.setSquare(terminal + COLUMN, board.getSquare(initial - 4 * COLUMN));
+          board.setSquare(initial - 4 * COLUMN, EMPTYSQUARE);
           //  castling does not involve capture
           return 0;
      }
      else if (moveType == KINGSIDE_CASTLING) {
           //  move king
-          board[terminal] = board[initial];
-          board[initial] = EMPTYSQUARE;
+          board.setSquare(terminal, board.getSquare(initial));
+          board.setSquare(initial, EMPTYSQUARE);
           //  move rook
-          board[terminal - COLUMN] = board[terminal + COLUMN];
-          board[terminal + COLUMN] = EMPTYSQUARE;
+          board.setSquare(terminal - COLUMN, board.getSquare(terminal + COLUMN));
+          board.setSquare(terminal + COLUMN, EMPTYSQUARE);
           //  castling does not involve capture
           return 0;
      }
      else if (moveType == KNIGHT_PROMOTION) {
-          terminalValue = board[terminal];
+          terminalValue = board.getSquare(terminal);
 
           //  white turn
-          if (board[initial] == WHITEPAWN) {
-               board[terminal] = WHITEKNIGHT;
+          if (board.getSquare(initial) == WHITEPAWN) {
+               board.setSquare(terminal, WHITEKNIGHT);
           }
           //  black turn
           else {
-               board[terminal] = BLACKKNIGHT;
+               board.setSquare(terminal, BLACKKNIGHT);
           }
-          board[initial] = EMPTYSQUARE;
+          board.setSquare(initial, EMPTYSQUARE);
           return terminalValue;
      }
      else if (moveType == BISHOP_PROMOTION) {
-          terminalValue = board[terminal];
+          terminalValue = board.getSquare(terminal);
 
           //  white turn
-          if (board[initial] == WHITEPAWN) {
-               board[terminal] = WHITEBISHOP;
+          if (board.getSquare(initial) == WHITEPAWN) {
+               board.setSquare(terminal, WHITEBISHOP);
           }
           //  black turn
           else {
-               board[terminal] = BLACKBISHOP;
+               board.setSquare(terminal, BLACKBISHOP);
           }
-          board[initial] = EMPTYSQUARE;
+          board.setSquare(initial, EMPTYSQUARE);
           return terminalValue;
      }
      else if (moveType == ROOK_PROMOTION) {
-          terminalValue = board[terminal];
+          terminalValue = board.getSquare(terminal);
 
           //  white turn
-          if (board[initial] == WHITEPAWN) {
-               board[terminal] = WHITEROOK;
+          if (board.getSquare(initial) == WHITEPAWN) {
+               board.setSquare(terminal, WHITEROOK);
           }
           //  black turn
           else {
-               board[terminal] = BLACKROOK;
+               board.setSquare(terminal, BLACKROOK);
           }
-          board[initial] = EMPTYSQUARE;
+          board.setSquare(initial, EMPTYSQUARE);
           return terminalValue;
      }
      else if (moveType == QUEEN_PROMOTION) {
-          terminalValue = board[terminal];
+          terminalValue = board.getSquare(terminal);
 
           //  white turn
-          if (board[initial] == WHITEPAWN) {
-               board[terminal] = WHITEQUEEN;
+          if (board.getSquare(initial) == WHITEPAWN) {
+               board.setSquare(terminal, WHITEQUEEN);
           }
           //  black turn
           else {
-               board[terminal] = BLACKQUEEN;
+               board.setSquare(terminal, BLACKQUEEN);
           }
-          board[initial] = EMPTYSQUARE;
+          board.setSquare(initial, EMPTYSQUARE);
           return terminalValue;
      }
      else if (moveType == ENPASSANT) {
           //  White turn
           if (board[initial] == WHITEPAWN) {
-               board[terminal] = board[initial];
-               board[initial] = EMPTYSQUARE;
-               board[terminal + ROW] = EMPTYSQUARE;
+               board.setSquare(terminal, board.getSquare(initial));
+               board.setSquare(initial, EMPTYSQUARE);
+               board.setSquare(terminal + ROW, EMPTYSQUARE);
                return BLACKPAWN;
           }
           //  Black turn
           else {
-               board[terminal] = board[initial];
-               board[initial] = EMPTYSQUARE;
-               board[terminal - ROW] = EMPTYSQUARE;
+               board.setSquare(terminal, board.getSquare(initial));
+               board.setSquare(initial, EMPTYSQUARE);
+               board.setSquare(terminal - ROW, EMPTYSQUARE);
                return WHITEPAWN;
           }
      }
