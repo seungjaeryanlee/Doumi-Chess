@@ -217,7 +217,7 @@ bool spectate = false;
 /******************************************************************************/
 
 /*                             BOARD SETUP FUNCTIONS                          */
-// TODO: Check board120Setup, FENboardSetup
+// TODO: Check board120Setup, FENboardSetup, moveGen, squareAttackCheck
 void board120Setup() {
      currentBoard.setTurn(WHITE);
      currentBoard.setEnpassantSquare(0);
@@ -1023,56 +1023,56 @@ void saveCurrentState() {
 }
 
 /*                           MOVE GENERATION FUNCTIONS                        */
-void moveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare, bool castlingCheck[4]) {
+void moveGeneration(Board board, int moveList[250][3], int *moveCount) {
      *moveCount = 0;
 
-     castlingMoveGeneration(board, turn, moveList, moveCount, castlingCheck);
-     enpassantMoveGeneration(board, turn, moveList, moveCount, enpassantSquare);
+     castlingMoveGeneration(board, moveList, moveCount);
+     enpassantMoveGeneration(board, moveList, moveCount);
 
-     if (turn == WHITE) {
+     if (board.getTurn() == WHITE) {
           for (int i = 0; i < 120; i++) {
-               switch (board[i]) {
+               switch (board.getSquare(i)) {
                case WHITEPAWN:
-                    pawnMoveGeneration(board, turn, i, moveList, moveCount);
+                    pawnMoveGeneration(board, i, moveList, moveCount);
                     break;
                case WHITEKNIGHT:
-                    knightMoveGeneration(board, turn, i, moveList, moveCount);
+                    knightMoveGeneration(board, i, moveList, moveCount);
                     break;
                case WHITEBISHOP:
-                    bishopMoveGeneration(board, turn, i, moveList, moveCount);
+                    bishopMoveGeneration(board, i, moveList, moveCount);
                     break;
                case WHITEROOK:
-                    rookMoveGeneration(board, turn, i, moveList, moveCount);
+                    rookMoveGeneration(board, i, moveList, moveCount);
                     break;
                case WHITEQUEEN:
-                    queenMoveGeneration(board, turn, i, moveList, moveCount);
+                    queenMoveGeneration(board, i, moveList, moveCount);
                     break;
                case WHITEKING:
-                    kingMoveGeneration(board, turn, i, moveList, moveCount);
+                    kingMoveGeneration(board, i, moveList, moveCount);
                     break;
                }
           }
      }
-     if (turn == BLACK) {
+     if (board.getTurn() == BLACK) {
           for (int i = 0; i < 120; i++) {
-               switch (board[i]) {
+               switch (board.getSquare(i)) {
                case BLACKPAWN:
-                    pawnMoveGeneration(board, turn, i, moveList, moveCount);
+                    pawnMoveGeneration(board,i, moveList, moveCount);
                     break;
                case BLACKKNIGHT:
-                    knightMoveGeneration(board, turn, i, moveList, moveCount);
+                    knightMoveGeneration(board, i, moveList, moveCount);
                     break;
                case BLACKBISHOP:
-                    bishopMoveGeneration(board, turn, i, moveList, moveCount);
+                    bishopMoveGeneration(board, i, moveList, moveCount);
                     break;
                case BLACKROOK:
-                    rookMoveGeneration(board, turn, i, moveList, moveCount);
+                    rookMoveGeneration(board, i, moveList, moveCount);
                     break;
                case BLACKQUEEN:
-                    queenMoveGeneration(board, turn, i, moveList, moveCount);
+                    queenMoveGeneration(board, i, moveList, moveCount);
                     break;
                case BLACKKING:
-                    kingMoveGeneration(board, turn, i, moveList, moveCount);
+                    kingMoveGeneration(board, i, moveList, moveCount);
                     break;
                }
           }
