@@ -1130,37 +1130,39 @@ void pawnMoveGeneration(Board board, int position, int moveList[250][3], int *mo
           }
      }
 }
-void knightMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
-     if (checkColor(board[position + ROW + 2 * COLUMN]) == -turn ||
-          board[position + ROW + 2 * COLUMN] == EMPTYSQUARE) {
+void knightMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount) {
+     int turn = board.getTurn();
+
+     if (checkColor(board.getSquare(position + ROW + 2 * COLUMN)) == -turn ||
+          board.getSquare(position + ROW + 2 * COLUMN) == EMPTYSQUARE) {
           addMove(position, position + ROW + 2 * COLUMN, NORMAL, moveList, moveCount);
      }
-     if (checkColor(board[position + ROW - 2 * COLUMN]) == -turn ||
-          board[position + ROW - 2 * COLUMN] == EMPTYSQUARE) {
+     if (checkColor(board.getSquare(position + ROW - 2 * COLUMN)) == -turn ||
+          board.getSquare(position + ROW - 2 * COLUMN) == EMPTYSQUARE) {
           addMove(position, position + ROW - 2 * COLUMN, NORMAL, moveList, moveCount);
      }
-     if (checkColor(board[position - ROW + 2 * COLUMN]) == -turn ||
-          board[position - ROW + 2 * COLUMN] == EMPTYSQUARE) {
+     if (checkColor(board.getSquare(position - ROW + 2 * COLUMN)) == -turn ||
+          board.getSquare(position - ROW + 2 * COLUMN) == EMPTYSQUARE) {
           addMove(position, position - ROW + 2 * COLUMN, NORMAL, moveList, moveCount);
      }
-     if (checkColor(board[position - ROW - 2 * COLUMN]) == -turn ||
-          board[position - ROW - 2 * COLUMN] == EMPTYSQUARE) {
+     if (checkColor(board.getSquare(position - ROW - 2 * COLUMN)) == -turn ||
+          board.getSquare(position - ROW - 2 * COLUMN) == EMPTYSQUARE) {
           addMove(position, position - ROW - 2 * COLUMN, NORMAL, moveList, moveCount);
      }
-     if (checkColor(board[position + 2 * ROW + COLUMN]) == -turn ||
-          board[position + 2 * ROW + COLUMN] == EMPTYSQUARE) {
+     if (checkColor(board.getSquare(position + 2 * ROW + COLUMN)) == -turn ||
+          board.getSquare(position + 2 * ROW + COLUMN) == EMPTYSQUARE) {
           addMove(position, position + 2 * ROW + COLUMN, NORMAL, moveList, moveCount);
      }
-     if (checkColor(board[position + 2 * ROW - COLUMN]) == -turn ||
-          board[position + 2 * ROW - COLUMN] == EMPTYSQUARE) {
+     if (checkColor(board.getSquare(position + 2 * ROW - COLUMN)) == -turn ||
+          board.getSquare(position + 2 * ROW - COLUMN) == EMPTYSQUARE) {
           addMove(position, position + 2 * ROW - COLUMN, NORMAL, moveList, moveCount);
      }
-     if (checkColor(board[position - 2 * ROW + COLUMN]) == -turn ||
-          board[position - 2 * ROW + COLUMN] == EMPTYSQUARE) {
+     if (checkColor(board.getSquare(position - 2 * ROW + COLUMN)) == -turn ||
+          board.getSquare(position - 2 * ROW + COLUMN) == EMPTYSQUARE) {
           addMove(position, position - 2 * ROW + COLUMN, NORMAL, moveList, moveCount);
      }
-     if (checkColor(board[position - 2 * ROW - COLUMN]) == -turn ||
-          board[position - 2 * ROW - COLUMN] == EMPTYSQUARE) {
+     if (checkColor(board.getSquare(position - 2 * ROW - COLUMN)) == -turn ||
+          board.getSquare(position - 2 * ROW - COLUMN) == EMPTYSQUARE) {
           addMove(position, position - 2 * ROW - COLUMN, NORMAL, moveList, moveCount);
      }
 }
