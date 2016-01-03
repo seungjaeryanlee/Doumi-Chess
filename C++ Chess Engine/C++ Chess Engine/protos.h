@@ -1,6 +1,55 @@
 #pragma once
 #include "defs.h"
 
+using namespace std;
+
+class Board {
+private:
+     array<int, 120> board;
+     array<bool, 4> castlingCheck;
+     int turn;
+     int enpassantSquare;
+     int fiftyMoveCount;
+     int moveNumber;
+
+public:
+     // Sets
+     void setBoard(array<int, 120> b) { board = b; }
+     void setSquare(int square, int value) { board.at(square) = value; }
+     void setCastlingArray(array<bool, 4> cc) { castlingCheck = cc; }
+     void setCastling(int index, bool value) { castlingCheck.at(index) = value; }
+     void setTurn(int t) { turn = t; }
+     void setEnpassantSquare(int e) { enpassantSquare = e; }
+     void setFiftyMoveCount(int f) { fiftyMoveCount = f; }
+     void setMoveNumber(int m) { moveNumber = m; }
+
+     //  Accessors
+     array<int, 120> getBoard() { return board; }
+     int getSquare(int square) { return board.at(square); }
+     array<bool, 4> getCastlingArray() { return castlingCheck; }
+     int getCastling(int index) { return castlingCheck.at(index); }
+     int getTurn() { return turn; }
+     int getEnpassantSquare() { return enpassantSquare; }
+     int getFiftyMoveCount() { return fiftyMoveCount; }
+     int getMoveNumber() { return moveNumber; }
+};
+class Move {
+private:
+     int initialSquare;
+     int terminalSquare;
+     int moveType;
+public:
+     // Sets
+     void setInitial(int i) { initialSquare = i; }
+     void setTerminal(int t) { terminalSquare = t; }
+     void setType(int t) { moveType = t; }
+     // Accessors
+     int getInitial() { return initialSquare; }
+     int getTerminal() { return terminalSquare; }
+     int getType() { return moveType; }
+
+};
+
 /*                                  BOARD SETUP                               */
 //  This function sets up currentboard[120] for the initial position of pieces.
 void board120Setup();
