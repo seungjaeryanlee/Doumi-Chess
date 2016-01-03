@@ -961,11 +961,12 @@ bool checkGameEnd(Board board) {
      return !(whiteKing && blackKing);
 }
 void saveCurrentState() {
+     // TODO: Can it be changed to savedBoard[halfMoveCount] = currentBoard?
      for (int i = 0; i < 120; i++) {
-          savedBoard[halfMoveCount].setSquare(i, currentBoard[i]);
+          savedBoard[halfMoveCount].setSquare(i, currentBoard.getSquare(i));
      }
      for (int i = 0; i < 4; i++) {
-          savedBoard[halfMoveCount].setCastling(i, castlingCheck[i]);
+          savedBoard[halfMoveCount].setCastling(i, currentBoard.getCastling(i));
      }
      savedBoard[halfMoveCount].setEnpassantSquare(enpassantSquare);
 
@@ -1317,7 +1318,7 @@ void promotionMoveGeneration(Board board, int position, int moveList[250][3], in
      }
 }
 void enpassantMoveGeneration(Board board, int moveList[250][3], int *moveCount) {
-     if (board.getEnpassantSquare == 0) { return; }
+     if (board.getEnpassantSquare() == 0) { return; }
 
      if (board.getTurn() == WHITE) {
           if (board.getSquare(enpassantSquare + ROW + COLUMN) == WHITEPAWN) {
@@ -1951,7 +1952,7 @@ int makeMove(Board board, int move[3]) {
      }
      else if (moveType == ENPASSANT) {
           //  White turn
-          if (board[initial] == WHITEPAWN) {
+          if (board.getSquare(initial) == WHITEPAWN) {
                board.setSquare(terminal, board.getSquare(initial));
                board.setSquare(initial, EMPTYSQUARE);
                board.setSquare(terminal + ROW, EMPTYSQUARE);

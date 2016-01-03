@@ -113,8 +113,8 @@ void enpassantMoveGeneration(Board board, int moveList[250][3], int *moveCount);
 void addMove(int initial, int terminal, int moveType, int moveList[250][3], int *moveCount);
 void addPromotionMove(int initial, int terminal, int moveList[250][3], int *moveCount);
 
-void legalMoves(int board[120], int turn, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount);
-bool squareAttackCheck(int board[120], int position, int turn);
+void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount);
+bool squareAttackCheck(Board board, int position);
 
 
 
@@ -123,8 +123,8 @@ bool squareAttackCheck(int board[120], int position, int turn);
 /*                                   RECURSION                                */
 u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOutput);
 u64 divide2(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOutput);
-int makeMove(int board[120], int move[3]);
-void undoMove(int board[120], int move[3], int terminalValue);
+int makeMove(Board board, int move[3]);
+void undoMove(Board board, int move[3], int terminalValue);
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex);
 void stopTimer(LARGE_INTEGER *endTime, int timerIndex);
 void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex);
