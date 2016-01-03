@@ -23,7 +23,7 @@ void printMove(int move[3]);
 
 /*                                BOARD EVALUATION                            */
 //  Returns evaluation score based on parameter board given.
-int boardEvaluation(int board[120]);
+int boardEvaluation(Board board);
 //  Gets a position number and returns the row-reversed position number
 int reversePosition(int position);
 //  Gets position based on 64 and returns position based on 120
@@ -49,17 +49,17 @@ void saveCurrentState();
 
 
 /*                                MOVE GENERATION                             */
-void moveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare, bool castlingCheck[4]);
-void pawnMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount);
-void knightMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount);
-void bishopMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount);
-void rookMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount);
-void queenMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount);
-void kingMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount);
+void moveGeneration(Board board, int moveList[250][3], int *moveCount, int enpassantSquare);
+void pawnMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
+void knightMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
+void bishopMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
+void rookMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
+void queenMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
+void kingMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
 
-void castlingMoveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, bool castlingCheck[4]);
-void promotionMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount);
-void enpassantMoveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare);
+void castlingMoveGeneration(Board board, int moveList[250][3], int *moveCount);
+void promotionMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
+void enpassantMoveGeneration(Board board, int moveList[250][3], int *moveCount);
 
 void addMove(int initial, int terminal, int moveType, int moveList[250][3], int *moveCount);
 void addPromotionMove(int initial, int terminal, int moveList[250][3], int *moveCount);

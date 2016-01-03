@@ -217,7 +217,7 @@ bool spectate = false;
 /******************************************************************************/
 
 /*                             BOARD SETUP FUNCTIONS                          */
-// TODO: Check board120Setup, FENboardSetup, moveGen, squareAttackCheck
+// TODO: Check board120Setup, FENboardSetup, boardEval, moveGen, squareAttackCheck
 void board120Setup() {
      currentBoard.setTurn(WHITE);
      currentBoard.setEnpassantSquare(0);
