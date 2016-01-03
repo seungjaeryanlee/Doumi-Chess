@@ -1351,15 +1351,15 @@ void addPromotionMove(int initial, int terminal, int moveList[250][3], int *move
 }
 
 //  TODO: Check if king attacking king is allowed (it shouldn't be)
-void legalMoves(int board[120], int turn, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount) {
+void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount) {
      *legalMoveCount = 0;
 
      //  find king position
      int kingPosition = 0, changedKingPosition = 0;
      int terminalValue;
      for (int i = 0; i < 120; i++) {
-          if (turn == WHITE && board[i] == WHITEKING ||
-               turn == BLACK && board[i] == BLACKKING) {
+          if (board.getTurn() == WHITE && board.getSquare(i) == WHITEKING ||
+               board.getTurn() == BLACK && board.getSquare(i) == BLACKKING) {
                kingPosition = i;
                break;
           }
@@ -1367,7 +1367,7 @@ void legalMoves(int board[120], int turn, int moveList[250][3], int moveCount, i
 
      for (int i = 0; i < moveCount; i++) {
           //  check if king will be moved
-          if (board[moveList[i][0]] == WHITEKING || board[moveList[i][0]] == BLACKKING) {
+          if (board.getSquare(moveList[i][0]) == WHITEKING || board.getSquare(moveList[i][0]) == BLACKKING) {
                if (moveList[i][2] == NORMAL) {
                     changedKingPosition = moveList[i][1];
                }
@@ -1385,7 +1385,7 @@ void legalMoves(int board[120], int turn, int moveList[250][3], int moveCount, i
           terminalValue = makeMove(board, moveList[i]);
 
           //  if king is safe
-          if (!squareAttackCheck(board, changedKingPosition, turn)) {
+          if (!squareAttackCheck(board, changedKingPosition)) {
                legalMoveList[*legalMoveCount][0] = moveList[i][0];
                legalMoveList[*legalMoveCount][1] = moveList[i][1];
                legalMoveList[*legalMoveCount][2] = moveList[i][2];
