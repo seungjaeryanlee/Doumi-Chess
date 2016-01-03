@@ -137,8 +137,6 @@ int depthLegalMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT][3];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 //  added for time performance check
 LARGE_INTEGER frequency, beginTime, endTime;
-//  for storing best moves
-int depthBestMoves[MAXIMUM_DEPTH + 1][3];
 //  Records the result of the game
 int gameResult = NOT_FINISHED;
 //  Stores Board and Board States for threefold repetition
@@ -2388,30 +2386,15 @@ void main() {
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
                
                saveCurrentState();
-               
-               // TODO: Check if this command can disappear now
-               // copy ep Square: needs to be done before any recursion
-               //depthEnpassantSquare[EVAL_DEPTH] = currentBoard.getEnpassantSquare();
-
-               //printf("Current Board Evaluation: %d\n", boardEvaluation(currentBoard));
-               //int negaMaxMove[3];
-               //int negamaxValue = rootNegaMax(EVAL_DEPTH, currentTurn, castlingCheck, negaMaxMove);
-               //printf("Negamax Value: %d\n", negamaxValue);
-
 
                int alphabetaMove[3];
                int alphabetaValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, alphabetaMove);
                printf("Alphabeta Value: %d\n", alphabetaValue);
-
-               // Print best move
-               //printf("NegaMax Move: ");
-               //printMove(negaMaxMove);
                printf("Alphabeta Move: ");
                printMove(alphabetaMove);
 
                int moveToMake[3];
                for (int i = 0; i < 3; i++) {
-                    //moveToMake[i] = negaMaxMove[i];
                     moveToMake[i] = alphabetaMove[i];
                }
 
@@ -2480,52 +2463,6 @@ void main() {
                     printf("%d: ", currentBoard.getMoveNumber());
                     printMove(moveToMake);
                }
-
-               //  Output using depthBestMoves
-               /*
-                              printf("Current Board Evaluation: %d\n", boardEvaluation(currentBoard));
-               int minimaxValue = blueValue(EVAL_DEPTH, currentTurn, castlingCheck);
-               // Print best moves and result
-               for (int i = EVAL_DEPTH; i > 0; i--) {
-                    printf("%d: %c%d %c%d (%d)\n", EVAL_DEPTH + 1 - i, numberToFile(depthBestMoves[i][0]), numberToRank(depthBestMoves[i][0]), numberToFile(depthBestMoves[i][1]), numberToRank(depthBestMoves[i][1]), depthBestMoves[i][2]);
-               }
-
-               //  Increment or reset Fifty move count
-               //  TODO: Add 50 Move Rule option in move generation / selection
-               if (currentBoard[depthBestMoves[EVAL_DEPTH][1]] == EMPTYSQUARE
-                    && currentBoard[depthBestMoves[EVAL_DEPTH][0]] != WHITEPAWN
-                    && currentBoard[depthBestMoves[EVAL_DEPTH][0]] != BLACKPAWN) {
-                    fiftyMoveCount++;
-               }
-               else { fiftyMoveCount = 0; }
-
-               //  Make best move and print board
-               lastTerminalValue = makeMove(currentBoard, depthBestMoves[EVAL_DEPTH]);
-               //  Save move for undoMove
-               for (int i = 0; i < 3; i++) {
-                    lastMove[i] = depthBestMoves[EVAL_DEPTH][i];
-               }
-               logtext << moveNumber << ": " << numberToFile(depthBestMoves[EVAL_DEPTH][0]) << numberToRank(depthBestMoves[EVAL_DEPTH][0]) << " " << numberToFile(depthBestMoves[EVAL_DEPTH][1]) << numberToRank(depthBestMoves[EVAL_DEPTH][1]) << endl;
-
-               printSimpleBoard(currentBoard);
-
-               //  Update enpassant square
-               if (depthBestMoves[EVAL_DEPTH][2] == DOUBLEMOVE) {
-                    enpassantSquare = (depthBestMoves[EVAL_DEPTH][0] + depthBestMoves[EVAL_DEPTH][1]) / 2;
-               }
-               else { enpassantSquare = 0; }
-
-               //  Print out move and move number
-               if (depthBestMoves[EVAL_DEPTH][2] == KINGSIDE_CASTLING) {
-                    printf("%d: O-O\n", moveNumber);
-               }
-               else if (depthBestMoves[EVAL_DEPTH][2] == QUEENSIDE_CASTLING) {
-                    printf("%d: O-O-O\n", moveNumber);
-               }
-               else {
-                    printf("%d: %c%d %c%d (%d)\n", moveNumber, numberToFile(depthBestMoves[EVAL_DEPTH][0]), numberToRank(depthBestMoves[EVAL_DEPTH][0]), numberToFile(depthBestMoves[EVAL_DEPTH][1]), numberToRank(depthBestMoves[EVAL_DEPTH][1]), depthBestMoves[EVAL_DEPTH][2]);
-               }
-               */
 
                //  Increment move
                if (currentBoard.getTurn() == WHITE) { currentBoard.moveNumberIncrement(); }
