@@ -154,7 +154,6 @@ bool spectate = false;
 /******************************************************************************/
 
 /*                             BOARD SETUP FUNCTIONS                          */
-// TODO: Check boardEval, squareAttackCheck
 void board120Setup() {
      currentBoard.setTurn(WHITE);
      currentBoard.setEnpassantSquare(0);
@@ -894,15 +893,7 @@ bool checkGameEnd(Board board) {
      return !(whiteKing && blackKing);
 }
 void saveCurrentState() {
-     // TODO: Can it be changed to savedBoard[halfMoveCount] = currentBoard?
-     for (int i = 0; i < 120; i++) {
-          savedBoard[halfMoveCount].setSquare(i, currentBoard.getSquare(i));
-     }
-     for (int i = 0; i < 4; i++) {
-          savedBoard[halfMoveCount].setCastling(i, currentBoard.getCastling(i));
-     }
-     savedBoard[halfMoveCount].setEnpassantSquare(currentBoard.getEnpassantSquare());
-
+     savedBoard[halfMoveCount] = currentBoard;
      //  TODO: Check repetition here
 
      //  Better place might be elsewhere
@@ -1486,7 +1477,6 @@ bool squareAttackCheck(Board board, int position) {
           //  (5. queen: added to bishop and rook)
 
           //  6. king: is it needed?
-          // TODO: Check for king as well
           if (board.getSquare(position + 1) == BLACKKING ||
                board.getSquare(position - 1) == BLACKKING ||
                board.getSquare(position + 11) == BLACKKING || 
@@ -1652,7 +1642,6 @@ bool squareAttackCheck(Board board, int position) {
           //  (5. queen: added to bishop and rook)
 
           //  6. king: is it needed?
-          // TODO: Check for king as well
           if (board.getSquare(position + 1) == WHITEKING ||
                board.getSquare(position - 1) == WHITEKING ||
                board.getSquare(position + 11) == WHITEKING ||
