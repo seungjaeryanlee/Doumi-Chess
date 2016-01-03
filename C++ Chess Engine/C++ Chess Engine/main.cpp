@@ -935,12 +935,8 @@ void saveCurrentState() {
 }
 
 /*                           MOVE GENERATION FUNCTIONS                        */
-void moveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare, bool castlingCheck[4], int fiftyMoveCount) {
+void moveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare, bool castlingCheck[4]) {
      *moveCount = 0;
-
-     if (fiftyMoveCount >= 50) {
-          addMove(0, 0, FIFTYMOVE_TIE, moveList, moveCount);
-     }
 
      castlingMoveGeneration(board, turn, moveList, moveCount, castlingCheck);
      enpassantMoveGeneration(board, turn, moveList, moveCount, enpassantSquare);
@@ -1324,15 +1320,6 @@ void legalMoves(int board[120], int turn, int moveList[250][3], int moveCount, i
      }
 
      for (int i = 0; i < moveCount; i++) {
-
-          // add fiftymoveCount if it exists
-          if (moveList[i][2] == FIFTYMOVE_TIE) {
-               legalMoveList[*legalMoveCount][0] = moveList[i][0];
-               legalMoveList[*legalMoveCount][1] = moveList[i][1];
-               legalMoveList[*legalMoveCount][2] = moveList[i][2];
-               *legalMoveCount += 1;
-               continue;
-          }
           //  check if king will be moved
           if (board[moveList[i][0]] == WHITEKING || board[moveList[i][0]] == BLACKKING) {
                if (moveList[i][2] == NORMAL) {
