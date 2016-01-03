@@ -2354,6 +2354,7 @@ void main() {
                     }
                }
                else if (commandType == UNDO_MOVE) {
+                    //  TODO: Use saved instead of last
                     //  TerminalSquare needs to be saved
                     if (lastTerminalValue == ERROR_INTEGER) {
                          printf("No move can be undone!\n");
@@ -2374,7 +2375,7 @@ void main() {
                     if (currentBoard.getTurn() == WHITE) {
                          currentBoard.moveNumberDecrement();
                     }
-                    // TODO: Add function for swapping
+
                     currentBoard.changeTurn();
                     
                     // Now user makes the next move
@@ -2428,10 +2429,11 @@ void main() {
                //int negaMaxMove[3];
                //int negamaxValue = rootNegaMax(EVAL_DEPTH, currentTurn, castlingCheck, negaMaxMove);
                //printf("Negamax Value: %d\n", negamaxValue);
+               printSimpleBoard(currentBoard);
                int alphabetaMove[3];
                int alphabetaValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, alphabetaMove);
                printf("Alphabeta Value: %d\n", alphabetaValue);
-
+               printSimpleBoard(currentBoard);
                // Print best move
                //printf("NegaMax Move: ");
                //printMove(negaMaxMove);
