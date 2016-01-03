@@ -130,7 +130,9 @@ bool squareAttackCheck(Board board, int position);
 /*                                   RECURSION                                */
 u64 divide(int depth, int maxDepth, Board board, bool showOutput);
 u64 divide2(int depth, int maxDepth, Board board, bool showOutput);
+// Makes the given move and changes turn
 int makeMove(Board &board, int move[3]);
+// Undos the given move and changes turn
 void undoMove(Board &board, int move[3], int terminalValue);
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex);
 void stopTimer(LARGE_INTEGER *endTime, int timerIndex);

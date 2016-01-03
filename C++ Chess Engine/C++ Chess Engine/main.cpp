@@ -871,7 +871,6 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
                }
           }
           int enpassantSquare = board.getEnpassantSquare();
-
           terminalValue = makeMove(board, depthLegalMoveList[maxDepth][i]);
 
           score = -alphabeta(maxDepth - 1, board, -beta, -alpha);
@@ -891,6 +890,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
                bestMove[1] = depthLegalMoveList[maxDepth][i][1];
                bestMove[2] = depthLegalMoveList[maxDepth][i][2];
           }
+          
           undoMove(board, depthLegalMoveList[maxDepth][i], terminalValue);
           board.setEnpassantSquare(enpassantSquare);
      }
@@ -2267,7 +2267,7 @@ void main() {
                     for (int i = 0; i < 3; i++) {
                          lastMove[i] = userMove[i];
                     }
-                    currentBoard.changeTurn();
+
                     // add to log file
                     logtext << currentBoard.getMoveNumber() << ": " << numberToFile(userMove[0]) << numberToRank(userMove[0]) << " " << numberToFile(userMove[1]) << numberToRank(userMove[1]) << endl;
 
@@ -2344,8 +2344,6 @@ void main() {
                     if (currentBoard.getTurn() == WHITE) {
                          currentBoard.moveNumberDecrement();
                     }
-
-                    currentBoard.changeTurn();
                     
                     // Now user makes the next move
                     userColor = -userColor;
@@ -2390,7 +2388,7 @@ void main() {
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
                
                saveCurrentState();
-
+               
                // TODO: Check if this command can disappear now
                // copy ep Square: needs to be done before any recursion
                //depthEnpassantSquare[EVAL_DEPTH] = currentBoard.getEnpassantSquare();
@@ -2399,11 +2397,12 @@ void main() {
                //int negaMaxMove[3];
                //int negamaxValue = rootNegaMax(EVAL_DEPTH, currentTurn, castlingCheck, negaMaxMove);
                //printf("Negamax Value: %d\n", negamaxValue);
-               printSimpleBoard(currentBoard);
+
+
                int alphabetaMove[3];
                int alphabetaValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, alphabetaMove);
                printf("Alphabeta Value: %d\n", alphabetaValue);
-               printSimpleBoard(currentBoard);
+
                // Print best move
                //printf("NegaMax Move: ");
                //printMove(negaMaxMove);
@@ -2528,8 +2527,7 @@ void main() {
                }
                */
 
-               //  Change turns and increment move
-               currentBoard.changeTurn();
+               //  Increment move
                if (currentBoard.getTurn() == WHITE) { currentBoard.moveNumberIncrement(); }
 
                //  Check if game is over
