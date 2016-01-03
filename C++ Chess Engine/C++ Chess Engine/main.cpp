@@ -649,7 +649,6 @@ int boardEvaluation(Board board) {
                break;
           }
      }
-     printf("Score: %d\n", score);
      return score;
 }
 int reversePosition(int position) {
@@ -872,9 +871,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
           int enpassantSquare = board.getEnpassantSquare();
           terminalValue = makeMove(board, depthLegalMoveList[maxDepth][i]);
 
-          printSimpleBoard(board);
           score = -alphabeta(maxDepth - 1, board, -beta, -alpha);
-          printf("%d\n", score);
 
           // TODO: Check if this is needed and change it
           if (score >= beta) {
@@ -1354,7 +1351,7 @@ bool squareAttackCheck(Board board, int position) {
      if (board.getTurn() == WHITE) {
           //  1. pawn
           if (board.getSquare(position - ROW - COLUMN) == BLACKPAWN ||
-          board.getSquare(position - ROW + COLUMN) == BLACKPAWN) {
+               board.getSquare(position - ROW + COLUMN) == BLACKPAWN) {
                return true;
           }
           //  2. knight
@@ -1371,7 +1368,7 @@ bool squareAttackCheck(Board board, int position) {
           //  3. bishop
           for (int i = 1; i < 8; i++) {
                if (board.getSquare(position - i*ROW - i*COLUMN) == BLACKBISHOP ||
-               board.getSquare(position - i*ROW - i*COLUMN) == BLACKQUEEN) {
+                    board.getSquare(position - i*ROW - i*COLUMN) == BLACKQUEEN) {
                     return true;
                }
 
@@ -1387,7 +1384,7 @@ bool squareAttackCheck(Board board, int position) {
           }
           for (int i = 1; i < 8; i++) {
                if (board.getSquare(position - i*ROW + i*COLUMN) == BLACKBISHOP ||
-               board.getSquare(position - i*ROW + i*COLUMN) == BLACKQUEEN) {
+                    board.getSquare(position - i*ROW + i*COLUMN) == BLACKQUEEN) {
                     return true;
                }
 
@@ -1498,10 +1495,21 @@ bool squareAttackCheck(Board board, int position) {
                     break;
                }
           }
+          //  (5. queen: added to bishop and rook)
 
-          //  5. queen: added to bishop and rook
           //  6. king: is it needed?
           // TODO: Check for king as well
+          if (board.getSquare(position + 1) == BLACKKING ||
+               board.getSquare(position - 1) == BLACKKING ||
+               board.getSquare(position + 11) == BLACKKING || 
+               board.getSquare(position - 11) == BLACKKING || 
+               board.getSquare(position + 9) == BLACKKING || 
+               board.getSquare(position - 9) == BLACKKING || 
+               board.getSquare(position + 10) == BLACKKING || 
+               board.getSquare(position - 10) == BLACKKING) {
+               return true;
+          }
+
           return false;
      }
 
@@ -1653,8 +1661,20 @@ bool squareAttackCheck(Board board, int position) {
                }
           }
 
-          //  5. queen: added to bishop and rook
+          //  (5. queen: added to bishop and rook)
+
           //  6. king: is it needed?
+          // TODO: Check for king as well
+          if (board.getSquare(position + 1) == WHITEKING ||
+               board.getSquare(position - 1) == WHITEKING ||
+               board.getSquare(position + 11) == WHITEKING ||
+               board.getSquare(position - 11) == WHITEKING ||
+               board.getSquare(position + 9) == WHITEKING ||
+               board.getSquare(position - 9) == WHITEKING ||
+               board.getSquare(position + 10) == WHITEKING ||
+               board.getSquare(position - 10) == WHITEKING) {
+               return true;
+          }
 
           return false;
      }
@@ -2139,7 +2159,7 @@ void main() {
                int initialSquare, terminalSquare;
                int commandType = ERROR_COMMAND;
                int commandType2 = ERROR_COMMAND;
-
+               
                correctInput = false;
                while (!correctInput) {
                     printf("--------------------------------------------------\n");
@@ -2174,7 +2194,7 @@ void main() {
                          break;
                     }
                }
-
+               
                if (commandType == MOVE) {
                     //  Movelist used for legality/movetype check
                     currentBoardMoveCount = 0;
