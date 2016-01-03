@@ -98,7 +98,7 @@ void saveCurrentState();
 
 
 /*                                MOVE GENERATION                             */
-void moveGeneration(Board board, int moveList[250][3], int *moveCount, int enpassantSquare);
+void moveGeneration(Board board, int moveList[250][3], int *moveCount);
 void pawnMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
 void knightMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
 void bishopMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
@@ -121,8 +121,8 @@ bool squareAttackCheck(Board board, int position);
 
 
 /*                                   RECURSION                                */
-u64 divide(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOutput);
-u64 divide2(int depth, int turn, int maxDepth, bool castlingCheck[4], bool showOutput);
+u64 divide(int depth, int maxDepth, Board board, bool showOutput);
+u64 divide2(int depth, int maxDepth, Board board, bool showOutput);
 int makeMove(Board board, int move[3]);
 void undoMove(Board board, int move[3], int terminalValue);
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex);

@@ -691,9 +691,7 @@ int negaMax(int depth, Board board) {
      int score;
      int terminalValue;
 
-     depthEnpassantSquare[depth - 1] = 0;
-
-     moveGeneration(board, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth]);
+     moveGeneration(board, depthAllMoveList[depth], &depthAllMoveCount[depth]);
      legalMoves(board, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
@@ -752,7 +750,7 @@ int rootNegaMax(int maxDepth, Board board, int bestMove[3]) {
 
      depthEnpassantSquare[maxDepth - 1] = 0;
 
-     moveGeneration(board, depthAllMoveList[maxDepth], &depthAllMoveCount[maxDepth], depthEnpassantSquare[maxDepth]);
+     moveGeneration(board, depthAllMoveList[maxDepth], &depthAllMoveCount[maxDepth]);
      legalMoves(board, depthAllMoveList[maxDepth], depthAllMoveCount[maxDepth], depthLegalMoveList[maxDepth], &depthLegalMoveCount[maxDepth]);
 
      for (int i = 0; i < depthLegalMoveCount[maxDepth]; i++) {
@@ -818,7 +816,7 @@ int alphabeta(int depth, Board board, int alpha, int beta) {
 
      depthEnpassantSquare[depth - 1] = 0;
 
-     moveGeneration(board, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth]);
+     moveGeneration(board, depthAllMoveList[depth], &depthAllMoveCount[depth]);
      legalMoves(board, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
@@ -880,7 +878,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
 
      depthEnpassantSquare[maxDepth - 1] = 0;
 
-     moveGeneration(board, depthAllMoveList[maxDepth], &depthAllMoveCount[maxDepth], depthEnpassantSquare[maxDepth]);
+     moveGeneration(board, depthAllMoveList[maxDepth], &depthAllMoveCount[maxDepth]);
      legalMoves(board, depthAllMoveList[maxDepth], depthAllMoveCount[maxDepth], depthLegalMoveList[maxDepth], &depthLegalMoveCount[maxDepth]);
 
      for (int i = 0; i < depthLegalMoveCount[maxDepth]; i++) {
@@ -1703,7 +1701,7 @@ bool squareAttackCheck(Board board, int position) {
 
 
 /*                             RECURSION FUNCTIONS                             */
-u64 divide(int depth, int maxDepth, bool showOutput, Board board) {
+u64 divide(int depth, int maxDepth, Board board, bool showOutput) {
 
      if (depth == 0) { return 1; }
 
@@ -1715,7 +1713,7 @@ u64 divide(int depth, int maxDepth, bool showOutput, Board board) {
      int terminalValue;
 
      // MOVEGEN
-     moveGeneration(board, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth]);
+     moveGeneration(board, depthAllMoveList[depth], &depthAllMoveCount[depth]);
      // CHECK FOR LEGALS
      legalMoves(board, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
@@ -1758,9 +1756,9 @@ u64 divide(int depth, int maxDepth, bool showOutput, Board board) {
                depthEnpassantSquare[depth - 1] = 0;
           }
 
-          node += divide(depth - 1, maxDepth, showOutput, board);
+          node += divide(depth - 1, maxDepth, board, showOutput);
           if (showOutput) {
-               individualNode = divide(depth - 1, maxDepth, false, board);
+               individualNode = divide(depth - 1, maxDepth, board, false);
           }
           
           if (depth >= maxDepth && showOutput) {
@@ -1775,7 +1773,7 @@ u64 divide(int depth, int maxDepth, bool showOutput, Board board) {
      return node;
 
 }
-u64 divide2(int depth, int maxDepth, bool showOutput, Board board) {
+u64 divide2(int depth, int maxDepth, Board board, bool showOutput) {
 
      if (depth == 0) { return 1; }
 
@@ -1791,7 +1789,7 @@ u64 divide2(int depth, int maxDepth, bool showOutput, Board board) {
      int terminalValue;
 
      // MOVEGEN
-     moveGeneration(board, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth]);
+     moveGeneration(board, depthAllMoveList[depth], &depthAllMoveCount[depth]);
      // CHECK FOR LEGALS
      legalMoves(board, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
@@ -1833,9 +1831,9 @@ u64 divide2(int depth, int maxDepth, bool showOutput, Board board) {
                depthEnpassantSquare[depth - 1] = 0;
           }
 
-          node += divide(depth - 1, maxDepth, showOutput, board);
+          node += divide(depth - 1, maxDepth, board, showOutput);
           if (showOutput) {
-               individualNode = divide(depth - 1, maxDepth, false, board);
+               individualNode = divide(depth - 1, maxDepth, board, false);
           }
 
           if (depth >= maxDepth && showOutput) {
@@ -2112,7 +2110,7 @@ void main() {
           }
 
           //  Detect Checkmate/Stalemate
-          moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare);
+          moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount);
           legalMoves(currentBoard, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
           if (currentBoardLegalMoveCount == 0) {
                int kingPosition = ERROR_INTEGER;
@@ -2222,7 +2220,7 @@ void main() {
                     //  Movelist used for legality/movetype check
                     currentBoardMoveCount = 0;
                     currentBoardLegalMoveCount = 0;
-                    moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare);
+                    moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount);
                     legalMoves(currentBoard, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
 
                     int moveType = NORMAL;
@@ -2339,7 +2337,7 @@ void main() {
                               continue;
                          }
                          else {
-                              printf("Perft (Depth %c): %llu\n", userCommand.at(0), divide(userCommand.at(0) - '0', currentTurn, 0, castlingCheck, false));
+                              printf("Perft (Depth %c): %llu\n", userCommand.at(0), divide(userCommand.at(0) - '0', 0, currentBoard, false));
                               correctInput = true;
                               break;
                          }
@@ -2359,7 +2357,7 @@ void main() {
                               continue;
                          }
                          else {
-                              printf("Divide (Depth %c): %llu\n", userCommand.at(0), divide(userCommand.at(0) - '0', currentTurn, userCommand.at(0) - '0', castlingCheck, true));
+                              printf("Divide (Depth %c): %llu\n", userCommand.at(0), divide(userCommand.at(0) - '0', userCommand.at(0) - '0', currentBoard, true));
                               correctInput = true;
                               break;
                          }
@@ -2396,7 +2394,7 @@ void main() {
                     continue;
                }
                else if (commandType == PRINT_ALL_MOVES) {
-                    moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount, enpassantSquare);
+                    moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount);
                     legalMoves(currentBoard, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
 
                     printf("Movecount: %d\n", currentBoardLegalMoveCount);
@@ -2411,13 +2409,13 @@ void main() {
                     LARGE_INTEGER frequency2, beginTime2, endTime2;
                     
                     frequency2 = startTimer(&beginTime2, 2);
-                    int negamaxValue = negaMax(EVAL_DEPTH, currentTurn, castlingCheck);
+                    int negamaxValue = negaMax(EVAL_DEPTH, currentBoard);
                     stopTimer(&endTime2, 2);
                     printf("Negamax Value: %d\n", negamaxValue);
                     std::cout << "Negamax timer " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
 
                     frequency2 = startTimer(&beginTime2, 2);
-                    int alphabetaValue = alphabeta(EVAL_DEPTH, currentTurn, castlingCheck, -999999, 999999);
+                    int alphabetaValue = alphabeta(EVAL_DEPTH, currentBoard, -999999, 999999);
                     stopTimer(&endTime2, 2);
                     printf("Alphabeta Value: %d\n", alphabetaValue);
                     std::cout << "Alphabeta timer : " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
@@ -2440,7 +2438,7 @@ void main() {
                //int negamaxValue = rootNegaMax(EVAL_DEPTH, currentTurn, castlingCheck, negaMaxMove);
                //printf("Negamax Value: %d\n", negamaxValue);
                int alphabetaMove[3];
-               int alphabetaValue = rootAlphabeta(EVAL_DEPTH, currentTurn, castlingCheck, -999999, 999999, alphabetaMove);
+               int alphabetaValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, alphabetaMove);
                printf("Alphabeta Value: %d\n", alphabetaValue);
 
                // Print best move
