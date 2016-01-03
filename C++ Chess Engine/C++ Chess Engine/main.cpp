@@ -2021,8 +2021,8 @@ void main() {
      logtext.open("log.txt");
      
      //  Initialize Board
-     //board120Setup();
-     FENboardSetup("k7/8/8/8/8/P7/7P/7K w - - 0 1");
+     board120Setup();
+     //FENboardSetup("k7/8/8/8/8/P7/7P/7K w - - 0 1");
      //FENboardSetup(currentBoard, "k7/pppppppp/8/8/8/8/8/R3K3 w Q - 0 1");
      //FENboardSetup(currentBoard, "k7/8/8/8/8/8/8/5RRK w - - 0 1");
      //  FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
