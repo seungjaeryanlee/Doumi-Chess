@@ -154,7 +154,7 @@ bool spectate = false;
 /******************************************************************************/
 
 /*                             BOARD SETUP FUNCTIONS                          */
-// TODO: Check board120Setup, FENboardSetup, boardEval, moveGen, squareAttackCheck
+// TODO: Check boardEval, squareAttackCheck
 void board120Setup() {
      currentBoard.setTurn(WHITE);
      currentBoard.setEnpassantSquare(0);
@@ -649,6 +649,7 @@ int boardEvaluation(Board board) {
                break;
           }
      }
+     printf("Score: %d\n", score);
      return score;
 }
 int reversePosition(int position) {
