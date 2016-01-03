@@ -1078,54 +1078,54 @@ void moveGeneration(int board[120], int turn, int moveList[250][3], int *moveCou
           }
      }
 }
-void pawnMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
-     if (turn == WHITE) {
+void pawnMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount) {
+     if (board.getTurn() == WHITE) {
           //  if on the last row before promotion, just call promotion
           if (A7 <= position && position <= H7) {
-               promotionMoveGeneration(board, turn, position, moveList, moveCount);
+               promotionMoveGeneration(board, position, moveList, moveCount);
                return;
           }
 
           //  Advance 1 square
-          if (board[position - ROW] == EMPTYSQUARE) {
+          if (board.getSquare(position - ROW) == EMPTYSQUARE) {
                addMove(position, position - ROW, NORMAL, moveList, moveCount);
                //  Advance 2 squares
                if (A2 <= position && position <= H2 &&
-                    board[position - 2 * ROW] == EMPTYSQUARE) {
-                    addMove(position, position - 2 * ROW, DOUBLEMOVE, moveList, moveCount);
+                    board.getSquare(position - 2*ROW) == EMPTYSQUARE) {
+                    addMove(position, position - 2*ROW, DOUBLEMOVE, moveList, moveCount);
                }
           }
 
           //  attack diagonals
-          if (checkColor(board[position - ROW - COLUMN]) == BLACK) {
+          if (checkColor(board.getSquare(position - ROW - COLUMN)) == BLACK) {
                addMove(position, position - ROW - COLUMN, NORMAL, moveList, moveCount);
           }
-          if (checkColor(board[position - ROW + COLUMN]) == BLACK) {
+          if (checkColor(board.getSquare(position - ROW + COLUMN)) == BLACK) {
                addMove(position, position - ROW + COLUMN, NORMAL, moveList, moveCount);
           }
      }
-     if (turn == BLACK) {
+     if (board.getTurn() == BLACK) {
           //  if on the last row before promotion, just call promotion
           if (A2 <= position && position <= H2) {
-               promotionMoveGeneration(board, turn, position, moveList, moveCount);
+               promotionMoveGeneration(board, position, moveList, moveCount);
                return;
           }
 
           //  Advance 1 square
-          if (board[position + ROW] == EMPTYSQUARE) {
+          if (board.getSquare(position + ROW) == EMPTYSQUARE) {
                addMove(position, position + ROW, NORMAL, moveList, moveCount);
                //  Advance 2 squares
                if (A7 <= position && position <= H7 &&
-                    board[position + 2 * ROW] == EMPTYSQUARE) {
+                    board.getSquare(position + 2 * ROW) == EMPTYSQUARE) {
                     addMove(position, position + 2 * ROW, DOUBLEMOVE, moveList, moveCount);
                }
           }
 
           //  attack diagonals
-          if (checkColor(board[position + ROW - COLUMN]) == WHITE) {
+          if (checkColor(board.getSquare(position + ROW - COLUMN)) == WHITE) {
                addMove(position, position + ROW - COLUMN, NORMAL, moveList, moveCount);
           }
-          if (checkColor(board[position + ROW + COLUMN]) == WHITE) {
+          if (checkColor(board.getSquare(position + ROW + COLUMN)) == WHITE) {
                addMove(position, position + ROW + COLUMN, NORMAL, moveList, moveCount);
           }
      }
@@ -1334,26 +1334,26 @@ void castlingMoveGeneration(int board[120], int turn, int moveList[250][3], int 
           }
      }
 }
-void promotionMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
-     if (turn == WHITE) {
-          if (checkColor(board[position - ROW - COLUMN]) == -turn) {
+void promotionMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount) {
+     if (board.getTurn() == WHITE) {
+          if (checkColor(board.getSquare(position - ROW - COLUMN)) == -board.getTurn()) {
                addPromotionMove(position, position - ROW - COLUMN, moveList, moveCount);
           }
-          if (checkColor(board[position - ROW + COLUMN]) == -turn) {
+          if (checkColor(board.getSquare(position - ROW + COLUMN)) == -board.getTurn()) {
                addPromotionMove(position, position - ROW + COLUMN, moveList, moveCount);
           }
-          if (board[position - ROW] == EMPTYSQUARE) {
+          if (board.getSquare(position - ROW) == EMPTYSQUARE) {
                addPromotionMove(position, position - ROW, moveList, moveCount);
           }
      }
-     if (turn == BLACK) {
-          if (checkColor(board[position + ROW - COLUMN]) == -turn) {
+     if (board.getTurn() == BLACK) {
+          if (checkColor(board.getSquare(position + ROW - COLUMN)) == -board.getTurn()) {
                addPromotionMove(position, position + ROW - COLUMN, moveList, moveCount);
           }
-          if (checkColor(board[position + ROW + COLUMN]) == -turn) {
+          if (checkColor(board.getSquare(position + ROW + COLUMN)) == -board.getTurn()) {
                addPromotionMove(position, position + ROW + COLUMN, moveList, moveCount);
           }
-          if (board[position + ROW] == EMPTYSQUARE) {
+          if (board.getSquare(position + ROW) == EMPTYSQUARE) {
                addPromotionMove(position, position + ROW, moveList, moveCount);
           }
      }
