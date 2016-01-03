@@ -17,18 +17,25 @@ private:
      array<bool, 4> castlingCheck;
      int turn;
      int enpassantSquare;
+     int fiftyMoveCount;
+     int moveNumber;
+
 public:
      // Sets
-     void setBoard(array<int, 120> board()) {}
-     void setCastlingCheck(array<int, 4> castlingCheck()) {}
-     void setTurn(int turn) {}
-     void setEnpassantSquare(int enpassantSquare) {}
+     void setBoard(array<int, 120> b) { board = b; }
+     void setCastlingCheck(array<bool, 4> cc) { castlingCheck = cc; }
+     void setTurn(int t) { turn = t; }
+     void setEnpassantSquare(int e) { enpassantSquare = e; }
+     void setFiftyMoveCount(int f) { fiftyMoveCount = f; }
+     void setMoveNumber(int m) { moveNumber = m; }
 
      //  Accessors
      array<int, 120> getBoard() { return board; }
      array<bool, 4> getCastlingCheck() { return castlingCheck; }
      int getTurn() { return turn; }
      int getEnpassantSquare() { return enpassantSquare; }
+     int getFiftyMoveCount() { return fiftyMoveCount; }
+     int getMoveNumber() { return moveNumber; }
 };
 
 /******************************************************************************/
