@@ -808,45 +808,43 @@ int rootNegaMax(int maxDepth, Board board, int bestMove[3]) {
      return max_Score;
 }
 
-int alphabeta(int depth, int turn, bool castlingCheck[4], int alpha, int beta) {
+int alphabeta(int depth, Board board, int alpha, int beta) {
      if (depth == 0) {
-          return turn * boardEvaluation(currentBoard);
+          return board.getTurn() * boardEvaluation(currentBoard);
      }
 
      int score;
      int terminalValue;
-     bool copyCastlingCheck[4];
 
      depthEnpassantSquare[depth - 1] = 0;
 
-     moveGeneration(currentBoard, turn, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth], castlingCheck);
-     legalMoves(currentBoard, turn, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+     moveGeneration(board, depthAllMoveList[depth], &depthAllMoveCount[depth], depthEnpassantSquare[depth]);
+     legalMoves(board, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
-          for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
 
-          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEKING) {
-               copyCastlingCheck[WKCASTLING] = false;
-               copyCastlingCheck[WQCASTLING] = false;
+          if (board.getSquare(depthLegalMoveList[depth][i][0]) == WHITEKING) {
+               board.setCastling(WKCASTLING, false);
+               board.setCastling(WQCASTLING, false);
           }
-          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKKING) {
-               copyCastlingCheck[BKCASTLING] = false;
-               copyCastlingCheck[BQCASTLING] = false;
+          if (board.getSquare(depthLegalMoveList[depth][i][0]) == BLACKKING) {
+               board.setCastling(BKCASTLING, false);
+               board.setCastling(BQCASTLING, false);
           }
-          if (currentBoard[depthLegalMoveList[depth][i][0]] == WHITEROOK) {
+          if (board.getSquare(depthLegalMoveList[depth][i][0]) == WHITEROOK) {
                if (depthLegalMoveList[depth][i][0] == A1) {
-                    copyCastlingCheck[WQCASTLING] = false;
+                    board.setCastling(WQCASTLING, false);
                }
                if (depthLegalMoveList[depth][i][0] == H1) {
-                    copyCastlingCheck[WKCASTLING] = false;
+                    board.setCastling(WKCASTLING, false);
                }
           }
-          if (currentBoard[depthLegalMoveList[depth][i][0]] == BLACKROOK) {
+          if (board.getSquare(depthLegalMoveList[depth][i][0]) == BLACKROOK) {
                if (depthLegalMoveList[depth][i][0] == A8) {
-                    copyCastlingCheck[BQCASTLING] = false;
+                    board.setCastling(BQCASTLING, false);
                }
                if (depthLegalMoveList[depth][i][0] == H8) {
-                    copyCastlingCheck[BKCASTLING] = false;
+                    board.setCastling(BKCASTLING, false);
                }
           }
 
@@ -860,7 +858,7 @@ int alphabeta(int depth, int turn, bool castlingCheck[4], int alpha, int beta) {
                depthEnpassantSquare[depth - 1] = 0;
           }
 
-          score = -alphabeta(depth - 1, -turn, copyCastlingCheck, -beta, -alpha);
+          score = -alphabeta(depth - 1, board, -beta, -alpha);
 
           if (score >= beta) {
 
@@ -876,41 +874,39 @@ int alphabeta(int depth, int turn, bool castlingCheck[4], int alpha, int beta) {
 
      return alpha;
 }
-int rootAlphabeta(int maxDepth, int turn, bool castlingCheck[4], int alpha, int beta, int bestMove[3]) {
+int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3]) {
      int score;
      int terminalValue;
-     bool copyCastlingCheck[4];
 
      depthEnpassantSquare[maxDepth - 1] = 0;
 
-     moveGeneration(currentBoard, turn, depthAllMoveList[maxDepth], &depthAllMoveCount[maxDepth], depthEnpassantSquare[maxDepth], castlingCheck);
-     legalMoves(currentBoard, turn, depthAllMoveList[maxDepth], depthAllMoveCount[maxDepth], depthLegalMoveList[maxDepth], &depthLegalMoveCount[maxDepth]);
+     moveGeneration(board, depthAllMoveList[maxDepth], &depthAllMoveCount[maxDepth], depthEnpassantSquare[maxDepth]);
+     legalMoves(board, depthAllMoveList[maxDepth], depthAllMoveCount[maxDepth], depthLegalMoveList[maxDepth], &depthLegalMoveCount[maxDepth]);
 
      for (int i = 0; i < depthLegalMoveCount[maxDepth]; i++) {
-          for (int j = 0; j < 4; j++) { copyCastlingCheck[j] = castlingCheck[j]; }
 
-          if (currentBoard[depthLegalMoveList[maxDepth][i][0]] == WHITEKING) {
-               copyCastlingCheck[WKCASTLING] = false;
-               copyCastlingCheck[WQCASTLING] = false;
+          if (board.getSquare(depthLegalMoveList[maxDepth][i][0]) == WHITEKING) {
+               board.setCastling(WKCASTLING, false);
+               board.setCastling(WQCASTLING, false);
           }
-          if (currentBoard[depthLegalMoveList[maxDepth][i][0]] == BLACKKING) {
-               copyCastlingCheck[BKCASTLING] = false;
-               copyCastlingCheck[BQCASTLING] = false;
+          if (board.getSquare(depthLegalMoveList[maxDepth][i][0]) == BLACKKING) {
+               board.setCastling(BKCASTLING, false);
+               board.setCastling(BQCASTLING, false);
           }
-          if (currentBoard[depthLegalMoveList[maxDepth][i][0]] == WHITEROOK) {
+          if (board.getSquare(depthLegalMoveList[maxDepth][i][0]) == WHITEROOK) {
                if (depthLegalMoveList[maxDepth][i][0] == A1) {
-                    copyCastlingCheck[WQCASTLING] = false;
+                    board.setCastling(WQCASTLING, false);
                }
                if (depthLegalMoveList[maxDepth][i][0] == H1) {
-                    copyCastlingCheck[WKCASTLING] = false;
+                    board.setCastling(WKCASTLING, false);
                }
           }
-          if (currentBoard[depthLegalMoveList[maxDepth][i][0]] == BLACKROOK) {
+          if (board.getSquare(depthLegalMoveList[maxDepth][i][0]) == BLACKROOK) {
                if (depthLegalMoveList[maxDepth][i][0] == A8) {
-                    copyCastlingCheck[BQCASTLING] = false;
+                    board.setCastling(BQCASTLING, false);
                }
                if (depthLegalMoveList[maxDepth][i][0] == H8) {
-                    copyCastlingCheck[BKCASTLING] = false;
+                    board.setCastling(BKCASTLING, false);
                }
           }
 
@@ -924,7 +920,7 @@ int rootAlphabeta(int maxDepth, int turn, bool castlingCheck[4], int alpha, int 
                depthEnpassantSquare[maxDepth - 1] = 0;
           }
 
-          score = -alphabeta(maxDepth - 1, -turn, copyCastlingCheck, -beta, -alpha);
+          score = -alphabeta(maxDepth - 1, board, -beta, -alpha);
 
           // TODO: Check if this is needed and change it
           if (score >= beta) {
