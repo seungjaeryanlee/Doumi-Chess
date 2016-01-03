@@ -2300,7 +2300,7 @@ void main() {
                     for (int i = 0; i < 3; i++) {
                          lastMove[i] = userMove[i];
                     }
-                    currentBoard.setTurn(-currentBoard.getTurn());
+                    currentBoard.changeTurn();
                     // add to log file
                     logtext << currentBoard.getMoveNumber() << ": " << numberToFile(userMove[0]) << numberToRank(userMove[0]) << " " << numberToFile(userMove[1]) << numberToRank(userMove[1]) << endl;
 
@@ -2371,13 +2371,13 @@ void main() {
                     }
                     currentBoard.setEnpassantSquare(lastEnpassantSquare);
                     if (currentBoard.getFiftyMoveCount() > 0) {
-                         fiftyMoveCount--;
+                         currentBoard.fiftyMoveCountDecrement();
                     }
                     if (currentBoard.getTurn() == WHITE) {
-                         moveNumber--;
+                         currentBoard.moveNumberDecrement();
                     }
                     // TODO: Add function for swapping
-                    currentBoard.setTurn(-currentBoard.getTurn());
+                    currentBoard.changeTurn();
                     
                     // Now user makes the next move
                     userColor = -userColor;
@@ -2451,7 +2451,7 @@ void main() {
                if (currentBoard.getSquare(moveToMake[1]) == EMPTYSQUARE
                     && currentBoard.getSquare(moveToMake[0]) != WHITEPAWN
                     && currentBoard.getSquare(moveToMake[0]) != BLACKPAWN) {
-                    fiftyMoveCount++;
+                    currentBoard.fiftyMoveCountIncrement();
                }
                else { currentBoard.setFiftyMoveCount(0); }
 
@@ -2485,7 +2485,7 @@ void main() {
                lastEnpassantSquare = currentBoard.getEnpassantSquare();
                //  Update enpassant square
                if (moveToMake[2] == DOUBLEMOVE) {
-                    enpassantSquare = (moveToMake[0] + moveToMake[1]) / 2;
+                    currentBoard.setEnpassantSquare((moveToMake[0] + moveToMake[1]) / 2);
                }
                else { currentBoard.setEnpassantSquare(0); }
 
@@ -2559,8 +2559,8 @@ void main() {
                */
 
                //  Change turns and increment move
-               currentBoard.setTurn(-currentBoard.getTurn());
-               if (currentBoard.getTurn() == WHITE) { moveNumber++; }
+               currentBoard.changeTurn();
+               if (currentBoard.getTurn() == WHITE) { currentBoard.moveNumberIncrement(); }
 
                //  Check if game is over
                gamePlaying = !checkGameEnd(currentBoard);

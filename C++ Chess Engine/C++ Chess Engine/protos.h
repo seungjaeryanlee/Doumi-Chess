@@ -13,7 +13,7 @@ private:
      int moveNumber;
 
 public:
-     // Sets
+     //  Sets
      void setBoard(array<int, 120> b) { board = b; }
      void setSquare(int square, int value) { board.at(square) = value; }
      void setCastlingArray(array<bool, 4> cc) { castlingCheck = cc; }
@@ -32,6 +32,13 @@ public:
      int getEnpassantSquare() { return enpassantSquare; }
      int getFiftyMoveCount() { return fiftyMoveCount; }
      int getMoveNumber() { return moveNumber; }
+
+     //  Other Functions
+     void changeTurn() { turn = -turn; }
+     void fiftyMoveCountDecrement() { fiftyMoveCount--; }
+     void fiftyMoveCountIncrement() { fiftyMoveCount++; }
+     void moveNumberDecrement() { moveNumber--; }
+     void moveNumberIncrement() { moveNumber++; }
 };
 class Move {
 private:
