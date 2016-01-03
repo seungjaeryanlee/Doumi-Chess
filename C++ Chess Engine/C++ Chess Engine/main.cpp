@@ -648,10 +648,10 @@ void printMove(int move[3]) {
 }
 
 /*                             EVALUATION FUNCTIONS                           */
-int boardEvaluation(int board[120]) {
+int boardEvaluation(Board board) {
      int score = 0;
      for (int i = 0; i < 120; i++) {
-          switch (board[i]) {
+          switch (board.getSquare(i)) {
           case WHITEPAWN:
                score += PAWNVALUE;
                score += PAWN_PCSQTable.at(i);
