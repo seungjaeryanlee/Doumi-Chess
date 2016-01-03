@@ -1975,60 +1975,60 @@ int makeMove(Board board, int move[3]) {
           return 0;
      }
 }
-void undoMove(int board[120], int move[3], int terminalValue) {
+void undoMove(Board board, int move[3], int terminalValue) {
      int initial = move[0], terminal = move[1], moveType = move[2];
      if (moveType == NORMAL) {
-          board[initial] = board[terminal];
-          board[terminal] = terminalValue;
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, terminalValue);
      }
      else if (moveType == DOUBLEMOVE) {
-          board[initial] = board[terminal];
-          board[terminal] = EMPTYSQUARE;
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, EMPTYSQUARE);
      }
      else if (moveType == QUEENSIDE_CASTLING) {
           //  undo king move
-          board[initial] = board[terminal];
-          board[terminal] = EMPTYSQUARE;
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, EMPTYSQUARE);
 
           //  undo rook move
-          board[initial - 4 * COLUMN] = board[terminal + COLUMN];
-          board[terminal + COLUMN] = EMPTYSQUARE;
+          board.setSquare(initial - 4 * COLUMN, board.getSquare(terminal + COLUMN));
+          board.setSquare(terminal + COLUMN, EMPTYSQUARE);
 
      }
      else if (moveType == KINGSIDE_CASTLING) {
           //  undo king move
-          board[initial] = board[terminal];
-          board[terminal] = EMPTYSQUARE;
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, EMPTYSQUARE);
 
           //  undo rook move
-          board[terminal + COLUMN] = board[terminal - COLUMN];
-          board[terminal - COLUMN] = EMPTYSQUARE;
+          board.setSquare(terminal + COLUMN, board.getSquare(terminal - COLUMN));
+          board.setSquare(terminal - COLUMN, EMPTYSQUARE);
      }
      else if (moveType == KNIGHT_PROMOTION || moveType == BISHOP_PROMOTION ||
           moveType == ROOK_PROMOTION || moveType == QUEEN_PROMOTION) {
           //  white turn
-          if (checkColor(board[terminal]) == WHITE) {
-               board[terminal] = terminalValue;
-               board[initial] = WHITEPAWN;
+          if (checkColor(board.getSquare(terminal)) == WHITE) {
+               board.setSquare(terminal, terminalValue);
+               board.setSquare(initial, WHITEPAWN);
           }
           //  black turn
           else {
-               board[terminal] = terminalValue;
-               board[initial] = BLACKPAWN;
+               board.setSquare(terminal, terminalValue);
+               board.setSquare(initial, BLACKPAWN);
           }
      }
      else if (moveType == ENPASSANT) {
           //  white turn
-          if (board[terminal] == WHITEPAWN) {
-               board[terminal] = EMPTYSQUARE;
-               board[initial] = WHITEPAWN;
-               board[terminal + ROW] = BLACKPAWN;
+          if (board.getSquare(terminal) == WHITEPAWN) {
+               board.setSquare(terminal, EMPTYSQUARE);
+               board.setSquare(initial, WHITEPAWN);
+               board.setSquare(terminal + ROW, BLACKPAWN);
           }
           //  black turn
           else {
-               board[terminal] = EMPTYSQUARE;
-               board[initial] = BLACKPAWN;
-               board[terminal - ROW] = WHITEPAWN;
+               board.setSquare(terminal, EMPTYSQUARE);
+               board.setSquare(initial, BLACKPAWN);
+               board.setSquare(terminal - ROW, WHITEPAWN);
           }
      }
 
