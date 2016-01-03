@@ -1363,22 +1363,22 @@ void promotionMoveGeneration(Board board, int position, int moveList[250][3], in
           }
      }
 }
-void enpassantMoveGeneration(int board[120], int turn, int moveList[250][3], int *moveCount, int enpassantSquare) {
-     if (enpassantSquare == 0) { return; }
+void enpassantMoveGeneration(Board board, int moveList[250][3], int *moveCount) {
+     if (board.getEnpassantSquare == 0) { return; }
 
-     if (turn == WHITE) {
-          if (board[enpassantSquare + ROW + COLUMN] == WHITEPAWN) {
+     if (board.getTurn() == WHITE) {
+          if (board.getSquare(enpassantSquare + ROW + COLUMN) == WHITEPAWN) {
                addMove(enpassantSquare + ROW + COLUMN, enpassantSquare, ENPASSANT, moveList, moveCount);
           }
-          if (board[enpassantSquare + ROW - COLUMN] == WHITEPAWN) {
+          if (board.getSquare(enpassantSquare + ROW - COLUMN) == WHITEPAWN) {
                addMove(enpassantSquare + ROW - COLUMN, enpassantSquare, ENPASSANT, moveList, moveCount);
           }
      }
-     if (turn == BLACK) {
-          if (board[enpassantSquare - ROW + COLUMN] == BLACKPAWN) {
+     if (board.getTurn() == BLACK) {
+          if (board.getSquare(enpassantSquare - ROW + COLUMN) == BLACKPAWN) {
                addMove(enpassantSquare - ROW + COLUMN, enpassantSquare, ENPASSANT, moveList, moveCount);
           }
-          if (board[enpassantSquare - ROW - COLUMN] == BLACKPAWN) {
+          if (board.getSquare(enpassantSquare - ROW - COLUMN) == BLACKPAWN) {
                addMove(enpassantSquare - ROW - COLUMN, enpassantSquare, ENPASSANT, moveList, moveCount);
           }
      }
