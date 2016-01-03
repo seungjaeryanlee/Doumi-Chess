@@ -124,16 +124,8 @@ array<int, 120> KING_PCSQTable_ENDGAME = {
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 };
-//  Current Move Number, starts at 1
-//  TODO: Delete this
-int moveNumber = 1;
 //  Current Half Move Number, starts at 0
 int halfMoveCount = 0;
-//  WHITE or BLACK
-//  TODO: Delete this
-int currentTurn = WHITE; 
-//  0 if double move did not happen, square value (ex. F3) otherwise
-int enpassantSquare = 0; 
 //  move[3]: initial, terminal, moveType
 int currentBoardMoveList[MAX_MOVEGEN_COUNT][3];
 int currentBoardMoveCount;
@@ -148,8 +140,6 @@ int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 LARGE_INTEGER frequency, beginTime, endTime;
 //  for storing best moves
 int depthBestMoves[MAXIMUM_DEPTH + 1][3];
-//  Counter to check Fifty Move rule and 75 Move Rule
-int fiftyMoveCount = 0;
 //  Records the result of the game
 int gameResult = NOT_FINISHED;
 //  Stores Board and Board States for threefold repetition
@@ -441,9 +431,9 @@ string boardToFEN(Board board) {
      else { FEN += '-'; }
 
      FEN += ' ';
-     FEN += ('0' + fiftyMoveCount);
+     FEN += ('0' + board.getFiftyMoveCount());
      FEN += ' ';
-     FEN += ('0' + moveNumber);
+     FEN += ('0' + board.getMoveNumber());
 
      cout << FEN << endl;
      return FEN;
@@ -956,7 +946,7 @@ void saveCurrentState() {
      for (int i = 0; i < 4; i++) {
           savedBoard[halfMoveCount].setCastling(i, currentBoard.getCastling(i));
      }
-     savedBoard[halfMoveCount].setEnpassantSquare(enpassantSquare);
+     savedBoard[halfMoveCount].setEnpassantSquare(currentBoard.getEnpassantSquare());
 
      //  TODO: Check repetition here
 
@@ -1307,6 +1297,8 @@ void promotionMoveGeneration(Board board, int position, int moveList[250][3], in
 }
 void enpassantMoveGeneration(Board board, int moveList[250][3], int *moveCount) {
      if (board.getEnpassantSquare() == 0) { return; }
+
+     int enpassantSquare = board.getEnpassantSquare();
 
      if (board.getTurn() == WHITE) {
           if (board.getSquare(enpassantSquare + ROW + COLUMN) == WHITEPAWN) {
@@ -2071,9 +2063,9 @@ void main() {
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("Castling - WK:%d WQ:%d BK:%d BQ:%d\n", currentBoard.getCastling(WKCASTLING), currentBoard.getCastling(WQCASTLING), currentBoard.getCastling(BKCASTLING), currentBoard.getCastling(BQCASTLING));
-     printf("en passant Square: %d\n", enpassantSquare);
-     printf("Move number: %d\n", moveNumber);
-     if (currentTurn == WHITE) { printf("Turn: White\n"); }
+     printf("en passant Square: %d\n", currentBoard.getEnpassantSquare());
+     printf("Move number: %d\n", currentBoard.getMoveNumber());
+     if (currentBoard.getTurn() == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
      boardToFEN(currentBoard);
      printf("--------------------------------------------------\n");
@@ -2115,8 +2107,8 @@ void main() {
           if (currentBoardLegalMoveCount == 0) {
                int kingPosition = ERROR_INTEGER;
                for (int i = 0; i < 120; i++) {
-                    if (currentBoard.getSquare(i) == WHITEKING && currentTurn == WHITE ||
-                         currentBoard.getSquare(i) == BLACKKING && currentTurn == BLACK) {
+                    if (currentBoard.getSquare(i) == WHITEKING && currentBoard.getTurn() == WHITE ||
+                         currentBoard.getSquare(i) == BLACKKING && currentBoard.getTurn() == BLACK) {
                          kingPosition = i;
                          break;
                     }
@@ -2127,10 +2119,10 @@ void main() {
                }
                if (squareAttackCheck(currentBoard, kingPosition)) {
                     gamePlaying = false;
-                    if (currentTurn == WHITE) {
+                    if (currentBoard.getTurn() == WHITE) {
                          gameResult = BLACK_WIN;
                     }
-                    if (currentTurn == BLACK) {
+                    if (currentBoard.getTurn() == BLACK) {
                          gameResult = WHITE_WIN;
                     }
                     break;
@@ -2175,7 +2167,7 @@ void main() {
                     continue;
                }
           }
-          if (currentTurn == userColor && spectate == false) {
+          if (currentBoard.getTurn() == userColor && spectate == false) {
                
                int initialSquare, terminalSquare;
                int commandType = ERROR_COMMAND;
@@ -2308,9 +2300,9 @@ void main() {
                     for (int i = 0; i < 3; i++) {
                          lastMove[i] = userMove[i];
                     }
-                    currentTurn = -currentTurn;
+                    currentBoard.setTurn(-currentBoard.getTurn());
                     // add to log file
-                    logtext << moveNumber << ": " << numberToFile(userMove[0]) << numberToRank(userMove[0]) << " " << numberToFile(userMove[1]) << numberToRank(userMove[1]) << endl;
+                    logtext << currentBoard.getMoveNumber() << ": " << numberToFile(userMove[0]) << numberToRank(userMove[0]) << " " << numberToFile(userMove[1]) << numberToRank(userMove[1]) << endl;
 
                     continue;
                }
@@ -2377,14 +2369,15 @@ void main() {
                     for (int i = 0; i < 4; i++) {
                          castlingCheck[i]  = lastCastlingCheck[i];
                     }
-                    enpassantSquare = lastEnpassantSquare;
-                    if (fiftyMoveCount > 0) {
+                    currentBoard.setEnpassantSquare(lastEnpassantSquare);
+                    if (currentBoard.getFiftyMoveCount() > 0) {
                          fiftyMoveCount--;
                     }
-                    if (currentTurn == WHITE) {
+                    if (currentBoard.getTurn() == WHITE) {
                          moveNumber--;
                     }
-                    currentTurn = -currentTurn;
+                    // TODO: Add function for swapping
+                    currentBoard.setTurn(-currentBoard.getTurn());
                     
                     // Now user makes the next move
                     userColor = -userColor;
@@ -2426,12 +2419,12 @@ void main() {
                     continue;
                }
           }
-          else if (currentTurn == -userColor || spectate == true) {
+          else if (currentBoard.getTurn() == -userColor || spectate == true) {
                
                saveCurrentState();
 
                // copy ep Square: needs to be done before any recursion
-               depthEnpassantSquare[EVAL_DEPTH] = enpassantSquare;
+               depthEnpassantSquare[EVAL_DEPTH] = currentBoard.getEnpassantSquare();
 
                //printf("Current Board Evaluation: %d\n", boardEvaluation(currentBoard));
                //int negaMaxMove[3];
@@ -2460,7 +2453,7 @@ void main() {
                     && currentBoard.getSquare(moveToMake[0]) != BLACKPAWN) {
                     fiftyMoveCount++;
                }
-               else { fiftyMoveCount = 0; }
+               else { currentBoard.setFiftyMoveCount(0); }
 
                //  Save castlingCheck for undoMove
                for (int i = 0; i < 4; i++) {
@@ -2494,7 +2487,7 @@ void main() {
                if (moveToMake[2] == DOUBLEMOVE) {
                     enpassantSquare = (moveToMake[0] + moveToMake[1]) / 2;
                }
-               else { enpassantSquare = 0; }
+               else { currentBoard.setEnpassantSquare(0); }
 
                //  Make best move and print board
                lastTerminalValue = makeMove(currentBoard, moveToMake);
@@ -2502,20 +2495,20 @@ void main() {
                for (int i = 0; i < 3; i++) {
                     lastMove[i] = moveToMake[i];
                }
-               logtext << moveNumber << ": " << numberToFilerank(moveToMake[0]) << " " << numberToFilerank(moveToMake[1]) << endl;
+               logtext << currentBoard.getMoveNumber() << ": " << numberToFilerank(moveToMake[0]) << " " << numberToFilerank(moveToMake[1]) << endl;
 
                printSimpleBoard(currentBoard);
 
 
                //  Print out move and move number
                if (moveToMake[2] == KINGSIDE_CASTLING) {
-                    printf("%d: O-O\n", moveNumber);
+                    printf("%d: O-O\n", currentBoard.getMoveNumber());
                }
                else if (moveToMake[2] == QUEENSIDE_CASTLING) {
-                    printf("%d: O-O-O\n", moveNumber);
+                    printf("%d: O-O-O\n", currentBoard.getMoveNumber());
                }
                else {
-                    printf("%d: ", moveNumber);
+                    printf("%d: ", currentBoard.getMoveNumber());
                     printMove(moveToMake);
                }
 
@@ -2566,8 +2559,8 @@ void main() {
                */
 
                //  Change turns and increment move
-               currentTurn = -currentTurn;
-               if (currentTurn == WHITE) { moveNumber++; }
+               currentBoard.setTurn(-currentBoard.getTurn());
+               if (currentBoard.getTurn() == WHITE) { moveNumber++; }
 
                //  Check if game is over
                gamePlaying = !checkGameEnd(currentBoard);
@@ -2605,7 +2598,7 @@ void main() {
 
 
                //  75 Move Rule Implement (unless checkmate)
-               if (fiftyMoveCount >= 75) {
+               if (currentBoard.getFiftyMoveCount() >= 75) {
                     gamePlaying = false;
                     gameResult = TIE;
                     break;
