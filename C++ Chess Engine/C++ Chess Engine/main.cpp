@@ -37,6 +37,22 @@ public:
      int getFiftyMoveCount() { return fiftyMoveCount; }
      int getMoveNumber() { return moveNumber; }
 };
+class Move {
+private:
+     int initialSquare;
+     int terminalSquare;
+     int moveType;
+public:
+     // Sets
+     void setInitial(int i) { initialSquare = i; }
+     void setTerminal(int t) { terminalSquare = t; }
+     void setType(int t) { moveType = t; }
+     // Accessors
+     int getInitial() { return initialSquare; }
+     int getTerminal() { return terminalSquare; }
+     int getType() { return moveType; }
+
+};
 
 /******************************************************************************/
 /*                                 GLOBAL VARIABLE                            */
