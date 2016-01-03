@@ -708,7 +708,7 @@ int negaMax(int depth, Board board) {
                }
           }
 
-          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
+          terminalValue = makeMove(board, depthLegalMoveList[depth][i]);
 
           if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
                depthEnpassantSquare[depth - 1] = terminalValue;
@@ -724,7 +724,7 @@ int negaMax(int depth, Board board) {
                max_Score = score;
           }
 
-          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+          undoMove(board, depthLegalMoveList[depth][i], terminalValue);
      }
 
      return max_Score;
@@ -767,7 +767,7 @@ int rootNegaMax(int maxDepth, Board board, int bestMove[3]) {
                }
           }
 
-          terminalValue = makeMove(currentBoard, depthLegalMoveList[maxDepth][i]);
+          terminalValue = makeMove(board, depthLegalMoveList[maxDepth][i]);
 
           if (depthLegalMoveList[maxDepth][i][2] == DOUBLEMOVE) {
                depthEnpassantSquare[maxDepth - 1] = terminalValue;
@@ -787,7 +787,7 @@ int rootNegaMax(int maxDepth, Board board, int bestMove[3]) {
 
           }
 
-          undoMove(currentBoard, depthLegalMoveList[maxDepth][i], terminalValue);
+          undoMove(board, depthLegalMoveList[maxDepth][i], terminalValue);
      }
 
      return max_Score;
@@ -833,7 +833,7 @@ int alphabeta(int depth, Board board, int alpha, int beta) {
                }
           }
 
-          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
+          terminalValue = makeMove(board, depthLegalMoveList[depth][i]);
 
           if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
                depthEnpassantSquare[depth - 1] = terminalValue;
@@ -847,14 +847,14 @@ int alphabeta(int depth, Board board, int alpha, int beta) {
 
           if (score >= beta) {
 
-               undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+               undoMove(board, depthLegalMoveList[depth][i], terminalValue);
                return beta;
           }
           
           if (score > alpha) {
                alpha = score;
           }
-          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+          undoMove(board, depthLegalMoveList[depth][i], terminalValue);
      }
 
      return alpha;
@@ -895,7 +895,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
                }
           }
 
-          terminalValue = makeMove(currentBoard, depthLegalMoveList[maxDepth][i]);
+          terminalValue = makeMove(board, depthLegalMoveList[maxDepth][i]);
 
           if (depthLegalMoveList[maxDepth][i][2] == DOUBLEMOVE) {
                depthEnpassantSquare[maxDepth - 1] = terminalValue;
@@ -910,7 +910,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
           // TODO: Check if this is needed and change it
           if (score >= beta) {
 
-               undoMove(currentBoard, depthLegalMoveList[maxDepth][i], terminalValue);
+               undoMove(board, depthLegalMoveList[maxDepth][i], terminalValue);
                return beta;
           }
 
@@ -920,7 +920,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
                bestMove[1] = depthLegalMoveList[maxDepth][i][1];
                bestMove[2] = depthLegalMoveList[maxDepth][i][2];
           }
-          undoMove(currentBoard, depthLegalMoveList[maxDepth][i], terminalValue);
+          undoMove(board, depthLegalMoveList[maxDepth][i], terminalValue);
      }
 
      return alpha;
@@ -1757,7 +1757,7 @@ u64 divide(int depth, int maxDepth, Board board, bool showOutput) {
                printf("\n");
           }
 
-          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+          undoMove(board, depthLegalMoveList[depth][i], terminalValue);
      }
      return node;
 
@@ -1830,7 +1830,7 @@ u64 divide2(int depth, int maxDepth, Board board, bool showOutput) {
                     numberToFile(depthLegalMoveList[depth][i][1]) << numberToRank(depthLegalMoveList[depth][i][1]) << ": " << individualNode << std::endl;
           }
 
-          undoMove(currentBoard, depthLegalMoveList[depth][i], terminalValue);
+          undoMove(board, depthLegalMoveList[depth][i], terminalValue);
      }
      return node;
      output2.close();
