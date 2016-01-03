@@ -707,16 +707,9 @@ int negaMax(int depth, Board board) {
                     board.setCastling(BKCASTLING, false);
                }
           }
+          int enpassantSquare = board.getEnpassantSquare();
 
           terminalValue = makeMove(board, depthLegalMoveList[depth][i]);
-
-          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
-               depthEnpassantSquare[depth - 1] = terminalValue;
-               //  this terminal value is actually enpassantSquare
-          }
-          else { // if not, revert it back to 0
-               depthEnpassantSquare[depth - 1] = 0;
-          }
 
           score = -negaMax(depth-1, board);
 
@@ -725,6 +718,7 @@ int negaMax(int depth, Board board) {
           }
 
           undoMove(board, depthLegalMoveList[depth][i], terminalValue);
+          board.setEnpassantSquare(enpassantSquare);
      }
 
      return max_Score;
@@ -767,15 +761,8 @@ int rootNegaMax(int maxDepth, Board board, int bestMove[3]) {
                }
           }
 
+          int enpassantSquare = board.getEnpassantSquare();
           terminalValue = makeMove(board, depthLegalMoveList[maxDepth][i]);
-
-          if (depthLegalMoveList[maxDepth][i][2] == DOUBLEMOVE) {
-               depthEnpassantSquare[maxDepth - 1] = terminalValue;
-               //  this terminal value is actually enpassantSquare
-          }
-          else { // if not, revert it back to 0
-               depthEnpassantSquare[maxDepth - 1] = 0;
-          }
 
           score = -negaMax(maxDepth - 1, board);
 
@@ -788,6 +775,7 @@ int rootNegaMax(int maxDepth, Board board, int bestMove[3]) {
           }
 
           undoMove(board, depthLegalMoveList[maxDepth][i], terminalValue);
+          board.setEnpassantSquare(enpassantSquare);
      }
 
      return max_Score;
@@ -800,8 +788,6 @@ int alphabeta(int depth, Board board, int alpha, int beta) {
 
      int score;
      int terminalValue;
-
-     depthEnpassantSquare[depth - 1] = 0;
 
      moveGeneration(board, depthAllMoveList[depth], &depthAllMoveCount[depth]);
      legalMoves(board, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
@@ -832,22 +818,16 @@ int alphabeta(int depth, Board board, int alpha, int beta) {
                     board.setCastling(BKCASTLING, false);
                }
           }
+          // Save enpassantSquare so it doesn't get lost while making move
+          int enpassantSquare = board.getEnpassantSquare();
 
           terminalValue = makeMove(board, depthLegalMoveList[depth][i]);
-
-          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
-               depthEnpassantSquare[depth - 1] = terminalValue;
-               //  this terminal value is actually enpassantSquare
-          }
-          else { // if not, revert it back to 0
-               depthEnpassantSquare[depth - 1] = 0;
-          }
 
           score = -alphabeta(depth - 1, board, -beta, -alpha);
 
           if (score >= beta) {
-
                undoMove(board, depthLegalMoveList[depth][i], terminalValue);
+               board.setEnpassantSquare(enpassantSquare);
                return beta;
           }
           
@@ -855,6 +835,7 @@ int alphabeta(int depth, Board board, int alpha, int beta) {
                alpha = score;
           }
           undoMove(board, depthLegalMoveList[depth][i], terminalValue);
+          board.setEnpassantSquare(enpassantSquare);
      }
 
      return alpha;
@@ -862,8 +843,6 @@ int alphabeta(int depth, Board board, int alpha, int beta) {
 int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3]) {
      int score;
      int terminalValue;
-
-     depthEnpassantSquare[maxDepth - 1] = 0;
 
      moveGeneration(board, depthAllMoveList[maxDepth], &depthAllMoveCount[maxDepth]);
      legalMoves(board, depthAllMoveList[maxDepth], depthAllMoveCount[maxDepth], depthLegalMoveList[maxDepth], &depthLegalMoveCount[maxDepth]);
@@ -894,16 +873,9 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
                     board.setCastling(BKCASTLING, false);
                }
           }
+          int enpassantSquare = board.getEnpassantSquare();
 
           terminalValue = makeMove(board, depthLegalMoveList[maxDepth][i]);
-
-          if (depthLegalMoveList[maxDepth][i][2] == DOUBLEMOVE) {
-               depthEnpassantSquare[maxDepth - 1] = terminalValue;
-               //  this terminal value is actually enpassantSquare
-          }
-          else { // if not, revert it back to 0
-               depthEnpassantSquare[maxDepth - 1] = 0;
-          }
 
           score = -alphabeta(maxDepth - 1, board, -beta, -alpha);
 
@@ -911,6 +883,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
           if (score >= beta) {
 
                undoMove(board, depthLegalMoveList[maxDepth][i], terminalValue);
+               board.setEnpassantSquare(enpassantSquare);
                return beta;
           }
 
@@ -921,6 +894,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
                bestMove[2] = depthLegalMoveList[maxDepth][i][2];
           }
           undoMove(board, depthLegalMoveList[maxDepth][i], terminalValue);
+          board.setEnpassantSquare(enpassantSquare);
      }
 
      return alpha;
@@ -1839,6 +1813,9 @@ u64 divide2(int depth, int maxDepth, Board board, bool showOutput) {
 int makeMove(Board &board, int move[3]) {
      int terminalValue;
      int initial = move[0], terminal = move[1], moveType = move[2];
+
+     board.setEnpassantSquare(0);
+
      if (moveType == NORMAL) {
           terminalValue = board.getSquare(terminal);
           board.setSquare(terminal, board.getSquare(initial));
@@ -1848,6 +1825,7 @@ int makeMove(Board &board, int move[3]) {
      if (moveType == DOUBLEMOVE) {
           board.setSquare(terminal, board.getSquare(initial));
           board.setSquare(initial, EMPTYSQUARE);
+          board.setEnpassantSquare((terminal + initial) / 2);
           //  terminalValue is actually enpassantSquare
           return (terminal+initial)/2;
      }
