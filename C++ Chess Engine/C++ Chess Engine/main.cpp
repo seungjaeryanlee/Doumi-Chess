@@ -670,7 +670,7 @@ int position120to64(int position120) {
 
 int negaMax(int depth, Board board) {
      if (depth == 0) {
-          return board.getTurn() * boardEvaluation(currentBoard);
+          return board.getTurn() * boardEvaluation(board);
      }
      int max_Score = INT_MIN;
      int score;
@@ -779,7 +779,7 @@ int rootNegaMax(int maxDepth, Board board, int bestMove[3]) {
 
 int alphabeta(int depth, Board board, int alpha, int beta) {
      if (depth == 0) {
-          return board.getTurn() * boardEvaluation(currentBoard);
+          return board.getTurn() * boardEvaluation(board);
      }
 
      int score;
@@ -872,8 +872,9 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
           int enpassantSquare = board.getEnpassantSquare();
           terminalValue = makeMove(board, depthLegalMoveList[maxDepth][i]);
 
+          printSimpleBoard(board);
           score = -alphabeta(maxDepth - 1, board, -beta, -alpha);
-
+          printf("%d\n", score);
 
           // TODO: Check if this is needed and change it
           if (score >= beta) {
@@ -889,7 +890,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
                bestMove[1] = depthLegalMoveList[maxDepth][i][1];
                bestMove[2] = depthLegalMoveList[maxDepth][i][2];
           }
-          
+
           undoMove(board, depthLegalMoveList[maxDepth][i], terminalValue);
           board.setEnpassantSquare(enpassantSquare);
      }
@@ -2012,7 +2013,7 @@ void main() {
      
      //  Initialize Board
      board120Setup();
-     //FENboardSetup("k7/8/8/8/8/P7/7P/7K w - - 0 1");
+     //FENboardSetup("k7/8/p7/8/8/7P/8/7K w - - 0 1");
      //FENboardSetup(currentBoard, "k7/pppppppp/8/8/8/8/8/R3K3 w Q - 0 1");
      //FENboardSetup(currentBoard, "k7/8/8/8/8/8/8/5RRK w - - 0 1");
      //  FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
