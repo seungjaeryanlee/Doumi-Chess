@@ -133,7 +133,6 @@ int currentBoardLegalMoveList[MAX_MOVEGEN_COUNT][3];
 int currentBoardLegalMoveCount;
 int depthAllMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT][3];
 int depthAllMoveCount[MAXIMUM_DEPTH + 1];
-int depthEnpassantSquare[MAXIMUM_DEPTH + 1];
 int depthLegalMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT][3];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 //  added for time performance check
@@ -729,8 +728,6 @@ int rootNegaMax(int maxDepth, Board board, int bestMove[3]) {
      int score;
      int terminalValue;
 
-     depthEnpassantSquare[maxDepth - 1] = 0;
-
      moveGeneration(board, depthAllMoveList[maxDepth], &depthAllMoveCount[maxDepth]);
      legalMoves(board, depthAllMoveList[maxDepth], depthAllMoveCount[maxDepth], depthLegalMoveList[maxDepth], &depthLegalMoveCount[maxDepth]);
 
@@ -820,7 +817,7 @@ int alphabeta(int depth, Board board, int alpha, int beta) {
           }
           // Save enpassantSquare so it doesn't get lost while making move
           int enpassantSquare = board.getEnpassantSquare();
-
+         
           terminalValue = makeMove(board, depthLegalMoveList[depth][i]);
 
           score = -alphabeta(depth - 1, board, -beta, -alpha);
@@ -878,6 +875,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
           terminalValue = makeMove(board, depthLegalMoveList[maxDepth][i]);
 
           score = -alphabeta(maxDepth - 1, board, -beta, -alpha);
+
 
           // TODO: Check if this is needed and change it
           if (score >= beta) {
@@ -1335,6 +1333,8 @@ void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveL
 
           //  make move
           terminalValue = makeMove(board, moveList[i]);
+          //  In this case, we don't want makeMove to change turn, so let's change it again
+          board.changeTurn();
 
           //  if king is safe
           if (!squareAttackCheck(board, changedKingPosition)) {
@@ -1346,6 +1346,8 @@ void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveL
 
           //  undo move
           undoMove(board, moveList[i], terminalValue);
+          //  Same reason as above
+          board.changeTurn();
      }
 }
 bool squareAttackCheck(Board board, int position) {
@@ -1670,7 +1672,6 @@ u64 divide(int depth, int maxDepth, Board board, bool showOutput) {
 
      depthAllMoveCount[depth] = 0;
      depthLegalMoveCount[depth] = 0;
-     depthEnpassantSquare[depth - 1] = 0;
 
      u64 node = 0, individualNode = 0;
      int terminalValue;
@@ -1708,17 +1709,10 @@ u64 divide(int depth, int maxDepth, Board board, bool showOutput) {
                     board.setCastling(BKCASTLING, false);
                }
           }
-
-          terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
-
-          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
-               depthEnpassantSquare[depth - 1] = terminalValue;
-               //  this terminal value is actually enpassantSquare
-          }
-          else { // if not, revert it back to 0
-               depthEnpassantSquare[depth - 1] = 0;
-          }
-
+          int enpassantSquare = board.getEnpassantSquare();
+          
+          terminalValue = makeMove(board, depthLegalMoveList[depth][i]);
+          
           node += divide(depth - 1, maxDepth, board, showOutput);
           if (showOutput) {
                individualNode = divide(depth - 1, maxDepth, board, false);
@@ -1732,6 +1726,7 @@ u64 divide(int depth, int maxDepth, Board board, bool showOutput) {
           }
 
           undoMove(board, depthLegalMoveList[depth][i], terminalValue);
+          board.setEnpassantSquare(enpassantSquare);
      }
      return node;
 
@@ -1746,7 +1741,6 @@ u64 divide2(int depth, int maxDepth, Board board, bool showOutput) {
 
      depthAllMoveCount[depth] = 0;
      depthLegalMoveCount[depth] = 0;
-     depthEnpassantSquare[depth - 1] = 0;
 
      u64 node = 0, individualNode = 0;
      int terminalValue;
@@ -1783,16 +1777,9 @@ u64 divide2(int depth, int maxDepth, Board board, bool showOutput) {
                     board.setCastling(BKCASTLING, false);
                }
           }
-
+          int enpassantSquare = board.getEnpassantSquare();
           terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
 
-          if (depthLegalMoveList[depth][i][2] == DOUBLEMOVE) {
-               depthEnpassantSquare[depth - 1] = terminalValue;
-               //  this terminal value is actually enpassantSquare
-          }
-          else { // if not, revert it back to 0
-               depthEnpassantSquare[depth - 1] = 0;
-          }
 
           node += divide(depth - 1, maxDepth, board, showOutput);
           if (showOutput) {
@@ -1805,6 +1792,7 @@ u64 divide2(int depth, int maxDepth, Board board, bool showOutput) {
           }
 
           undoMove(board, depthLegalMoveList[depth][i], terminalValue);
+          board.setEnpassantSquare(enpassantSquare);
      }
      return node;
      output2.close();
@@ -1815,6 +1803,7 @@ int makeMove(Board &board, int move[3]) {
      int initial = move[0], terminal = move[1], moveType = move[2];
 
      board.setEnpassantSquare(0);
+     board.changeTurn();
 
      if (moveType == NORMAL) {
           terminalValue = board.getSquare(terminal);
@@ -1928,6 +1917,8 @@ int makeMove(Board &board, int move[3]) {
 }
 void undoMove(Board &board, int move[3], int terminalValue) {
      int initial = move[0], terminal = move[1], moveType = move[2];
+
+     board.changeTurn();
      if (moveType == NORMAL) {
           board.setSquare(initial, board.getSquare(terminal));
           board.setSquare(terminal, terminalValue);
@@ -2109,7 +2100,7 @@ void main() {
                     break;
                }
           }
-          
+
           //  Let user determine color to play in first loop
           correctInput = false;
           while (!correctInput && userColor == ERROR_INTEGER) {
@@ -2400,8 +2391,9 @@ void main() {
                
                saveCurrentState();
 
+               // TODO: Check if this command can disappear now
                // copy ep Square: needs to be done before any recursion
-               depthEnpassantSquare[EVAL_DEPTH] = currentBoard.getEnpassantSquare();
+               //depthEnpassantSquare[EVAL_DEPTH] = currentBoard.getEnpassantSquare();
 
                //printf("Current Board Evaluation: %d\n", boardEvaluation(currentBoard));
                //int negaMaxMove[3];
