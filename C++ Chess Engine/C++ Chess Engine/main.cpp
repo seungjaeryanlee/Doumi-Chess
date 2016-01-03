@@ -61,7 +61,7 @@ public:
 /******************************************************************************/
 /*                                 GLOBAL VARIABLE                            */
 /******************************************************************************/
-int currentBoard[120];
+Board currentBoard;
 bool gamePlaying = true;
 bool endGame = false;
 //  PCSQ Tables from 
@@ -215,56 +215,55 @@ bool spectate = false;
 
 /*                             BOARD SETUP FUNCTIONS                          */
 void board120Setup() {
-     currentTurn = WHITE;
-     enpassantSquare = 0;
-     moveNumber = 1;
-     fiftyMoveCount = 0;
-     for (int i = 0; i < 4; i++) {
-          castlingCheck[i] = true;
-     }
+     currentBoard.setTurn(WHITE);
+     currentBoard.setEnpassantSquare(0);
+     currentBoard.setMoveNumber(1);
+     currentBoard.setFiftyMoveCount(0);
+
+     currentBoard.setCastlingArray({ true, true, true, true });
      
      //  Add Empty Squares
      for (int i = 0; i < 8; i++) {
           for (int j = 0; j < 8; j++) {
-               currentBoard[(i + 2) * 10 + j + 1] = EMPTYSQUARE;
+               currentBoard.setSquare((i + 2) * 10 + j + 1, EMPTYSQUARE);
           }
      }
      
      //  Add Error Squares
      for (int j = 0; j < 10; j++) {
-          currentBoard[j] = ERRORSQUARE;
-          currentBoard[10 + j] = ERRORSQUARE;
-          currentBoard[100 + j] = ERRORSQUARE;
-          currentBoard[110 + j] = ERRORSQUARE;
+          currentBoard.setSquare(j, ERRORSQUARE);
+          currentBoard.setSquare(10 + j, ERRORSQUARE);
+          currentBoard.setSquare(100 + j, ERRORSQUARE);
+          currentBoard.setSquare(110 + j, ERRORSQUARE);
      }
      for (int j = 0; j < 12; j++) {
-          currentBoard[10 * j] = ERRORSQUARE;
-          currentBoard[10 * j + 9] = ERRORSQUARE;
+          currentBoard.setSquare(10*j, ERRORSQUARE);
+          currentBoard.setSquare(10*j + 9, ERRORSQUARE);
      }
      
      //  Add Non-Pawn Pieces
-     currentBoard[A8] = BLACKROOK;
-     currentBoard[B8] = BLACKKNIGHT;
-     currentBoard[C8] = BLACKBISHOP;
-     currentBoard[D8] = BLACKQUEEN;
-     currentBoard[E8] = BLACKKING;
-     currentBoard[F8] = BLACKBISHOP;
-     currentBoard[G8] = BLACKKNIGHT;
-     currentBoard[H8] = BLACKROOK;
+     currentBoard.setSquare(A8, BLACKROOK);
+     currentBoard.setSquare(B8, BLACKKNIGHT);
+     currentBoard.setSquare(C8, BLACKBISHOP);
+     currentBoard.setSquare(D8, BLACKQUEEN);
+     currentBoard.setSquare(E8, BLACKKING);
+     currentBoard.setSquare(F8, BLACKBISHOP);
+     currentBoard.setSquare(G8, BLACKKNIGHT);
+     currentBoard.setSquare(H8, BLACKROOK);
 
-     currentBoard[A1] = WHITEROOK;
-     currentBoard[B1] = WHITEKNIGHT;
-     currentBoard[C1] = WHITEBISHOP;
-     currentBoard[D1] = WHITEQUEEN;
-     currentBoard[E1] = WHITEKING;
-     currentBoard[F1] = WHITEBISHOP;
-     currentBoard[G1] = WHITEKNIGHT;
-     currentBoard[H1] = WHITEROOK;
+     currentBoard.setSquare(A1, WHITEROOK);
+     currentBoard.setSquare(B1, WHITEKNIGHT);
+     currentBoard.setSquare(C1, WHITEBISHOP);
+     currentBoard.setSquare(D1, WHITEQUEEN);
+     currentBoard.setSquare(E1, WHITEKING);
+     currentBoard.setSquare(F1, WHITEBISHOP);
+     currentBoard.setSquare(G1, WHITEKNIGHT);
+     currentBoard.setSquare(H1, WHITEROOK);
 
      //  Add Pawn Pieces
      for (int i = 0; i < 8; i++) {
-          currentBoard[A2+i] = WHITEPAWN;
-          currentBoard[A7+i] = BLACKPAWN;
+          currentBoard.setSquare(A2 + i, WHITEPAWN);
+          currentBoard.setSquare(A7 + i, BLACKPAWN);
      }
 }
 void FENboardSetup(int board[120], std::string FEN) {
@@ -1011,6 +1010,8 @@ void saveCurrentState() {
           savedBoard[halfMoveCount].setCastling(i, castlingCheck[i]);
      }
      savedBoard[halfMoveCount].setEnpassantSquare(enpassantSquare);
+
+     //  TODO: Check repetition here
 
      //  Better place might be elsewhere
      halfMoveCount++;
