@@ -1166,98 +1166,100 @@ void knightMoveGeneration(Board board, int position, int moveList[250][3], int *
           addMove(position, position - 2 * ROW - COLUMN, NORMAL, moveList, moveCount);
      }
 }
-void bishopMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
+void bishopMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount) {
+     int turn = board.getTurn();
      bool topright = true, downright = true, downleft = true, topleft = true;
      for (int i = 1; i < 8; i++) {
           if (topright == true &&
-               (checkColor(board[position - i*ROW + i*COLUMN]) == -turn ||
-                    board[position - i*ROW + i*COLUMN] == EMPTYSQUARE)) {
+               (checkColor(board.getSquare(position - i*ROW + i*COLUMN)) == -turn ||
+                    board.getSquare(position - i*ROW + i*COLUMN) == EMPTYSQUARE)) {
                addMove(position, position - i*ROW + i*COLUMN, NORMAL, moveList, moveCount);
-               if (checkColor(board[position - i*ROW + i*COLUMN]) == -turn) {
+               if (checkColor(board.getSquare(position - i*ROW + i*COLUMN)) == -turn) {
                     topright = false;
                }
           }
           else { topright = false; }
 
           if (downright == true &&
-               (checkColor(board[position + i*ROW + i*COLUMN]) == -turn ||
-                    board[position + i*ROW + i*COLUMN] == EMPTYSQUARE)) {
+               (checkColor(board.getSquare(position + i*ROW + i*COLUMN)) == -turn ||
+                    board.getSquare(position + i*ROW + i*COLUMN) == EMPTYSQUARE)) {
                addMove(position, position + i*ROW + i*COLUMN, NORMAL, moveList, moveCount);
-               if (checkColor(board[position + i*ROW + i*COLUMN]) == -turn) {
+               if (checkColor(board.getSquare(position + i*ROW + i*COLUMN)) == -turn) {
                     downright = false;
                }
           }
           else { downright = false; }
 
           if (downleft == true &&
-               (checkColor(board[position + i*ROW - i*COLUMN]) == -turn ||
-                    board[position + i*ROW - i*COLUMN] == EMPTYSQUARE)) {
+               (checkColor(board.getSquare(position + i*ROW - i*COLUMN)) == -turn ||
+                    board.getSquare(position + i*ROW - i*COLUMN) == EMPTYSQUARE)) {
                addMove(position, position + i*ROW - i*COLUMN, NORMAL, moveList, moveCount);
-               if (checkColor(board[position + i*ROW - i*COLUMN]) == -turn) {
+               if (checkColor(board.getSquare(position + i*ROW - i*COLUMN)) == -turn) {
                     downleft = false;
                }
           }
           else { downleft = false; }
 
           if (topleft == true &&
-               (checkColor(board[position - i*ROW - i*COLUMN]) == -turn ||
-                    board[position - i*ROW - i*COLUMN] == EMPTYSQUARE)) {
+               (checkColor(board.getSquare(position - i*ROW - i*COLUMN)) == -turn ||
+                    board.getSquare(position - i*ROW - i*COLUMN) == EMPTYSQUARE)) {
                addMove(position, position - i*ROW - i*COLUMN, NORMAL, moveList, moveCount);
-               if (checkColor(board[position - i*ROW - i*COLUMN]) == -turn) {
+               if (checkColor(board.getSquare(position - i*ROW - i*COLUMN)) == -turn) {
                     topleft = false;
                }
           }
           else { topleft = false; }
      }
 }
-void rookMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
+void rookMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount) {
+     int turn = board.getTurn();
      bool top = true, right = true, down = true, left = true;
 
      for (int i = 1; i < 8; i++) {
           if (top == true &&
-               (checkColor(board[position - i*ROW]) == -turn ||
-                    board[position - i*ROW] == EMPTYSQUARE)) {
+               (checkColor(board.getSquare(position - i*ROW)) == -turn ||
+                    board.getSquare(position - i*ROW) == EMPTYSQUARE)) {
                addMove(position, position - i*ROW, NORMAL, moveList, moveCount);
-               if (checkColor(board[position - i*ROW]) == -turn) {
+               if (checkColor(board.getSquare(position - i*ROW)) == -turn) {
                     top = false;
                }
           }
           else { top = false; }
 
           if (right == true &&
-               (checkColor(board[position + i*COLUMN]) == -turn ||
-                    board[position + i*COLUMN] == EMPTYSQUARE)) {
+               (checkColor(board.getSquare(position + i*COLUMN)) == -turn ||
+                    board.getSquare(position + i*COLUMN) == EMPTYSQUARE)) {
                addMove(position, position + i*COLUMN, NORMAL, moveList, moveCount);
-               if (checkColor(board[position + i*COLUMN]) == -turn) {
+               if (checkColor(board.getSquare(position + i*COLUMN)) == -turn) {
                     right = false;
                }
           }
           else { right = false; }
 
           if (down == true &&
-               (checkColor(board[position + i*ROW]) == -turn ||
-                    board[position + i*ROW] == EMPTYSQUARE)) {
+               (checkColor(board.getSquare(position + i*ROW)) == -turn ||
+                    board.getSquare(position + i*ROW) == EMPTYSQUARE)) {
                addMove(position, position + i*ROW, NORMAL, moveList, moveCount);
-               if (checkColor(board[position + i*ROW]) == -turn) {
+               if (checkColor(board.getSquare(position + i*ROW)) == -turn) {
                     down = false;
                }
           }
           else { down = false; }
 
           if (left == true &&
-               (checkColor(board[position - i*COLUMN]) == -turn ||
-                    board[position - i*COLUMN] == EMPTYSQUARE)) {
+               (checkColor(board.getSquare(position - i*COLUMN)) == -turn ||
+                    board.getSquare(position - i*COLUMN) == EMPTYSQUARE)) {
                addMove(position, position - i*COLUMN, NORMAL, moveList, moveCount);
-               if (checkColor(board[position - i*COLUMN]) == -turn) {
+               if (checkColor(board.getSquare(position - i*COLUMN)) == -turn) {
                     left = false;
                }
           }
           else { left = false; }
      }
 }
-void queenMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
-     rookMoveGeneration(board, turn, position, moveList, moveCount);
-     bishopMoveGeneration(board, turn, position, moveList, moveCount);
+void queenMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount) {
+     rookMoveGeneration(board, position, moveList, moveCount);
+     bishopMoveGeneration(board, position, moveList, moveCount);
 }
 void kingMoveGeneration(int board[120], int turn, int position, int moveList[250][3], int *moveCount) {
      if (checkColor(board[position + ROW]) == -turn ||
