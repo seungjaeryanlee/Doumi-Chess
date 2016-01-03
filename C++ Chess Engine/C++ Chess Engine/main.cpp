@@ -145,9 +145,6 @@ int gameResult = NOT_FINISHED;
 //  Stores Board and Board States for threefold repetition
 Board savedBoard[MAX_MOVENUMBER + 1];
 int repetitionCount[MAX_MOVENUMBER + 1];
-//  The castling states of the current Board
-//  TODO: Delete this
-bool castlingCheck[4];
 //  Which color user plays
 int userColor = ERROR_INTEGER;
 //  To create a log of moves
@@ -1232,16 +1229,16 @@ void kingMoveGeneration(Board board, int position, int moveList[250][3], int *mo
 
 void castlingMoveGeneration(Board board, int moveList[250][3], int *moveCount) {
      if (board.getTurn() == WHITE) {
-          if (castlingCheck[WKCASTLING] &&                                                 //  neither piece moved
+          if (board.getCastling(WKCASTLING) &&                                             //  neither piece moved
                board.getSquare(E1) == WHITEKING && board.getSquare(H1) == WHITEROOK &&     //  both pieces exists on board
                board.getSquare(F1) == EMPTYSQUARE && board.getSquare(G1) == EMPTYSQUARE && //  between them are empty
-               squareAttackCheck(board, E1) == false &&                             //  not in check
-               squareAttackCheck(board, F1) == false &&                             //  not attacked while moving
+               squareAttackCheck(board, E1) == false &&                                    //  not in check
+               squareAttackCheck(board, F1) == false &&                                    //  not attacked while moving
                squareAttackCheck(board, G1) == false) {
               
                addMove(E1, G1, KINGSIDE_CASTLING, moveList, moveCount);
           }
-          if (castlingCheck[WQCASTLING] && board.getSquare(B1) == EMPTYSQUARE &&
+          if (board.getCastling(WQCASTLING) && board.getSquare(B1) == EMPTYSQUARE &&
                board.getSquare(C1) == EMPTYSQUARE && board.getSquare(D1) == EMPTYSQUARE &&
                board.getSquare(E1) == WHITEKING && board.getSquare(A1) == WHITEROOK &&
                squareAttackCheck(board, E1) == false &&
@@ -1252,16 +1249,16 @@ void castlingMoveGeneration(Board board, int moveList[250][3], int *moveCount) {
 
      }
      if (board.getTurn() == BLACK) {
-          if (castlingCheck[BKCASTLING] &&                                                 //  neither piece moved
+          if (board.getCastling(BKCASTLING) &&                                             //  neither piece moved
                board.getSquare(E8) == BLACKKING && board.getSquare(H8) == BLACKROOK &&     //  both pieces exists on board
                board.getSquare(F8) == EMPTYSQUARE && board.getSquare(G8) == EMPTYSQUARE && //  between them are empty
-               squareAttackCheck(board, E8) == false &&                             //  not in check
-               squareAttackCheck(board, F8) == false &&                             //  not attacked while moving
+               squareAttackCheck(board, E8) == false &&                                    //  not in check
+               squareAttackCheck(board, F8) == false &&                                    //  not attacked while moving
                squareAttackCheck(board, G8) == false) {
                
                addMove(E8, G8, KINGSIDE_CASTLING, moveList, moveCount);
           }
-          if (castlingCheck[BQCASTLING] && board.getSquare(B8) == EMPTYSQUARE &&
+          if (board.getCastling(BQCASTLING) && board.getSquare(B8) == EMPTYSQUARE &&
                board.getSquare(C8) == EMPTYSQUARE && board.getSquare(D8) == EMPTYSQUARE &&
                board.getSquare(E8) == BLACKKING && board.getSquare(A8) == BLACKROOK &&
                squareAttackCheck(board, E8) == false &&
@@ -2046,7 +2043,8 @@ void main() {
      logtext.open("log.txt");
      
      //  Initialize Board
-     board120Setup();
+     //board120Setup();
+     FENboardSetup("k7/8/8/8/8/P7/7P/7K w - - 0 1");
      //FENboardSetup(currentBoard, "k7/pppppppp/8/8/8/8/8/R3K3 w Q - 0 1");
      //FENboardSetup(currentBoard, "k7/8/8/8/8/8/8/5RRK w - - 0 1");
      //  FENboardSetup(currentBoard, "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
@@ -2367,7 +2365,7 @@ void main() {
 
                     // Update castlingCheck, enpassantSquare, currentTurn, moveNumber, fiftyMoveCount
                     for (int i = 0; i < 4; i++) {
-                         castlingCheck[i]  = lastCastlingCheck[i];
+                         currentBoard.setCastling(i, lastCastlingCheck[i]);
                     }
                     currentBoard.setEnpassantSquare(lastEnpassantSquare);
                     if (currentBoard.getFiftyMoveCount() > 0) {
@@ -2457,7 +2455,7 @@ void main() {
 
                //  Save castlingCheck for undoMove
                for (int i = 0; i < 4; i++) {
-                    lastCastlingCheck[i] = castlingCheck[i];
+                    lastCastlingCheck[i] = currentBoard.getCastling(i);
                }
                //  Update castlingCheck
                if (currentBoard.getSquare(moveToMake[0]) == WHITEROOK && moveToMake[0] == A1) {
