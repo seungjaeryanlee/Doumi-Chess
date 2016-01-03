@@ -24,14 +24,14 @@ public:
      void setMoveNumber(int m) { moveNumber = m; }
 
      //  Accessors
-     array<int, 120> getBoard() { return board; }
-     int getSquare(int square) { return board.at(square); }
-     array<bool, 4> getCastlingArray() { return castlingCheck; }
-     bool getCastling(int index) { return castlingCheck.at(index); }
-     int getTurn() { return turn; }
-     int getEnpassantSquare() { return enpassantSquare; }
-     int getFiftyMoveCount() { return fiftyMoveCount; }
-     int getMoveNumber() { return moveNumber; }
+     const array<int, 120> getBoard() { return board; }
+     const int getSquare(int square) { return board.at(square); }
+     const array<bool, 4> getCastlingArray() { return castlingCheck; }
+     const bool getCastling(int index) { return castlingCheck.at(index); }
+     const int getTurn() { return turn; }
+     const int getEnpassantSquare() { return enpassantSquare; }
+     const int getFiftyMoveCount() { return fiftyMoveCount; }
+     const int getMoveNumber() { return moveNumber; }
 
      //  Other Functions
      void changeTurn() { turn = -turn; }
@@ -51,9 +51,9 @@ public:
      void setTerminal(int t) { terminalSquare = t; }
      void setType(int t) { moveType = t; }
      // Accessors
-     int getInitial() { return initialSquare; }
-     int getTerminal() { return terminalSquare; }
-     int getType() { return moveType; }
+     const int getInitial() { return initialSquare; }
+     const int getTerminal() { return terminalSquare; }
+     const int getType() { return moveType; }
 
 };
 

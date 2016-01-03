@@ -2470,9 +2470,8 @@ void main() {
                     lastMove[i] = moveToMake[i];
                }
                logtext << currentBoard.getMoveNumber() << ": " << numberToFilerank(moveToMake[0]) << " " << numberToFilerank(moveToMake[1]) << endl;
-
+               
                printSimpleBoard(currentBoard);
-
 
                //  Print out move and move number
                if (moveToMake[2] == KINGSIDE_CASTLING) {
