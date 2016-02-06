@@ -2022,6 +2022,7 @@ void main() {
 
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
+     printf("Engine Search Depth: %d\n", EVAL_DEPTH);
      printf("Castling - WK:%d WQ:%d BK:%d BQ:%d\n", currentBoard.getCastling(WKCASTLING), currentBoard.getCastling(WQCASTLING), currentBoard.getCastling(BKCASTLING), currentBoard.getCastling(BQCASTLING));
      printf("en passant Square: %d\n", currentBoard.getEnpassantSquare());
      printf("Move number: %d\n", currentBoard.getMoveNumber());
@@ -2127,6 +2128,9 @@ void main() {
                     continue;
                }
           }
+
+          logtext << "COM Search Depth: " << EVAL_DEPTH << endl;
+
           if (currentBoard.getTurn() == userColor && spectate == false) {
                
                int initialSquare, terminalSquare;
