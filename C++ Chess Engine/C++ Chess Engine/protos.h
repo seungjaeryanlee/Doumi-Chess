@@ -13,25 +13,25 @@ private:
      int moveNumber;
 
 public:
-     //  Sets
-     void setBoard(array<int, 120> b) { board = b; }
-     void setSquare(int square, int value) { board.at(square) = value; }
-     void setCastlingArray(array<bool, 4> cc) { castlingCheck = cc; }
-     void setCastling(int index, bool value) { castlingCheck.at(index) = value; }
-     void setTurn(int t) { turn = t; }
-     void setEnpassantSquare(int e) { enpassantSquare = e; }
-     void setFiftyMoveCount(int f) { fiftyMoveCount = f; }
-     void setMoveNumber(int m) { moveNumber = m; }
+     //  Mutators
+     void setBoard(const array<int, 120> b) { board = b; }
+     void setSquare(const int square, const int value) { board.at(square) = value; }
+     void setCastlingArray(const array<bool, 4> cc) { castlingCheck = cc; }
+     void setCastling(const int index, const bool value) { castlingCheck.at(index) = value; }
+     void setTurn(const int t) { turn = t; }
+     void setEnpassantSquare(const int e) { enpassantSquare = e; }
+     void setFiftyMoveCount(const int f) { fiftyMoveCount = f; }
+     void setMoveNumber(const int m) { moveNumber = m; }
 
      //  Accessors
-     const array<int, 120> getBoard() { return board; }
-     const int getSquare(int square) { return board.at(square); }
-     const array<bool, 4> getCastlingArray() { return castlingCheck; }
-     const bool getCastling(int index) { return castlingCheck.at(index); }
-     const int getTurn() { return turn; }
-     const int getEnpassantSquare() { return enpassantSquare; }
-     const int getFiftyMoveCount() { return fiftyMoveCount; }
-     const int getMoveNumber() { return moveNumber; }
+     const array<int, 120> getBoard() const { return board; }
+     const int getSquare(int square) const { return board.at(square); }
+     const array<bool, 4> getCastlingArray() const { return castlingCheck; }
+     const bool getCastling(int index) const { return castlingCheck.at(index); }
+     const int getTurn() const { return turn; }
+     const int getEnpassantSquare() const { return enpassantSquare; }
+     const int getFiftyMoveCount() const { return fiftyMoveCount; }
+     const int getMoveNumber() const { return moveNumber; }
 
      //  Other Functions
      void changeTurn() { turn = -turn; }
@@ -46,14 +46,14 @@ private:
      int terminalSquare;
      int moveType;
 public:
-     // Sets
-     void setInitial(int i) { initialSquare = i; }
-     void setTerminal(int t) { terminalSquare = t; }
-     void setType(int t) { moveType = t; }
+     // Mutators
+     void setInitial(const int i) { initialSquare = i; }
+     void setTerminal(const int t) { terminalSquare = t; }
+     void setType(const int t) { moveType = t; }
      // Accessors
-     const int getInitial() { return initialSquare; }
-     const int getTerminal() { return terminalSquare; }
-     const int getType() { return moveType; }
+     const int getInitial() const { return initialSquare; }
+     const int getTerminal() const { return terminalSquare; }
+     const int getType() const { return moveType; }
 
 };
 
