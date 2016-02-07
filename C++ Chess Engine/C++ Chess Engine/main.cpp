@@ -322,7 +322,7 @@ void FENboardSetup(std::string FEN) {
 
 
 }
-string boardToFEN(Board board) {
+string boardToFEN(Board& board) {
      std::string FEN;
      int emptySquareCount = 0;
 
@@ -432,7 +432,7 @@ string boardToFEN(Board board) {
      return FEN;
 
 }
-void printBoard(Board board) {
+void printBoard(Board& board) {
      for (int i = 0; i < 120; i++) {
           if (i % 10 == 0) {
                printf("\n");
@@ -484,7 +484,7 @@ void printBoard(Board board) {
      }
      printf("\n");
 }
-void printSimpleBoard(Board board) {
+void printSimpleBoard(Board& board) {
      for (int i = 2; i < 10; i++) {
           printf("%d| ", 10 - i);
           for (int j = 1; j < 9; j++) {
@@ -584,7 +584,7 @@ void printMove(int move[3]) {
 }
 
 /*                             EVALUATION FUNCTIONS                           */
-int boardEvaluation(Board board) {
+int boardEvaluation(Board& board) {
      int score = 0;
      for (int i = 0; i < 120; i++) {
           switch (board.getSquare(i)) {
@@ -655,7 +655,7 @@ int reversePosition(int position) {
      return (12 - row - 1) * 10 + column;
 }
 
-int negaMax(int depth, Board board) {
+int negaMax(int depth, Board& board) {
      if (depth == 0) {
           return board.getTurn() * boardEvaluation(board);
      }
@@ -708,7 +708,7 @@ int negaMax(int depth, Board board) {
 
      return max_Score;
 }
-int rootNegaMax(int maxDepth, Board board, int bestMove[3]) {
+int rootNegaMax(int maxDepth, Board& board, int bestMove[3]) {
 
      int max_Score = INT_MIN;
      int score;
@@ -764,7 +764,7 @@ int rootNegaMax(int maxDepth, Board board, int bestMove[3]) {
      return max_Score;
 }
 
-int alphabeta(int depth, Board board, int alpha, int beta) {
+int alphabeta(int depth, Board& board, int alpha, int beta) {
      if (depth == 0) {
           return board.getTurn() * boardEvaluation(board);
      }
@@ -823,7 +823,7 @@ int alphabeta(int depth, Board board, int alpha, int beta) {
 
      return alpha;
 }
-int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3]) {
+int rootAlphabeta(int maxDepth, Board& board, int alpha, int beta, int bestMove[3]) {
      int score;
      int terminalValue;
 
@@ -884,7 +884,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
 }
 
 /*                             GAME CYCLE FUNCTIONS                           */
-bool checkGameEnd(Board board) {
+bool checkGameEnd(Board& board) {
      bool whiteKing = false, blackKing = false;
      for (int i = 0; i < 120; i++) {
           if (board.getSquare(i) == WHITEKING) { whiteKing = true; }
@@ -901,7 +901,7 @@ void saveCurrentState() {
 }
 
 /*                           MOVE GENERATION FUNCTIONS                        */
-void moveGeneration(Board board, int moveList[250][3], int *moveCount) {
+void moveGeneration(Board& board, int moveList[250][3], int *moveCount) {
      *moveCount = 0;
 
      castlingMoveGeneration(board, moveList, moveCount);
@@ -956,7 +956,7 @@ void moveGeneration(Board board, int moveList[250][3], int *moveCount) {
           }
      }
 }
-void pawnMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount) {
+void pawnMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount) {
      if (board.getTurn() == WHITE) {
           //  if on the last row before promotion, just call promotion
           if (A7 <= position && position <= H7) {
@@ -1008,7 +1008,7 @@ void pawnMoveGeneration(Board board, int position, int moveList[250][3], int *mo
           }
      }
 }
-void knightMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount) {
+void knightMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount) {
      int turn = board.getTurn();
 
      if (checkColor(board.getSquare(position + ROW + 2 * COLUMN)) == -turn ||
@@ -1044,7 +1044,7 @@ void knightMoveGeneration(Board board, int position, int moveList[250][3], int *
           addMove(position, position - 2 * ROW - COLUMN, NORMAL, moveList, moveCount);
      }
 }
-void bishopMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount) {
+void bishopMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount) {
      int turn = board.getTurn();
      bool topright = true, downright = true, downleft = true, topleft = true;
      for (int i = 1; i < 8; i++) {
@@ -1089,7 +1089,7 @@ void bishopMoveGeneration(Board board, int position, int moveList[250][3], int *
           else { topleft = false; }
      }
 }
-void rookMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount) {
+void rookMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount) {
      int turn = board.getTurn();
      bool top = true, right = true, down = true, left = true;
 
@@ -1135,11 +1135,11 @@ void rookMoveGeneration(Board board, int position, int moveList[250][3], int *mo
           else { left = false; }
      }
 }
-void queenMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount) {
+void queenMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount) {
      rookMoveGeneration(board, position, moveList, moveCount);
      bishopMoveGeneration(board, position, moveList, moveCount);
 }
-void kingMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount) {
+void kingMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount) {
      int turn = board.getTurn();
 
      if (checkColor(board.getSquare(position + ROW)) == -turn ||
@@ -1176,7 +1176,7 @@ void kingMoveGeneration(Board board, int position, int moveList[250][3], int *mo
      }
 }
 
-void castlingMoveGeneration(Board board, int moveList[250][3], int *moveCount) {
+void castlingMoveGeneration(Board& board, int moveList[250][3], int *moveCount) {
      if (board.getTurn() == WHITE) {
           if (board.getCastling(WKCASTLING) &&                                             //  neither piece moved
                board.getSquare(E1) == WHITEKING && board.getSquare(H1) == WHITEROOK &&     //  both pieces exists on board
@@ -1217,7 +1217,7 @@ void castlingMoveGeneration(Board board, int moveList[250][3], int *moveCount) {
           }
      }
 }
-void promotionMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount) {
+void promotionMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount) {
      if (board.getTurn() == WHITE) {
           if (checkColor(board.getSquare(position - ROW - COLUMN)) == -board.getTurn()) {
                addPromotionMove(position, position - ROW - COLUMN, moveList, moveCount);
@@ -1241,7 +1241,7 @@ void promotionMoveGeneration(Board board, int position, int moveList[250][3], in
           }
      }
 }
-void enpassantMoveGeneration(Board board, int moveList[250][3], int *moveCount) {
+void enpassantMoveGeneration(Board& board, int moveList[250][3], int *moveCount) {
      if (board.getEnpassantSquare() == 0) { return; }
 
      int enpassantSquare = board.getEnpassantSquare();
@@ -1277,7 +1277,7 @@ void addPromotionMove(int initial, int terminal, int moveList[250][3], int *move
      addMove(initial, terminal, QUEEN_PROMOTION, moveList, moveCount);
 }
 
-void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount) {
+void legalMoves(Board& board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount) {
      *legalMoveCount = 0;
 
      //  find king position
@@ -1326,7 +1326,7 @@ void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveL
           board.changeTurn();
      }
 }
-bool squareAttackCheck(Board board, int position) {
+bool squareAttackCheck(Board& board, int position) {
      if (board.getTurn() == WHITE) {
           //  1. pawn
           if (board.getSquare(position - ROW - COLUMN) == BLACKPAWN ||
@@ -1663,7 +1663,7 @@ bool squareAttackCheck(Board board, int position) {
 
 
 /*                             RECURSION FUNCTIONS                             */
-u64 divide(int depth, int maxDepth, Board board, bool showOutput) {
+u64 divide(int depth, int maxDepth, Board& board, bool showOutput) {
 
      if (depth == 0) { return 1; }
 
@@ -1728,7 +1728,7 @@ u64 divide(int depth, int maxDepth, Board board, bool showOutput) {
      return node;
 
 }
-u64 divide2(int depth, int maxDepth, Board board, bool showOutput) {
+u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
 
      if (depth == 0) { return 1; }
 

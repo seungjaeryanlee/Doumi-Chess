@@ -62,11 +62,11 @@ public:
 void board120Setup();
 //  receives a FEN string to setup board
 void FENboardSetup(string FEN);
-string boardToFEN(Board board);
+string boardToFEN(Board& board);
 //  This functions prints the board from the parameter.
-void printBoard(Board board);
+void printBoard(Board& board);
 //  This functions prints simple version of the board from the parameter.
-void printSimpleBoard(Board board);
+void printSimpleBoard(Board& board);
 //  Gets a piece and returns the color of the piece
 int checkColor(int pieceType);
 char numberToFile(int position);
@@ -79,7 +79,7 @@ void printMove(int move[3]);
 
 /*                                BOARD EVALUATION                            */
 //  Returns evaluation score based on parameter board given.
-int boardEvaluation(Board board);
+int boardEvaluation(Board& board);
 //  Gets a position number and returns the row-reversed position number
 int reversePosition(int position);
 //  negaMax implemented for board evaluation
@@ -89,38 +89,38 @@ int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], int bestMoves[3])
 
 
 /*                                   GAME CYCLE                               */
-bool checkGameEnd(Board board);
+bool checkGameEnd(Board& board);
 //  Save Board state for threefold repetition check
 void saveCurrentState();
 
 
 
 /*                                MOVE GENERATION                             */
-void moveGeneration(Board board, int moveList[250][3], int *moveCount);
-void pawnMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
-void knightMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
-void bishopMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
-void rookMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
-void queenMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
-void kingMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
+void moveGeneration(Board& board, int moveList[250][3], int *moveCount);
+void pawnMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
+void knightMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
+void bishopMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
+void rookMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
+void queenMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
+void kingMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
 
-void castlingMoveGeneration(Board board, int moveList[250][3], int *moveCount);
-void promotionMoveGeneration(Board board, int position, int moveList[250][3], int *moveCount);
-void enpassantMoveGeneration(Board board, int moveList[250][3], int *moveCount);
+void castlingMoveGeneration(Board& board, int moveList[250][3], int *moveCount);
+void promotionMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
+void enpassantMoveGeneration(Board& board, int moveList[250][3], int *moveCount);
 
 void addMove(int initial, int terminal, int moveType, int moveList[250][3], int *moveCount);
 void addPromotionMove(int initial, int terminal, int moveList[250][3], int *moveCount);
 
-void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount);
-bool squareAttackCheck(Board board, int position);
+void legalMoves(Board& board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount);
+bool squareAttackCheck(Board& board, int position);
 
 
 
 
 
 /*                                   RECURSION                                */
-u64 divide(int depth, int maxDepth, Board board, bool showOutput);
-u64 divide2(int depth, int maxDepth, Board board, bool showOutput);
+u64 divide(int depth, int maxDepth, Board& board, bool showOutput);
+u64 divide2(int depth, int maxDepth, Board& board, bool showOutput);
 // Makes the given move and changes turn
 int makeMove(Board &board, int move[3]);
 // Undos the given move and changes turn
