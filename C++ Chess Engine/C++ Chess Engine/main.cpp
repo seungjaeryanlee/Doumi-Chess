@@ -2152,6 +2152,7 @@ void main() {
                     printf("A: Print Possible Moves\n");
                     printf("B: Efficiency Test of Alphabeta Pruning\n");
                     printf("C: Evaluate Board\n");
+                    printf("D: Alphabeta Speed Check\n");
                     printf("--------------------------------------------------\n");
                     printf("Please choose command: ");
                     std::getline(cin, userCommand);
@@ -2160,7 +2161,7 @@ void main() {
                          printf("You must enter a number!\n");
                          continue;
                     }
-                    if ('A' <= userCommand.at(0) && userCommand.at(0) <= 'C') {
+                    if ('A' <= userCommand.at(0) && userCommand.at(0) <= 'D') {
                          commandType = userCommand.at(0) - 'A' + 10;
                          correctInput = true;
                          break;
@@ -2380,6 +2381,15 @@ void main() {
                else if (commandType == EVALUATE_BOARD) {
                     printf("Current Board Evaluation: %d\n", boardEvaluation(currentBoard));
                     continue;
+               }
+               else if (commandType == ALPHABETA_SPEED_CHECK) {
+                    LARGE_INTEGER frequency2, beginTime2, endTime2;
+
+                    frequency2 = startTimer(&beginTime2, 2);
+                    int alphabetaValue = alphabeta(EVAL_DEPTH, currentBoard, -999999, 999999);
+                    stopTimer(&endTime2, 2);
+                    printf("Alphabeta Value: %d\n", alphabetaValue);
+                    std::cout << "Alphabeta timer : " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
                }
           }
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
