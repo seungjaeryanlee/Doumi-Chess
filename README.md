@@ -29,6 +29,10 @@ I plan to use Negamax algorithm for this engine.
     - Fifty Move Rule (FIDE 9.3) - *In progress*  
     - 75 Move Rule (FIDE 9.6) - **Complete**  
   - Resignation  
+6. Qt Widget
+  - Basic Layout Setup
+  - Pipe between Engine & Widget
+  - Test Widget
 
 ## TODOs  
 1. Add Undo Move command Player vs. COM
