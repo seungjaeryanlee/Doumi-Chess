@@ -20,6 +20,9 @@ private:
 
 private slots:
     void showTime();
+
+protected:
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 };
 
 #endif // MAINWINDOW_H

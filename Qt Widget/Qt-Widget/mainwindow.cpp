@@ -24,4 +24,14 @@ void MainWindow::showTime()
     QString text = time.toString("mm:ss");
     qDebug() << text;
 }
-
+void MainWindow::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+    QPointF textPosition;
+    textPosition.setX(100);
+    textPosition.setY(100);
+    QFont font = painter.font();
+    font.setPointSize(20);
+    painter.setFont(font);
+    painter.drawText(textPosition, "Time");
+}
