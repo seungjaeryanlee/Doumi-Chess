@@ -2258,7 +2258,8 @@ void main() {
                               }
                          }
                     }
-                    saveCurrentState();
+                    savedBoard[halfMoveCount] = currentBoard;
+                    halfMoveCount++;
                     int userMove[3] = { initialSquare, terminalSquare, moveType};
                     // save terminalValue for undoMove;
                     lastTerminalValue = makeMove(currentBoard, userMove);
@@ -2394,7 +2395,8 @@ void main() {
           }
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
                
-               saveCurrentState();
+               savedBoard[halfMoveCount] = currentBoard;
+               halfMoveCount++;
 
                int alphabetaMove[3];
                int alphabetaValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, alphabetaMove);
