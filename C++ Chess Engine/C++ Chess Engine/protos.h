@@ -111,8 +111,8 @@ void enpassantMoveGeneration(Board& board, int moveList[250][3], int *moveCount)
 void addMove(int initial, int terminal, int moveType, int moveList[250][3], int *moveCount);
 void addPromotionMove(int initial, int terminal, int moveList[250][3], int *moveCount);
 
-void legalMoves(Board& board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount);
-bool squareAttackCheck(Board& board, int position);
+void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount);
+bool squareAttackCheck(Board board, int position);
 
 
 
