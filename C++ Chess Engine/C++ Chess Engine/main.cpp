@@ -148,11 +148,6 @@ int savedTerminalValue[MAX_MOVENUMBER]; // TODO: Check if it should be initializ
 int savedMove[MAX_MOVENUMBER + 1][3];
 bool savedCastlingCheck[MAX_MOVENUMBER + 1][4];
 int savedEnpassantSquare[MAX_MOVENUMBER] = { 0, };
-int lastTerminalValue = ERROR_INTEGER; // data input in makemove, used in undomove
-int lastMove[3] = { ERROR_INTEGER, ERROR_INTEGER, ERROR_INTEGER }; // data input in makemove, used in undomove
-bool lastCastlingCheck[4];
-int lastEnpassantSquare = 0;
-
 
 //  Which color user plays
 int userColor = ERROR_INTEGER;
@@ -903,13 +898,6 @@ bool checkGameEnd(Board& board) {
           if (board.getSquare(i) == BLACKKING) { blackKing = true; }
      }
      return !(whiteKing && blackKing);
-}
-void saveCurrentState() {
-     savedBoard[halfMoveCount] = currentBoard;
-     //  TODO: Check repetition here
-
-     //  Better place might be elsewhere
-     halfMoveCount++;
 }
 
 /*                           MOVE GENERATION FUNCTIONS                        */
