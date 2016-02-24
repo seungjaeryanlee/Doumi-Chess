@@ -141,7 +141,19 @@ LARGE_INTEGER frequency, beginTime, endTime;
 int gameResult = NOT_FINISHED;
 //  Stores Board and Board States for threefold repetition
 Board savedBoard[MAX_MOVENUMBER + 1];
+//  Number of times the savedBoard state has occured
 int repetitionCount[MAX_MOVENUMBER + 1];
+//  Saved values for UNDO_MOVE command
+int savedTerminalValue[MAX_MOVENUMBER]; // TODO: Check if it should be initialized as ERROR_INTEGER
+int savedMove[MAX_MOVENUMBER + 1][3];
+int savedCastlingCheck[MAX_MOVENUMBER + 1][4];
+int savedEnpassantSquare[MAX_MOVENUMBER] = { 0, };
+int lastTerminalValue = ERROR_INTEGER; // data input in makemove, used in undomove
+int lastMove[3] = { ERROR_INTEGER, ERROR_INTEGER, ERROR_INTEGER }; // data input in makemove, used in undomove
+bool lastCastlingCheck[4];
+int lastEnpassantSquare = 0;
+
+
 //  Which color user plays
 int userColor = ERROR_INTEGER;
 //  To create a log of moves
@@ -2034,11 +2046,8 @@ void main() {
      //  begin timer
      frequency = startTimer(&beginTime, 1);
      
+
      //  Game Loop: Player vs COM
-     int lastTerminalValue = ERROR_INTEGER; // data input in makemove, used in undomove
-     int lastMove[3] = { ERROR_INTEGER, ERROR_INTEGER, ERROR_INTEGER }; // data input in makemove, used in undomove
-     bool lastCastlingCheck[4];
-     int lastEnpassantSquare = 0;
      bool correctInput = false;
      string userCommand;
 
