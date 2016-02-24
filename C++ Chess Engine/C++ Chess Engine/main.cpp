@@ -2258,11 +2258,11 @@ void main() {
                               }
                          }
                     }
-                    savedBoard[halfMoveCount] = currentBoard;
-                    halfMoveCount++;
+                    
                     int userMove[3] = { initialSquare, terminalSquare, moveType};
                     // save terminalValue for undoMove;
                     lastTerminalValue = makeMove(currentBoard, userMove);
+                    
                     for (int i = 0; i < 3; i++) {
                          lastMove[i] = userMove[i];
                     }
@@ -2324,7 +2324,7 @@ void main() {
                else if (commandType == UNDO_MOVE) {
                     //  TODO: Use saved instead of last
                     //  TerminalSquare needs to be saved
-                    if (lastTerminalValue == ERROR_INTEGER) {
+                    if (lastTerminalValue == ERROR_INTEGER || halfMoveCount == 0) {
                          printf("No move can be undone!\n");
                          continue;
                     }
