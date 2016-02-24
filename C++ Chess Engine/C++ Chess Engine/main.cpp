@@ -1289,7 +1289,7 @@ void addPromotionMove(int initial, int terminal, int moveList[250][3], int *move
      addMove(initial, terminal, QUEEN_PROMOTION, moveList, moveCount);
 }
 
-void legalMoves(Board& board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount) {
+void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount) {
      *legalMoveCount = 0;
 
      //  find king position
@@ -1338,7 +1338,7 @@ void legalMoves(Board& board, int moveList[250][3], int moveCount, int legalMove
           board.changeTurn();
      }
 }
-bool squareAttackCheck(Board& board, int position) {
+bool squareAttackCheck(Board board, int position) {
      if (board.getTurn() == WHITE) {
           //  1. pawn
           if (board.getSquare(position - ROW - COLUMN) == BLACKPAWN ||
