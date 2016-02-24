@@ -2337,6 +2337,7 @@ void main() {
                          continue;
                     }
                     else {
+                         halfMoveCount--;
                          undoMove(currentBoard, savedMove[halfMoveCount], savedTerminalValue[halfMoveCount]);
                     }
 
