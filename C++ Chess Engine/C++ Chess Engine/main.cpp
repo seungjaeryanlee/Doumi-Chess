@@ -2264,6 +2264,9 @@ void main() {
                          savedMove[halfMoveCount][i] = userMove[i];
                     }
 
+                    savedBoard[halfMoveCount] = currentBoard;
+                    halfMoveCount++;
+
                     // add to log file
                     logtext << currentBoard.getMoveNumber() << ": " << numberToFile(userMove[0]) << numberToRank(userMove[0]) << " " << numberToFile(userMove[1]) << numberToRank(userMove[1]) << endl;
 
