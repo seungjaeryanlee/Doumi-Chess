@@ -141,7 +141,14 @@ LARGE_INTEGER frequency, beginTime, endTime;
 int gameResult = NOT_FINISHED;
 //  Stores Board and Board States for threefold repetition
 Board savedBoard[MAX_MOVENUMBER + 1];
+//  Number of times the savedBoard state has occured
 int repetitionCount[MAX_MOVENUMBER + 1];
+//  Saved values for UNDO_MOVE command
+int savedTerminalValue[MAX_MOVENUMBER]; // TODO: Check if it should be initialized as ERROR_INTEGER
+int savedMove[MAX_MOVENUMBER + 1][3];
+bool savedCastlingCheck[MAX_MOVENUMBER + 1][4];
+int savedEnpassantSquare[MAX_MOVENUMBER] = { 0, };
+
 //  Which color user plays
 int userColor = ERROR_INTEGER;
 //  To create a log of moves
@@ -891,13 +898,6 @@ bool checkGameEnd(Board& board) {
           if (board.getSquare(i) == BLACKKING) { blackKing = true; }
      }
      return !(whiteKing && blackKing);
-}
-void saveCurrentState() {
-     savedBoard[halfMoveCount] = currentBoard;
-     //  TODO: Check repetition here
-
-     //  Better place might be elsewhere
-     halfMoveCount++;
 }
 
 /*                           MOVE GENERATION FUNCTIONS                        */
@@ -2034,11 +2034,8 @@ void main() {
      //  begin timer
      frequency = startTimer(&beginTime, 1);
      
+
      //  Game Loop: Player vs COM
-     int lastTerminalValue = ERROR_INTEGER; // data input in makemove, used in undomove
-     int lastMove[3] = { ERROR_INTEGER, ERROR_INTEGER, ERROR_INTEGER }; // data input in makemove, used in undomove
-     bool lastCastlingCheck[4];
-     int lastEnpassantSquare = 0;
      bool correctInput = false;
      string userCommand;
 
@@ -2258,13 +2255,17 @@ void main() {
                               }
                          }
                     }
-                    saveCurrentState();
+                    
                     int userMove[3] = { initialSquare, terminalSquare, moveType};
                     // save terminalValue for undoMove;
-                    lastTerminalValue = makeMove(currentBoard, userMove);
+                    savedTerminalValue[halfMoveCount] = makeMove(currentBoard, userMove);
+                    
                     for (int i = 0; i < 3; i++) {
-                         lastMove[i] = userMove[i];
+                         savedMove[halfMoveCount][i] = userMove[i];
                     }
+
+                    savedBoard[halfMoveCount] = currentBoard;
+                    halfMoveCount++;
 
                     // add to log file
                     logtext << currentBoard.getMoveNumber() << ": " << numberToFile(userMove[0]) << numberToRank(userMove[0]) << " " << numberToFile(userMove[1]) << numberToRank(userMove[1]) << endl;
@@ -2321,21 +2322,21 @@ void main() {
                     }
                }
                else if (commandType == UNDO_MOVE) {
-                    //  TODO: Use saved instead of last
                     //  TerminalSquare needs to be saved
-                    if (lastTerminalValue == ERROR_INTEGER) {
+                    if (savedTerminalValue[halfMoveCount] == ERROR_INTEGER || halfMoveCount == 0) {
                          printf("No move can be undone!\n");
                          continue;
                     }
                     else {
-                         undoMove(currentBoard, lastMove, lastTerminalValue);
+                         halfMoveCount--;
+                         undoMove(currentBoard, savedMove[halfMoveCount], savedTerminalValue[halfMoveCount]);
                     }
 
                     // Update castlingCheck, enpassantSquare, currentTurn, moveNumber, fiftyMoveCount
                     for (int i = 0; i < 4; i++) {
-                         currentBoard.setCastling(i, lastCastlingCheck[i]);
+                         currentBoard.setCastling(i, savedCastlingCheck[halfMoveCount][i]);
                     }
-                    currentBoard.setEnpassantSquare(lastEnpassantSquare);
+                    currentBoard.setEnpassantSquare(savedEnpassantSquare[halfMoveCount]);
                     if (currentBoard.getFiftyMoveCount() > 0) {
                          currentBoard.fiftyMoveCountDecrement();
                     }
@@ -2394,7 +2395,7 @@ void main() {
           }
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
                
-               saveCurrentState();
+               savedBoard[halfMoveCount] = currentBoard;
 
                int alphabetaMove[3];
                int alphabetaValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, alphabetaMove);
@@ -2418,7 +2419,7 @@ void main() {
 
                //  Save castlingCheck for undoMove
                for (int i = 0; i < 4; i++) {
-                    lastCastlingCheck[i] = currentBoard.getCastling(i);
+                    savedCastlingCheck[halfMoveCount][i] = currentBoard.getCastling(i);
                }
                //  Update castlingCheck
                if (currentBoard.getSquare(moveToMake[0]) == WHITEROOK && moveToMake[0] == A1) {
@@ -2443,7 +2444,7 @@ void main() {
                }
 
                //  Save enpassantSquare for undoMove
-               lastEnpassantSquare = currentBoard.getEnpassantSquare();
+               savedEnpassantSquare[halfMoveCount] = currentBoard.getEnpassantSquare();
                //  Update enpassant square
                if (moveToMake[2] == DOUBLEMOVE) {
                     currentBoard.setEnpassantSquare((moveToMake[0] + moveToMake[1]) / 2);
@@ -2451,10 +2452,10 @@ void main() {
                else { currentBoard.setEnpassantSquare(0); }
 
                //  Make best move and print board
-               lastTerminalValue = makeMove(currentBoard, moveToMake);
+               savedTerminalValue[halfMoveCount] = makeMove(currentBoard, moveToMake);
                //  Save move for undoMove
                for (int i = 0; i < 3; i++) {
-                    lastMove[i] = moveToMake[i];
+                    savedMove[halfMoveCount][i] = moveToMake[i];
                }
                logtext << currentBoard.getMoveNumber() << ": " << numberToFilerank(moveToMake[0]) << " " << numberToFilerank(moveToMake[1]) << endl;
                
@@ -2516,6 +2517,9 @@ void main() {
                     gameResult = TIE;
                     break;
                }
+               
+               // At the very end since multiple things are saved while the computer makes a move
+               halfMoveCount++;
           }
      }
 
