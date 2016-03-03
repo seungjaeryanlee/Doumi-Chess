@@ -2172,6 +2172,9 @@ void main() {
                }
                
                if (commandType == MOVE) {
+                    
+                    savedBoard[halfMoveCount] = currentBoard;
+
                     //  Movelist used for legality/movetype check
                     currentBoardMoveCount = 0;
                     currentBoardLegalMoveCount = 0;
@@ -2183,7 +2186,7 @@ void main() {
                     correctInput = false;
                     while (!correctInput) {
                          printf("Please enter your move: ");
-                         std::getline(cin, userCommand); // do I want to get the entire command?
+                         std::getline(cin, userCommand); // TODO: do I want to get the entire command?
 
                          //  Check size
                          if (userCommand.size() < 4) {
@@ -2265,7 +2268,6 @@ void main() {
                          savedMove[halfMoveCount][i] = userMove[i];
                     }
 
-                    savedBoard[halfMoveCount] = currentBoard;
                     halfMoveCount++;
 
                     // add to log file
