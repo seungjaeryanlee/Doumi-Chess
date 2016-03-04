@@ -213,7 +213,7 @@ void board120Setup() {
           currentBoard.setSquare(A7 + i, BLACKPAWN);
      }
 }
-void FENboardSetup(std::string FEN) {
+void FENboardSetup(const std::string FEN) {
      currentBoard.setCastlingArray({ false, false, false, false });
      currentBoard.setEnpassantSquare(0);
 
@@ -329,7 +329,7 @@ void FENboardSetup(std::string FEN) {
 
 
 }
-string boardToFEN(Board& board) {
+string boardToFEN(const Board& board) {
      std::string FEN;
      int emptySquareCount = 0;
 
@@ -439,7 +439,7 @@ string boardToFEN(Board& board) {
      return FEN;
 
 }
-void printBoard(Board& board) {
+void printBoard(const Board& board) {
      for (int i = 0; i < 120; i++) {
           if (i % 10 == 0) {
                printf("\n");
@@ -491,7 +491,7 @@ void printBoard(Board& board) {
      }
      printf("\n");
 }
-void printSimpleBoard(Board& board) {
+void printSimpleBoard(const Board& board) {
      for (int i = 2; i < 10; i++) {
           printf("%d| ", 10 - i);
           for (int j = 1; j < 9; j++) {
@@ -591,7 +591,7 @@ void printMove(int move[3]) {
 }
 
 /*                             EVALUATION FUNCTIONS                           */
-int boardEvaluation(Board& board) {
+int boardEvaluation(const Board& board) {
      int score = 0;
      for (int i = 0; i < 120; i++) {
           switch (board.getSquare(i)) {
@@ -891,7 +891,7 @@ int rootAlphabeta(int maxDepth, Board& board, int alpha, int beta, int bestMove[
 }
 
 /*                             GAME CYCLE FUNCTIONS                           */
-bool checkGameEnd(Board& board) {
+bool checkGameEnd(const Board& board) {
      bool whiteKing = false, blackKing = false;
      for (int i = 0; i < 120; i++) {
           if (board.getSquare(i) == WHITEKING) { whiteKing = true; }
