@@ -13,6 +13,29 @@ private:
      int moveNumber;
 
 public:
+     
+     // Default Constructor
+     Board() {}
+
+     // Constructor adding all content at once
+     Board(array<int, 120> b, array<bool, 4> cc, int t, int e, int f, int m) {
+          board = b;
+          castlingCheck = cc;
+          turn = t;
+          enpassantSquare = e;
+          fiftyMoveCount = f;
+          moveNumber = m;
+     }
+     //  Clone Method
+     Board(const Board& originalBoard) {
+          board = originalBoard.getBoard();
+          castlingCheck = originalBoard.getCastlingArray();
+          turn = originalBoard.getTurn();
+          enpassantSquare = originalBoard.getEnpassantSquare();
+          fiftyMoveCount = originalBoard.getFiftyMoveCount();
+          moveNumber = originalBoard.getMoveNumber();
+     }
+
      //  Mutators
      void setBoard(const array<int, 120> b) { board = b; }
      void setSquare(const int square, const int value) { board.at(square) = value; }

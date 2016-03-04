@@ -2147,7 +2147,7 @@ void main() {
                     printf("%d: Undo move\n", UNDO_MOVE);
                     printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
                     printf("A: Print Possible Moves\n");
-                    printf("B: Efficiency Test of Alphabeta Pruning\n");
+                    printf("B: Negamax vs. Negamax + Alphabeta Pruning\n");
                     printf("C: Evaluate Board\n");
                     printf("D: Alphabeta Speed Check\n");
                     printf("E: Print Saved FEN\n");
