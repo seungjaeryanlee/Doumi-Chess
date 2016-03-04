@@ -16,6 +16,23 @@ public:
      
      // Default Constructor
      Board() {}
+     /*
+     Board() {
+          for (int i = 0; i < 120; i++) {
+               board[i] = ERRORSQUARE;
+          }
+          for (int i = 2; i < 10; i++) {
+               for (int j = 1; j < 9; j++) {
+                    board[i * 8 + j] = EMPTYSQUARE;
+               }
+          }
+
+          turn = WHITE;
+          enpassantSquare = 0;
+          fiftyMoveCount = 0;
+          moveNumber = 1;
+     }
+     */
 
      // Constructor adding all content at once
      Board(array<int, 120> b, array<bool, 4> cc, int t, int e, int f, int m) {
