@@ -871,6 +871,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
           if (score >= beta) {
 
                undoMove(board, depthLegalMoveList[maxDepth][i], terminalValue);
+               // TODO: Make sure Castling & EP Square & other details are also undo-ed
                board.setEnpassantSquare(enpassantSquare);
                return beta;
           }
@@ -1999,6 +2000,32 @@ double elapsedTime (LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGE
      return (endTime.QuadPart - beginTime.QuadPart) * 1000.0 / frequency.QuadPart;
 }
 
+void castlingUpdate(Board& board, const Move& move) {
+     if (board.getSquare(move.getInitial()) == WHITEKING) {
+          board.setCastling(WKCASTLING, false);
+          board.setCastling(WQCASTLING, false);
+     }
+     if (board.getSquare(move.getInitial()) == BLACKKING) {
+          board.setCastling(BKCASTLING, false);
+          board.setCastling(BQCASTLING, false);
+     }
+     if (board.getSquare(move.getInitial()) == WHITEROOK) {
+          if (move.getInitial() == A1) {
+               board.setCastling(WQCASTLING, false);
+          }
+          if (move.getInitial() == H1) {
+               board.setCastling(WKCASTLING, false);
+          }
+     }
+     if (board.getSquare(move.getInitial()) == BLACKROOK) {
+          if (move.getInitial() == A8) {
+               board.setCastling(BQCASTLING, false);
+          }
+          if (move.getInitial() == H8) {
+               board.setCastling(BKCASTLING, false);
+          }
+     }
+}
 
 /******************************************************************************/
 /*                               MAIN FUNCTION                                */
