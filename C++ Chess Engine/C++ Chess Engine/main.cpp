@@ -146,7 +146,6 @@ int repetitionCount[MAX_MOVENUMBER + 1];
 //  Saved values for UNDO_MOVE command
 int savedTerminalValue[MAX_MOVENUMBER]; // TODO: Check if it should be initialized as ERROR_INTEGER
 int savedMove[MAX_MOVENUMBER + 1][3];
-bool savedCastlingCheck[MAX_MOVENUMBER + 1][4];
 int savedEnpassantSquare[MAX_MOVENUMBER] = { 0, };
 
 //  Which color user plays
@@ -830,7 +829,7 @@ int alphabeta(int depth, Board& board, int alpha, int beta) {
 
      return alpha;
 }
-int rootAlphabeta(int maxDepth, Board& board, int alpha, int beta, int bestMove[3]) {
+int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3]) {
      int score;
      int terminalValue;
 
@@ -2337,7 +2336,7 @@ void main() {
 
                     // Update castlingCheck, enpassantSquare, currentTurn, moveNumber, fiftyMoveCount
                     for (int i = 0; i < 4; i++) {
-                         currentBoard.setCastling(i, savedCastlingCheck[halfMoveCount][i]);
+                         currentBoard.setCastling(i, savedBoard[halfMoveCount].getCastling(i));
                     }
                     currentBoard.setEnpassantSquare(savedEnpassantSquare[halfMoveCount]);
                     if (currentBoard.getFiftyMoveCount() > 0) {
@@ -2427,7 +2426,7 @@ void main() {
 
                //  Save castlingCheck for undoMove
                for (int i = 0; i < 4; i++) {
-                    savedCastlingCheck[halfMoveCount][i] = currentBoard.getCastling(i);
+                    savedBoard[halfMoveCount].setCastling(i, currentBoard.getCastling(i));
                }
                //  Update castlingCheck
                if (currentBoard.getSquare(moveToMake[0]) == WHITEROOK && moveToMake[0] == A1) {

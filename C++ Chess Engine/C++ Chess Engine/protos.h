@@ -128,7 +128,7 @@ int negaMax(int depth, int turn, bool castlingCheck[4]);
 int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], int bestMoves[3]);
 //  negaMax with alphaBeta pruning implemented for board evaluation
 int alphabeta(int depth, Board& board, int alpha, int beta);
-int rootAlphabeta(int maxDepth, Board& board, int alpha, int beta, int bestMove[3]);
+int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3]);
 
 
 
