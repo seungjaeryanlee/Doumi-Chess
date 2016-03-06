@@ -146,8 +146,6 @@ int repetitionCount[MAX_MOVENUMBER + 1];
 //  Saved values for UNDO_MOVE command
 int savedTerminalValue[MAX_MOVENUMBER]; // TODO: Check if it should be initialized as ERROR_INTEGER
 int savedMove[MAX_MOVENUMBER + 1][3];
-bool savedCastlingCheck[MAX_MOVENUMBER + 1][4];
-int savedEnpassantSquare[MAX_MOVENUMBER] = { 0, };
 
 //  Which color user plays
 int userColor = ERROR_INTEGER;
@@ -213,7 +211,7 @@ void board120Setup() {
           currentBoard.setSquare(A7 + i, BLACKPAWN);
      }
 }
-void FENboardSetup(std::string FEN) {
+void FENboardSetup(const std::string FEN) {
      currentBoard.setCastlingArray({ false, false, false, false });
      currentBoard.setEnpassantSquare(0);
 
@@ -329,7 +327,7 @@ void FENboardSetup(std::string FEN) {
 
 
 }
-string boardToFEN(Board& board) {
+string boardToFEN(const Board& board) {
      std::string FEN;
      int emptySquareCount = 0;
 
@@ -433,13 +431,13 @@ string boardToFEN(Board& board) {
      FEN += ' ';
      FEN += ('0' + board.getFiftyMoveCount());
      FEN += ' ';
-     FEN += ('0' + board.getMoveNumber());
-
+     FEN += to_string(board.getMoveNumber());
+     
      cout << FEN << endl;
      return FEN;
 
 }
-void printBoard(Board& board) {
+void printBoard(const Board& board) {
      for (int i = 0; i < 120; i++) {
           if (i % 10 == 0) {
                printf("\n");
@@ -491,7 +489,7 @@ void printBoard(Board& board) {
      }
      printf("\n");
 }
-void printSimpleBoard(Board& board) {
+void printSimpleBoard(const Board& board) {
      for (int i = 2; i < 10; i++) {
           printf("%d| ", 10 - i);
           for (int j = 1; j < 9; j++) {
@@ -591,7 +589,7 @@ void printMove(int move[3]) {
 }
 
 /*                             EVALUATION FUNCTIONS                           */
-int boardEvaluation(Board& board) {
+int boardEvaluation(const Board& board) {
      int score = 0;
      for (int i = 0; i < 120; i++) {
           switch (board.getSquare(i)) {
@@ -830,7 +828,7 @@ int alphabeta(int depth, Board& board, int alpha, int beta) {
 
      return alpha;
 }
-int rootAlphabeta(int maxDepth, Board& board, int alpha, int beta, int bestMove[3]) {
+int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3]) {
      int score;
      int terminalValue;
 
@@ -872,6 +870,7 @@ int rootAlphabeta(int maxDepth, Board& board, int alpha, int beta, int bestMove[
           if (score >= beta) {
 
                undoMove(board, depthLegalMoveList[maxDepth][i], terminalValue);
+               // TODO: Make sure Castling & EP Square & other details are also undo-ed
                board.setEnpassantSquare(enpassantSquare);
                return beta;
           }
@@ -891,7 +890,7 @@ int rootAlphabeta(int maxDepth, Board& board, int alpha, int beta, int bestMove[
 }
 
 /*                             GAME CYCLE FUNCTIONS                           */
-bool checkGameEnd(Board& board) {
+bool checkGameEnd(const Board& board) {
      bool whiteKing = false, blackKing = false;
      for (int i = 0; i < 120; i++) {
           if (board.getSquare(i) == WHITEKING) { whiteKing = true; }
@@ -2000,6 +1999,32 @@ double elapsedTime (LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGE
      return (endTime.QuadPart - beginTime.QuadPart) * 1000.0 / frequency.QuadPart;
 }
 
+void castlingUpdate(Board& board, const Move& move) {
+     if (board.getSquare(move.getInitial()) == WHITEKING) {
+          board.setCastling(WKCASTLING, false);
+          board.setCastling(WQCASTLING, false);
+     }
+     if (board.getSquare(move.getInitial()) == BLACKKING) {
+          board.setCastling(BKCASTLING, false);
+          board.setCastling(BQCASTLING, false);
+     }
+     if (board.getSquare(move.getInitial()) == WHITEROOK) {
+          if (move.getInitial() == A1) {
+               board.setCastling(WQCASTLING, false);
+          }
+          if (move.getInitial() == H1) {
+               board.setCastling(WKCASTLING, false);
+          }
+     }
+     if (board.getSquare(move.getInitial()) == BLACKROOK) {
+          if (move.getInitial() == A8) {
+               board.setCastling(BQCASTLING, false);
+          }
+          if (move.getInitial() == H8) {
+               board.setCastling(BKCASTLING, false);
+          }
+     }
+}
 
 /******************************************************************************/
 /*                               MAIN FUNCTION                                */
@@ -2147,9 +2172,10 @@ void main() {
                     printf("%d: Undo move\n", UNDO_MOVE);
                     printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
                     printf("A: Print Possible Moves\n");
-                    printf("B: Efficiency Test of Alphabeta Pruning\n");
+                    printf("B: Negamax vs. Negamax + Alphabeta Pruning\n");
                     printf("C: Evaluate Board\n");
                     printf("D: Alphabeta Speed Check\n");
+                    printf("E: Print Saved FEN\n");
                     printf("--------------------------------------------------\n");
                     printf("Please choose command: ");
                     std::getline(cin, userCommand);
@@ -2158,7 +2184,7 @@ void main() {
                          printf("You must enter a number!\n");
                          continue;
                     }
-                    if ('A' <= userCommand.at(0) && userCommand.at(0) <= 'D') {
+                    if ('A' <= userCommand.at(0) && userCommand.at(0) <= 'E') {
                          commandType = userCommand.at(0) - 'A' + 10;
                          correctInput = true;
                          break;
@@ -2171,6 +2197,9 @@ void main() {
                }
                
                if (commandType == MOVE) {
+                    
+                    savedBoard[halfMoveCount] = currentBoard;
+
                     //  Movelist used for legality/movetype check
                     currentBoardMoveCount = 0;
                     currentBoardLegalMoveCount = 0;
@@ -2182,7 +2211,7 @@ void main() {
                     correctInput = false;
                     while (!correctInput) {
                          printf("Please enter your move: ");
-                         std::getline(cin, userCommand); // do I want to get the entire command?
+                         std::getline(cin, userCommand); // TODO: do I want to get the entire command?
 
                          //  Check size
                          if (userCommand.size() < 4) {
@@ -2264,7 +2293,7 @@ void main() {
                          savedMove[halfMoveCount][i] = userMove[i];
                     }
 
-                    savedBoard[halfMoveCount] = currentBoard;
+                    if (currentBoard.getTurn() == WHITE) { currentBoard.moveNumberIncrement(); }
                     halfMoveCount++;
 
                     // add to log file
@@ -2334,13 +2363,13 @@ void main() {
 
                     // Update castlingCheck, enpassantSquare, currentTurn, moveNumber, fiftyMoveCount
                     for (int i = 0; i < 4; i++) {
-                         currentBoard.setCastling(i, savedCastlingCheck[halfMoveCount][i]);
+                         currentBoard.setCastling(i, savedBoard[halfMoveCount].getCastling(i));
                     }
-                    currentBoard.setEnpassantSquare(savedEnpassantSquare[halfMoveCount]);
+                    currentBoard.setEnpassantSquare(savedBoard[halfMoveCount].getEnpassantSquare());
                     if (currentBoard.getFiftyMoveCount() > 0) {
                          currentBoard.fiftyMoveCountDecrement();
                     }
-                    if (currentBoard.getTurn() == WHITE) {
+                    if (currentBoard.getTurn() == BLACK) {
                          currentBoard.moveNumberDecrement();
                     }
                     
@@ -2392,6 +2421,11 @@ void main() {
                     printf("Alphabeta Value: %d\n", alphabetaValue);
                     std::cout << "Alphabeta timer : " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
                }
+               else if (commandType == PRINT_SAVED_FEN) {
+                    for (int i = 0; i < halfMoveCount; i++) {
+                         boardToFEN(savedBoard[i]); // Print statement inside boardToFEN() prints the FEN
+                    }
+               }
           }
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
                
@@ -2419,7 +2453,7 @@ void main() {
 
                //  Save castlingCheck for undoMove
                for (int i = 0; i < 4; i++) {
-                    savedCastlingCheck[halfMoveCount][i] = currentBoard.getCastling(i);
+                    savedBoard[halfMoveCount].setCastling(i, currentBoard.getCastling(i));
                }
                //  Update castlingCheck
                if (currentBoard.getSquare(moveToMake[0]) == WHITEROOK && moveToMake[0] == A1) {
@@ -2443,8 +2477,6 @@ void main() {
                     currentBoard.setCastling(BQCASTLING, false);
                }
 
-               //  Save enpassantSquare for undoMove
-               savedEnpassantSquare[halfMoveCount] = currentBoard.getEnpassantSquare();
                //  Update enpassant square
                if (moveToMake[2] == DOUBLEMOVE) {
                     currentBoard.setEnpassantSquare((moveToMake[0] + moveToMake[1]) / 2);

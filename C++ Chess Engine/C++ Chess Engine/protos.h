@@ -13,6 +13,46 @@ private:
      int moveNumber;
 
 public:
+     
+     // Default Constructor
+     Board() {}
+     /*
+     Board() {
+          for (int i = 0; i < 120; i++) {
+               board[i] = ERRORSQUARE;
+          }
+          for (int i = 2; i < 10; i++) {
+               for (int j = 1; j < 9; j++) {
+                    board[i * 8 + j] = EMPTYSQUARE;
+               }
+          }
+
+          turn = WHITE;
+          enpassantSquare = 0;
+          fiftyMoveCount = 0;
+          moveNumber = 1;
+     }
+     */
+
+     // Constructor adding all content at once
+     Board(array<int, 120> b, array<bool, 4> cc, int t, int e, int f, int m) {
+          board = b;
+          castlingCheck = cc;
+          turn = t;
+          enpassantSquare = e;
+          fiftyMoveCount = f;
+          moveNumber = m;
+     }
+     //  Clone Method
+     Board(const Board& originalBoard) {
+          board = originalBoard.getBoard();
+          castlingCheck = originalBoard.getCastlingArray();
+          turn = originalBoard.getTurn();
+          enpassantSquare = originalBoard.getEnpassantSquare();
+          fiftyMoveCount = originalBoard.getFiftyMoveCount();
+          moveNumber = originalBoard.getMoveNumber();
+     }
+
      //  Mutators
      void setBoard(const array<int, 120> b) { board = b; }
      void setSquare(const int square, const int value) { board.at(square) = value; }
@@ -61,12 +101,12 @@ public:
 //  This function sets up currentboard[120] for the initial position of pieces.
 void board120Setup();
 //  receives a FEN string to setup board
-void FENboardSetup(string FEN);
-string boardToFEN(Board& board);
+void FENboardSetup(const string FEN);
+string boardToFEN(const Board& board);
 //  This functions prints the board from the parameter.
-void printBoard(Board& board);
+void printBoard(const Board& board);
 //  This functions prints simple version of the board from the parameter.
-void printSimpleBoard(Board& board);
+void printSimpleBoard(const Board& board);
 //  Gets a piece and returns the color of the piece
 int checkColor(int pieceType);
 char numberToFile(int position);
@@ -79,19 +119,23 @@ void printMove(int move[3]);
 
 /*                                BOARD EVALUATION                            */
 //  Returns evaluation score based on parameter board given.
-int boardEvaluation(Board& board);
+int boardEvaluation(const Board& board);
 //  Gets a position number and returns the row-reversed position number
 int reversePosition(int position);
 //  negaMax implemented for board evaluation
 int negaMax(int depth, int turn, bool castlingCheck[4]);
 //  function to call negaMax. bestMoves is the output
 int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], int bestMoves[3]);
+//  negaMax with alphaBeta pruning implemented for board evaluation
+int alphabeta(int depth, Board& board, int alpha, int beta);
+int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3]);
+
+
 
 
 /*                                   GAME CYCLE                               */
-bool checkGameEnd(Board& board);
-//  Save Board state for threefold repetition check
-void saveCurrentState();
+bool checkGameEnd(const Board& board);
+
 
 
 
@@ -129,3 +173,8 @@ LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex);
 void stopTimer(LARGE_INTEGER *endTime, int timerIndex);
 void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex);
 double elapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex);
+
+/*                                  MISC                                      */
+// Helper function that updates castling array inside board based on given move
+// TODO: Check if this can be integrated inside makeMove
+void castlingUpdate(Board& board, const Move& move);
