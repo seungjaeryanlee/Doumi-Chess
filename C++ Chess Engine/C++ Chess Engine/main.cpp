@@ -2294,6 +2294,7 @@ void main() {
                          savedMove[halfMoveCount][i] = userMove[i];
                     }
 
+                    if (currentBoard.getTurn() == WHITE) { currentBoard.moveNumberIncrement(); }
                     halfMoveCount++;
 
                     // add to log file
@@ -2369,7 +2370,7 @@ void main() {
                     if (currentBoard.getFiftyMoveCount() > 0) {
                          currentBoard.fiftyMoveCountDecrement();
                     }
-                    if (currentBoard.getTurn() == WHITE) {
+                    if (currentBoard.getTurn() == BLACK) {
                          currentBoard.moveNumberDecrement();
                     }
                     
