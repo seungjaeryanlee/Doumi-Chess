@@ -431,8 +431,8 @@ string boardToFEN(const Board& board) {
      FEN += ' ';
      FEN += ('0' + board.getFiftyMoveCount());
      FEN += ' ';
-     FEN += ('0' + board.getMoveNumber());
-
+     FEN += to_string(board.getMoveNumber());
+     
      cout << FEN << endl;
      return FEN;
 
