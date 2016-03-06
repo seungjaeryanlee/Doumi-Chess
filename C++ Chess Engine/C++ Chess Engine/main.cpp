@@ -2035,15 +2035,34 @@ int isTerminalNode(Board& board) {
      legalMoves(board, tempBoardMoveList, tempBoardMoveCount, tempBoardLegalMoveList, &tempBoardLegalMoveCount);
 
      // Checkmate
-     
+     for (int i = 0; i < tempBoardLegalMoveCount; i++) {
+          if (board.getTurn() == WHITE && tempBoardLegalMoveList[i][0] == WHITEKING) {
+               return CHECKMATE_SCORE;
+          }
+          if (board.getTurn() == BLACK && tempBoardLegalMoveList[i][0] == BLACKKING) {
+               // TODO: Relative or absolute score?
+               return CHECKMATE_SCORE;
+          }
+     }
+
      // Stalemate: No legal move
-     
+     if (tempBoardLegalMoveCount == 0) {
+          return 0;
+     }
 
      // Stalemate: Fifty Move Rule
+     if (board.getFiftyMoveCount() >= 50) {
+          return 0;
+     }
      
      // Stalemate: 75 Move Rule
-     
+     // TODO: Check if needed
+     if (board.getFiftyMoveCount() >= 75) {
+          return 0;
+     }
+
      // Stalemate: Threefold Repetition
+
 
      return -1;
 }
