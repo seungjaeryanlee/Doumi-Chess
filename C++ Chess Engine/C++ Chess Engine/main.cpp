@@ -2025,6 +2025,28 @@ void castlingUpdate(Board& board, const Move& move) {
           }
      }
 }
+int isTerminalNode(Board& board) {
+     int tempBoardMoveList[MAX_MOVEGEN_COUNT][3];
+     int tempBoardMoveCount;
+     int tempBoardLegalMoveList[MAX_MOVEGEN_COUNT][3];
+     int tempBoardLegalMoveCount;
+     
+     moveGeneration(board, tempBoardMoveList, &tempBoardMoveCount);
+     legalMoves(board, tempBoardMoveList, tempBoardMoveCount, tempBoardLegalMoveList, &tempBoardLegalMoveCount);
+
+     // Checkmate
+     
+     // Stalemate: No legal move
+     
+
+     // Stalemate: Fifty Move Rule
+     
+     // Stalemate: 75 Move Rule
+     
+     // Stalemate: Threefold Repetition
+
+     return -1;
+}
 
 /******************************************************************************/
 /*                               MAIN FUNCTION                                */
