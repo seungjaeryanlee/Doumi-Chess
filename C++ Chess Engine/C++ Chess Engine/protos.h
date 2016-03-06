@@ -43,6 +43,7 @@ public:
           fiftyMoveCount = f;
           moveNumber = m;
      }
+     
      //  Clone Method
      Board(const Board& originalBoard) {
           board = originalBoard.getBoard();
@@ -51,6 +52,39 @@ public:
           enpassantSquare = originalBoard.getEnpassantSquare();
           fiftyMoveCount = originalBoard.getFiftyMoveCount();
           moveNumber = originalBoard.getMoveNumber();
+     }
+
+     //  isEqual Method
+     bool isEqual(const Board& thatBoard) {
+          if (this == &thatBoard) {
+               return true;
+          }
+          if (board == thatBoard.board &&
+               castlingCheck == thatBoard.castlingCheck &&
+               turn == thatBoard.turn &&
+               enpassantSquare == thatBoard.enpassantSquare &&
+               fiftyMoveCount == thatBoard.fiftyMoveCount &&
+               moveNumber && thatBoard.moveNumber) {
+               return true;
+          }
+          else {
+               return false;
+          }
+     }
+
+     //  isAlmostEqual Method (for threefold repetition checking)
+     bool isAlmostEqual(const Board& thatBoard) {
+          if (this == &thatBoard) {
+               return true;
+          }
+          if (board == thatBoard.board &&
+               castlingCheck == thatBoard.castlingCheck &&
+               enpassantSquare == thatBoard.enpassantSquare) {
+               return true;
+          }
+          else {
+               return false;
+          }
      }
 
      //  Mutators
