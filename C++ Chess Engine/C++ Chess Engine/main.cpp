@@ -146,7 +146,6 @@ int repetitionCount[MAX_MOVENUMBER + 1];
 //  Saved values for UNDO_MOVE command
 int savedTerminalValue[MAX_MOVENUMBER]; // TODO: Check if it should be initialized as ERROR_INTEGER
 int savedMove[MAX_MOVENUMBER + 1][3];
-int savedEnpassantSquare[MAX_MOVENUMBER] = { 0, };
 
 //  Which color user plays
 int userColor = ERROR_INTEGER;
@@ -2366,7 +2365,7 @@ void main() {
                     for (int i = 0; i < 4; i++) {
                          currentBoard.setCastling(i, savedBoard[halfMoveCount].getCastling(i));
                     }
-                    currentBoard.setEnpassantSquare(savedEnpassantSquare[halfMoveCount]);
+                    currentBoard.setEnpassantSquare(savedBoard[halfMoveCount].getEnpassantSquare());
                     if (currentBoard.getFiftyMoveCount() > 0) {
                          currentBoard.fiftyMoveCountDecrement();
                     }
@@ -2478,8 +2477,6 @@ void main() {
                     currentBoard.setCastling(BQCASTLING, false);
                }
 
-               //  Save enpassantSquare for undoMove
-               savedEnpassantSquare[halfMoveCount] = currentBoard.getEnpassantSquare();
                //  Update enpassant square
                if (moveToMake[2] == DOUBLEMOVE) {
                     currentBoard.setEnpassantSquare((moveToMake[0] + moveToMake[1]) / 2);
