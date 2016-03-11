@@ -320,10 +320,25 @@ void FENboardSetup(const std::string FEN) {
      }
 
      i += 2;
-     currentBoard.setFiftyMoveCount(FEN.at(i) - '0');
-
-     i += 2;
-     currentBoard.setMoveNumber(FEN.at(i) - '0');
+     // One-digit Fifty Move Count
+     if (FEN.at(i + 1) == ' ') {
+          currentBoard.setFiftyMoveCount(FEN.at(i) - '0');
+          i += 2;
+     }
+     // Two-digit Fifty Move Count
+     else if ('0' <= FEN.at(i+1) && FEN.at(i+1) <= '9') {
+          currentBoard.setFiftyMoveCount(10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0'));
+          i += 3;
+     }
+     
+     // One-digit Move Number
+     if (FEN.at(i + 1) == ' ') {
+          currentBoard.setMoveNumber(FEN.at(i) - '0');
+     }
+     // Two-digit Move Number
+     else if ('0' <= FEN.at(i + 1) && FEN.at(i + 1) <= '9') {
+          currentBoard.setMoveNumber(10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0'));
+     }
 
 
 }
@@ -429,7 +444,7 @@ string boardToFEN(const Board& board) {
      else { FEN += '-'; }
 
      FEN += ' ';
-     FEN += ('0' + board.getFiftyMoveCount());
+     FEN += to_string(board.getFiftyMoveCount());
      FEN += ' ';
      FEN += to_string(board.getMoveNumber());
      
