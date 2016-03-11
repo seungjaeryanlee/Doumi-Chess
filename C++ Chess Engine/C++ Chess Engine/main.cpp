@@ -2049,8 +2049,7 @@ void main() {
      logtext.open("log.txt");
      
      //  Initialize Board
-     // board120Setup();
-     FENboardSetup("k7/8/8/8/8/8/8/7K w - - 70 40");
+     board120Setup();
  
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results
