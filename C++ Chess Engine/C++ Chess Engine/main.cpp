@@ -320,10 +320,25 @@ void FENboardSetup(const std::string FEN) {
      }
 
      i += 2;
-     currentBoard.setFiftyMoveCount(FEN.at(i) - '0');
-
-     i += 2;
-     currentBoard.setMoveNumber(FEN.at(i) - '0');
+     // One-digit Fifty Move Count
+     if (FEN.at(i + 1) == ' ') {
+          currentBoard.setFiftyMoveCount(FEN.at(i) - '0');
+          i += 2;
+     }
+     // Two-digit Fifty Move Count
+     else if ('0' <= FEN.at(i+1) && FEN.at(i+1) <= '9') {
+          currentBoard.setFiftyMoveCount(10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0'));
+          i += 3;
+     }
+     
+     // One-digit Move Number
+     if (FEN.at(i + 1) == ' ') {
+          currentBoard.setMoveNumber(FEN.at(i) - '0');
+     }
+     // Two-digit Move Number
+     else if ('0' <= FEN.at(i + 1) && FEN.at(i + 1) <= '9') {
+          currentBoard.setMoveNumber(10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0'));
+     }
 
 
 }
@@ -2034,7 +2049,8 @@ void main() {
      logtext.open("log.txt");
      
      //  Initialize Board
-     board120Setup();
+     // board120Setup();
+     FENboardSetup("k7/8/8/8/8/8/8/7K w - - 70 40");
  
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results
