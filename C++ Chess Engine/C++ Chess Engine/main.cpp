@@ -444,7 +444,7 @@ string boardToFEN(const Board& board) {
      else { FEN += '-'; }
 
      FEN += ' ';
-     FEN += ('0' + board.getFiftyMoveCount());
+     FEN += to_string(board.getFiftyMoveCount());
      FEN += ' ';
      FEN += to_string(board.getMoveNumber());
      
