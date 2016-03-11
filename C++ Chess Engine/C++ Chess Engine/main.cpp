@@ -2049,20 +2049,15 @@ int isTerminalNode(Board& board) {
      if (tempBoardLegalMoveCount == 0) {
           return 0;
      }
-
-     // Stalemate: Fifty Move Rule
-     if (board.getFiftyMoveCount() >= 50) {
-          return 0;
-     }
      
      // Stalemate: 75 Move Rule
-     // TODO: Check if needed
+     // 50 Move rule will be implemented in moveGen
      if (board.getFiftyMoveCount() >= 75) {
           return 0;
      }
 
      // Stalemate: Threefold Repetition
-
+     // TODO: Implement
 
      return -1;
 }
@@ -2075,7 +2070,8 @@ void main() {
      logtext.open("log.txt");
      
      //  Initialize Board
-     board120Setup();
+     // board120Setup();
+     FENboardSetup("k7/8/8/8/8/8/8/7K w - - 70 1");
  
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results
