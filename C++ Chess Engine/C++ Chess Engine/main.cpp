@@ -2048,24 +2048,24 @@ int isTerminalNode(Board& board) {
 
      // Checkmate                                                                                                                 
      if (tempBoardLegalMoveCount == 0 && squareAttackCheck(board, kingPos)) {
-          return 0;
+          return CHECKMATE;
      }
 
      // Stalemate: No legal move
      if (tempBoardLegalMoveCount == 0) {
-          return 0;
+          return STALEMATE_MOVE;
      }
      
      // Stalemate: 75 Move Rule
      // TODO: 50 Move rule will be implemented in moveGen
      if (board.getFiftyMoveCount() >= 75) {
-          return 0;
+          return STALEMATE_75;
      }
 
      // Stalemate: Threefold Repetition
      // TODO: Implement
 
-     return -1;
+     return NOTEND;
 }
 
 /******************************************************************************/
