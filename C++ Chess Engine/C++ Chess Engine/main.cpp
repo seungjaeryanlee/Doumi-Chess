@@ -2033,16 +2033,22 @@ int isTerminalNode(Board& board) {
      
      moveGeneration(board, tempBoardMoveList, &tempBoardMoveCount);
      legalMoves(board, tempBoardMoveList, tempBoardMoveCount, tempBoardLegalMoveList, &tempBoardLegalMoveCount);
+     
+     int kingPos = -1;
+     for (int i = 0; i < 120; i++) {
+          if (board.getSquare(i) == WHITEKING && board.getTurn() == WHITE) {
+               kingPos = i;
+               break;
+          }
+          if (board.getSquare(i) == BLACKKING && board.getTurn() == BLACK) {
+               kingPos = i;
+               break;
+          }
+     }
 
-     // Checkmate
-     for (int i = 0; i < tempBoardLegalMoveCount; i++) {
-          if (board.getTurn() == WHITE && tempBoardLegalMoveList[i][0] == WHITEKING) {
-               return CHECKMATE_SCORE;
-          }
-          if (board.getTurn() == BLACK && tempBoardLegalMoveList[i][0] == BLACKKING) {
-               // TODO: Relative or absolute score?
-               return CHECKMATE_SCORE;
-          }
+     // Checkmate                                                                                                                 
+     if (tempBoardLegalMoveCount == 0 && squareAttackCheck(board, kingPos)) {
+          return 0;
      }
 
      // Stalemate: No legal move
@@ -2051,7 +2057,7 @@ int isTerminalNode(Board& board) {
      }
      
      // Stalemate: 75 Move Rule
-     // 50 Move rule will be implemented in moveGen
+     // TODO: 50 Move rule will be implemented in moveGen
      if (board.getFiftyMoveCount() >= 75) {
           return 0;
      }
@@ -2070,8 +2076,8 @@ void main() {
      logtext.open("log.txt");
      
      //  Initialize Board
-     // board120Setup();
-     FENboardSetup("k7/8/8/8/8/8/8/7K w - - 70 1");
+     board120Setup();
+     //FENboardSetup("k7/8/8/8/8/8/8/7K w - - 70 1");
  
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results
