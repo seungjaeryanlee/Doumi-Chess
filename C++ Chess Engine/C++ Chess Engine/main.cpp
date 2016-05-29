@@ -2078,7 +2078,11 @@ void main() {
      //  Initialize Board
      board120Setup();
      //FENboardSetup("k7/8/8/8/8/8/8/7K w - - 70 1");
- 
+     FENboardSetup("k7/8/8/8/8/8/r7/r6K w - - 0 1");
+     printf("%d\n", isTerminalNode(currentBoard));
+     FENboardSetup("k7/8/8/8/8/8/5q2/7K w - - 0 1");
+     printf("%d\n", isTerminalNode(currentBoard));
+
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results
      //  - Position 1: Perft 6 Correct
