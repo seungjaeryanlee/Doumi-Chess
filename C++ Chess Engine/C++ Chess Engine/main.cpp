@@ -141,8 +141,6 @@ LARGE_INTEGER frequency, beginTime, endTime;
 int gameResult = NOT_FINISHED;
 //  Stores Board and Board States for threefold repetition
 Board savedBoard[MAX_MOVENUMBER + 1];
-//  Number of times the savedBoard state has occured
-int repetitionCount[MAX_MOVENUMBER + 1];
 //  Saved values for UNDO_MOVE command
 int savedTerminalValue[MAX_MOVENUMBER]; // TODO: Check if it should be initialized as ERROR_INTEGER
 int savedMove[MAX_MOVENUMBER + 1][3];
@@ -2121,11 +2119,6 @@ void main() {
      bool correctInput = false;
      string userCommand;
 
-     // Repetition count reset
-     for (int i = 0; i < MAX_MOVENUMBER; i++) {
-          repetitionCount[i] = 0;
-     }
-
      while (gamePlaying) {
           //  Check endgame
           if (!endGame) {
@@ -2485,7 +2478,7 @@ void main() {
                }
           }
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
-               
+
                savedBoard[halfMoveCount] = currentBoard;
 
                int alphabetaMove[3];
@@ -2547,7 +2540,7 @@ void main() {
                     savedMove[halfMoveCount][i] = moveToMake[i];
                }
                logtext << currentBoard.getMoveNumber() << ": " << numberToFilerank(moveToMake[0]) << " " << numberToFilerank(moveToMake[1]) << endl;
-               
+
                printSimpleBoard(currentBoard);
 
                //  Print out move and move number
@@ -2570,7 +2563,7 @@ void main() {
                if (!gamePlaying) { break; }
 
                //  TODO: Check Threefold repetition
-               bool repetition = false;
+               int repetitionCount = 0;
                for (int i = 0; i < halfMoveCount; i++) {
                     bool sameState = false;
                     for (int j = 0; j < 120; j++) {
@@ -2590,13 +2583,33 @@ void main() {
                          break;
                     }
                     if (sameState == true) {
-                         repetitionCount[i]++;
-                         repetition = true;
-                         break;
+                         repetitionCount++;
                     }
                }
-               if (repetition == false) {
-                    repetitionCount[halfMoveCount] = 1;
+
+               if (repetitionCount >= 3) {
+                    correctInput = false;
+                    bool declareTie = false;
+                    while (!correctInput) {
+                         printf("Declare Threefold Repetition? (Y/N):");
+                         std::getline(cin, userCommand);
+                         if (userCommand.size() == 0 || (userCommand.at(0) != 'Y' && userCommand.at(0) != 'N')) {
+                              printf("Wrong Input!\n");
+                              continue;
+                         }
+                         else {
+                              correctInput = true;
+                              if (userCommand.at(0) == 'Y') {
+                                   declareTie = true;
+                              }
+                              break;
+                         }
+                    }
+                    if (declareTie) {
+                         gamePlaying = false;
+                         gameResult = TIE;
+                         break;
+                    }
                }
 
 
