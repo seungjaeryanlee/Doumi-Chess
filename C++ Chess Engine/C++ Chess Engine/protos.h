@@ -178,3 +178,6 @@ double elapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER
 // Helper function that updates castling array inside board based on given move
 // TODO: Check if this can be integrated inside makeMove
 void castlingUpdate(Board& board, const Move& move);
+// Checks if the board is at the end state: returns -1 if false, return board value otherwise
+int isTerminalNode(Board& board);
+     

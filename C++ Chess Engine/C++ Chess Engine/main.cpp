@@ -2040,6 +2040,48 @@ void castlingUpdate(Board& board, const Move& move) {
           }
      }
 }
+int isTerminalNode(Board& board) {
+     int tempBoardMoveList[MAX_MOVEGEN_COUNT][3];
+     int tempBoardMoveCount;
+     int tempBoardLegalMoveList[MAX_MOVEGEN_COUNT][3];
+     int tempBoardLegalMoveCount;
+     
+     moveGeneration(board, tempBoardMoveList, &tempBoardMoveCount);
+     legalMoves(board, tempBoardMoveList, tempBoardMoveCount, tempBoardLegalMoveList, &tempBoardLegalMoveCount);
+     
+     int kingPos = -1;
+     for (int i = 0; i < 120; i++) {
+          if (board.getSquare(i) == WHITEKING && board.getTurn() == WHITE) {
+               kingPos = i;
+               break;
+          }
+          if (board.getSquare(i) == BLACKKING && board.getTurn() == BLACK) {
+               kingPos = i;
+               break;
+          }
+     }
+
+     // Checkmate                                                                                                                 
+     if (tempBoardLegalMoveCount == 0 && squareAttackCheck(board, kingPos)) {
+          return CHECKMATE;
+     }
+
+     // Stalemate: No legal move
+     if (tempBoardLegalMoveCount == 0) {
+          return STALEMATE_MOVE;
+     }
+     
+     // Stalemate: 75 Move Rule
+     // TODO: 50 Move rule will be implemented in moveGen
+     if (board.getFiftyMoveCount() >= 75) {
+          return STALEMATE_75;
+     }
+
+     // Stalemate: Threefold Repetition
+     // TODO: Implement
+
+     return NOTEND;
+}
 
 /******************************************************************************/
 /*                               MAIN FUNCTION                                */
@@ -2050,7 +2092,7 @@ void main() {
      
      //  Initialize Board
      board120Setup();
- 
+
      //  FEN source:
      //  https://chessprogramming.wikispaces.com/Perft+Results
      //  - Position 1: Perft 6 Correct
