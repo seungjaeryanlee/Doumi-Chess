@@ -685,33 +685,7 @@ int negaMax(int depth, Board& board) {
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
 
-          int initial = depthLegalMoveList[depth][i].getInitial();
-
-          //TODO: change to castlingUpdate
-          if (board.getSquare(initial) == WHITEKING) {
-               board.setCastling(WKCASTLING, false);
-               board.setCastling(WQCASTLING, false);
-          }
-          if (board.getSquare(initial) == BLACKKING) {
-               board.setCastling(BKCASTLING, false);
-               board.setCastling(BQCASTLING, false);
-          }
-          if (board.getSquare(initial) == WHITEROOK) {
-               if (initial == A1) {
-                    board.setCastling(WQCASTLING, false);
-               }
-               if (initial == H1) {
-                    board.setCastling(WKCASTLING, false);
-               }
-          }
-          if (board.getSquare(initial) == BLACKROOK) {
-               if (initial == A8) {
-                    board.setCastling(BQCASTLING, false);
-               }
-               if (initial == H8) {
-                    board.setCastling(BKCASTLING, false);
-               }
-          }
+          castlingUpdate(board, depthLegalMoveList[depth][i]);
           int enpassantSquare = board.getEnpassantSquare();
 
           terminalValue = makeMove(board, depthLegalMoveList[depth][i]);
@@ -738,34 +712,7 @@ int rootNegaMax(int maxDepth, Board& board, Move& bestMove) {
      legalMoves(board, depthAllMoveList[maxDepth], depthAllMoveCount[maxDepth], depthLegalMoveList[maxDepth], &depthLegalMoveCount[maxDepth]);
 
      for (int i = 0; i < depthLegalMoveCount[maxDepth]; i++) {
-          int initial = depthLegalMoveList[maxDepth][i].getInitial();
-          
-          
-          //TODO: change to castlingUpdate
-          if (board.getSquare(initial) == WHITEKING) {
-               board.setCastling(WKCASTLING, false);
-               board.setCastling(WQCASTLING, false);
-          }
-          if (board.getSquare(initial) == BLACKKING) {
-               board.setCastling(BKCASTLING, false);
-               board.setCastling(BQCASTLING, false);
-          }
-          if (board.getSquare(initial) == WHITEROOK) {
-               if (initial == A1) {
-                    board.setCastling(WQCASTLING, false);
-               }
-               if (initial == H1) {
-                    board.setCastling(WKCASTLING, false);
-               }
-          }
-          if (board.getSquare(initial) == BLACKROOK) {
-               if (initial == A8) {
-                    board.setCastling(BQCASTLING, false);
-               }
-               if (initial == H8) {
-                    board.setCastling(BKCASTLING, false);
-               }
-          }
+          castlingUpdate(board, depthLegalMoveList[maxDepth][i]);
 
           int enpassantSquare = board.getEnpassantSquare();
           terminalValue = makeMove(board, depthLegalMoveList[maxDepth][i]);
@@ -796,33 +743,8 @@ int alphabeta(int depth, Board& board, int alpha, int beta) {
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
 
-          int initial = depthLegalMoveList[depth][i].getInitial();
+          castlingUpdate(board, depthLegalMoveList[depth][i]);
 
-          //TODO: change to castlingUpdate
-          if (board.getSquare(initial) == WHITEKING) {
-               board.setCastling(WKCASTLING, false);
-               board.setCastling(WQCASTLING, false);
-          }
-          if (board.getSquare(initial) == BLACKKING) {
-               board.setCastling(BKCASTLING, false);
-               board.setCastling(BQCASTLING, false);
-          }
-          if (board.getSquare(initial) == WHITEROOK) {
-               if (initial == A1) {
-                    board.setCastling(WQCASTLING, false);
-               }
-               if (initial == H1) {
-                    board.setCastling(WKCASTLING, false);
-               }
-          }
-          if (board.getSquare(initial) == BLACKROOK) {
-               if (initial == A8) {
-                    board.setCastling(BQCASTLING, false);
-               }
-               if (initial == H8) {
-                    board.setCastling(BKCASTLING, false);
-               }
-          }
           // Save enpassantSquare so it doesn't get lost while making move
           int enpassantSquare = board.getEnpassantSquare();
          
@@ -854,33 +776,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, Move& bestMove
 
      for (int i = 0; i < depthLegalMoveCount[maxDepth]; i++) {
 
-          int initial = depthLegalMoveList[maxDepth][i].getInitial();
-
-          //TODO: change to castlingUpdate
-          if (board.getSquare(initial) == WHITEKING) {
-               board.setCastling(WKCASTLING, false);
-               board.setCastling(WQCASTLING, false);
-          }
-          if (board.getSquare(initial) == BLACKKING) {
-               board.setCastling(BKCASTLING, false);
-               board.setCastling(BQCASTLING, false);
-          }
-          if (board.getSquare(initial) == WHITEROOK) {
-               if (initial == A1) {
-                    board.setCastling(WQCASTLING, false);
-               }
-               if (initial == H1) {
-                    board.setCastling(WKCASTLING, false);
-               }
-          }
-          if (board.getSquare(initial) == BLACKROOK) {
-               if (initial == A8) {
-                    board.setCastling(BQCASTLING, false);
-               }
-               if (initial == H8) {
-                    board.setCastling(BKCASTLING, false);
-               }
-          }
+          castlingUpdate(board, depthLegalMoveList[maxDepth][i]);
           int enpassantSquare = board.getEnpassantSquare();
           terminalValue = makeMove(board, depthLegalMoveList[maxDepth][i]);
 
@@ -1698,31 +1594,8 @@ u64 divide(int depth, int maxDepth, Board& board, bool showOutput) {
           int initial = depthLegalMoveList[depth][i].getInitial();
           int terminal = depthLegalMoveList[depth][i].getTerminal();
 
-          //TODO: change to castlingUpdate
-          if (board.getSquare(initial) == WHITEKING) {
-               board.setCastling(WKCASTLING, false);
-               board.setCastling(WQCASTLING, false);
-          }
-          if (board.getSquare(initial) == BLACKKING) {
-               board.setCastling(BKCASTLING, false);
-               board.setCastling(BQCASTLING, false);
-          }
-          if (board.getSquare(initial) == WHITEROOK) {
-               if (initial == A1) {
-                    board.setCastling(WQCASTLING, false);
-               }
-               if (initial == H1) {
-                    board.setCastling(WKCASTLING, false);
-               }
-          }
-          if (board.getSquare(initial) == BLACKROOK) {
-               if (initial == A8) {
-                    board.setCastling(BQCASTLING, false);
-               }
-               if (initial == H8) {
-                    board.setCastling(BKCASTLING, false);
-               }
-          }
+          castlingUpdate(board, depthLegalMoveList[maxDepth][i]);
+
           int enpassantSquare = board.getEnpassantSquare();
           
           terminalValue = makeMove(board, depthLegalMoveList[depth][i]);
@@ -1770,31 +1643,7 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
           int initial = depthLegalMoveList[depth][i].getInitial();
           int terminal = depthLegalMoveList[depth][i].getTerminal();
 
-          //TODO: change to castlingUpdate
-          if (board.getSquare(initial) == WHITEKING) {
-               board.setCastling(WKCASTLING, false);
-               board.setCastling(WQCASTLING, false);
-          }
-          if (board.getSquare(initial) == BLACKKING) {
-               board.setCastling(BKCASTLING, false);
-               board.setCastling(BQCASTLING, false);
-          }
-          if (board.getSquare(initial) == WHITEROOK) {
-               if (initial == A1) {
-                    board.setCastling(WQCASTLING, false);
-               }
-               if (initial == H1) {
-                    board.setCastling(WKCASTLING, false);
-               }
-          }
-          if (board.getSquare(initial) == BLACKROOK) {
-               if (initial == A8) {
-                    board.setCastling(BQCASTLING, false);
-               }
-               if (initial == H8) {
-                    board.setCastling(BKCASTLING, false);
-               }
-          }
+          castlingUpdate(board, depthLegalMoveList[maxDepth][i]);
           int enpassantSquare = board.getEnpassantSquare();
           terminalValue = makeMove(currentBoard, depthLegalMoveList[depth][i]);
 
