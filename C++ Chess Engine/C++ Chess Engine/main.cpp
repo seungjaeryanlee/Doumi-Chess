@@ -329,7 +329,7 @@ void FENboardSetup(const std::string FEN) {
      }
      
      // One-digit Move Number
-     if (FEN.at(i + 1) == ' ') {
+     if (FEN.length() == i+1 || FEN.at(i + 1) == ' ') {
           currentBoard.setMoveNumber(FEN.at(i) - '0');
      }
      // Two-digit Move Number
