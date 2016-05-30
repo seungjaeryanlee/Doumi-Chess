@@ -2486,16 +2486,16 @@ void main() {
 
                savedBoard[halfMoveCount] = currentBoard;
 
-               int alphabetaMove[3];
+               Move alphabetaMove;
                int alphabetaValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, alphabetaMove);
                printf("Alphabeta Value: %d\n", alphabetaValue);
                printf("Alphabeta Move: ");
                printMove(alphabetaMove);
 
                int moveToMake[3];
-               for (int i = 0; i < 3; i++) {
-                    moveToMake[i] = alphabetaMove[i];
-               }
+               moveToMake[0] = alphabetaMove.getInitial();
+               moveToMake[1] = alphabetaMove.getTerminal();
+               moveToMake[2] = alphabetaMove.getType();
 
                //  Increment or reset Fifty move count
                //  TODO: Add 50 Move Rule option in move generation / selection

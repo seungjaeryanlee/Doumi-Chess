@@ -167,6 +167,7 @@ int numberToRank(int position);
 int filerankToNumber(char file, int rank);
 std::string numberToFilerank(int position);
 void printMove(int move[3]);
+void printMove(Move move);
 
 
 
@@ -176,9 +177,9 @@ int boardEvaluation(const Board& board);
 //  Gets a position number and returns the row-reversed position number
 int reversePosition(int position);
 //  negaMax implemented for board evaluation
-int negaMax(int depth, int turn, bool castlingCheck[4]);
+int negaMax(int depth, Board& board);
 //  function to call negaMax. bestMoves is the output
-int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], Move bestMove);
+int rootNegaMax(int depth, Board& board, Move bestMove);
 //  negaMax with alphaBeta pruning implemented for board evaluation
 int alphabeta(int depth, Board& board, int alpha, int beta);
 int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, Move bestMove);
