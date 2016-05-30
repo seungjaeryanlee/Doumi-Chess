@@ -2081,6 +2081,40 @@ int isTerminalNode(Board& board) {
      return NOTEND;
 }
 
+void printDebugMenu() {
+     printf("--------------------------------------------------\n");
+     printf("%d: Make move\n", MOVE);
+     printf("%d: Display Board\n", DISPLAY_BOARD);
+     printf("%d: Display FEN\n", DISPLAY_FEN);
+     printf("%d: Reset Board\n", BOARD_RESET);
+     printf("%d: Perft Test\n", PERFT);
+     printf("%d: Quit\n", QUIT);
+     printf("%d: Divide Perft Test\n", DIVIDE);
+     printf("%d: Undo move\n", UNDO_MOVE);
+     printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
+     printf("A: Print Possible Moves\n");
+     printf("B: Negamax vs. Negamax + Alphabeta Pruning\n");
+     printf("C: Evaluate Board\n");
+     printf("D: Alphabeta Speed Check\n");
+     printf("E: Print Saved FEN\n");
+     printf("--------------------------------------------------\n");
+     printf("Please choose command: ");
+}
+void printMenu() {
+     printf("--------------------------------------------------\n");
+     printf("%d: Make move\n", MOVE);
+     printf("%d: Display Board\n", DISPLAY_BOARD);
+     printf("%d: Display FEN\n", DISPLAY_FEN);
+     printf("%d: Reset Board\n", BOARD_RESET);
+     printf("%d: Quit\n", QUIT);
+     printf("%d: Undo move\n", UNDO_MOVE);
+     printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
+     printf("A: Print Possible Moves\n");
+     printf("C: Evaluate Board\n");
+     printf("--------------------------------------------------\n");
+     printf("Please choose command: ");
+}
+
 /******************************************************************************/
 /*                               MAIN FUNCTION                                */
 /******************************************************************************/
@@ -2155,7 +2189,7 @@ void main() {
           }
           if (!gamePlaying) { break; }
 
-          //  Let user determine color to play in first loop
+          //  Let user determine color to play
           correctInput = false;
           while (!correctInput && userColor == ERROR_INTEGER) {
                printf("Which color would you like to play? (W, B or N): ");
@@ -2197,25 +2231,10 @@ void main() {
                int commandType = ERROR_COMMAND;
                int commandType2 = ERROR_COMMAND;
                
+               // Get user command
                correctInput = false;
                while (!correctInput) {
-                    printf("--------------------------------------------------\n");
-                    printf("%d: Make move\n", MOVE);
-                    printf("%d: Display Board\n", DISPLAY_BOARD);
-                    printf("%d: Display FEN\n", DISPLAY_FEN);
-                    printf("%d: Reset Board\n", BOARD_RESET);
-                    printf("%d: Perft Test\n", PERFT);
-                    printf("%d: Quit\n", QUIT);
-                    printf("%d: Divide Perft Test\n", DIVIDE);
-                    printf("%d: Undo move\n", UNDO_MOVE);
-                    printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
-                    printf("A: Print Possible Moves\n");
-                    printf("B: Negamax vs. Negamax + Alphabeta Pruning\n");
-                    printf("C: Evaluate Board\n");
-                    printf("D: Alphabeta Speed Check\n");
-                    printf("E: Print Saved FEN\n");
-                    printf("--------------------------------------------------\n");
-                    printf("Please choose command: ");
+                    printMenu();
                     std::getline(cin, userCommand);
 
                     if (userCommand.size() == 0) {
