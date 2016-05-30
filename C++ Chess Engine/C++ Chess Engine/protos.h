@@ -122,11 +122,16 @@ private:
 public:
      Move() {}
 
-     // Clone Method
+     // Clone Methods
      Move(const Move& originalMove) {
           initialSquare = originalMove.getInitial();
           terminalSquare = originalMove.getTerminal();
           moveType = originalMove.getType();
+     }
+     Move(int originalMove[3]) {
+          initialSquare = originalMove[0];
+          terminalSquare = originalMove[1];
+          moveType = originalMove[2];
      }
      // Mutators
      void setInitial(const int i) { initialSquare = i; }
