@@ -166,7 +166,7 @@ char numberToFile(int position);
 int numberToRank(int position);
 int filerankToNumber(char file, int rank);
 std::string numberToFilerank(int position);
-void printMove(Move& move);
+void printMove(const Move& move);
 
 
 
@@ -193,17 +193,17 @@ bool checkGameEnd(const Board& board);
 
 
 /*                                MOVE GENERATION                             */
-void moveGeneration(Board& board, Move moveList[250], int *moveCount);
-void pawnMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
-void knightMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
-void bishopMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
-void rookMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
-void queenMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
-void kingMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void moveGeneration(const Board& board, Move moveList[250], int *moveCount);
+void pawnMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
+void knightMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
+void bishopMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
+void rookMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
+void queenMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
+void kingMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
 
-void castlingMoveGeneration(Board& board, Move moveList[250], int *moveCount);
-void promotionMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
-void enpassantMoveGeneration(Board& board, Move moveList[250], int *moveCount);
+void castlingMoveGeneration(const Board& board, Move moveList[250], int *moveCount);
+void promotionMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
+void enpassantMoveGeneration(const Board& board, Move moveList[250], int *moveCount);
 
 void addMove(int initial, int terminal, int moveType, Move moveList[250], int *moveCount);
 void addPromotionMove(int initial, int terminal, Move moveList[250], int *moveCount);
@@ -234,7 +234,7 @@ void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTE
 double elapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex);
 // Helper function that updates castling array inside board based on given move
 // TODO: Check if this can be integrated inside makeMove
-void castlingUpdate(Board& board, const Move& move);
+void castlingUpdate(const Board& board, const Move& move);
 // Checks if the board is at the end state: returns -1 if false, return board value otherwise
 int isTerminalNode(Board& board);
 void printMenu();
