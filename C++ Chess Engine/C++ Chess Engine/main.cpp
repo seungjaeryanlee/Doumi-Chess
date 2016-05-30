@@ -2091,15 +2091,6 @@ void main() {
      //  Initialize Board
      board120Setup();
 
-     //  FEN source:
-     //  https://chessprogramming.wikispaces.com/Perft+Results
-     //  - Position 1: Perft 6 Correct
-     //  - Position 2: Perft 5 Correct
-     //  - Position 3: Perft 6 Correct, Perft 7 makeMove unreachable error, doesn't end
-     //  - Position 4: Perft 5 Correct
-     //  - Position 5: Perft 5 Correct
-     //  - Position 6: Perft 5 Correct
-
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("Engine Search Depth: %d\n", EVAL_DEPTH);
@@ -2619,10 +2610,8 @@ void main() {
           logtext << "0-0: Game not finished" << endl;
      }
 
-     //  stop timer
+     //  stop timer and print elapsed time
      stopTimer(&endTime, 1);
-     //  print elapsed time
      printElapsedTime(beginTime, endTime, frequency, 1);
-
      logtext << "Total Time: " << elapsedTime(beginTime, endTime, frequency, 1) << "ms" << endl;
 }
