@@ -2119,6 +2119,10 @@ void main() {
      bool correctInput = false;
      string userCommand;
 
+/******************************************************************************/
+/*                                 MAIN LOOP                                  */
+/******************************************************************************/
+
      while (gamePlaying) {
           //  Check endgame
           if (!endGame) {
@@ -2135,36 +2139,28 @@ void main() {
           }
 
           //  Detect Checkmate/Stalemate
-          moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount);
-          legalMoves(currentBoard, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
-          if (currentBoardLegalMoveCount == 0) {
-               int kingPosition = ERROR_INTEGER;
-               for (int i = 0; i < 120; i++) {
-                    if (currentBoard.getSquare(i) == WHITEKING && currentBoard.getTurn() == WHITE ||
-                         currentBoard.getSquare(i) == BLACKKING && currentBoard.getTurn() == BLACK) {
-                         kingPosition = i;
-                         break;
-                    }
+          switch (isTerminalNode(currentBoard)) {
+          case CHECKMATE:
+               if (currentBoard.getTurn() == WHITE) {
+                    gameResult = BLACK_WIN;
                }
-               if (kingPosition == ERROR_INTEGER) {
-                    printf("Something went wrong!\n");
-                    break;
+               if (currentBoard.getTurn() == BLACK) {
+                    gameResult = WHITE_WIN;
                }
-               if (squareAttackCheck(currentBoard, kingPosition)) {
-                    gamePlaying = false;
-                    if (currentBoard.getTurn() == WHITE) {
-                         gameResult = BLACK_WIN;
-                    }
-                    if (currentBoard.getTurn() == BLACK) {
-                         gameResult = WHITE_WIN;
-                    }
-                    break;
-               }
-               else {
-                    gamePlaying = false;
-                    gameResult = TIE;
-                    break;
-               }
+               gamePlaying = false;
+               break;
+          case STALEMATE_MOVE:
+               gamePlaying = false;
+               gameResult = TIE;
+               break;
+          case STALEMATE_75:
+               gamePlaying = false;
+               gameResult = TIE;
+               break;
+          case NOTEND:
+               gamePlaying = false;
+               gameResult = TIE;
+               break;
           }
 
           //  Let user determine color to play in first loop
