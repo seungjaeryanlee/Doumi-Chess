@@ -166,7 +166,7 @@ char numberToFile(int position);
 int numberToRank(int position);
 int filerankToNumber(char file, int rank);
 std::string numberToFilerank(int position);
-void printMove(Move move);
+void printMove(Move& move);
 
 
 
@@ -222,15 +222,20 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput);
 int makeMove(Board &board, Move& move);
 // Undos the given move and changes turn
 void undoMove(Board &board, Move& move, int terminalValue);
+
+
+
+
+
+/*                                  MISC                                      */
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex);
 void stopTimer(LARGE_INTEGER *endTime, int timerIndex);
 void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex);
 double elapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex);
-
-/*                                  MISC                                      */
 // Helper function that updates castling array inside board based on given move
 // TODO: Check if this can be integrated inside makeMove
 void castlingUpdate(Board& board, const Move& move);
 // Checks if the board is at the end state: returns -1 if false, return board value otherwise
 int isTerminalNode(Board& board);
-     
+void printMenu();
+void printDebugMenu();

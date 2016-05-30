@@ -1842,6 +1842,8 @@ void undoMove(Board &board, Move& move, int terminalValue) {
      }
 }
 
+
+/*                                  MISC                                      */
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex) {
      LARGE_INTEGER frequency;  // ticks per second
 
