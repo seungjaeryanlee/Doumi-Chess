@@ -2051,9 +2051,9 @@ void castlingUpdate(Board& board, const Move& move) {
      }
 }
 int isTerminalNode(Board& board) {
-     int tempBoardMoveList[MAX_MOVEGEN_COUNT][3];
+     Move tempBoardMoveList[MAX_MOVEGEN_COUNT];
      int tempBoardMoveCount;
-     int tempBoardLegalMoveList[MAX_MOVEGEN_COUNT][3];
+     Move tempBoardLegalMoveList[MAX_MOVEGEN_COUNT];
      int tempBoardLegalMoveCount;
      
      moveGeneration(board, tempBoardMoveList, &tempBoardMoveCount);
