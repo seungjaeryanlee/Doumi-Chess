@@ -1871,7 +1871,7 @@ double elapsedTime (LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGE
      return (endTime.QuadPart - beginTime.QuadPart) * 1000.0 / frequency.QuadPart;
 }
 
-void castlingUpdate(const Board& board, const Move& move) {
+void castlingUpdate(Board& board, const Move& move) {
      if (board.getSquare(move.getInitial()) == WHITEKING) {
           board.setCastling(WKCASTLING, false);
           board.setCastling(WQCASTLING, false);
@@ -1982,7 +1982,8 @@ void main() {
      logtext.open("log.txt");
      
      //  Initialize Board
-     board120Setup();
+     // board120Setup();
+     FENboardSetup("8/8/8/8/6k1/2K5/8/8 w - - 0 1");
 
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -2199,6 +2200,40 @@ void main() {
                               }
                          }
                     }
+
+                    // Check Threefold repetition
+                    int repetitionCount = 0;
+                    for (int i = 0; i < halfMoveCount; i++) {
+                         if (currentBoard.isAlmostEqual(savedBoard[i])) {
+                              repetitionCount++;
+                         }
+                         if (repetitionCount >= 3) { break; }
+                    }
+
+                    if (repetitionCount >= 3) {
+                         correctInput = false;
+                         bool declareTie = false;
+                         while (!correctInput) {
+                              printf("Declare Threefold Repetition? (Y/N):");
+                              std::getline(cin, userCommand);
+                              if (userCommand.size() == 0 || (userCommand.at(0) != 'Y' && userCommand.at(0) != 'N')) {
+                                   printf("Wrong Input!\n");
+                                   continue;
+                              }
+                              else {
+                                   correctInput = true;
+                                   if (userCommand.at(0) == 'Y') {
+                                        declareTie = true;
+                                   }
+                                   break;
+                              }
+                         }
+                         if (declareTie) {
+                              gamePlaying = false;
+                              gameResult = TIE;
+                              break;
+                         }
+                    }
                     
                     Move userMove = Move(initialSquare, terminalSquare, moveType);
                     // save terminalValue for undoMove;
@@ -2390,7 +2425,7 @@ void main() {
                gamePlaying = !checkGameEnd(currentBoard);
                if (!gamePlaying) { break; }
 
-               //  TODO: Check Threefold repetition
+               // Check Threefold repetition
                int repetitionCount = 0;
                for (int i = 0; i < halfMoveCount; i++) {
                     if (currentBoard.isAlmostEqual(savedBoard[i])) {
@@ -2403,7 +2438,7 @@ void main() {
                     correctInput = false;
                     bool declareTie = false;
                     while (!correctInput) {
-                         printf("Declare Threefold Repetition? (Y/N):");
+                         printf("Computer: Declare Threefold Repetition? (Y/N):");
                          std::getline(cin, userCommand);
                          if (userCommand.size() == 0 || (userCommand.at(0) != 'Y' && userCommand.at(0) != 'N')) {
                               printf("Wrong Input!\n");
