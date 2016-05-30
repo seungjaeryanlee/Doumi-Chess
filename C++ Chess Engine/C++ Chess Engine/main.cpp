@@ -2608,14 +2608,6 @@ void main() {
                     }
                }
 
-
-               //  75 Move Rule Implement (unless checkmate)
-               if (currentBoard.getFiftyMoveCount() >= 75) {
-                    gamePlaying = false;
-                    gameResult = TIE;
-                    break;
-               }
-               
                // At the very end since multiple things are saved while the computer makes a move
                halfMoveCount++;
           }
