@@ -2497,26 +2497,7 @@ void main() {
                //  Save castlingCheck for undoMove
                savedBoard[halfMoveCount].setCastlingArray(currentBoard.getCastlingArray());
                //  Update castlingCheck
-               if (currentBoard.getSquare(moveToMake[0]) == WHITEROOK && moveToMake[0] == A1) {
-                    currentBoard.setCastling(WQCASTLING, false);
-               }
-               else if (currentBoard.getSquare(moveToMake[0]) == WHITEROOK && moveToMake[0] == H1) {
-                    currentBoard.setCastling(WKCASTLING, false);
-               }
-               else if (currentBoard.getSquare(moveToMake[0]) == BLACKROOK && moveToMake[0] == A8) {
-                    currentBoard.setCastling(BQCASTLING, false);
-               }
-               else if (currentBoard.getSquare(moveToMake[0]) == BLACKROOK && moveToMake[0] == H8) {
-                    currentBoard.setCastling(BKCASTLING, false);
-               }
-               else if (currentBoard.getSquare(moveToMake[0]) == WHITEKING && moveToMake[0] == E1) {
-                    currentBoard.setCastling(WKCASTLING, false);
-                    currentBoard.setCastling(WQCASTLING, false);
-               }
-               else if (currentBoard.getSquare(moveToMake[0]) == BLACKKING && moveToMake[0] == E8) {
-                    currentBoard.setCastling(BKCASTLING, false);
-                    currentBoard.setCastling(BQCASTLING, false);
-               }
+               castlingUpdate(currentBoard, Move(moveToMake));
 
                //  Update enpassant square
                if (moveToMake[2] == DOUBLEMOVE) {
