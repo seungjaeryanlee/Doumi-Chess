@@ -120,6 +120,14 @@ private:
      int terminalSquare;
      int moveType;
 public:
+     Move() {}
+
+     // Clone Method
+     Move(const Move& originalMove) {
+          initialSquare = originalMove.getInitial();
+          terminalSquare = originalMove.getTerminal();
+          moveType = originalMove.getType();
+     }
      // Mutators
      void setInitial(const int i) { initialSquare = i; }
      void setTerminal(const int t) { terminalSquare = t; }
