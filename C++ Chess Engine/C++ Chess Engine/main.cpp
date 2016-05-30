@@ -2158,10 +2158,11 @@ void main() {
                gameResult = TIE;
                break;
           case NOTEND:
-               gamePlaying = false;
+               gamePlaying = true;
                gameResult = TIE;
                break;
           }
+          if (!gamePlaying) { break; }
 
           //  Let user determine color to play in first loop
           correctInput = false;
@@ -2561,26 +2562,10 @@ void main() {
                //  TODO: Check Threefold repetition
                int repetitionCount = 0;
                for (int i = 0; i < halfMoveCount; i++) {
-                    bool sameState = false;
-                    for (int j = 0; j < 120; j++) {
-                         if (savedBoard[i].getSquare(j) != currentBoard.getSquare(j)) {
-                              sameState = false;
-                              break;
-                         }
-                    }
-                    for (int j = 0; j < 4; j++) {
-                         if (savedBoard[i].getCastling(j) != currentBoard.getCastling(j)) {
-                              sameState = false;
-                              break;
-                         }
-                    }
-                    if (savedBoard[i].getEnpassantSquare() != currentBoard.getEnpassantSquare()) {
-                         sameState = false;
-                         break;
-                    }
-                    if (sameState == true) {
+                    if (currentBoard.isAlmostEqual(savedBoard[i])) {
                          repetitionCount++;
                     }
+                    if (repetitionCount >= 3) { break; }
                }
 
                if (repetitionCount >= 3) {
