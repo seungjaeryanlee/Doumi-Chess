@@ -2351,6 +2351,7 @@ void main() {
                     }
 
                     if (currentBoard.getTurn() == WHITE) { currentBoard.moveNumberIncrement(); }
+                    
                     halfMoveCount++;
 
                     // add to log file
@@ -2415,19 +2416,7 @@ void main() {
                     }
                     else {
                          halfMoveCount--;
-                         undoMove(currentBoard, savedMove[halfMoveCount], savedTerminalValue[halfMoveCount]);
-                    }
-
-                    // Update castlingCheck, enpassantSquare, currentTurn, moveNumber, fiftyMoveCount
-                    for (int i = 0; i < 4; i++) {
-                         currentBoard.setCastling(i, savedBoard[halfMoveCount].getCastling(i));
-                    }
-                    currentBoard.setEnpassantSquare(savedBoard[halfMoveCount].getEnpassantSquare());
-                    if (currentBoard.getFiftyMoveCount() > 0) {
-                         currentBoard.fiftyMoveCountDecrement();
-                    }
-                    if (currentBoard.getTurn() == BLACK) {
-                         currentBoard.moveNumberDecrement();
+                         currentBoard = Board(savedBoard[halfMoveCount]);
                     }
                     
                     // Now user makes the next move
