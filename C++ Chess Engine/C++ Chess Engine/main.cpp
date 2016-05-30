@@ -2229,12 +2229,11 @@ void main() {
                
                int initialSquare, terminalSquare;
                int commandType = ERROR_COMMAND;
-               int commandType2 = ERROR_COMMAND;
                
                // Get user command
                correctInput = false;
                while (!correctInput) {
-                    printMenu();
+                    printDebugMenu();
                     std::getline(cin, userCommand);
 
                     if (userCommand.size() == 0) {
@@ -2417,10 +2416,8 @@ void main() {
                     else {
                          halfMoveCount--;
                          currentBoard = Board(savedBoard[halfMoveCount]);
+                         userColor = -userColor;
                     }
-                    
-                    // Now user makes the next move
-                    userColor = -userColor;
                }
                else if (commandType == COM_MAKE_MOVE) {
                     userColor = -userColor;
@@ -2498,9 +2495,7 @@ void main() {
                else { currentBoard.setFiftyMoveCount(0); }
 
                //  Save castlingCheck for undoMove
-               for (int i = 0; i < 4; i++) {
-                    savedBoard[halfMoveCount].setCastling(i, currentBoard.getCastling(i));
-               }
+               savedBoard[halfMoveCount].setCastlingArray(currentBoard.getCastlingArray());
                //  Update castlingCheck
                if (currentBoard.getSquare(moveToMake[0]) == WHITEROOK && moveToMake[0] == A1) {
                     currentBoard.setCastling(WQCASTLING, false);

@@ -7,3 +7,6 @@ FEN source: https://chessprogramming.wikispaces.com/Perft+Results
 - Position 4: Perft 5 Correct
 - Position 5: Perft 5 Correct
 - Position 6: Perft 5 Correct
+
+FILES
+log.txt - Displays log of the LAST game played
