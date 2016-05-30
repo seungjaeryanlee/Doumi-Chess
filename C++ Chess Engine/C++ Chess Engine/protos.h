@@ -193,14 +193,6 @@ bool checkGameEnd(const Board& board);
 
 
 /*                                MOVE GENERATION                             */
-void moveGeneration(Board& board, int moveList[250][3], int *moveCount);
-void pawnMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
-void knightMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
-void bishopMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
-void rookMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
-void queenMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
-void kingMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
-
 void moveGeneration(Board& board, Move moveList[250], int *moveCount);
 void pawnMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
 void knightMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
@@ -209,20 +201,13 @@ void rookMoveGeneration(Board& board, int position, Move moveList[250], int *mov
 void queenMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
 void kingMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
 
-void castlingMoveGeneration(Board& board, int moveList[250][3], int *moveCount);
-void promotionMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
-void enpassantMoveGeneration(Board& board, int moveList[250][3], int *moveCount);
-
 void castlingMoveGeneration(Board& board, Move moveList[250], int *moveCount);
 void promotionMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
 void enpassantMoveGeneration(Board& board, Move moveList[250], int *moveCount);
 
-void addMove(int initial, int terminal, int moveType, int moveList[250][3], int *moveCount);
 void addMove(int initial, int terminal, int moveType, Move moveList[250], int *moveCount);
-void addPromotionMove(int initial, int terminal, int moveList[250][3], int *moveCount);
 void addPromotionMove(int initial, int terminal, Move moveList[250], int *moveCount);
 
-void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount);
 void legalMoves(Board board, Move moveList[250], int moveCount, Move legalMoveList[250], int *legalMoveCount);
 bool squareAttackCheck(Board board, int position);
 
@@ -234,10 +219,8 @@ bool squareAttackCheck(Board board, int position);
 u64 divide(int depth, int maxDepth, Board& board, bool showOutput);
 u64 divide2(int depth, int maxDepth, Board& board, bool showOutput);
 // Makes the given move and changes turn
-int makeMove(Board &board, int move[3]);
 int makeMove(Board &board, Move move);
 // Undos the given move and changes turn
-void undoMove(Board &board, int move[3], int terminalValue);
 void undoMove(Board &board, Move move, int terminalValue);
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex);
 void stopTimer(LARGE_INTEGER *endTime, int timerIndex);
