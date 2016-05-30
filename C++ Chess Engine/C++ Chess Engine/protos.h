@@ -166,7 +166,6 @@ char numberToFile(int position);
 int numberToRank(int position);
 int filerankToNumber(char file, int rank);
 std::string numberToFilerank(int position);
-void printMove(int move[3]);
 void printMove(Move move);
 
 
@@ -220,9 +219,9 @@ bool squareAttackCheck(Board board, int position);
 u64 divide(int depth, int maxDepth, Board& board, bool showOutput);
 u64 divide2(int depth, int maxDepth, Board& board, bool showOutput);
 // Makes the given move and changes turn
-int makeMove(Board &board, Move move);
+int makeMove(Board &board, Move& move);
 // Undos the given move and changes turn
-void undoMove(Board &board, Move move, int terminalValue);
+void undoMove(Board &board, Move& move, int terminalValue);
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex);
 void stopTimer(LARGE_INTEGER *endTime, int timerIndex);
 void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex);

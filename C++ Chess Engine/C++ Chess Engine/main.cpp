@@ -596,9 +596,6 @@ string numberToFilerank(int position) {
      fileRank += std::to_string(rank);
      return fileRank;
 }
-void printMove(int move[3]) {
-     cout << numberToFilerank(move[0]) << " " << numberToFilerank(move[1]) << " (" << move[2] << ")" << endl;
-}
 void printMove(Move move) {
      cout << numberToFilerank(move.getInitial()) << " " << numberToFilerank(move.getTerminal()) << " (" << move.getType() << ")" << endl;
 }
@@ -1819,7 +1816,7 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
      output2.close();
 }
 
-int makeMove(Board &board, Move move) {
+int makeMove(Board &board, Move& move) {
      int terminalValue;
      int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
@@ -1936,7 +1933,7 @@ int makeMove(Board &board, Move move) {
           return 0;
      }
 }
-void undoMove(Board &board, Move move, int terminalValue) {
+void undoMove(Board &board, Move& move, int terminalValue) {
      int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
      board.changeTurn();
