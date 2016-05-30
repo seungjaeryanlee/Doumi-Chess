@@ -126,7 +126,6 @@ array<int, 120> KING_PCSQTable_ENDGAME = {
 };
 //  Current Half Move Number, starts at 0
 int halfMoveCount = 0;
-//  move[3]: initial, terminal, moveType
 Move currentBoardMoveList[MAX_MOVEGEN_COUNT];
 int currentBoardMoveCount;
 Move currentBoardLegalMoveList[MAX_MOVEGEN_COUNT];
@@ -143,7 +142,7 @@ int gameResult = NOT_FINISHED;
 Board savedBoard[MAX_MOVENUMBER + 1];
 //  Saved values for UNDO_MOVE command
 int savedTerminalValue[MAX_MOVENUMBER]; // TODO: Check if it should be initialized as ERROR_INTEGER
-int savedMove[MAX_MOVENUMBER + 1][3];
+Move savedMove[MAX_MOVENUMBER + 1];
 
 //  Which color user plays
 int userColor = ERROR_INTEGER;
@@ -732,7 +731,7 @@ int negaMax(int depth, Board& board) {
 
      return max_Score;
 }
-int rootNegaMax(int maxDepth, Board& board, Move bestMove) {
+int rootNegaMax(int maxDepth, Board& board, Move& bestMove) {
 
      int max_Score = INT_MIN;
      int score;
@@ -2353,20 +2352,20 @@ void main() {
                          }
                     }
                     
-                    int userMove[3] = { initialSquare, terminalSquare, moveType};
+                    Move userMove = Move(initialSquare, terminalSquare, moveType);
                     // save terminalValue for undoMove;
                     savedTerminalValue[halfMoveCount] = makeMove(currentBoard, userMove);
                     
-                    for (int i = 0; i < 3; i++) {
-                         savedMove[halfMoveCount][i] = userMove[i];
-                    }
+                    savedMove[halfMoveCount] = Move(userMove);
+                    
 
                     if (currentBoard.getTurn() == WHITE) { currentBoard.moveNumberIncrement(); }
                     
                     halfMoveCount++;
 
                     // add to log file
-                    logtext << currentBoard.getMoveNumber() << ": " << numberToFile(userMove[0]) << numberToRank(userMove[0]) << " " << numberToFile(userMove[1]) << numberToRank(userMove[1]) << endl;
+                    logtext << currentBoard.getMoveNumber() << ": " << numberToFile(initialSquare) << numberToRank(initialSquare) << " " 
+                         << numberToFile(terminalSquare) << numberToRank(terminalSquare) << endl;
 
                     continue;
                }
@@ -2492,16 +2491,15 @@ void main() {
                printf("Alphabeta Move: ");
                printMove(alphabetaMove);
 
-               int moveToMake[3];
-               moveToMake[0] = alphabetaMove.getInitial();
-               moveToMake[1] = alphabetaMove.getTerminal();
-               moveToMake[2] = alphabetaMove.getType();
+               int initial = alphabetaMove.getInitial();
+               int terminal = alphabetaMove.getTerminal();
+               int moveType = alphabetaMove.getType();
 
                //  Increment or reset Fifty move count
                //  TODO: Add 50 Move Rule option in move generation / selection
-               if (currentBoard.getSquare(moveToMake[1]) == EMPTYSQUARE
-                    && currentBoard.getSquare(moveToMake[0]) != WHITEPAWN
-                    && currentBoard.getSquare(moveToMake[0]) != BLACKPAWN) {
+               if (currentBoard.getSquare(terminal) == EMPTYSQUARE
+                    && currentBoard.getSquare(initial) != WHITEPAWN
+                    && currentBoard.getSquare(initial) != BLACKPAWN) {
                     currentBoard.fiftyMoveCountIncrement();
                }
                else { currentBoard.setFiftyMoveCount(0); }
@@ -2509,34 +2507,32 @@ void main() {
                //  Save castlingCheck for undoMove
                savedBoard[halfMoveCount].setCastlingArray(currentBoard.getCastlingArray());
                //  Update castlingCheck
-               castlingUpdate(currentBoard, Move(moveToMake));
+               castlingUpdate(currentBoard, alphabetaMove);
 
                //  Update enpassant square
-               if (moveToMake[2] == DOUBLEMOVE) {
-                    currentBoard.setEnpassantSquare((moveToMake[0] + moveToMake[1]) / 2);
+               if (moveType == DOUBLEMOVE) {
+                    currentBoard.setEnpassantSquare((initial + terminal) / 2);
                }
                else { currentBoard.setEnpassantSquare(0); }
 
                //  Make best move and print board
-               savedTerminalValue[halfMoveCount] = makeMove(currentBoard, moveToMake);
+               savedTerminalValue[halfMoveCount] = makeMove(currentBoard, alphabetaMove);
                //  Save move for undoMove
-               for (int i = 0; i < 3; i++) {
-                    savedMove[halfMoveCount][i] = moveToMake[i];
-               }
-               logtext << currentBoard.getMoveNumber() << ": " << numberToFilerank(moveToMake[0]) << " " << numberToFilerank(moveToMake[1]) << endl;
+               savedMove[halfMoveCount] = Move(alphabetaMove);
+               logtext << currentBoard.getMoveNumber() << ": " << numberToFilerank(initial) << " " << numberToFilerank(terminal) << endl;
 
                printSimpleBoard(currentBoard);
 
                //  Print out move and move number
-               if (moveToMake[2] == KINGSIDE_CASTLING) {
+               if (moveType == KINGSIDE_CASTLING) {
                     printf("%d: O-O\n", currentBoard.getMoveNumber());
                }
-               else if (moveToMake[2] == QUEENSIDE_CASTLING) {
+               else if (moveType == QUEENSIDE_CASTLING) {
                     printf("%d: O-O-O\n", currentBoard.getMoveNumber());
                }
                else {
                     printf("%d: ", currentBoard.getMoveNumber());
-                    printMove(moveToMake);
+                    printMove(alphabetaMove);
                }
 
                //  Increment move
