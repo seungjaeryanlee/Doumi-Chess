@@ -178,10 +178,10 @@ int reversePosition(int position);
 //  negaMax implemented for board evaluation
 int negaMax(int depth, int turn, bool castlingCheck[4]);
 //  function to call negaMax. bestMoves is the output
-int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], int bestMoves[3]);
+int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], Move bestMove);
 //  negaMax with alphaBeta pruning implemented for board evaluation
 int alphabeta(int depth, Board& board, int alpha, int beta);
-int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3]);
+int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, Move bestMove);
 
 
 
@@ -194,19 +194,20 @@ bool checkGameEnd(const Board& board);
 
 /*                                MOVE GENERATION                             */
 void moveGeneration(Board& board, int moveList[250][3], int *moveCount);
-void pawnMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
-void knightMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
-void bishopMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
-void rookMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
-void queenMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
-void kingMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
-
 void pawnMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
 void knightMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
 void bishopMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
 void rookMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
 void queenMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
 void kingMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
+
+void moveGeneration(Board& board, Move moveList[250], int *moveCount);
+void pawnMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void knightMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void bishopMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void rookMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void queenMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void kingMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
 
 void castlingMoveGeneration(Board& board, int moveList[250][3], int *moveCount);
 void promotionMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
@@ -222,6 +223,7 @@ void addPromotionMove(int initial, int terminal, int moveList[250][3], int *move
 void addPromotionMove(int initial, int terminal, Move moveList[250], int *moveCount);
 
 void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount);
+void legalMoves(Board board, Move moveList[250], int moveCount, Move legalMoveList[250], int *legalMoveCount);
 bool squareAttackCheck(Board board, int position);
 
 
