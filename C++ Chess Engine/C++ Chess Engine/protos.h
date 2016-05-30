@@ -120,7 +120,13 @@ private:
      int terminalSquare;
      int moveType;
 public:
+     // Constructors
      Move() {}
+     Move(int i, int t, int m) {
+          initialSquare = i;
+          terminalSquare = t;
+          moveType = m;
+     }
 
      // Clone Methods
      Move(const Move& originalMove) {
