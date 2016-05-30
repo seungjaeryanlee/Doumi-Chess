@@ -1282,7 +1282,17 @@ void addMove(int initial, int terminal, int moveType, int moveList[250][3], int 
      moveList[*moveCount][2] = moveType;
      *moveCount += 1;
 }
+void addMove(int initial, int terminal, int moveType, Move moveList[250], int *moveCount) {
+     moveList[*moveCount] = Move(initial, terminal, moveType);
+     *moveCount += 1;
+}
 void addPromotionMove(int initial, int terminal, int moveList[250][3], int *moveCount) {
+     addMove(initial, terminal, KNIGHT_PROMOTION, moveList, moveCount);
+     addMove(initial, terminal, BISHOP_PROMOTION, moveList, moveCount);
+     addMove(initial, terminal, ROOK_PROMOTION, moveList, moveCount);
+     addMove(initial, terminal, QUEEN_PROMOTION, moveList, moveCount);
+}
+void addPromotionMove(int initial, int terminal, Move moveList[250], int *moveCount) {
      addMove(initial, terminal, KNIGHT_PROMOTION, moveList, moveCount);
      addMove(initial, terminal, BISHOP_PROMOTION, moveList, moveCount);
      addMove(initial, terminal, ROOK_PROMOTION, moveList, moveCount);
@@ -1329,6 +1339,53 @@ void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveL
                legalMoveList[*legalMoveCount][0] = moveList[i][0];
                legalMoveList[*legalMoveCount][1] = moveList[i][1];
                legalMoveList[*legalMoveCount][2] = moveList[i][2];
+               *legalMoveCount += 1;
+          }
+
+          //  undo move
+          undoMove(board, moveList[i], terminalValue);
+          //  Same reason as above
+          board.changeTurn();
+     }
+}
+void legalMoves(Board board, Move moveList[250], int moveCount, Move legalMoveList[250], int *legalMoveCount) {
+     *legalMoveCount = 0;
+
+     //  find king position
+     int kingPosition = 0, changedKingPosition = 0;
+     int terminalValue;
+     for (int i = 0; i < 120; i++) {
+          if (board.getTurn() == WHITE && board.getSquare(i) == WHITEKING ||
+               board.getTurn() == BLACK && board.getSquare(i) == BLACKKING) {
+               kingPosition = i;
+               break;
+          }
+     }
+
+     for (int i = 0; i < moveCount; i++) {
+          //  check if king will be moved
+          if (board.getSquare(moveList[i].getInitial()) == WHITEKING || board.getSquare(moveList[i].getInitial()) == BLACKKING) {
+               if (moveList[i].getType() == NORMAL) {
+                    changedKingPosition = moveList[i].getTerminal();
+               }
+               if (moveList[i].getType() == KINGSIDE_CASTLING) {
+                    changedKingPosition = moveList[i].getInitial() + 2 * COLUMN;
+               }
+               if (moveList[i].getType() == QUEENSIDE_CASTLING) {
+                    changedKingPosition = moveList[i].getInitial() - 2 * COLUMN;
+               }
+
+          }
+          else { changedKingPosition = kingPosition; }
+
+          //  make move
+          terminalValue = makeMove(board, moveList[i]);
+          //  In this case, we don't want makeMove to change turn, so let's change it again
+          board.changeTurn();
+
+          //  if king is safe
+          if (!squareAttackCheck(board, changedKingPosition)) {
+               legalMoveList[*legalMoveCount] = Move(moveList[i]);
                *legalMoveCount += 1;
           }
 
@@ -1924,6 +1981,123 @@ int makeMove(Board &board, int move[3]) {
           return 0;
      }
 }
+int makeMove(Board &board, Move move) {
+     int terminalValue;
+     int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
+
+     board.setEnpassantSquare(0);
+     board.changeTurn();
+
+     if (moveType == NORMAL) {
+          terminalValue = board.getSquare(terminal);
+          board.setSquare(terminal, board.getSquare(initial));
+          board.setSquare(initial, EMPTYSQUARE);
+          return terminalValue;
+     }
+     if (moveType == DOUBLEMOVE) {
+          board.setSquare(terminal, board.getSquare(initial));
+          board.setSquare(initial, EMPTYSQUARE);
+          board.setEnpassantSquare((terminal + initial) / 2);
+          //  terminalValue is actually enpassantSquare
+          return (terminal + initial) / 2;
+     }
+     else if (moveType == QUEENSIDE_CASTLING) {
+          //  move king
+          board.setSquare(terminal, board.getSquare(initial));
+          board.setSquare(initial, EMPTYSQUARE);
+          //  move rook
+          board.setSquare(terminal + COLUMN, board.getSquare(initial - 4 * COLUMN));
+          board.setSquare(initial - 4 * COLUMN, EMPTYSQUARE);
+          //  castling does not involve capture
+          return 0;
+     }
+     else if (moveType == KINGSIDE_CASTLING) {
+          //  move king
+          board.setSquare(terminal, board.getSquare(initial));
+          board.setSquare(initial, EMPTYSQUARE);
+          //  move rook
+          board.setSquare(terminal - COLUMN, board.getSquare(terminal + COLUMN));
+          board.setSquare(terminal + COLUMN, EMPTYSQUARE);
+          //  castling does not involve capture
+          return 0;
+     }
+     else if (moveType == KNIGHT_PROMOTION) {
+          terminalValue = board.getSquare(terminal);
+
+          //  white turn
+          if (board.getSquare(initial) == WHITEPAWN) {
+               board.setSquare(terminal, WHITEKNIGHT);
+          }
+          //  black turn
+          else {
+               board.setSquare(terminal, BLACKKNIGHT);
+          }
+          board.setSquare(initial, EMPTYSQUARE);
+          return terminalValue;
+     }
+     else if (moveType == BISHOP_PROMOTION) {
+          terminalValue = board.getSquare(terminal);
+
+          //  white turn
+          if (board.getSquare(initial) == WHITEPAWN) {
+               board.setSquare(terminal, WHITEBISHOP);
+          }
+          //  black turn
+          else {
+               board.setSquare(terminal, BLACKBISHOP);
+          }
+          board.setSquare(initial, EMPTYSQUARE);
+          return terminalValue;
+     }
+     else if (moveType == ROOK_PROMOTION) {
+          terminalValue = board.getSquare(terminal);
+
+          //  white turn
+          if (board.getSquare(initial) == WHITEPAWN) {
+               board.setSquare(terminal, WHITEROOK);
+          }
+          //  black turn
+          else {
+               board.setSquare(terminal, BLACKROOK);
+          }
+          board.setSquare(initial, EMPTYSQUARE);
+          return terminalValue;
+     }
+     else if (moveType == QUEEN_PROMOTION) {
+          terminalValue = board.getSquare(terminal);
+
+          //  white turn
+          if (board.getSquare(initial) == WHITEPAWN) {
+               board.setSquare(terminal, WHITEQUEEN);
+          }
+          //  black turn
+          else {
+               board.setSquare(terminal, BLACKQUEEN);
+          }
+          board.setSquare(initial, EMPTYSQUARE);
+          return terminalValue;
+     }
+     else if (moveType == ENPASSANT) {
+          //  White turn
+          if (board.getSquare(initial) == WHITEPAWN) {
+               board.setSquare(terminal, board.getSquare(initial));
+               board.setSquare(initial, EMPTYSQUARE);
+               board.setSquare(terminal + ROW, EMPTYSQUARE);
+               return BLACKPAWN;
+          }
+          //  Black turn
+          else {
+               board.setSquare(terminal, board.getSquare(initial));
+               board.setSquare(initial, EMPTYSQUARE);
+               board.setSquare(terminal - ROW, EMPTYSQUARE);
+               return WHITEPAWN;
+          }
+     }
+     else {
+          printf("makeMove unreachable error\n");
+          return 0;
+     }
+}
 void undoMove(Board &board, int move[3], int terminalValue) {
      int initial = move[0], terminal = move[1], moveType = move[2];
 
@@ -1983,6 +2157,65 @@ void undoMove(Board &board, int move[3], int terminalValue) {
           }
      }
 
+}
+void undoMove(Board &board, Move move, int terminalValue) {
+     int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
+
+     board.changeTurn();
+     if (moveType == NORMAL) {
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, terminalValue);
+     }
+     else if (moveType == DOUBLEMOVE) {
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, EMPTYSQUARE);
+     }
+     else if (moveType == QUEENSIDE_CASTLING) {
+          //  undo king move
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, EMPTYSQUARE);
+
+          //  undo rook move
+          board.setSquare(initial - 4 * COLUMN, board.getSquare(terminal + COLUMN));
+          board.setSquare(terminal + COLUMN, EMPTYSQUARE);
+
+     }
+     else if (moveType == KINGSIDE_CASTLING) {
+          //  undo king move
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, EMPTYSQUARE);
+
+          //  undo rook move
+          board.setSquare(terminal + COLUMN, board.getSquare(terminal - COLUMN));
+          board.setSquare(terminal - COLUMN, EMPTYSQUARE);
+     }
+     else if (moveType == KNIGHT_PROMOTION || moveType == BISHOP_PROMOTION ||
+          moveType == ROOK_PROMOTION || moveType == QUEEN_PROMOTION) {
+          //  white turn
+          if (checkColor(board.getSquare(terminal)) == WHITE) {
+               board.setSquare(terminal, terminalValue);
+               board.setSquare(initial, WHITEPAWN);
+          }
+          //  black turn
+          else {
+               board.setSquare(terminal, terminalValue);
+               board.setSquare(initial, BLACKPAWN);
+          }
+     }
+     else if (moveType == ENPASSANT) {
+          //  white turn
+          if (board.getSquare(terminal) == WHITEPAWN) {
+               board.setSquare(terminal, EMPTYSQUARE);
+               board.setSquare(initial, WHITEPAWN);
+               board.setSquare(terminal + ROW, BLACKPAWN);
+          }
+          //  black turn
+          else {
+               board.setSquare(terminal, EMPTYSQUARE);
+               board.setSquare(initial, BLACKPAWN);
+               board.setSquare(terminal - ROW, WHITEPAWN);
+          }
+     }
 }
 
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex) {
