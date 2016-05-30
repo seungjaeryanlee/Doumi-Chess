@@ -600,6 +600,9 @@ string numberToFilerank(int position) {
 void printMove(int move[3]) {
      cout << numberToFilerank(move[0]) << " " << numberToFilerank(move[1]) << " (" << move[2] << ")" << endl;
 }
+void printMove(Move move) {
+     cout << numberToFilerank(move.getInitial()) << " " << numberToFilerank(move.getTerminal()) << " (" << move.getType() << ")" << endl;
+}
 
 /*                             EVALUATION FUNCTIONS                           */
 int boardEvaluation(const Board& board) {
