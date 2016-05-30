@@ -194,6 +194,13 @@ bool checkGameEnd(const Board& board);
 
 /*                                MOVE GENERATION                             */
 void moveGeneration(Board& board, int moveList[250][3], int *moveCount);
+void pawnMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void knightMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void bishopMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void rookMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void queenMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void kingMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+
 void pawnMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
 void knightMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
 void bishopMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
@@ -205,8 +212,14 @@ void castlingMoveGeneration(Board& board, int moveList[250][3], int *moveCount);
 void promotionMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
 void enpassantMoveGeneration(Board& board, int moveList[250][3], int *moveCount);
 
+void castlingMoveGeneration(Board& board, Move moveList[250], int *moveCount);
+void promotionMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void enpassantMoveGeneration(Board& board, Move moveList[250], int *moveCount);
+
 void addMove(int initial, int terminal, int moveType, int moveList[250][3], int *moveCount);
+void addMove(int initial, int terminal, int moveType, Move moveList[250], int *moveCount);
 void addPromotionMove(int initial, int terminal, int moveList[250][3], int *moveCount);
+void addPromotionMove(int initial, int terminal, Move moveList[250], int *moveCount);
 
 void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount);
 bool squareAttackCheck(Board board, int position);
