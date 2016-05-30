@@ -849,7 +849,7 @@ int alphabeta(int depth, Board& board, int alpha, int beta) {
 
      return alpha;
 }
-int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, Move bestMove) {
+int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, Move& bestMove) {
      int score;
      int terminalValue;
 

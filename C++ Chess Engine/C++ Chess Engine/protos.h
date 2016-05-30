@@ -182,7 +182,7 @@ int negaMax(int depth, Board& board);
 int rootNegaMax(int depth, Board& board, Move bestMove);
 //  negaMax with alphaBeta pruning implemented for board evaluation
 int alphabeta(int depth, Board& board, int alpha, int beta);
-int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, Move bestMove);
+int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, Move& bestMove);
 
 
 
