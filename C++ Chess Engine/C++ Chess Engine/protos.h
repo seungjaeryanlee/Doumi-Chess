@@ -120,6 +120,25 @@ private:
      int terminalSquare;
      int moveType;
 public:
+     // Constructors
+     Move() {}
+     Move(int i, int t, int m) {
+          initialSquare = i;
+          terminalSquare = t;
+          moveType = m;
+     }
+
+     // Clone Methods
+     Move(const Move& originalMove) {
+          initialSquare = originalMove.getInitial();
+          terminalSquare = originalMove.getTerminal();
+          moveType = originalMove.getType();
+     }
+     Move(int originalMove[3]) {
+          initialSquare = originalMove[0];
+          terminalSquare = originalMove[1];
+          moveType = originalMove[2];
+     }
      // Mutators
      void setInitial(const int i) { initialSquare = i; }
      void setTerminal(const int t) { terminalSquare = t; }
@@ -147,7 +166,7 @@ char numberToFile(int position);
 int numberToRank(int position);
 int filerankToNumber(char file, int rank);
 std::string numberToFilerank(int position);
-void printMove(int move[3]);
+void printMove(Move move);
 
 
 
@@ -157,12 +176,12 @@ int boardEvaluation(const Board& board);
 //  Gets a position number and returns the row-reversed position number
 int reversePosition(int position);
 //  negaMax implemented for board evaluation
-int negaMax(int depth, int turn, bool castlingCheck[4]);
+int negaMax(int depth, Board& board);
 //  function to call negaMax. bestMoves is the output
-int rootNegaMax(int maxDepth, int turn, bool castlingCheck[4], int bestMoves[3]);
+int rootNegaMax(int depth, Board& board, Move& bestMove);
 //  negaMax with alphaBeta pruning implemented for board evaluation
 int alphabeta(int depth, Board& board, int alpha, int beta);
-int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3]);
+int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, Move& bestMove);
 
 
 
@@ -174,22 +193,22 @@ bool checkGameEnd(const Board& board);
 
 
 /*                                MOVE GENERATION                             */
-void moveGeneration(Board& board, int moveList[250][3], int *moveCount);
-void pawnMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
-void knightMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
-void bishopMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
-void rookMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
-void queenMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
-void kingMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
+void moveGeneration(Board& board, Move moveList[250], int *moveCount);
+void pawnMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void knightMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void bishopMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void rookMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void queenMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void kingMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
 
-void castlingMoveGeneration(Board& board, int moveList[250][3], int *moveCount);
-void promotionMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount);
-void enpassantMoveGeneration(Board& board, int moveList[250][3], int *moveCount);
+void castlingMoveGeneration(Board& board, Move moveList[250], int *moveCount);
+void promotionMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount);
+void enpassantMoveGeneration(Board& board, Move moveList[250], int *moveCount);
 
-void addMove(int initial, int terminal, int moveType, int moveList[250][3], int *moveCount);
-void addPromotionMove(int initial, int terminal, int moveList[250][3], int *moveCount);
+void addMove(int initial, int terminal, int moveType, Move moveList[250], int *moveCount);
+void addPromotionMove(int initial, int terminal, Move moveList[250], int *moveCount);
 
-void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount);
+void legalMoves(Board board, Move moveList[250], int moveCount, Move legalMoveList[250], int *legalMoveCount);
 bool squareAttackCheck(Board board, int position);
 
 
@@ -200,9 +219,9 @@ bool squareAttackCheck(Board board, int position);
 u64 divide(int depth, int maxDepth, Board& board, bool showOutput);
 u64 divide2(int depth, int maxDepth, Board& board, bool showOutput);
 // Makes the given move and changes turn
-int makeMove(Board &board, int move[3]);
+int makeMove(Board &board, Move& move);
 // Undos the given move and changes turn
-void undoMove(Board &board, int move[3], int terminalValue);
+void undoMove(Board &board, Move& move, int terminalValue);
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex);
 void stopTimer(LARGE_INTEGER *endTime, int timerIndex);
 void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex);

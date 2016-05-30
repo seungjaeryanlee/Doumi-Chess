@@ -126,14 +126,13 @@ array<int, 120> KING_PCSQTable_ENDGAME = {
 };
 //  Current Half Move Number, starts at 0
 int halfMoveCount = 0;
-//  move[3]: initial, terminal, moveType
-int currentBoardMoveList[MAX_MOVEGEN_COUNT][3];
+Move currentBoardMoveList[MAX_MOVEGEN_COUNT];
 int currentBoardMoveCount;
-int currentBoardLegalMoveList[MAX_MOVEGEN_COUNT][3];
+Move currentBoardLegalMoveList[MAX_MOVEGEN_COUNT];
 int currentBoardLegalMoveCount;
-int depthAllMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT][3];
+Move depthAllMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT];
 int depthAllMoveCount[MAXIMUM_DEPTH + 1];
-int depthLegalMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT][3];
+Move depthLegalMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 //  added for time performance check
 LARGE_INTEGER frequency, beginTime, endTime;
@@ -143,7 +142,7 @@ int gameResult = NOT_FINISHED;
 Board savedBoard[MAX_MOVENUMBER + 1];
 //  Saved values for UNDO_MOVE command
 int savedTerminalValue[MAX_MOVENUMBER]; // TODO: Check if it should be initialized as ERROR_INTEGER
-int savedMove[MAX_MOVENUMBER + 1][3];
+Move savedMove[MAX_MOVENUMBER + 1];
 
 //  Which color user plays
 int userColor = ERROR_INTEGER;
@@ -597,8 +596,8 @@ string numberToFilerank(int position) {
      fileRank += std::to_string(rank);
      return fileRank;
 }
-void printMove(int move[3]) {
-     cout << numberToFilerank(move[0]) << " " << numberToFilerank(move[1]) << " (" << move[2] << ")" << endl;
+void printMove(Move move) {
+     cout << numberToFilerank(move.getInitial()) << " " << numberToFilerank(move.getTerminal()) << " (" << move.getType() << ")" << endl;
 }
 
 /*                             EVALUATION FUNCTIONS                           */
@@ -686,27 +685,30 @@ int negaMax(int depth, Board& board) {
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
 
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == WHITEKING) {
+          int initial = depthLegalMoveList[depth][i].getInitial();
+
+          //TODO: change to castlingUpdate
+          if (board.getSquare(initial) == WHITEKING) {
                board.setCastling(WKCASTLING, false);
                board.setCastling(WQCASTLING, false);
           }
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == BLACKKING) {
+          if (board.getSquare(initial) == BLACKKING) {
                board.setCastling(BKCASTLING, false);
                board.setCastling(BQCASTLING, false);
           }
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == WHITEROOK) {
-               if (depthLegalMoveList[depth][i][0] == A1) {
+          if (board.getSquare(initial) == WHITEROOK) {
+               if (initial == A1) {
                     board.setCastling(WQCASTLING, false);
                }
-               if (depthLegalMoveList[depth][i][0] == H1) {
+               if (initial == H1) {
                     board.setCastling(WKCASTLING, false);
                }
           }
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == BLACKROOK) {
-               if (depthLegalMoveList[depth][i][0] == A8) {
+          if (board.getSquare(initial) == BLACKROOK) {
+               if (initial == A8) {
                     board.setCastling(BQCASTLING, false);
                }
-               if (depthLegalMoveList[depth][i][0] == H8) {
+               if (initial == H8) {
                     board.setCastling(BKCASTLING, false);
                }
           }
@@ -726,7 +728,7 @@ int negaMax(int depth, Board& board) {
 
      return max_Score;
 }
-int rootNegaMax(int maxDepth, Board& board, int bestMove[3]) {
+int rootNegaMax(int maxDepth, Board& board, Move& bestMove) {
 
      int max_Score = INT_MIN;
      int score;
@@ -736,28 +738,31 @@ int rootNegaMax(int maxDepth, Board& board, int bestMove[3]) {
      legalMoves(board, depthAllMoveList[maxDepth], depthAllMoveCount[maxDepth], depthLegalMoveList[maxDepth], &depthLegalMoveCount[maxDepth]);
 
      for (int i = 0; i < depthLegalMoveCount[maxDepth]; i++) {
-
-          if (board.getSquare(depthLegalMoveList[maxDepth][i][0]) == WHITEKING) {
+          int initial = depthLegalMoveList[maxDepth][i].getInitial();
+          
+          
+          //TODO: change to castlingUpdate
+          if (board.getSquare(initial) == WHITEKING) {
                board.setCastling(WKCASTLING, false);
                board.setCastling(WQCASTLING, false);
           }
-          if (board.getSquare(depthLegalMoveList[maxDepth][i][0]) == BLACKKING) {
+          if (board.getSquare(initial) == BLACKKING) {
                board.setCastling(BKCASTLING, false);
                board.setCastling(BQCASTLING, false);
           }
-          if (board.getSquare(depthLegalMoveList[maxDepth][i][0]) == WHITEROOK) {
-               if (depthLegalMoveList[maxDepth][i][0] == A1) {
+          if (board.getSquare(initial) == WHITEROOK) {
+               if (initial == A1) {
                     board.setCastling(WQCASTLING, false);
                }
-               if (depthLegalMoveList[maxDepth][i][0] == H1) {
+               if (initial == H1) {
                     board.setCastling(WKCASTLING, false);
                }
           }
-          if (board.getSquare(depthLegalMoveList[maxDepth][i][0]) == BLACKROOK) {
-               if (depthLegalMoveList[maxDepth][i][0] == A8) {
+          if (board.getSquare(initial) == BLACKROOK) {
+               if (initial == A8) {
                     board.setCastling(BQCASTLING, false);
                }
-               if (depthLegalMoveList[maxDepth][i][0] == H8) {
+               if (initial == H8) {
                     board.setCastling(BKCASTLING, false);
                }
           }
@@ -769,10 +774,7 @@ int rootNegaMax(int maxDepth, Board& board, int bestMove[3]) {
 
           if (score > max_Score) {
                max_Score = score;
-               bestMove[0] = depthLegalMoveList[maxDepth][i][0];
-               bestMove[1] = depthLegalMoveList[maxDepth][i][1];
-               bestMove[2] = depthLegalMoveList[maxDepth][i][2];
-
+               bestMove = Move(depthLegalMoveList[maxDepth][i]);
           }
 
           undoMove(board, depthLegalMoveList[maxDepth][i], terminalValue);
@@ -786,7 +788,6 @@ int alphabeta(int depth, Board& board, int alpha, int beta) {
      if (depth == 0) {
           return board.getTurn() * boardEvaluation(board);
      }
-
      int score;
      int terminalValue;
 
@@ -795,27 +796,30 @@ int alphabeta(int depth, Board& board, int alpha, int beta) {
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
 
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == WHITEKING) {
+          int initial = depthLegalMoveList[depth][i].getInitial();
+
+          //TODO: change to castlingUpdate
+          if (board.getSquare(initial) == WHITEKING) {
                board.setCastling(WKCASTLING, false);
                board.setCastling(WQCASTLING, false);
           }
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == BLACKKING) {
+          if (board.getSquare(initial) == BLACKKING) {
                board.setCastling(BKCASTLING, false);
                board.setCastling(BQCASTLING, false);
           }
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == WHITEROOK) {
-               if (depthLegalMoveList[depth][i][0] == A1) {
+          if (board.getSquare(initial) == WHITEROOK) {
+               if (initial == A1) {
                     board.setCastling(WQCASTLING, false);
                }
-               if (depthLegalMoveList[depth][i][0] == H1) {
+               if (initial == H1) {
                     board.setCastling(WKCASTLING, false);
                }
           }
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == BLACKROOK) {
-               if (depthLegalMoveList[depth][i][0] == A8) {
+          if (board.getSquare(initial) == BLACKROOK) {
+               if (initial == A8) {
                     board.setCastling(BQCASTLING, false);
                }
-               if (depthLegalMoveList[depth][i][0] == H8) {
+               if (initial == H8) {
                     board.setCastling(BKCASTLING, false);
                }
           }
@@ -841,7 +845,7 @@ int alphabeta(int depth, Board& board, int alpha, int beta) {
 
      return alpha;
 }
-int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3]) {
+int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, Move& bestMove) {
      int score;
      int terminalValue;
 
@@ -850,27 +854,30 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
 
      for (int i = 0; i < depthLegalMoveCount[maxDepth]; i++) {
 
-          if (board.getSquare(depthLegalMoveList[maxDepth][i][0]) == WHITEKING) {
+          int initial = depthLegalMoveList[maxDepth][i].getInitial();
+
+          //TODO: change to castlingUpdate
+          if (board.getSquare(initial) == WHITEKING) {
                board.setCastling(WKCASTLING, false);
                board.setCastling(WQCASTLING, false);
           }
-          if (board.getSquare(depthLegalMoveList[maxDepth][i][0]) == BLACKKING) {
+          if (board.getSquare(initial) == BLACKKING) {
                board.setCastling(BKCASTLING, false);
                board.setCastling(BQCASTLING, false);
           }
-          if (board.getSquare(depthLegalMoveList[maxDepth][i][0]) == WHITEROOK) {
-               if (depthLegalMoveList[maxDepth][i][0] == A1) {
+          if (board.getSquare(initial) == WHITEROOK) {
+               if (initial == A1) {
                     board.setCastling(WQCASTLING, false);
                }
-               if (depthLegalMoveList[maxDepth][i][0] == H1) {
+               if (initial == H1) {
                     board.setCastling(WKCASTLING, false);
                }
           }
-          if (board.getSquare(depthLegalMoveList[maxDepth][i][0]) == BLACKROOK) {
-               if (depthLegalMoveList[maxDepth][i][0] == A8) {
+          if (board.getSquare(initial) == BLACKROOK) {
+               if (initial == A8) {
                     board.setCastling(BQCASTLING, false);
                }
-               if (depthLegalMoveList[maxDepth][i][0] == H8) {
+               if (initial == H8) {
                     board.setCastling(BKCASTLING, false);
                }
           }
@@ -890,9 +897,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, int bestMove[3
 
           if (score > alpha) {
                alpha = score;
-               bestMove[0] = depthLegalMoveList[maxDepth][i][0];
-               bestMove[1] = depthLegalMoveList[maxDepth][i][1];
-               bestMove[2] = depthLegalMoveList[maxDepth][i][2];
+               bestMove = Move(depthLegalMoveList[maxDepth][i]);
           }
 
           undoMove(board, depthLegalMoveList[maxDepth][i], terminalValue);
@@ -913,7 +918,7 @@ bool checkGameEnd(const Board& board) {
 }
 
 /*                           MOVE GENERATION FUNCTIONS                        */
-void moveGeneration(Board& board, int moveList[250][3], int *moveCount) {
+void moveGeneration(Board& board, Move moveList[250], int *moveCount) {
      *moveCount = 0;
 
      castlingMoveGeneration(board, moveList, moveCount);
@@ -947,7 +952,7 @@ void moveGeneration(Board& board, int moveList[250][3], int *moveCount) {
           for (int i = 0; i < 120; i++) {
                switch (board.getSquare(i)) {
                case BLACKPAWN:
-                    pawnMoveGeneration(board,i, moveList, moveCount);
+                    pawnMoveGeneration(board, i, moveList, moveCount);
                     break;
                case BLACKKNIGHT:
                     knightMoveGeneration(board, i, moveList, moveCount);
@@ -968,7 +973,7 @@ void moveGeneration(Board& board, int moveList[250][3], int *moveCount) {
           }
      }
 }
-void pawnMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount) {
+void pawnMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount) {
      if (board.getTurn() == WHITE) {
           //  if on the last row before promotion, just call promotion
           if (A7 <= position && position <= H7) {
@@ -981,8 +986,8 @@ void pawnMoveGeneration(Board& board, int position, int moveList[250][3], int *m
                addMove(position, position - ROW, NORMAL, moveList, moveCount);
                //  Advance 2 squares
                if (A2 <= position && position <= H2 &&
-                    board.getSquare(position - 2*ROW) == EMPTYSQUARE) {
-                    addMove(position, position - 2*ROW, DOUBLEMOVE, moveList, moveCount);
+                    board.getSquare(position - 2 * ROW) == EMPTYSQUARE) {
+                    addMove(position, position - 2 * ROW, DOUBLEMOVE, moveList, moveCount);
                }
           }
 
@@ -1020,7 +1025,7 @@ void pawnMoveGeneration(Board& board, int position, int moveList[250][3], int *m
           }
      }
 }
-void knightMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount) {
+void knightMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount) {
      int turn = board.getTurn();
 
      if (checkColor(board.getSquare(position + ROW + 2 * COLUMN)) == -turn ||
@@ -1056,7 +1061,7 @@ void knightMoveGeneration(Board& board, int position, int moveList[250][3], int 
           addMove(position, position - 2 * ROW - COLUMN, NORMAL, moveList, moveCount);
      }
 }
-void bishopMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount) {
+void bishopMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount) {
      int turn = board.getTurn();
      bool topright = true, downright = true, downleft = true, topleft = true;
      for (int i = 1; i < 8; i++) {
@@ -1101,7 +1106,7 @@ void bishopMoveGeneration(Board& board, int position, int moveList[250][3], int 
           else { topleft = false; }
      }
 }
-void rookMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount) {
+void rookMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount) {
      int turn = board.getTurn();
      bool top = true, right = true, down = true, left = true;
 
@@ -1147,11 +1152,11 @@ void rookMoveGeneration(Board& board, int position, int moveList[250][3], int *m
           else { left = false; }
      }
 }
-void queenMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount) {
+void queenMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount) {
      rookMoveGeneration(board, position, moveList, moveCount);
      bishopMoveGeneration(board, position, moveList, moveCount);
 }
-void kingMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount) {
+void kingMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount) {
      int turn = board.getTurn();
 
      if (checkColor(board.getSquare(position + ROW)) == -turn ||
@@ -1188,7 +1193,7 @@ void kingMoveGeneration(Board& board, int position, int moveList[250][3], int *m
      }
 }
 
-void castlingMoveGeneration(Board& board, int moveList[250][3], int *moveCount) {
+void castlingMoveGeneration(Board& board, Move moveList[250], int *moveCount) {
      if (board.getTurn() == WHITE) {
           if (board.getCastling(WKCASTLING) &&                                             //  neither piece moved
                board.getSquare(E1) == WHITEKING && board.getSquare(H1) == WHITEROOK &&     //  both pieces exists on board
@@ -1196,14 +1201,14 @@ void castlingMoveGeneration(Board& board, int moveList[250][3], int *moveCount) 
                squareAttackCheck(board, E1) == false &&                                    //  not in check
                squareAttackCheck(board, F1) == false &&                                    //  not attacked while moving
                squareAttackCheck(board, G1) == false) {
-              
+
                addMove(E1, G1, KINGSIDE_CASTLING, moveList, moveCount);
           }
           if (board.getCastling(WQCASTLING) && board.getSquare(B1) == EMPTYSQUARE &&
                board.getSquare(C1) == EMPTYSQUARE && board.getSquare(D1) == EMPTYSQUARE &&
                board.getSquare(E1) == WHITEKING && board.getSquare(A1) == WHITEROOK &&
                squareAttackCheck(board, E1) == false &&
-               squareAttackCheck(board, C1) == false &&         
+               squareAttackCheck(board, C1) == false &&
                squareAttackCheck(board, D1) == false) {
                addMove(E1, C1, QUEENSIDE_CASTLING, moveList, moveCount);
           }
@@ -1216,7 +1221,7 @@ void castlingMoveGeneration(Board& board, int moveList[250][3], int *moveCount) 
                squareAttackCheck(board, E8) == false &&                                    //  not in check
                squareAttackCheck(board, F8) == false &&                                    //  not attacked while moving
                squareAttackCheck(board, G8) == false) {
-               
+
                addMove(E8, G8, KINGSIDE_CASTLING, moveList, moveCount);
           }
           if (board.getCastling(BQCASTLING) && board.getSquare(B8) == EMPTYSQUARE &&
@@ -1229,7 +1234,7 @@ void castlingMoveGeneration(Board& board, int moveList[250][3], int *moveCount) 
           }
      }
 }
-void promotionMoveGeneration(Board& board, int position, int moveList[250][3], int *moveCount) {
+void promotionMoveGeneration(Board& board, int position, Move moveList[250], int *moveCount) {
      if (board.getTurn() == WHITE) {
           if (checkColor(board.getSquare(position - ROW - COLUMN)) == -board.getTurn()) {
                addPromotionMove(position, position - ROW - COLUMN, moveList, moveCount);
@@ -1253,7 +1258,7 @@ void promotionMoveGeneration(Board& board, int position, int moveList[250][3], i
           }
      }
 }
-void enpassantMoveGeneration(Board& board, int moveList[250][3], int *moveCount) {
+void enpassantMoveGeneration(Board& board, Move moveList[250], int *moveCount) {
      if (board.getEnpassantSquare() == 0) { return; }
 
      int enpassantSquare = board.getEnpassantSquare();
@@ -1276,20 +1281,18 @@ void enpassantMoveGeneration(Board& board, int moveList[250][3], int *moveCount)
      }
 }
 
-void addMove(int initial, int terminal, int moveType, int moveList[250][3], int *moveCount) {
-     moveList[*moveCount][0] = initial;
-     moveList[*moveCount][1] = terminal;
-     moveList[*moveCount][2] = moveType;
+void addMove(int initial, int terminal, int moveType, Move moveList[250], int *moveCount) {
+     moveList[*moveCount] = Move(initial, terminal, moveType);
      *moveCount += 1;
 }
-void addPromotionMove(int initial, int terminal, int moveList[250][3], int *moveCount) {
+void addPromotionMove(int initial, int terminal, Move moveList[250], int *moveCount) {
      addMove(initial, terminal, KNIGHT_PROMOTION, moveList, moveCount);
      addMove(initial, terminal, BISHOP_PROMOTION, moveList, moveCount);
      addMove(initial, terminal, ROOK_PROMOTION, moveList, moveCount);
      addMove(initial, terminal, QUEEN_PROMOTION, moveList, moveCount);
 }
 
-void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveList[250][3], int *legalMoveCount) {
+void legalMoves(Board board, Move moveList[250], int moveCount, Move legalMoveList[250], int *legalMoveCount) {
      *legalMoveCount = 0;
 
      //  find king position
@@ -1305,17 +1308,17 @@ void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveL
 
      for (int i = 0; i < moveCount; i++) {
           //  check if king will be moved
-          if (board.getSquare(moveList[i][0]) == WHITEKING || board.getSquare(moveList[i][0]) == BLACKKING) {
-               if (moveList[i][2] == NORMAL) {
-                    changedKingPosition = moveList[i][1];
+          if (board.getSquare(moveList[i].getInitial()) == WHITEKING || board.getSquare(moveList[i].getInitial()) == BLACKKING) {
+               if (moveList[i].getType() == NORMAL) {
+                    changedKingPosition = moveList[i].getTerminal();
                }
-               if (moveList[i][2] == KINGSIDE_CASTLING) {
-                    changedKingPosition = moveList[i][0] + 2 * COLUMN;
+               if (moveList[i].getType() == KINGSIDE_CASTLING) {
+                    changedKingPosition = moveList[i].getInitial() + 2 * COLUMN;
                }
-               if (moveList[i][2] == QUEENSIDE_CASTLING) {
-                    changedKingPosition = moveList[i][0] - 2 * COLUMN;
+               if (moveList[i].getType() == QUEENSIDE_CASTLING) {
+                    changedKingPosition = moveList[i].getInitial() - 2 * COLUMN;
                }
-               
+
           }
           else { changedKingPosition = kingPosition; }
 
@@ -1326,9 +1329,7 @@ void legalMoves(Board board, int moveList[250][3], int moveCount, int legalMoveL
 
           //  if king is safe
           if (!squareAttackCheck(board, changedKingPosition)) {
-               legalMoveList[*legalMoveCount][0] = moveList[i][0];
-               legalMoveList[*legalMoveCount][1] = moveList[i][1];
-               legalMoveList[*legalMoveCount][2] = moveList[i][2];
+               legalMoveList[*legalMoveCount] = Move(moveList[i]);
                *legalMoveCount += 1;
           }
 
@@ -1694,27 +1695,31 @@ u64 divide(int depth, int maxDepth, Board& board, bool showOutput) {
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
 
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == WHITEKING) {
+          int initial = depthLegalMoveList[depth][i].getInitial();
+          int terminal = depthLegalMoveList[depth][i].getTerminal();
+
+          //TODO: change to castlingUpdate
+          if (board.getSquare(initial) == WHITEKING) {
                board.setCastling(WKCASTLING, false);
                board.setCastling(WQCASTLING, false);
           }
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == BLACKKING) {
+          if (board.getSquare(initial) == BLACKKING) {
                board.setCastling(BKCASTLING, false);
                board.setCastling(BQCASTLING, false);
           }
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == WHITEROOK) {
-               if (depthLegalMoveList[depth][i][0] == A1) {
+          if (board.getSquare(initial) == WHITEROOK) {
+               if (initial == A1) {
                     board.setCastling(WQCASTLING, false);
                }
-               if (depthLegalMoveList[depth][i][0] == H1) {
+               if (initial == H1) {
                     board.setCastling(WKCASTLING, false);
                }
           }
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == BLACKROOK) {
-               if (depthLegalMoveList[depth][i][0] == A8) {
+          if (board.getSquare(initial) == BLACKROOK) {
+               if (initial == A8) {
                     board.setCastling(BQCASTLING, false);
                }
-               if (depthLegalMoveList[depth][i][0] == H8) {
+               if (initial == H8) {
                     board.setCastling(BKCASTLING, false);
                }
           }
@@ -1729,8 +1734,8 @@ u64 divide(int depth, int maxDepth, Board& board, bool showOutput) {
           
           if (depth >= maxDepth && showOutput) {
                for (int i = 0; i < 3-depth; i++) { printf("  "); }
-               printf("%c%d%c%d: %llu", numberToFile(depthLegalMoveList[depth][i][0]), numberToRank(depthLegalMoveList[depth][i][0]),
-                    numberToFile(depthLegalMoveList[depth][i][1]), numberToRank(depthLegalMoveList[depth][i][1]), individualNode);
+               printf("%c%d%c%d: %llu", numberToFile(initial), numberToRank(initial),
+                    numberToFile(terminal), numberToRank(terminal), individualNode);
                printf("\n");
           }
 
@@ -1762,27 +1767,31 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
      //if (depth == 1) { return depthLegalMoveCount[depth]; }
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == WHITEKING) {
+          int initial = depthLegalMoveList[depth][i].getInitial();
+          int terminal = depthLegalMoveList[depth][i].getTerminal();
+
+          //TODO: change to castlingUpdate
+          if (board.getSquare(initial) == WHITEKING) {
                board.setCastling(WKCASTLING, false);
                board.setCastling(WQCASTLING, false);
           }
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == BLACKKING) {
+          if (board.getSquare(initial) == BLACKKING) {
                board.setCastling(BKCASTLING, false);
                board.setCastling(BQCASTLING, false);
           }
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == WHITEROOK) {
-               if (depthLegalMoveList[depth][i][0] == A1) {
+          if (board.getSquare(initial) == WHITEROOK) {
+               if (initial == A1) {
                     board.setCastling(WQCASTLING, false);
                }
-               if (depthLegalMoveList[depth][i][0] == H1) {
+               if (initial == H1) {
                     board.setCastling(WKCASTLING, false);
                }
           }
-          if (board.getSquare(depthLegalMoveList[depth][i][0]) == BLACKROOK) {
-               if (depthLegalMoveList[depth][i][0] == A8) {
+          if (board.getSquare(initial) == BLACKROOK) {
+               if (initial == A8) {
                     board.setCastling(BQCASTLING, false);
                }
-               if (depthLegalMoveList[depth][i][0] == H8) {
+               if (initial == H8) {
                     board.setCastling(BKCASTLING, false);
                }
           }
@@ -1796,8 +1805,8 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
           }
 
           if (depth >= maxDepth && showOutput) {
-               output2 << numberToFile(depthLegalMoveList[depth][i][0]) << numberToRank(depthLegalMoveList[depth][i][0]) <<
-                    numberToFile(depthLegalMoveList[depth][i][1]) << numberToRank(depthLegalMoveList[depth][i][1]) << ": " << individualNode << std::endl;
+               output2 << numberToFile(initial) << numberToRank(initial) <<
+                    numberToFile(terminal) << numberToRank(terminal) << ": " << individualNode << std::endl;
           }
 
           undoMove(board, depthLegalMoveList[depth][i], terminalValue);
@@ -1807,9 +1816,9 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
      output2.close();
 }
 
-int makeMove(Board &board, int move[3]) {
+int makeMove(Board &board, Move& move) {
      int terminalValue;
-     int initial = move[0], terminal = move[1], moveType = move[2];
+     int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
      board.setEnpassantSquare(0);
      board.changeTurn();
@@ -1825,7 +1834,7 @@ int makeMove(Board &board, int move[3]) {
           board.setSquare(initial, EMPTYSQUARE);
           board.setEnpassantSquare((terminal + initial) / 2);
           //  terminalValue is actually enpassantSquare
-          return (terminal+initial)/2;
+          return (terminal + initial) / 2;
      }
      else if (moveType == QUEENSIDE_CASTLING) {
           //  move king
@@ -1924,8 +1933,8 @@ int makeMove(Board &board, int move[3]) {
           return 0;
      }
 }
-void undoMove(Board &board, int move[3], int terminalValue) {
-     int initial = move[0], terminal = move[1], moveType = move[2];
+void undoMove(Board &board, Move& move, int terminalValue) {
+     int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
      board.changeTurn();
      if (moveType == NORMAL) {
@@ -1982,7 +1991,6 @@ void undoMove(Board &board, int move[3], int terminalValue) {
                board.setSquare(terminal - ROW, WHITEPAWN);
           }
      }
-
 }
 
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex) {
@@ -2039,9 +2047,9 @@ void castlingUpdate(Board& board, const Move& move) {
      }
 }
 int isTerminalNode(Board& board) {
-     int tempBoardMoveList[MAX_MOVEGEN_COUNT][3];
+     Move tempBoardMoveList[MAX_MOVEGEN_COUNT];
      int tempBoardMoveCount;
-     int tempBoardLegalMoveList[MAX_MOVEGEN_COUNT][3];
+     Move tempBoardLegalMoveList[MAX_MOVEGEN_COUNT];
      int tempBoardLegalMoveCount;
      
      moveGeneration(board, tempBoardMoveList, &tempBoardMoveCount);
@@ -2287,9 +2295,9 @@ void main() {
                          //  Check legality & movetype
                          bool legal = false;
                          for (int i = 0; i < currentBoardLegalMoveCount; i++) {
-                              if (initialSquare == currentBoardLegalMoveList[i][0] && terminalSquare == currentBoardLegalMoveList[i][1]) {
+                              if (initialSquare == currentBoardLegalMoveList[i].getInitial() && terminalSquare == currentBoardLegalMoveList[i].getTerminal()) {
                                    legal = true;
-                                   moveType = currentBoardLegalMoveList[i][2];
+                                   moveType = currentBoardLegalMoveList[i].getType();
                                    break;
                               }
                          }
@@ -2341,20 +2349,20 @@ void main() {
                          }
                     }
                     
-                    int userMove[3] = { initialSquare, terminalSquare, moveType};
+                    Move userMove = Move(initialSquare, terminalSquare, moveType);
                     // save terminalValue for undoMove;
                     savedTerminalValue[halfMoveCount] = makeMove(currentBoard, userMove);
                     
-                    for (int i = 0; i < 3; i++) {
-                         savedMove[halfMoveCount][i] = userMove[i];
-                    }
+                    savedMove[halfMoveCount] = Move(userMove);
+                    
 
                     if (currentBoard.getTurn() == WHITE) { currentBoard.moveNumberIncrement(); }
                     
                     halfMoveCount++;
 
                     // add to log file
-                    logtext << currentBoard.getMoveNumber() << ": " << numberToFile(userMove[0]) << numberToRank(userMove[0]) << " " << numberToFile(userMove[1]) << numberToRank(userMove[1]) << endl;
+                    logtext << currentBoard.getMoveNumber() << ": " << numberToFile(initialSquare) << numberToRank(initialSquare) << " " 
+                         << numberToFile(terminalSquare) << numberToRank(terminalSquare) << endl;
 
                     continue;
                }
@@ -2474,22 +2482,21 @@ void main() {
 
                savedBoard[halfMoveCount] = currentBoard;
 
-               int alphabetaMove[3];
+               Move alphabetaMove;
                int alphabetaValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, alphabetaMove);
                printf("Alphabeta Value: %d\n", alphabetaValue);
                printf("Alphabeta Move: ");
                printMove(alphabetaMove);
 
-               int moveToMake[3];
-               for (int i = 0; i < 3; i++) {
-                    moveToMake[i] = alphabetaMove[i];
-               }
+               int initial = alphabetaMove.getInitial();
+               int terminal = alphabetaMove.getTerminal();
+               int moveType = alphabetaMove.getType();
 
                //  Increment or reset Fifty move count
                //  TODO: Add 50 Move Rule option in move generation / selection
-               if (currentBoard.getSquare(moveToMake[1]) == EMPTYSQUARE
-                    && currentBoard.getSquare(moveToMake[0]) != WHITEPAWN
-                    && currentBoard.getSquare(moveToMake[0]) != BLACKPAWN) {
+               if (currentBoard.getSquare(terminal) == EMPTYSQUARE
+                    && currentBoard.getSquare(initial) != WHITEPAWN
+                    && currentBoard.getSquare(initial) != BLACKPAWN) {
                     currentBoard.fiftyMoveCountIncrement();
                }
                else { currentBoard.setFiftyMoveCount(0); }
@@ -2497,53 +2504,32 @@ void main() {
                //  Save castlingCheck for undoMove
                savedBoard[halfMoveCount].setCastlingArray(currentBoard.getCastlingArray());
                //  Update castlingCheck
-               if (currentBoard.getSquare(moveToMake[0]) == WHITEROOK && moveToMake[0] == A1) {
-                    currentBoard.setCastling(WQCASTLING, false);
-               }
-               else if (currentBoard.getSquare(moveToMake[0]) == WHITEROOK && moveToMake[0] == H1) {
-                    currentBoard.setCastling(WKCASTLING, false);
-               }
-               else if (currentBoard.getSquare(moveToMake[0]) == BLACKROOK && moveToMake[0] == A8) {
-                    currentBoard.setCastling(BQCASTLING, false);
-               }
-               else if (currentBoard.getSquare(moveToMake[0]) == BLACKROOK && moveToMake[0] == H8) {
-                    currentBoard.setCastling(BKCASTLING, false);
-               }
-               else if (currentBoard.getSquare(moveToMake[0]) == WHITEKING && moveToMake[0] == E1) {
-                    currentBoard.setCastling(WKCASTLING, false);
-                    currentBoard.setCastling(WQCASTLING, false);
-               }
-               else if (currentBoard.getSquare(moveToMake[0]) == BLACKKING && moveToMake[0] == E8) {
-                    currentBoard.setCastling(BKCASTLING, false);
-                    currentBoard.setCastling(BQCASTLING, false);
-               }
+               castlingUpdate(currentBoard, alphabetaMove);
 
                //  Update enpassant square
-               if (moveToMake[2] == DOUBLEMOVE) {
-                    currentBoard.setEnpassantSquare((moveToMake[0] + moveToMake[1]) / 2);
+               if (moveType == DOUBLEMOVE) {
+                    currentBoard.setEnpassantSquare((initial + terminal) / 2);
                }
                else { currentBoard.setEnpassantSquare(0); }
 
                //  Make best move and print board
-               savedTerminalValue[halfMoveCount] = makeMove(currentBoard, moveToMake);
+               savedTerminalValue[halfMoveCount] = makeMove(currentBoard, alphabetaMove);
                //  Save move for undoMove
-               for (int i = 0; i < 3; i++) {
-                    savedMove[halfMoveCount][i] = moveToMake[i];
-               }
-               logtext << currentBoard.getMoveNumber() << ": " << numberToFilerank(moveToMake[0]) << " " << numberToFilerank(moveToMake[1]) << endl;
+               savedMove[halfMoveCount] = Move(alphabetaMove);
+               logtext << currentBoard.getMoveNumber() << ": " << numberToFilerank(initial) << " " << numberToFilerank(terminal) << endl;
 
                printSimpleBoard(currentBoard);
 
                //  Print out move and move number
-               if (moveToMake[2] == KINGSIDE_CASTLING) {
+               if (moveType == KINGSIDE_CASTLING) {
                     printf("%d: O-O\n", currentBoard.getMoveNumber());
                }
-               else if (moveToMake[2] == QUEENSIDE_CASTLING) {
+               else if (moveType == QUEENSIDE_CASTLING) {
                     printf("%d: O-O-O\n", currentBoard.getMoveNumber());
                }
                else {
                     printf("%d: ", currentBoard.getMoveNumber());
-                    printMove(moveToMake);
+                    printMove(alphabetaMove);
                }
 
                //  Increment move
