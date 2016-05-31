@@ -1974,6 +1974,43 @@ void printMenu() {
      printf("Please choose command: ");
 }
 
+void fiftyMoveCheck(Board& board, Move& move, bool isUser) {
+     int initial = move.getInitial();
+     int terminal = move.getTerminal();
+
+     if (board.getSquare(terminal) == EMPTYSQUARE
+          && board.getSquare(initial) != WHITEPAWN
+          && board.getSquare(initial) != BLACKPAWN) {
+          board.fiftyMoveCountIncrement();
+          if (board.getFiftyMoveCount() >= 50) {
+               // User: Ask user for input
+               if (isUser) {
+                    bool correctInput = false;
+                    while (!correctInput) {
+                         printf("Declare 50 move rule? (Y/N):");
+                         std::getline(cin, userCommand);
+                         if (userCommand.size() == 0 || (userCommand.at(0) != 'Y' && userCommand.at(0) != 'N')) {
+                              printf("Wrong Input!\n");
+                              continue;
+                         }
+                         else {
+                              correctInput = true;
+                              if (userCommand.at(0) == 'Y') {
+                                   declareTie = true;
+                              }
+                              break;
+                         }
+                    }
+               }
+               // TODO: Computer Declare 50 move rule
+               else {
+
+               }
+          }
+     }
+     else { currentBoard.setFiftyMoveCount(0); }
+}
+
 /******************************************************************************/
 /*                               MAIN FUNCTION                                */
 /******************************************************************************/
@@ -2122,8 +2159,8 @@ void main() {
                     moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount);
                     legalMoves(currentBoard, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
 
+                    // Get user input for move
                     int moveType = NORMAL;
-
                     correctInput = false;
                     while (!correctInput) {
                          printf("Please enter your move: ");
