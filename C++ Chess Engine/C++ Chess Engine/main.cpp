@@ -1974,7 +1974,7 @@ void printMenu() {
      printf("Please choose command: ");
 }
 
-void fiftyMoveCheck(Board& board, Move& move, bool isUser) {
+bool fiftyMoveCheck(Board& board, Move& move) {
      int initial = move.getInitial();
      int terminal = move.getTerminal();
 
@@ -1983,32 +1983,11 @@ void fiftyMoveCheck(Board& board, Move& move, bool isUser) {
           && board.getSquare(initial) != BLACKPAWN) {
           board.fiftyMoveCountIncrement();
           if (board.getFiftyMoveCount() >= 50) {
-               // User: Ask user for input
-               if (isUser) {
-                    bool correctInput = false;
-                    while (!correctInput) {
-                         printf("Declare 50 move rule? (Y/N):");
-                         std::getline(cin, userCommand);
-                         if (userCommand.size() == 0 || (userCommand.at(0) != 'Y' && userCommand.at(0) != 'N')) {
-                              printf("Wrong Input!\n");
-                              continue;
-                         }
-                         else {
-                              correctInput = true;
-                              if (userCommand.at(0) == 'Y') {
-                                   declareTie = true;
-                              }
-                              break;
-                         }
-                    }
-               }
-               // TODO: Computer Declare 50 move rule
-               else {
-
-               }
+               return true;
           }
      }
      else { currentBoard.setFiftyMoveCount(0); }
+     return false;
 }
 
 /******************************************************************************/
