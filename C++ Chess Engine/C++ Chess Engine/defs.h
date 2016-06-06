@@ -13,6 +13,7 @@
 #define MAXIMUM_DEPTH 6
 #define EVAL_DEPTH 4
 #define ERROR_INTEGER 970201
+#define STALEMATE_BOUND -100
 
 typedef unsigned long long u64;
 

@@ -2437,7 +2437,7 @@ void main() {
                     // If in bad position, declare fifty move rule
                     printf("Computer declares Fifty Move Rule.\n");
                     logtext << "Computer declares Fifty Move Rule." << endl;
-                    if (alphabetaValue <= -100) {
+                    if (alphabetaValue <= STALEMATE_BOUND) {
                          gamePlaying = false;
                          gameResult = TIE;
                          break;
