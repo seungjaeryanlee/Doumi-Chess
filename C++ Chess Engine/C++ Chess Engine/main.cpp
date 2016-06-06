@@ -1983,7 +1983,7 @@ bool fiftyMoveCheck(Board& board, Move& move) {
           && board.getSquare(initial) != WHITEPAWN
           && board.getSquare(initial) != BLACKPAWN) {
           board.fiftyMoveCountIncrement();
-          if (board.getFiftyMoveCount() >= 50) {
+          if (board.getFiftyMoveCount() >= 100) {
                return true;
           }
      }
