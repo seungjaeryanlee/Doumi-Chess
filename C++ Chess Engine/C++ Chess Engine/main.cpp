@@ -1974,6 +1974,7 @@ void printMenu() {
      printf("Please choose command: ");
 }
 
+// TODO: 50 full-moves, not 50 half moves
 bool fiftyMoveCheck(Board& board, Move& move) {
      int initial = move.getInitial();
      int terminal = move.getTerminal();
