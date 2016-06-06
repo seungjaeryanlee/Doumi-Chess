@@ -1930,7 +1930,7 @@ int isTerminalNode(Board& board) {
      
      // Stalemate: 75 Move Rule
      // TODO: 50 Move rule will be implemented in moveGen
-     if (board.getFiftyMoveCount() >= 75) {
+     if (board.getFiftyMoveCount() >= 150) {
           return STALEMATE_75;
      }
 
@@ -2000,7 +2000,7 @@ void main() {
      
      //  Initialize Board
      // board120Setup();
-     FENboardSetup("8/8/8/8/6k1/2K5/8/8 w - - 50 75");
+     FENboardSetup("8/8/8/8/6k1/2KNR3/8/8 w - - 99 75");
 
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -2432,6 +2432,18 @@ void main() {
                }
                else { currentBoard.setFiftyMoveCount(0); }
 
+               // Check Fifty move rule
+               if (fiftyMoveCheck(currentBoard, alphabetaMove)) {
+                    // If in bad position, declare fifty move rule
+                    printf("Computer declares Fifty Move Rule.\n");
+                    logtext << "Computer declares Fifty Move Rule." << endl;
+                    if (alphabetaValue <= -100) {
+                         gamePlaying = false;
+                         gameResult = TIE;
+                         break;
+                    }
+               }
+                    
                //  Save castlingCheck for undoMove
                savedBoard[halfMoveCount].setCastlingArray(currentBoard.getCastlingArray());
                //  Update castlingCheck
