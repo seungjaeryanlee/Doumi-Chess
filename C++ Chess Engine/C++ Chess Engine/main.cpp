@@ -1999,7 +1999,7 @@ void main() {
      
      //  Initialize Board
      // board120Setup();
-     FENboardSetup("8/8/8/8/6k1/2K5/8/8 w - - 0 1");
+     FENboardSetup("8/8/8/8/6k1/2K5/8/8 w - - 50 75");
 
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -2250,8 +2250,36 @@ void main() {
                               break;
                          }
                     }
+
                     
+                    // Check Fifty Move rule
                     Move userMove = Move(initialSquare, terminalSquare, moveType);
+                    if (fiftyMoveCheck(currentBoard, userMove)) {
+
+                         bool correctInput = false, declareTie = false;
+                         while (!correctInput) {
+                              printf("Declare Fifty Move Rule? (Y/N):");
+                              std::getline(cin, userCommand);
+                              if (userCommand.size() == 0 || (userCommand.at(0) != 'Y' && userCommand.at(0) != 'N')) {
+                                   printf("Wrong Input!\n");
+                                   continue;
+                              }
+                              else {
+                                   correctInput = true;
+                                   if (userCommand.at(0) == 'Y') {
+                                        declareTie = true;
+                                   }
+                                   break;
+                              }
+                         }
+                         if (declareTie) {
+                              gamePlaying = false;
+                              gameResult = TIE;
+                              break;
+                         }
+                    }
+
+                    
                     // save terminalValue for undoMove;
                     savedTerminalValue[halfMoveCount] = makeMove(currentBoard, userMove);
                     
