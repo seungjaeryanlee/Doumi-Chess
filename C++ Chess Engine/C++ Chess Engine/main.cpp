@@ -137,7 +137,7 @@ int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 //  added for time performance check
 LARGE_INTEGER frequency, beginTime, endTime;
 //  Records the result of the game
-int gameResult = NOT_FINISHED;
+result gameResult = NOT_FINISHED;
 //  Stores Board and Board States for threefold repetition
 Board savedBoard[MAX_MOVENUMBER + 1];
 //  Saved values for UNDO_MOVE command
