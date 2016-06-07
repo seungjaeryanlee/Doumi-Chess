@@ -2328,6 +2328,7 @@ void main() {
                }
                else if (commandType == QUIT) {
                     gamePlaying = false;
+                    gameResult = NOT_FINISHED;
                     break;
                }
                else if (commandType == DIVIDE) {
