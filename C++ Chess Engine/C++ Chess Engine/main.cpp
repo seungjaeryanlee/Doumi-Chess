@@ -1930,7 +1930,7 @@ int isTerminalNode(Board& board) {
      
      // Stalemate: 75 Move Rule
      // TODO: 50 Move rule will be implemented in moveGen
-     if (board.getFiftyMoveCount() >= 75) {
+     if (board.getFiftyMoveCount() >= 150) {
           return STALEMATE_75;
      }
 
@@ -1974,6 +1974,23 @@ void printMenu() {
      printf("Please choose command: ");
 }
 
+// TODO: 50 full-moves, not 50 half moves
+bool fiftyMoveCheck(Board& board, Move& move) {
+     int initial = move.getInitial();
+     int terminal = move.getTerminal();
+
+     if (board.getSquare(terminal) == EMPTYSQUARE
+          && board.getSquare(initial) != WHITEPAWN
+          && board.getSquare(initial) != BLACKPAWN) {
+          board.fiftyMoveCountIncrement();
+          if (board.getFiftyMoveCount() >= 100) {
+               return true;
+          }
+     }
+     else { currentBoard.setFiftyMoveCount(0); }
+     return false;
+}
+
 /******************************************************************************/
 /*                               MAIN FUNCTION                                */
 /******************************************************************************/
@@ -1983,7 +2000,7 @@ void main() {
      
      //  Initialize Board
      // board120Setup();
-     FENboardSetup("8/8/8/8/6k1/2K5/8/8 w - - 0 1");
+     FENboardSetup("8/8/8/8/6k1/2KNR3/8/8 w - - 99 75");
 
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -2122,8 +2139,8 @@ void main() {
                     moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount);
                     legalMoves(currentBoard, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
 
+                    // Get user input for move
                     int moveType = NORMAL;
-
                     correctInput = false;
                     while (!correctInput) {
                          printf("Please enter your move: ");
@@ -2234,8 +2251,36 @@ void main() {
                               break;
                          }
                     }
+
                     
+                    // Check Fifty Move rule
                     Move userMove = Move(initialSquare, terminalSquare, moveType);
+                    if (fiftyMoveCheck(currentBoard, userMove)) {
+
+                         bool correctInput = false, declareTie = false;
+                         while (!correctInput) {
+                              printf("Declare Fifty Move Rule? (Y/N):");
+                              std::getline(cin, userCommand);
+                              if (userCommand.size() == 0 || (userCommand.at(0) != 'Y' && userCommand.at(0) != 'N')) {
+                                   printf("Wrong Input!\n");
+                                   continue;
+                              }
+                              else {
+                                   correctInput = true;
+                                   if (userCommand.at(0) == 'Y') {
+                                        declareTie = true;
+                                   }
+                                   break;
+                              }
+                         }
+                         if (declareTie) {
+                              gamePlaying = false;
+                              gameResult = TIE;
+                              break;
+                         }
+                    }
+
+                    
                     // save terminalValue for undoMove;
                     savedTerminalValue[halfMoveCount] = makeMove(currentBoard, userMove);
                     
@@ -2387,6 +2432,18 @@ void main() {
                }
                else { currentBoard.setFiftyMoveCount(0); }
 
+               // Check Fifty move rule
+               if (fiftyMoveCheck(currentBoard, alphabetaMove)) {
+                    // If in bad position, declare fifty move rule
+                    printf("Computer declares Fifty Move Rule.\n");
+                    logtext << "Computer declares Fifty Move Rule." << endl;
+                    if (alphabetaValue <= STALEMATE_BOUND) {
+                         gamePlaying = false;
+                         gameResult = TIE;
+                         break;
+                    }
+               }
+                    
                //  Save castlingCheck for undoMove
                savedBoard[halfMoveCount].setCastlingArray(currentBoard.getCastlingArray());
                //  Update castlingCheck
