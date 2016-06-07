@@ -1937,7 +1937,7 @@ int isTerminalNode(Board& board) {
      // Stalemate: Threefold Repetition
      // TODO: Implement
 
-     return NOTEND;
+     return NOTMATE;
 }
 
 void printDebugMenu() {
@@ -2059,7 +2059,7 @@ void main() {
                gamePlaying = false;
                gameResult = TIE;
                break;
-          case NOTEND:
+          case NOTMATE:
                gamePlaying = true;
                gameResult = TIE;
                break;
