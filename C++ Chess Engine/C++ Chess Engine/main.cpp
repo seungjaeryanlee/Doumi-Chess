@@ -1974,7 +1974,6 @@ void printMenu() {
      printf("Please choose command: ");
 }
 
-// TODO: 50 full-moves, not 50 half moves
 bool fiftyMoveCheck(Board& board, Move& move) {
      int initial = move.getInitial();
      int terminal = move.getTerminal();
@@ -1998,7 +1997,7 @@ void main() {
 
      logtext.open("log.txt");
      
-     //  Initialize Board
+     //Initialize Board
      // board120Setup();
      FENboardSetup("8/8/8/8/6k1/2KNR3/8/8 w - - 99 75");
 
@@ -2013,11 +2012,9 @@ void main() {
      boardToFEN(currentBoard);
      printf("--------------------------------------------------\n");
 
-     //  begin timer
+     // Begin timer
      frequency = startTimer(&beginTime, 1);
      
-
-     //  Game Loop: Player vs COM
      bool correctInput = false;
      string userCommand;
 
@@ -2102,6 +2099,7 @@ void main() {
 
           logtext << "COM Search Depth: " << EVAL_DEPTH << endl;
 
+          //  User turn
           if (currentBoard.getTurn() == userColor && spectate == false) {
                
                int initialSquare, terminalSquare;
@@ -2410,6 +2408,8 @@ void main() {
                     }
                }
           }
+          
+          //  Computer turn
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
 
                savedBoard[halfMoveCount] = currentBoard;
@@ -2522,7 +2522,7 @@ void main() {
           }
      }
 
-     //  Output Game Result
+     //  Print Game Result
      printf("Game Result: ");
      logtext << "Game Result: ";
      switch (gameResult) {
@@ -2543,7 +2543,7 @@ void main() {
           logtext << "0-0: Game not finished" << endl;
      }
 
-     //  stop timer and print elapsed time
+     //  Stop timer and print elapsed time
      stopTimer(&endTime, 1);
      printElapsedTime(beginTime, endTime, frequency, 1);
      logtext << "Total Time: " << elapsedTime(beginTime, endTime, frequency, 1) << "ms" << endl;
