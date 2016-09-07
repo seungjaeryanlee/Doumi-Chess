@@ -1,12 +1,10 @@
 #pragma once
 #include "defs.h"
 
-using namespace std;
-
 class Board {
 private:
-     array<int, 120> board;
-     array<bool, 4> castlingCheck;
+     std::array<int, 120> board;
+     std::array<bool, 4> castlingCheck;
      int turn;
      int enpassantSquare;
      int fiftyMoveCount;
@@ -35,7 +33,7 @@ public:
      */
 
      // Constructor adding all content at once
-     Board(array<int, 120> b, array<bool, 4> cc, int t, int e, int f, int m) {
+     Board(std::array<int, 120> b, std::array<bool, 4> cc, int t, int e, int f, int m) {
           board = b;
           castlingCheck = cc;
           turn = t;
@@ -88,9 +86,9 @@ public:
      }
 
      //  Mutators
-     void setBoard(const array<int, 120> b) { board = b; }
+     void setBoard(const std::array<int, 120> b) { board = b; }
      void setSquare(const int square, const int value) { board.at(square) = value; }
-     void setCastlingArray(const array<bool, 4> cc) { castlingCheck = cc; }
+     void setCastlingArray(const std::array<bool, 4> cc) { castlingCheck = cc; }
      void setCastling(const int index, const bool value) { castlingCheck.at(index) = value; }
      void setTurn(const int t) { turn = t; }
      void setEnpassantSquare(const int e) { enpassantSquare = e; }
@@ -98,9 +96,9 @@ public:
      void setMoveNumber(const int m) { moveNumber = m; }
 
      //  Accessors
-     const array<int, 120> getBoard() const { return board; }
+     const std::array<int, 120> getBoard() const { return board; }
      const int getSquare(int square) const { return board.at(square); }
-     const array<bool, 4> getCastlingArray() const { return castlingCheck; }
+     const std::array<bool, 4> getCastlingArray() const { return castlingCheck; }
      const bool getCastling(int index) const { return castlingCheck.at(index); }
      const int getTurn() const { return turn; }
      const int getEnpassantSquare() const { return enpassantSquare; }
@@ -154,8 +152,8 @@ public:
 //  This function sets up currentboard[120] for the initial position of pieces.
 void board120Setup();
 //  receives a FEN string to setup board
-void FENboardSetup(const string FEN);
-string boardToFEN(const Board& board);
+void FENboardSetup(const std::string FEN);
+std::string boardToFEN(const Board& board);
 //  This functions prints the board from the parameter.
 void printBoard(const Board& board);
 //  This functions prints simple version of the board from the parameter.

@@ -9,8 +9,6 @@
 #include "protos.h"
 #include "defs.h"
 
-using namespace std;
-
 /******************************************************************************/
 /*                                 GLOBAL VARIABLE                            */
 /******************************************************************************/
@@ -19,7 +17,7 @@ bool gamePlaying = true;
 bool endGame = false;
 //  PCSQ Tables from 
 //  https://chessprogramming.wikispaces.com/Simplified+evaluation+function
-array<int, 120> PAWN_PCSQTable = {
+std::array<int, 120> PAWN_PCSQTable = {
      //  Possibly use -9999 for error squares for safety
      /*
      -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999,
@@ -40,7 +38,7 @@ array<int, 120> PAWN_PCSQTable = {
       0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
       0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
-array<int, 120> KNIGHT_PCSQTable = {
+std::array<int, 120> KNIGHT_PCSQTable = {
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,-50,-40,-30,-30,-30,-30,-40,-50,  0,
@@ -54,7 +52,7 @@ array<int, 120> KNIGHT_PCSQTable = {
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
-array<int, 120> BISHOP_PCSQTable = {
+std::array<int, 120> BISHOP_PCSQTable = {
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,-20,-10,-10,-10,-10,-10,-10,-20,  0,
@@ -68,7 +66,7 @@ array<int, 120> BISHOP_PCSQTable = {
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
-array<int, 120> ROOK_PCSQTable = {
+std::array<int, 120> ROOK_PCSQTable = {
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -82,7 +80,7 @@ array<int, 120> ROOK_PCSQTable = {
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
-array<int, 120> QUEEN_PCSQTable = {
+std::array<int, 120> QUEEN_PCSQTable = {
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,-20,-10,-10, -5, -5,-10,-10,-20,  0,
@@ -96,7 +94,7 @@ array<int, 120> QUEEN_PCSQTable = {
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
-array<int, 120> KING_PCSQTable = {
+std::array<int, 120> KING_PCSQTable = {
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,-30,-40,-40,-50,-50,-40,-40,-30,  0,
@@ -110,7 +108,7 @@ array<int, 120> KING_PCSQTable = {
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 };
-array<int, 120> KING_PCSQTable_ENDGAME = {
+std::array<int, 120> KING_PCSQTable_ENDGAME = {
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,-50,-40,-30,-20,-20,-30,-40,-50,  0,
@@ -147,7 +145,7 @@ Move savedMove[MAX_MOVENUMBER + 1];
 //  Which color user plays
 int userColor = ERROR_INTEGER;
 //  To create a log of moves
-ofstream logtext;
+std::ofstream logtext;
 //  if true, the game is between two computers
 bool spectate = false;
 
@@ -339,7 +337,7 @@ void FENboardSetup(const std::string FEN) {
 
 
 }
-string boardToFEN(const Board& board) {
+std::string boardToFEN(const Board& board) {
      std::string FEN;
      int emptySquareCount = 0;
 
@@ -441,11 +439,11 @@ string boardToFEN(const Board& board) {
      else { FEN += '-'; }
 
      FEN += ' ';
-     FEN += to_string(board.getFiftyMoveCount());
+     FEN += std::to_string(board.getFiftyMoveCount());
      FEN += ' ';
-     FEN += to_string(board.getMoveNumber());
+     FEN += std::to_string(board.getMoveNumber());
      
-     cout << FEN << endl;
+     std::cout << FEN << std::endl;
      return FEN;
 
 }
@@ -588,8 +586,8 @@ int filerankToNumber(char file, int rank) {
      position120 = COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - '1'));
      return position120;
 }
-string numberToFilerank(int position) {
-     string fileRank = "";
+std::string numberToFilerank(int position) {
+     std::string fileRank = "";
      char file = 'a' + position % 10 - 1; 
      int rank = 10 - position / 10;
      fileRank += file;
@@ -597,7 +595,7 @@ string numberToFilerank(int position) {
      return fileRank;
 }
 void printMove(const Move& move) {
-     cout << numberToFilerank(move.getInitial()) << " " << numberToFilerank(move.getTerminal()) << " (" << move.getType() << ")" << endl;
+     std::cout << numberToFilerank(move.getInitial()) << " " << numberToFilerank(move.getTerminal()) << " (" << move.getType() << ")" << std::endl;
 }
 
 /*                             EVALUATION FUNCTIONS                           */
@@ -1623,7 +1621,7 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
      if (depth == 0) { return 1; }
 
      //  output text file for large output
-     ofstream output2;
+     std::ofstream output2;
      output2.open("divide.txt");
 
      depthAllMoveCount[depth] = 0;
@@ -2016,7 +2014,7 @@ void main() {
      frequency = startTimer(&beginTime, 1);
      
      bool correctInput = false;
-     string userCommand;
+     std::string userCommand;
 
 /******************************************************************************/
 /*                                 MAIN LOOP                                  */
@@ -2067,7 +2065,7 @@ void main() {
           correctInput = false;
           while (!correctInput && userColor == ERROR_INTEGER) {
                printf("Which color would you like to play? (W, B or N): ");
-               std::getline(cin, userCommand);
+               std::getline(std::cin, userCommand);
                if (userCommand.size() == 0) {
                     printf("You must enter W or B!\n");
                     continue;
@@ -2075,20 +2073,20 @@ void main() {
                if (userCommand.at(0) == 'W') {
                     userColor = WHITE;
                     correctInput = true;
-                    logtext << "Player (White) vs. COM (Black)" << endl;
+                    logtext << "Player (White) vs. COM (Black)" << std::endl;
                     break;
                }
                else if (userCommand.at(0) == 'B') {
                     userColor = BLACK;
                     correctInput = true;
-                    logtext << "COM (White) vs. Player (Black)" << endl;
+                    logtext << "COM (White) vs. Player (Black)" << std::endl;
                     break;
                }
                else if (userCommand.at(0) == 'N') {
                     spectate = true;
                     correctInput = true;
                     userColor = NEITHER;
-                    logtext << "COM (White) vs. COM (Black)" << endl;
+                    logtext << "COM (White) vs. COM (Black)" << std::endl;
                     break;
                }
                else {
@@ -2097,7 +2095,7 @@ void main() {
                }
           }
 
-          logtext << "COM Search Depth: " << EVAL_DEPTH << endl;
+          logtext << "COM Search Depth: " << EVAL_DEPTH << std::endl;
 
           //  User turn
           if (currentBoard.getTurn() == userColor && spectate == false) {
@@ -2109,7 +2107,7 @@ void main() {
                correctInput = false;
                while (!correctInput) {
                     printDebugMenu();
-                    std::getline(cin, userCommand);
+                    std::getline(std::cin, userCommand);
 
                     if (userCommand.size() == 0) {
                          printf("You must enter a number!\n");
@@ -2142,7 +2140,7 @@ void main() {
                     correctInput = false;
                     while (!correctInput) {
                          printf("Please enter your move: ");
-                         std::getline(cin, userCommand); // TODO: do I want to get the entire command?
+                         std::getline(std::cin, userCommand); // TODO: do I want to get the entire command?
 
                          //  Check size
                          if (userCommand.size() < 4) {
@@ -2183,7 +2181,7 @@ void main() {
                          correctInput = false;
                          while (!correctInput) {
                               printf("Please pick a piece to promote to (N, B, R, Q): ");
-                              std::getline(cin, userCommand); // do I want to get the entire command?
+                              std::getline(std::cin, userCommand); // do I want to get the entire command?
 
                               //  Check size
                               if (userCommand.size() != 1) {
@@ -2230,7 +2228,7 @@ void main() {
                          bool declareTie = false;
                          while (!correctInput) {
                               printf("Declare Threefold Repetition? (Y/N):");
-                              std::getline(cin, userCommand);
+                              std::getline(std::cin, userCommand);
                               if (userCommand.size() == 0 || (userCommand.at(0) != 'Y' && userCommand.at(0) != 'N')) {
                                    printf("Wrong Input!\n");
                                    continue;
@@ -2258,7 +2256,7 @@ void main() {
                          bool correctInput = false, declareTie = false;
                          while (!correctInput) {
                               printf("Declare Fifty Move Rule? (Y/N):");
-                              std::getline(cin, userCommand);
+                              std::getline(std::cin, userCommand);
                               if (userCommand.size() == 0 || (userCommand.at(0) != 'Y' && userCommand.at(0) != 'N')) {
                                    printf("Wrong Input!\n");
                                    continue;
@@ -2291,7 +2289,7 @@ void main() {
 
                     // add to log file
                     logtext << currentBoard.getMoveNumber() << ": " << numberToFile(initialSquare) << numberToRank(initialSquare) << " " 
-                         << numberToFile(terminalSquare) << numberToRank(terminalSquare) << endl;
+                         << numberToFile(terminalSquare) << numberToRank(terminalSquare) << std::endl;
 
                     continue;
                }
@@ -2312,7 +2310,7 @@ void main() {
                     correctInput = false;
                     while (!correctInput) {
                          printf("What depth? (1~%d): ", MAXIMUM_DEPTH);
-                         std::getline(cin, userCommand);
+                         std::getline(std::cin, userCommand);
                          if (userCommand.size() == 0 || userCommand.at(0) - '0' < 1 || userCommand.at(0) - '0' > MAXIMUM_DEPTH) {
                               printf("Wrong Input!\n");
                               continue;
@@ -2333,7 +2331,7 @@ void main() {
                     correctInput = false;
                     while (!correctInput) {
                          printf("What depth? (1~%d): ", MAXIMUM_DEPTH);
-                         std::getline(cin, userCommand);
+                         std::getline(std::cin, userCommand);
                          if (userCommand.size() == 0 || userCommand.at(0) - '0' < 1 || userCommand.at(0) - '0' > MAXIMUM_DEPTH) {
                               printf("Wrong Input!\n");
                               continue;
@@ -2437,7 +2435,7 @@ void main() {
                if (fiftyMoveCheck(currentBoard, alphabetaMove)) {
                     // If in bad position, declare fifty move rule
                     printf("Computer declares Fifty Move Rule.\n");
-                    logtext << "Computer declares Fifty Move Rule." << endl;
+                    logtext << "Computer declares Fifty Move Rule." << std::endl;
                     if (alphabetaValue <= STALEMATE_BOUND) {
                          gamePlaying = false;
                          gameResult = TIE;
@@ -2460,7 +2458,7 @@ void main() {
                savedTerminalValue[halfMoveCount] = makeMove(currentBoard, alphabetaMove);
                //  Save move for undoMove
                savedMove[halfMoveCount] = Move(alphabetaMove);
-               logtext << currentBoard.getMoveNumber() << ": " << numberToFilerank(initial) << " " << numberToFilerank(terminal) << endl;
+               logtext << currentBoard.getMoveNumber() << ": " << numberToFilerank(initial) << " " << numberToFilerank(terminal) << std::endl;
 
                printSimpleBoard(currentBoard);
 
@@ -2497,7 +2495,7 @@ void main() {
                     bool declareTie = false;
                     while (!correctInput) {
                          printf("Computer: Declare Threefold Repetition? (Y/N):");
-                         std::getline(cin, userCommand);
+                         std::getline(std::cin, userCommand);
                          if (userCommand.size() == 0 || (userCommand.at(0) != 'Y' && userCommand.at(0) != 'N')) {
                               printf("Wrong Input!\n");
                               continue;
@@ -2528,23 +2526,23 @@ void main() {
      switch (gameResult) {
      case BLACK_WIN:
           printf("0-1\n");
-          logtext << "0-1" << endl;
+          logtext << "0-1" << std::endl;
           break;
      case TIE:
           printf("1/2-1/2\n");
-          logtext << "1/2-1/2" << endl;
+          logtext << "1/2-1/2" << std::endl;
           break;
      case WHITE_WIN:
           printf("1-0\n");
-          logtext << "1-0" << endl;
+          logtext << "1-0" << std::endl;
           break;
      case NOT_FINISHED:
           printf("0-0: Game not finished\n");
-          logtext << "0-0: Game not finished" << endl;
+          logtext << "0-0: Game not finished" << std::endl;
      }
 
      //  Stop timer and print elapsed time
      stopTimer(&endTime, 1);
      printElapsedTime(beginTime, endTime, frequency, 1);
-     logtext << "Total Time: " << elapsedTime(beginTime, endTime, frequency, 1) << "ms" << endl;
+     logtext << "Total Time: " << elapsedTime(beginTime, endTime, frequency, 1) << "ms" << std::endl;
 }
