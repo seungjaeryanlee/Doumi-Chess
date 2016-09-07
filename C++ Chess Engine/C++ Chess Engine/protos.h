@@ -173,9 +173,9 @@ public:
 
 /*                                  BOARD SETUP                               */
 //  This function sets up currentboard[120] for the initial position of pieces.
-void board120Setup();
+void board120Setup(Board& board);
 //  receives a FEN string to setup board
-void FENboardSetup(const std::string FEN);
+void FENboardSetup(Board& board, const std::string FEN);
 std::string boardToFEN(const Board& board);
 //  This functions prints the board from the parameter.
 void printBoard(const Board& board);
