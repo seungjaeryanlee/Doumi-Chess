@@ -149,7 +149,6 @@ public:
      const int getType() const { return moveType; }
 
 };
-
 class MoveList {
 private:
      std::array<Move, MAX_MOVEGEN_COUNT> movelist;
@@ -172,21 +171,69 @@ public:
 };
 
 /*                                  BOARD SETUP                               */
-//  This function sets up currentboard[120] for the initial position of pieces.
+/// <summary>
+/// This function sets the given board to the initial state.
+/// </summary>
+/// <param name="board">The board that will be changed to initial state.</param>
 void board120Setup(Board& board);
-//  receives a FEN string to setup board
+/// <summary>
+/// This function sets the given board according to the FEN.
+/// </summary>
+/// <param name="board">The board that will be changed to initial state.</param>
+/// <param name="FEN">The desired board in FEN notation.</param>
 void FENboardSetup(Board& board, const std::string FEN);
+/// <summary>
+/// This function converts the given board to FEN notation.
+/// </summary>
+/// <param name="board">The board that will be converted to FEN notation.</param>
+/// <returns>FEN notation of the given board.</returns>
 std::string boardToFEN(const Board& board);
-//  This functions prints the board from the parameter.
+/// <summary>
+/// This function prints the given board to console.
+/// </summary>
+/// <param name="board">The board that will be printed to console.</param>
 void printBoard(const Board& board);
-//  This functions prints simple version of the board from the parameter.
+/// <summary>
+/// This function prints the given board to console excluding the error squares.
+/// </summary>
+/// <param name="board">The board that will be printed to console.</param>
 void printSimpleBoard(const Board& board);
-//  Gets a piece and returns the color of the piece
+
+/// <summary>
+/// This function returns the color of the given piece type
+/// </summary>
+/// <param name="pieceType">The piece that will be checked its color</param>
+/// <returns>The color of the given piece</returns>
 int checkColor(int pieceType);
+/// <summary>
+/// This function returns the column character (file) of a given square.
+/// </summary>
+/// <param name="position">The square that the function will give its file</param>
+/// <returns>The file of the given square</returns>
 char numberToFile(int position);
+/// <summary>
+/// This function returns the row number (rank) of a given square.
+/// </summary>
+/// <param name="position">The square that the function will give its rank</param>
+/// <returns>The rank of the given square</returns>
 int numberToRank(int position);
+/// <summary>
+/// This function converts the file and rank notation to array index of a board. 
+/// </summary>
+/// <param name="file">The file of the square</param>
+/// <param name="rank">The rank of the square</param>
+/// <returns>The array index notation of the square</returns>
 int filerankToNumber(char file, int rank);
+/// <summary>
+/// This function converts a position's notation from array index to file rank.
+/// </summary>
+/// <param name="position">The square in array index notation.</param>
+/// <returns>A two-letter string with file rank notation of the given square.</returns>
 std::string numberToFilerank(int position);
+/// <summary>
+/// This function prints the given move to console in filerank-filerank notation.
+/// </summary>
+/// <param name="move">The move that will be printed to console</param>
 void printMove(const Move& move);
 
 
@@ -205,17 +252,9 @@ int alphabeta(int depth, Board& board, int alpha, int beta);
 int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, Move& bestMove);
 
 
-
-
 /*                                   GAME CYCLE                               */
 bool checkGameEnd(const Board& board);
 bool checkEndgame(const Board& board);
-
-
-
-
-
-
 
 
 /*                                   RECURSION                                */
