@@ -237,7 +237,6 @@ std::string numberToFilerank(int position);
 void printMove(const Move& move);
 
 
-
 /*                                BOARD EVALUATION                            */
 /// <summary>
 /// This function returns evaluation score of the given board using piece values and PCSQ tables. Positive score signifies white's advantage.
