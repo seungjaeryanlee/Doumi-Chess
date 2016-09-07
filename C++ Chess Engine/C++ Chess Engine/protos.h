@@ -6,7 +6,7 @@ class Board {
 private:
      std::array<int, 120> board;
      std::array<bool, 4> castlingCheck;
-     int turn;
+     color turn;
      int enpassantSquare;
      int fiftyMoveCount;
      int moveNumber;
@@ -34,7 +34,7 @@ public:
      */
 
      // Constructor adding all content at once
-     Board(std::array<int, 120> b, std::array<bool, 4> cc, int t, int e, int f, int m) {
+     Board(std::array<int, 120> b, std::array<bool, 4> cc, color t, int e, int f, int m) {
           board = b;
           castlingCheck = cc;
           turn = t;
@@ -91,7 +91,7 @@ public:
      void setSquare(const int square, const int value) { board.at(square) = value; }
      void setCastlingArray(const std::array<bool, 4> cc) { castlingCheck = cc; }
      void setCastling(const int index, const bool value) { castlingCheck.at(index) = value; }
-     void setTurn(const int t) { turn = t; }
+     void setTurn(const color t) { turn = t; }
      void setEnpassantSquare(const int e) { enpassantSquare = e; }
      void setFiftyMoveCount(const int f) { fiftyMoveCount = f; }
      void setMoveNumber(const int m) { moveNumber = m; }
@@ -101,13 +101,13 @@ public:
      const int getSquare(int square) const { return board.at(square); }
      const std::array<bool, 4> getCastlingArray() const { return castlingCheck; }
      const bool getCastling(int index) const { return castlingCheck.at(index); }
-     const int getTurn() const { return turn; }
+     const color getTurn() const { return turn; }
      const int getEnpassantSquare() const { return enpassantSquare; }
      const int getFiftyMoveCount() const { return fiftyMoveCount; }
      const int getMoveNumber() const { return moveNumber; }
 
      //  Other Functions
-     void changeTurn() { turn = -turn; }
+     void changeTurn() { turn = (color)-turn; }
      void fiftyMoveCountDecrement() { fiftyMoveCount--; }
      void fiftyMoveCountIncrement() { fiftyMoveCount++; }
      void moveNumberDecrement() { moveNumber--; }

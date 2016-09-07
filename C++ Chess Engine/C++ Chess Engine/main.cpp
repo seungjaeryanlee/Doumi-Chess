@@ -1106,8 +1106,8 @@ void main() {
      logtext.open("log.txt");
      
      //Initialize Board
-     // board120Setup();
-     FENboardSetup("8/8/8/8/6k1/2KNR3/8/8 w - - 99 75");
+     board120Setup();
+     //FENboardSetup("8/8/8/8/6k1/2KNR3/8/8 w - - 99 75");
 
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
