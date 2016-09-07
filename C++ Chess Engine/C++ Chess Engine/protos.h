@@ -150,6 +150,27 @@ public:
 
 };
 
+class MoveList {
+private:
+     std::array<Move, MAX_MOVEGEN_COUNT> movelist;
+     int moveCounter;
+public:
+     // Construcctor
+     MoveList() {
+          moveCounter = 0;
+     }
+
+     // Accessor
+     inline std::array<Move, MAX_MOVEGEN_COUNT> getList() { return movelist; }
+     inline Move getMove(int index) { return movelist[index]; }
+     inline int getCounter() { return moveCounter; }
+
+     void addMove(Move& move) {
+          movelist[moveCounter] = move;
+          moveCounter++;
+     }
+};
+
 /*                                  BOARD SETUP                               */
 //  This function sets up currentboard[120] for the initial position of pieces.
 void board120Setup();
