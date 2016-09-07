@@ -204,32 +204,32 @@ void printSimpleBoard(const Board& board);
 /// </summary>
 /// <param name="pieceType">The piece that will be checked its color</param>
 /// <returns>The color of the given piece</returns>
-int checkColor(int pieceType);
+int checkColor(const int pieceType);
 /// <summary>
 /// This function returns the column character (file) of a given square.
 /// </summary>
 /// <param name="position">The square that the function will give its file</param>
 /// <returns>The file of the given square</returns>
-char numberToFile(int position);
+char numberToFile(const int position);
 /// <summary>
 /// This function returns the row number (rank) of a given square.
 /// </summary>
 /// <param name="position">The square that the function will give its rank</param>
 /// <returns>The rank of the given square</returns>
-int numberToRank(int position);
+int numberToRank(const int position);
 /// <summary>
 /// This function converts the file and rank notation to array index of a board. 
 /// </summary>
 /// <param name="file">The file of the square</param>
 /// <param name="rank">The rank of the square</param>
 /// <returns>The array index notation of the square</returns>
-int filerankToNumber(char file, int rank);
+int filerankToNumber(const char file, const int rank);
 /// <summary>
 /// This function converts a position's notation from array index to file rank.
 /// </summary>
 /// <param name="position">The square in array index notation.</param>
 /// <returns>A two-letter string with file rank notation of the given square.</returns>
-std::string numberToFilerank(int position);
+std::string numberToFilerank(const int position);
 /// <summary>
 /// This function prints the given move to console in filerank-filerank notation.
 /// </summary>
@@ -249,14 +249,14 @@ int boardEvaluation(const Board& board);
 /// </summary>
 /// <param name="position">The position that will be row-reversed.</param>
 /// <returns>The row-reversed position</returns>
-int reversePosition(int position);
+int reversePosition(const int position);
 /// <summary>
 /// This function finds the best move using negaMax recursion on the given board for given depth. This function should only be called in rootNegaMax().
 /// </summary>
 /// <param name="depth">The depth of the recursion.</param>
 /// <param name="board">The board that will be analyzed.</param>
 /// <returns>The evaluation score of best move.</returns>
-int negaMax(int depth, Board& board);
+int negaMax(const int depth, Board& board);
 /// <summary>
 /// This function is the root function for negaMax().
 /// </summary>
@@ -264,7 +264,7 @@ int negaMax(int depth, Board& board);
 /// <param name="board">The board that will be analyzed.</param>
 /// <param name="bestMove">The best move found.</param>
 /// <returns>The evaluation score of best move.</returns>
-int rootNegaMax(int depth, Board& board, Move& bestMove);
+int rootNegaMax(const int depth, Board& board, Move& bestMove);
 /// <summary>
 /// This function finds the best move using negaMax recursion and alpha-beta pruning on the given board for given depth. This function should only be called in rootAlphabeta().
 /// </summary>
@@ -273,7 +273,7 @@ int rootNegaMax(int depth, Board& board, Move& bestMove);
 /// <param name="alpha">The alpha value used for alpha-beta pruning.</param>
 /// <param name="beta">The beta value used for alpha-beta pruning.</param>
 /// <returns>The evaluation score of best move.</returns>
-int alphabeta(int maxDepth, Board& board, int alpha, int beta);
+int alphabeta(const int maxDepth, Board& board, int alpha, int beta);
 /// <summary>
 /// This function is the root function for negaMax().
 /// </summary>
@@ -283,7 +283,7 @@ int alphabeta(int maxDepth, Board& board, int alpha, int beta);
 /// <param name="beta">The beta value used for alpha-beta pruning.</param>
 /// <param name="bestMove">The best move found.</param>
 /// <returns>The evaluation score of best move.</returns>
-int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, Move& bestMove);
+int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& bestMove);
 
 
 /*                                   GAME CYCLE                               */

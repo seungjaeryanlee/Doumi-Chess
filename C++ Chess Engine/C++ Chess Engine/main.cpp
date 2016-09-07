@@ -434,7 +434,7 @@ void printSimpleBoard(const Board& board) {
      printf("  ----------------\n");
      printf("   a b c d e f g h\n");
 }
-int checkColor(int pieceType) {
+int checkColor(const int pieceType) {
      if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
           return WHITE;
      }
@@ -449,15 +449,15 @@ int checkColor(int pieceType) {
           return 0;
      }
 }
-char numberToFile(int position) {
+char numberToFile(const int position) {
      char file = 'a' + position % 10 - 1;
      return file;
-}    
-int numberToRank(int position) {
+}
+int numberToRank(const int position) {
      int rank = 10 - position / 10;
      return rank;
 }
-int filerankToNumber(char file, int rank) {
+int filerankToNumber(const char file, const int rank) {
      //  if it is not a correct filerank format, return error
      if ('a' > file || file > 'h' || '0' > rank || rank > '8' ) {
           return ERROR_INTEGER;
@@ -467,7 +467,7 @@ int filerankToNumber(char file, int rank) {
      position120 = COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - '1'));
      return position120;
 }
-std::string numberToFilerank(int position) {
+std::string numberToFilerank(const int position) {
      std::string fileRank = "";
      char file = 'a' + position % 10 - 1; 
      int rank = 10 - position / 10;
@@ -546,12 +546,12 @@ int boardEvaluation(const Board& board) {
      }
      return score;
 }
-int reversePosition(int position) {
+int reversePosition(const int position) {
      int row = position / 10, column = position % 10;
      return (12 - row - 1) * 10 + column;
 }
 
-int negaMax(int depth, Board& board) {
+int negaMax(const int depth, Board& board) {
      if (depth == 0) {
           return board.getTurn() * boardEvaluation(board);
      }
@@ -581,7 +581,7 @@ int negaMax(int depth, Board& board) {
 
      return max_Score;
 }
-int rootNegaMax(int maxDepth, Board& board, Move& bestMove) {
+int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
 
      int max_Score = INT_MIN;
      int score;
@@ -610,7 +610,7 @@ int rootNegaMax(int maxDepth, Board& board, Move& bestMove) {
      return max_Score;
 }
 
-int alphabeta(int depth, Board& board, int alpha, int beta) {
+int alphabeta(const int depth, Board& board, int alpha, int beta) {
      if (depth == 0) {
           return board.getTurn() * boardEvaluation(board);
      }
@@ -646,7 +646,7 @@ int alphabeta(int depth, Board& board, int alpha, int beta) {
 
      return alpha;
 }
-int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, Move& bestMove) {
+int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& bestMove) {
      int score;
      int terminalValue;
 

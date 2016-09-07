@@ -43,5 +43,6 @@
     <Text Include="log.txt" />
     <Text Include="README.txt" />
     <Text Include="Improvements.txt" />
+    <Text Include="Dictionary.txt" />
   </ItemGroup>
 </Project>
