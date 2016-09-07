@@ -1,11 +1,10 @@
-#include <stdio.h>
 #include <iostream>
 #include "timer.h"
 
 LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex) {
      LARGE_INTEGER frequency;  // ticks per second
 
-     printf("Timer %d starting!\n", timerIndex);
+     std::cout << "Timer " << timerIndex << " starting!" << std::endl;
 
      // get ticks per second
      QueryPerformanceFrequency(&frequency);
@@ -17,7 +16,7 @@ LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex) {
 }
 void stopTimer(LARGE_INTEGER *endTime, int timerIndex) {
      QueryPerformanceCounter(endTime);
-     printf("Timer %d ended!\n", timerIndex);
+     std::cout << "Timer " << timerIndex << " ended!" << std::endl;
 }
 void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex) {
      // in millisecond

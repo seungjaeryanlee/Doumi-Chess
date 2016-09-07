@@ -1103,7 +1103,6 @@ bool fiftyMoveCheck(Board& board, Move& move) {
 /*                               MAIN FUNCTION                                */
 /******************************************************************************/
 void main() {
-
      logtext.open("log.txt");
      
      //Initialize Board

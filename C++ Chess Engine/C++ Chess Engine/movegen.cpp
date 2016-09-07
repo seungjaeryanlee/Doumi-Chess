@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "defs.h"
 #include "protos.h"
 #include "movegen.h"
@@ -589,7 +588,7 @@ bool squareAttackCheck(Board board, int position) {
           return false;
      }
 
-     if (board.getTurn() == BLACK) {
+     else if (board.getTurn() == BLACK) {
           //  1. pawn
           if (board.getSquare(position + ROW - COLUMN) == WHITEPAWN ||
                board.getSquare(position + ROW + COLUMN) == WHITEPAWN) {
@@ -754,7 +753,10 @@ bool squareAttackCheck(Board board, int position) {
           return false;
      }
 
-     printf("squareAttackCheck unreachable error\n");
-     return true;
-
+     else {
+          // TODO: Better Exception Handling
+          throw "Board given as argument to squareAttackCheck does not have valid turn.\n";
+          return true;
+     }
+     
 }
