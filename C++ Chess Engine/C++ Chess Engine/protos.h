@@ -306,5 +306,12 @@ void undoMove(Board &board, Move& move, int terminalValue);
 void castlingUpdate(Board& board, const Move& move);
 // Checks if the board is at the end state: returns -1 if false, return board value otherwise
 int isTerminalNode(Board& board);
+
+/// <summary>
+/// This function prints the basic menu of possible user commands.
+/// </summary>
 void printMenu();
+/// <summary>
+/// This function prints the extensive menu of possible user commands, including some options created for debugging the code.
+/// </summary>
 void printDebugMenu();
