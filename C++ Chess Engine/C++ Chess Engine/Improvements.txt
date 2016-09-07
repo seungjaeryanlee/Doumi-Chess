@@ -1,1 +1,5 @@
+***NECESSARY***
+
+
+---OPTIONAL---
 0001. Better Endgame Detection

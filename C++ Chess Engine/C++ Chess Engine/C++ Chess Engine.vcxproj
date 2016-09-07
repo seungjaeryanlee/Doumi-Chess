@@ -157,6 +157,7 @@
     <ClInclude Include="timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Improvements.txt" />
     <Text Include="log.txt" />
     <Text Include="README.txt" />
   </ItemGroup>

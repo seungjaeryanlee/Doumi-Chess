@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <iostream>
 #include <string>
@@ -15,7 +14,6 @@
 /*                                 GLOBAL VARIABLE                            */
 /******************************************************************************/
 Board currentBoard;
-bool gamePlaying = true;
 bool endGame = false;
 //  Current Half Move Number, starts at 0
 int halfMoveCount = 0;
@@ -27,22 +25,11 @@ Move depthAllMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT];
 int depthAllMoveCount[MAXIMUM_DEPTH + 1];
 Move depthLegalMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
-//  added for time performance check
-LARGE_INTEGER frequency, beginTime, endTime;
-//  Records the result of the game
-result gameResult = NOT_FINISHED;
 //  Stores Board and Board States for threefold repetition
 Board savedBoard[MAX_MOVENUMBER + 1];
 //  Saved values for UNDO_MOVE command
 int savedTerminalValue[MAX_MOVENUMBER]; // TODO: Check if it should be initialized as ERROR_INTEGER
 Move savedMove[MAX_MOVENUMBER + 1];
-
-//  Which color user plays
-int userColor = ERROR_INTEGER;
-//  To create a log of moves
-std::ofstream logtext;
-//  if true, the game is between two computers
-bool spectate = false;
 
 /******************************************************************************/
 /*                                  FUNCTIONS                                 */
@@ -1116,9 +1103,15 @@ bool fiftyMoveCheck(Board& board, Move& move) {
 /*                               MAIN FUNCTION                                */
 /******************************************************************************/
 void main() {
+     bool gamePlaying = true;
+     result gameResult = NOT_FINISHED; // Records the result of the game
+     int userColor = ERROR_INTEGER;    // Which color user plays
+     bool spectate = false;            // if true, the game is between two computers
+     LARGE_INTEGER frequency, beginTime, endTime; //  added for time performance check
+
+     std::ofstream logtext;
      logtext.open("log.txt");
      
-     //Initialize Board
      board120Setup();
      //FENboardSetup("8/8/8/8/6k1/2KNR3/8/8 w - - 99 75");
 
