@@ -15,6 +15,8 @@
 #define ERROR_INTEGER 970201
 #define STALEMATE_BOUND -100
 
+#include <array>
+
 typedef unsigned long long u64;
 
 
@@ -65,6 +67,8 @@ enum commandType {ERROR_COMMAND,
 };
 enum endType {CHECKMATE, STALEMATE_MOVE, STALEMATE_50, STALEMATE_75, STALEMATE_3F, NOTMATE};
 
+//  PCSQ Tables from 
+//  https://chessprogramming.wikispaces.com/Simplified+evaluation+function
 const std::array<int, 120> PAWN_PCSQTable = {
      //  Possibly use -9999 for error squares for safety
      /*

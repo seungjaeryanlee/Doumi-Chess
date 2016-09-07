@@ -147,9 +147,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="movegen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defs.h" />
+    <ClInclude Include="movegen.h" />
     <ClInclude Include="protos.h" />
   </ItemGroup>
   <ItemGroup>

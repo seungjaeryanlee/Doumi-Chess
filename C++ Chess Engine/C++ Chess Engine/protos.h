@@ -1,5 +1,6 @@
 #pragma once
 #include "defs.h"
+#include <Windows.h>
 
 class Board {
 private:
@@ -137,6 +138,7 @@ public:
           terminalSquare = originalMove[1];
           moveType = originalMove[2];
      }
+
      // Mutators
      void setInitial(const int i) { initialSquare = i; }
      void setTerminal(const int t) { terminalSquare = t; }
@@ -190,24 +192,6 @@ bool checkGameEnd(const Board& board);
 
 
 
-/*                                MOVE GENERATION                             */
-void moveGeneration(const Board& board, Move moveList[250], int *moveCount);
-void pawnMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
-void knightMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
-void bishopMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
-void rookMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
-void queenMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
-void kingMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
-
-void castlingMoveGeneration(const Board& board, Move moveList[250], int *moveCount);
-void promotionMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
-void enpassantMoveGeneration(const Board& board, Move moveList[250], int *moveCount);
-
-void addMove(int initial, int terminal, int moveType, Move moveList[250], int *moveCount);
-void addPromotionMove(int initial, int terminal, Move moveList[250], int *moveCount);
-
-void legalMoves(Board board, Move moveList[250], int moveCount, Move legalMoveList[250], int *legalMoveCount);
-bool squareAttackCheck(Board board, int position);
 
 
 
@@ -220,9 +204,6 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput);
 int makeMove(Board &board, Move& move);
 // Undos the given move and changes turn
 void undoMove(Board &board, Move& move, int terminalValue);
-
-
-
 
 
 /*                                  MISC                                      */
