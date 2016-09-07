@@ -218,16 +218,16 @@ char numberToFile(const int position);
 /// <returns>The rank of the given square</returns>
 int numberToRank(const int position);
 /// <summary>
-/// This function converts the file and rank notation to array index of a board. 
+/// This function converts the file and rank notation to board index of a board. 
 /// </summary>
 /// <param name="file">The file of the square</param>
 /// <param name="rank">The rank of the square</param>
-/// <returns>The array index notation of the square</returns>
+/// <returns>The board index notation of the square</returns>
 int filerankToNumber(const char file, const int rank);
 /// <summary>
-/// This function converts a position's notation from array index to file rank.
+/// This function converts a position's notation from board index to file rank.
 /// </summary>
-/// <param name="position">The square in array index notation.</param>
+/// <param name="position">The square in board index notation.</param>
 /// <returns>A two-letter string with file rank notation of the given square.</returns>
 std::string numberToFilerank(const int position);
 /// <summary>
@@ -245,7 +245,7 @@ void printMove(const Move& move);
 /// <returns>The score of the board</returns>
 int boardEvaluation(const Board& board);
 /// <summary>
-/// This function returns the row-reversed position of the given position in array index notation. Used in applying PCSQ table for black.
+/// This function returns the row-reversed position of the given position in board index notation. Used in applying PCSQ table for black.
 /// </summary>
 /// <param name="position">The position that will be row-reversed.</param>
 /// <returns>The row-reversed position</returns>
