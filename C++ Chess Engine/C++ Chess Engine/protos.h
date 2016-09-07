@@ -209,7 +209,7 @@ int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, Move& bestMove
 
 /*                                   GAME CYCLE                               */
 bool checkGameEnd(const Board& board);
-
+bool checkEndgame(const Board& board);
 
 
 
