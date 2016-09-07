@@ -459,7 +459,7 @@ int numberToRank(const int position) {
 }
 int filerankToNumber(const char file, const int rank) {
      //  if it is not a correct filerank format, return error
-     if ('a' > file || file > 'h' || '0' > rank || rank > '8' ) {
+     if ('a' > file || file > 'h' || 1 > rank || rank > 8 ) {
           return ERROR_INTEGER;
      }
 
@@ -1112,7 +1112,8 @@ void main() {
 
      std::ofstream logtext;
      logtext.open("log.txt");
-     
+     logtext << "COM Search Depth: " << EVAL_DEPTH << std::endl;
+
      board120Setup(currentBoard);
      //FENboardSetup("8/8/8/8/6k1/2KNR3/8/8 w - - 99 75");
 
@@ -1200,7 +1201,7 @@ void main() {
                }
           }
 
-          logtext << "COM Search Depth: " << EVAL_DEPTH << std::endl;
+          
 
           //  User turn
           if (currentBoard.getTurn() == userColor && spectate == false) {
@@ -1253,8 +1254,8 @@ void main() {
                               continue;
                          }
 
-                         initialSquare = filerankToNumber(userCommand.at(0), userCommand.at(1));
-                         terminalSquare = filerankToNumber(userCommand.at(2), userCommand.at(3));
+                         initialSquare = filerankToNumber(userCommand.at(0), userCommand.at(1)-'0');
+                         terminalSquare = filerankToNumber(userCommand.at(2), userCommand.at(3)-'0');
 
                          //  Check if Filerank format is correct
                          if (initialSquare == ERROR_INTEGER || terminalSquare == ERROR_INTEGER) {
