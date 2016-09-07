@@ -3,7 +3,7 @@
 #include "protos.h"
 #include "movegen.h"
 
-void moveGeneration(const Board& board, Move moveList[250], int *moveCount) {
+void moveGeneration(const Board& board, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
      *moveCount = 0;
 
      castlingMoveGeneration(board, moveList, moveCount);
@@ -58,7 +58,7 @@ void moveGeneration(const Board& board, Move moveList[250], int *moveCount) {
           }
      }
 }
-void pawnMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount) {
+void pawnMoveGeneration(const Board& board, int position, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
      if (board.getTurn() == WHITE) {
           //  if on the last row before promotion, just call promotion
           if (A7 <= position && position <= H7) {
@@ -110,7 +110,7 @@ void pawnMoveGeneration(const Board& board, int position, Move moveList[250], in
           }
      }
 }
-void knightMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount) {
+void knightMoveGeneration(const Board& board, int position, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
      int turn = board.getTurn();
 
      if (checkColor(board.getSquare(position + ROW + 2 * COLUMN)) == -turn ||
@@ -146,7 +146,7 @@ void knightMoveGeneration(const Board& board, int position, Move moveList[250], 
           addMove(position, position - 2 * ROW - COLUMN, NORMAL, moveList, moveCount);
      }
 }
-void bishopMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount) {
+void bishopMoveGeneration(const Board& board, int position, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
      int turn = board.getTurn();
      bool topright = true, downright = true, downleft = true, topleft = true;
      for (int i = 1; i < 8; i++) {
@@ -191,7 +191,7 @@ void bishopMoveGeneration(const Board& board, int position, Move moveList[250], 
           else { topleft = false; }
      }
 }
-void rookMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount) {
+void rookMoveGeneration(const Board& board, int position, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
      int turn = board.getTurn();
      bool top = true, right = true, down = true, left = true;
 
@@ -237,11 +237,11 @@ void rookMoveGeneration(const Board& board, int position, Move moveList[250], in
           else { left = false; }
      }
 }
-void queenMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount) {
+void queenMoveGeneration(const Board& board, int position, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
      rookMoveGeneration(board, position, moveList, moveCount);
      bishopMoveGeneration(board, position, moveList, moveCount);
 }
-void kingMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount) {
+void kingMoveGeneration(const Board& board, int position, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
      int turn = board.getTurn();
 
      if (checkColor(board.getSquare(position + ROW)) == -turn ||
@@ -278,7 +278,7 @@ void kingMoveGeneration(const Board& board, int position, Move moveList[250], in
      }
 }
 
-void castlingMoveGeneration(const Board& board, Move moveList[250], int *moveCount) {
+void castlingMoveGeneration(const Board& board, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
      if (board.getTurn() == WHITE) {
           if (board.getCastling(WKCASTLING) &&                                             //  neither piece moved
                board.getSquare(E1) == WHITEKING && board.getSquare(H1) == WHITEROOK &&     //  both pieces exists on board
@@ -319,7 +319,7 @@ void castlingMoveGeneration(const Board& board, Move moveList[250], int *moveCou
           }
      }
 }
-void promotionMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount) {
+void promotionMoveGeneration(const Board& board, int position, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
      if (board.getTurn() == WHITE) {
           if (checkColor(board.getSquare(position - ROW - COLUMN)) == -board.getTurn()) {
                addPromotionMove(position, position - ROW - COLUMN, moveList, moveCount);
@@ -343,7 +343,7 @@ void promotionMoveGeneration(const Board& board, int position, Move moveList[250
           }
      }
 }
-void enpassantMoveGeneration(const Board& board, Move moveList[250], int *moveCount) {
+void enpassantMoveGeneration(const Board& board, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
      if (board.getEnpassantSquare() == 0) { return; }
 
      int enpassantSquare = board.getEnpassantSquare();
@@ -366,18 +366,18 @@ void enpassantMoveGeneration(const Board& board, Move moveList[250], int *moveCo
      }
 }
 
-void addMove(int initial, int terminal, int moveType, Move moveList[250], int *moveCount) {
+void addMove(int initial, int terminal, int moveType, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
      moveList[*moveCount] = Move(initial, terminal, moveType);
      *moveCount += 1;
 }
-void addPromotionMove(int initial, int terminal, Move moveList[250], int *moveCount) {
+void addPromotionMove(int initial, int terminal, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
      addMove(initial, terminal, KNIGHT_PROMOTION, moveList, moveCount);
      addMove(initial, terminal, BISHOP_PROMOTION, moveList, moveCount);
      addMove(initial, terminal, ROOK_PROMOTION, moveList, moveCount);
      addMove(initial, terminal, QUEEN_PROMOTION, moveList, moveCount);
 }
 
-void legalMoves(Board board, Move moveList[250], int moveCount, Move legalMoveList[250], int *legalMoveCount) {
+void legalMoves(Board board, Move moveList[MAX_MOVEGEN_COUNT], int moveCount, Move legalMoveList[MAX_MOVEGEN_COUNT], int *legalMoveCount) {
      *legalMoveCount = 0;
 
      //  find king position
