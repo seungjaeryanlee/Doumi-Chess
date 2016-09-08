@@ -16,19 +16,10 @@
 bool endGame = false;
 //  Current Half Move Number, starts at 0
 int halfMoveCount = 0;
-Move currentBoardMoveList[MAX_MOVEGEN_COUNT];
-int currentBoardMoveCount;
-Move currentBoardLegalMoveList[MAX_MOVEGEN_COUNT];
-int currentBoardLegalMoveCount;
 Move depthAllMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT];
 int depthAllMoveCount[MAXIMUM_DEPTH + 1];
 Move depthLegalMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
-//  Stores Board and Board States for threefold repetition
-Board savedBoard[MAX_MOVENUMBER + 1];
-//  Saved values for UNDO_MOVE command
-int savedTerminalValue[MAX_MOVENUMBER]; // TODO: Check if it should be initialized as ERROR_INTEGER
-Move savedMove[MAX_MOVENUMBER + 1];
 
 /******************************************************************************/
 /*                                  FUNCTIONS                                 */
@@ -1103,6 +1094,15 @@ bool fiftyMoveCheck(Board& board, Move& move) {
 /******************************************************************************/
 void main() {
      Board currentBoard;
+     Move currentBoardMoveList[MAX_MOVEGEN_COUNT];
+     int currentBoardMoveCount;
+     Move currentBoardLegalMoveList[MAX_MOVEGEN_COUNT];
+     int currentBoardLegalMoveCount;
+
+     Board savedBoard[MAX_MOVENUMBER + 1];    //  Stores Board and Board States for threefold repetition
+     // TODO: Check if it should be initialized as ERROR_INTEGER
+     int savedTerminalValue[MAX_MOVENUMBER];  //  Saved values for UNDO_MOVE command
+     Move savedMove[MAX_MOVENUMBER + 1];
 
      bool gamePlaying = true;
      result gameResult = NOT_FINISHED; // Records the result of the game
@@ -1201,7 +1201,9 @@ void main() {
                }
           }
 
-          
+/******************************************************************************/
+/*                                 GAME LOOP                                  */
+/******************************************************************************/
 
           //  User turn
           if (currentBoard.getTurn() == userColor && spectate == false) {
