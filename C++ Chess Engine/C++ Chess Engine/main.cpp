@@ -25,9 +25,9 @@ void board120Setup(Board& board) {
      board.setTurn(WHITE);
      board.setEnpassantSquare(0);
      board.setMoveNumber(1);
-     board.setFiftyMoveCount(0);
+     board.setHalfMoveClock(0);
 
-     board.setCastlingArray({ true, true, true, true });
+     board.setCastlingRights({ true, true, true, true });
      
      //  Add Empty Squares
      for (int i = 0; i < 8; i++) {
@@ -74,7 +74,7 @@ void board120Setup(Board& board) {
      }
 }
 void FENboardSetup(Board& board, const std::string FEN) {
-     board.setCastlingArray({ false, false, false, false });
+     board.setCastlingRights({ false, false, false, false });
      board.setEnpassantSquare(0);
 
      //  Add Error Squares
@@ -154,16 +154,16 @@ void FENboardSetup(Board& board, const std::string FEN) {
      if (FEN.at(i) != '-') {
           while (FEN.at(i) != ' ') {
                if (FEN.at(i) == 'K') {
-                    board.setCastling(WKCASTLING, true);
+                    board.setCastlingRight(WKCASTLING, true);
                }
                if (FEN.at(i) == 'Q') {
-                    board.setCastling(WQCASTLING, true);
+                    board.setCastlingRight(WQCASTLING, true);
                }
                if (FEN.at(i) == 'k') {
-                    board.setCastling(BKCASTLING, true);
+                    board.setCastlingRight(BKCASTLING, true);
                }
                if (FEN.at(i) == 'q') {
-                    board.setCastling(BQCASTLING, true);
+                    board.setCastlingRight(BQCASTLING, true);
                }
                i++;
           }
@@ -184,12 +184,12 @@ void FENboardSetup(Board& board, const std::string FEN) {
      i += 2;
      // One-digit Fifty Move Count
      if (FEN.at(i + 1) == ' ') {
-          board.setFiftyMoveCount(FEN.at(i) - '0');
+          board.setHalfMoveClock(FEN.at(i) - '0');
           i += 2;
      }
      // Two-digit Fifty Move Count
      else if ('0' <= FEN.at(i+1) && FEN.at(i+1) <= '9') {
-          board.setFiftyMoveCount(10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0'));
+          board.setHalfMoveClock(10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0'));
           i += 3;
      }
      
@@ -276,10 +276,10 @@ std::string boardToFEN(const Board& board) {
 
      FEN += ' ';
      //  no castling available
-     bool WKCastling = board.getCastling(WKCASTLING);
-     bool WQCastling = board.getCastling(WQCASTLING);
-     bool BKCastling = board.getCastling(BKCASTLING);
-     bool BQCastling = board.getCastling(BQCASTLING);
+     bool WKCastling = board.getCastlingRight(WKCASTLING);
+     bool WQCastling = board.getCastlingRight(WQCASTLING);
+     bool BKCastling = board.getCastlingRight(BKCASTLING);
+     bool BQCastling = board.getCastlingRight(BQCASTLING);
      if (!(WKCastling || WQCastling || BKCastling || BQCastling)) {
           FEN += '-';
      }
@@ -306,7 +306,7 @@ std::string boardToFEN(const Board& board) {
      else { FEN += '-'; }
 
      FEN += ' ';
-     FEN += std::to_string(board.getFiftyMoveCount());
+     FEN += std::to_string(board.getHalfMoveClock());
      FEN += ' ';
      FEN += std::to_string(board.getMoveNumber());
      
@@ -829,27 +829,27 @@ void undoMove(Board &board, Move& move, int terminalValue) {
 /*                                  MISC                                      */
 void castlingUpdate(Board& board, const Move& move) {
      if (board.getSquare(move.getInitial()) == WHITEKING) {
-          board.setCastling(WKCASTLING, false);
-          board.setCastling(WQCASTLING, false);
+          board.setCastlingRight(WKCASTLING, false);
+          board.setCastlingRight(WQCASTLING, false);
      }
      if (board.getSquare(move.getInitial()) == BLACKKING) {
-          board.setCastling(BKCASTLING, false);
-          board.setCastling(BQCASTLING, false);
+          board.setCastlingRight(BKCASTLING, false);
+          board.setCastlingRight(BQCASTLING, false);
      }
      if (board.getSquare(move.getInitial()) == WHITEROOK) {
           if (move.getInitial() == A1) {
-               board.setCastling(WQCASTLING, false);
+               board.setCastlingRight(WQCASTLING, false);
           }
           if (move.getInitial() == H1) {
-               board.setCastling(WKCASTLING, false);
+               board.setCastlingRight(WKCASTLING, false);
           }
      }
      if (board.getSquare(move.getInitial()) == BLACKROOK) {
           if (move.getInitial() == A8) {
-               board.setCastling(BQCASTLING, false);
+               board.setCastlingRight(BQCASTLING, false);
           }
           if (move.getInitial() == H8) {
-               board.setCastling(BKCASTLING, false);
+               board.setCastlingRight(BKCASTLING, false);
           }
      }
 }
@@ -880,7 +880,7 @@ int isTerminalNode(Board& board) {
      
      // Stalemate: 75 Move Rule
      // TODO: 50 Move rule will be implemented in moveGen
-     if (board.getFiftyMoveCount() >= 150) {
+     if (board.getHalfMoveClock() >= 150) {
           return STALEMATE_75;
      }
 
@@ -896,12 +896,12 @@ bool fiftyMoveCheck(Board& board, Move& move) {
      if (board.getSquare(terminal) == EMPTYSQUARE
           && board.getSquare(initial) != WHITEPAWN
           && board.getSquare(initial) != BLACKPAWN) {
-          board.fiftyMoveCountIncrement();
-          if (board.getFiftyMoveCount() >= 100) {
+          board.incrementHalfMoveClock();
+          if (board.getHalfMoveClock() >= 100) {
                return true;
           }
      }
-     else { board.setFiftyMoveCount(0); }
+     else { board.setHalfMoveClock(0); }
      return false;
 }
 
@@ -935,10 +935,10 @@ void main() {
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("Engine Search Depth: %d\n", EVAL_DEPTH);
-     printf("Castling - WK:%d WQ:%d BK:%d BQ:%d\n", currentBoard.getCastling(WKCASTLING), 
-                                                    currentBoard.getCastling(WQCASTLING), 
-                                                    currentBoard.getCastling(BKCASTLING), 
-                                                    currentBoard.getCastling(BQCASTLING));
+     printf("Castling - WK:%d WQ:%d BK:%d BQ:%d\n", currentBoard.getCastlingRight(WKCASTLING), 
+                                                    currentBoard.getCastlingRight(WQCASTLING), 
+                                                    currentBoard.getCastlingRight(BKCASTLING), 
+                                                    currentBoard.getCastlingRight(BQCASTLING));
      printf("en passant Square: %d\n", currentBoard.getEnpassantSquare());
      printf("Move number: %d\n", currentBoard.getMoveNumber());
      if (currentBoard.getTurn() == WHITE) { printf("Turn: White\n"); }
@@ -1206,7 +1206,7 @@ void main() {
                     savedMove[saveIndex] = Move(userMove);
                     
 
-                    if (currentBoard.getTurn() == WHITE) { currentBoard.moveNumberIncrement(); }
+                    if (currentBoard.getTurn() == WHITE) { currentBoard.incrementMoveNumber(); }
                     
                     saveIndex++;
 
@@ -1349,9 +1349,9 @@ void main() {
                if (currentBoard.getSquare(terminal) == EMPTYSQUARE
                     && currentBoard.getSquare(initial) != WHITEPAWN
                     && currentBoard.getSquare(initial) != BLACKPAWN) {
-                    currentBoard.fiftyMoveCountIncrement();
+                    currentBoard.incrementHalfMoveClock();
                }
-               else { currentBoard.setFiftyMoveCount(0); }
+               else { currentBoard.setHalfMoveClock(0); }
 
                // Check Fifty move rule
                if (fiftyMoveCheck(currentBoard, alphabetaMove)) {
@@ -1366,7 +1366,7 @@ void main() {
                }
                     
                //  Save castlingCheck for undoMove
-               savedBoard[saveIndex].setCastlingArray(currentBoard.getCastlingArray());
+               savedBoard[saveIndex].setCastlingRights(currentBoard.getCastlingRights());
                //  Update castlingCheck
                castlingUpdate(currentBoard, alphabetaMove);
 
@@ -1397,7 +1397,7 @@ void main() {
                }
 
                //  Increment move
-               if (currentBoard.getTurn() == WHITE) { currentBoard.moveNumberIncrement(); }
+               if (currentBoard.getTurn() == WHITE) { currentBoard.incrementMoveNumber(); }
 
                //  Check if game is over
                gamePlaying = !checkGameEnd(currentBoard);

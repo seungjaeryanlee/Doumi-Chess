@@ -63,10 +63,10 @@ public:
 class Board {
 private:
      std::array<int, 120> board;
-     std::array<bool, 4> castlingCheck;
+     std::array<bool, 4> castlingRights;
      color turn;
      int enpassantSquare;
-     int fiftyMoveCount;
+     int halfMoveClock;
      int moveNumber;
      bool isEndgame;
 
@@ -95,20 +95,20 @@ public:
      // Constructor adding all content at once
      Board(std::array<int, 120> b, std::array<bool, 4> cc, color t, int e, int f, int m) {
           board = b;
-          castlingCheck = cc;
+          castlingRights = cc;
           turn = t;
           enpassantSquare = e;
-          fiftyMoveCount = f;
+          halfMoveClock = f;
           moveNumber = m;
      }
      
      //  Clone Method
      Board(const Board& originalBoard) {
           board = originalBoard.getBoard();
-          castlingCheck = originalBoard.getCastlingArray();
+          castlingRights = originalBoard.getCastlingRights();
           turn = originalBoard.getTurn();
           enpassantSquare = originalBoard.getEnpassantSquare();
-          fiftyMoveCount = originalBoard.getFiftyMoveCount();
+          halfMoveClock = originalBoard.getHalfMoveClock();
           moveNumber = originalBoard.getMoveNumber();
      }
 
@@ -118,10 +118,10 @@ public:
                return true;
           }
           if (board == thatBoard.board &&
-               castlingCheck == thatBoard.castlingCheck &&
+               castlingRights == thatBoard.castlingRights &&
                turn == thatBoard.turn &&
                enpassantSquare == thatBoard.enpassantSquare &&
-               fiftyMoveCount == thatBoard.fiftyMoveCount &&
+               halfMoveClock == thatBoard.halfMoveClock &&
                moveNumber && thatBoard.moveNumber) {
                return true;
           }
@@ -136,7 +136,7 @@ public:
                return true;
           }
           if (board == thatBoard.board &&
-               castlingCheck == thatBoard.castlingCheck &&
+               castlingRights == thatBoard.castlingRights &&
                enpassantSquare == thatBoard.enpassantSquare) {
                return true;
           }
@@ -148,11 +148,11 @@ public:
      //  Mutators
      void setBoard(const std::array<int, 120> b) { board = b; }
      void setSquare(const int square, const int value) { board.at(square) = value; }
-     void setCastlingArray(const std::array<bool, 4> cc) { castlingCheck = cc; }
-     void setCastling(const int index, const bool value) { castlingCheck.at(index) = value; }
+     void setCastlingRights(const std::array<bool, 4> cc) { castlingRights = cc; }
+     void setCastlingRight(const int index, const bool value) { castlingRights.at(index) = value; }
      void setTurn(const color t) { turn = t; }
      void setEnpassantSquare(const int e) { enpassantSquare = e; }
-     void setFiftyMoveCount(const int f) { fiftyMoveCount = f; }
+     void setHalfMoveClock(const int f) { halfMoveClock = f; }
      void setMoveNumber(const int m) { moveNumber = m; }
      void updateEndgame() {
           if (isEndgame) { return; }
@@ -185,20 +185,21 @@ public:
      //  Accessors
      const std::array<int, 120> getBoard() const { return board; }
      const int getSquare(int square) const { return board.at(square); }
-     const std::array<bool, 4> getCastlingArray() const { return castlingCheck; }
-     const bool getCastling(int index) const { return castlingCheck.at(index); }
+     const std::array<bool, 4> getCastlingRights() const { return castlingRights; }
+     const bool getCastlingRight(int index) const { return castlingRights.at(index); }
      const color getTurn() const { return turn; }
      const int getEnpassantSquare() const { return enpassantSquare; }
-     const int getFiftyMoveCount() const { return fiftyMoveCount; }
+     const int getHalfMoveClock() const { return halfMoveClock; }
      const int getMoveNumber() const { return moveNumber; }
      const bool getEndgame() const { return isEndgame; }
 
      //  Other Functions
      void changeTurn() { turn = (color)-turn; }
-     void fiftyMoveCountDecrement() { fiftyMoveCount--; }
-     void fiftyMoveCountIncrement() { fiftyMoveCount++; }
-     void moveNumberDecrement() { moveNumber--; }
-     void moveNumberIncrement() { moveNumber++; }
+     void incrementHalfMoveClock() { halfMoveClock++; }
+     void decrementHalfMoveClock() { halfMoveClock--; }
+     void incrementMoveNumber() { moveNumber++; }
+     void decrementMoveNumber() { moveNumber--; }
+     
 };
 
 

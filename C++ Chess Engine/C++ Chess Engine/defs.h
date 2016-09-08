@@ -23,8 +23,6 @@ const int ERRORCODE = 970201;
 const int STALEMATE_BOUND = -100;
 
 
-
-
 /*                                   ENUMERATION                              */
 enum squareType {
      EMPTYSQUARE,
