@@ -327,6 +327,109 @@ void kingMoveGeneration(const Board& board, const int position, Move moveList[MA
      }
 }
 
+void moveGeneration(const Board& board, MoveList moveList) {
+     MoveList pseudolegalMoveList;
+     // STEP 1: PSEUDOLEGAL MOVEGEN
+     castlingMoveGeneration(board, pseudolegalMoveList);
+     enpassantMoveGeneration(board, pseudolegalMoveList);
+
+     if (board.getTurn() == WHITE) {
+          for (int i = 0; i < 120; i++) {
+               switch (board.getSquare(i)) {
+               case WHITEPAWN:
+                    pawnMoveGeneration(board, i, pseudolegalMoveList);
+                    break;
+               case WHITEKNIGHT:
+                    knightMoveGeneration(board, i, pseudolegalMoveList);
+                    break;
+               case WHITEBISHOP:
+                    bishopMoveGeneration(board, i, pseudolegalMoveList);
+                    break;
+               case WHITEROOK:
+                    rookMoveGeneration(board, i, pseudolegalMoveList);
+                    break;
+               case WHITEQUEEN:
+                    queenMoveGeneration(board, i, pseudolegalMoveList);
+                    break;
+               case WHITEKING:
+                    kingMoveGeneration(board, i, pseudolegalMoveList);
+                    break;
+               }
+          }
+     }
+     if (board.getTurn() == BLACK) {
+          for (int i = 0; i < 120; i++) {
+               switch (board.getSquare(i)) {
+               case BLACKPAWN:
+                    pawnMoveGeneration(board, i, pseudolegalMoveList);
+                    break;
+               case BLACKKNIGHT:
+                    knightMoveGeneration(board, i, pseudolegalMoveList);
+                    break;
+               case BLACKBISHOP:
+                    bishopMoveGeneration(board, i, pseudolegalMoveList);
+                    break;
+               case BLACKROOK:
+                    rookMoveGeneration(board, i, pseudolegalMoveList);
+                    break;
+               case BLACKQUEEN:
+                    queenMoveGeneration(board, i, pseudolegalMoveList);
+                    break;
+               case BLACKKING:
+                    kingMoveGeneration(board, i, pseudolegalMoveList);
+                    break;
+               }
+          }
+     }
+
+     // STEP 2: CHECK LEGALITY
+     moveList.setCounterToZero();
+     Board copiedBoard(board); // Clone
+
+     //  find king position
+     int kingPosition = 0, changedKingPosition = 0;
+     int terminalValue;
+     for (int i = 0; i < 120; i++) {
+          if (copiedBoard.getTurn() == WHITE && copiedBoard.getSquare(i) == WHITEKING ||
+               copiedBoard.getTurn() == BLACK && copiedBoard.getSquare(i) == BLACKKING) {
+               kingPosition = i;
+               break;
+          }
+     }
+
+     for (int i = 0; i < pseudolegalMoveList.getCounter(); i++) {
+          //  check if king will be moved
+          if (copiedBoard.getSquare(pseudolegalMoveList.getMove(i).getInitial()) == WHITEKING || copiedBoard.getSquare(pseudolegalMoveList.getMove(i).getInitial()) == BLACKKING) {
+               if (pseudolegalMoveList.getMove(i).getType() == NORMAL) {
+                    changedKingPosition = pseudolegalMoveList.getMove(i).getTerminal();
+               }
+               if (pseudolegalMoveList.getMove(i).getType() == KINGSIDE_CASTLING) {
+                    changedKingPosition = pseudolegalMoveList.getMove(i).getInitial() + 2 * COLUMN;
+               }
+               if (pseudolegalMoveList.getMove(i).getType() == QUEENSIDE_CASTLING) {
+                    changedKingPosition = pseudolegalMoveList.getMove(i).getInitial() - 2 * COLUMN;
+               }
+
+          }
+          else { changedKingPosition = kingPosition; }
+
+          //  make move
+          terminalValue = makeMove(copiedBoard, pseudolegalMoveList.getMove(i));
+          //  In this case, we don't want makeMove to change turn, so let's change it again
+          copiedBoard.changeTurn();
+
+          //  if king is safe
+          if (!squareAttackCheck(copiedBoard, changedKingPosition)) {
+               moveList.addMove(pseudolegalMoveList.getMove(i));
+          }
+
+          //  undo move
+          undoMove(copiedBoard, pseudolegalMoveList.getMove(i), terminalValue);
+          //  Same reason as above
+          copiedBoard.changeTurn();
+     }
+
+}
 void pawnMoveGeneration(const Board& board, const int position, MoveList moveList) {
      if (board.getTurn() == WHITE) {
           //  if on the last row before promotion, just call promotion

@@ -7,6 +7,7 @@ void rookMoveGeneration(const Board& board, const int position, Move moveList[MA
 void queenMoveGeneration(const Board& board, const int position, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount);
 void kingMoveGeneration(const Board& board, const int position, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount);
 
+void moveGeneration(const Board& board, MoveList moveList);
 void pawnMoveGeneration(const Board& board, const int position, MoveList moveList);
 void knightMoveGeneration(const Board& board, const int position, MoveList moveList);
 void bishopMoveGeneration(const Board& board, const int position, MoveList moveList);
