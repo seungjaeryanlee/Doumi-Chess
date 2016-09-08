@@ -735,19 +735,6 @@ int alphabeta(int depth, Board& board, int alpha, int beta) {
      if (depth == 0) {
           return board.getTurn() * boardEvaluation(board);
      }
-     if (isTerminalNode(board) != NOTMATE) {
-          // Checkmate
-          if (isTerminalNode(board) == CHECKMATE) {
-               // TODO: Check if sign is correct
-               // TODO: Replace hardcoded integer
-               return board.getTurn() * 10000;
-          }
-          // Stalemate
-          else {
-               return 0;
-          }
-     }
-
      int score;
      int terminalValue;
 
@@ -2012,7 +1999,7 @@ void main() {
      
      //Initialize Board
      // board120Setup();
-     FENboardSetup("8/8/8/8/6k1/2KNR3/8/8 w - - 0 1");
+     FENboardSetup("8/8/8/8/6k1/2KNR3/8/8 w - - 99 75");
 
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
