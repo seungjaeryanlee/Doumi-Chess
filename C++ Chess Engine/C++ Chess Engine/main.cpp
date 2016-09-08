@@ -1336,7 +1336,7 @@ void main() {
                int terminal = abMove.getTerminal();
                int moveType = abMove.getType();
 
-               //  Increment or reset Fifty move count
+               //  Update Fifty move count
                //  TODO: Add 50 Move Rule option in move generation / selection
                if (currentBoard.getSquare(terminal) == EMPTYSQUARE
                     && currentBoard.getSquare(initial) != WHITEPAWN
@@ -1356,9 +1356,7 @@ void main() {
                          break;
                     }
                }
-                    
-               //  Save castlingCheck for undoMove
-               savedBoard[saveIndex].setCastlingRights(currentBoard.getCastlingRights());
+
                //  Update castlingCheck
                castlingUpdate(currentBoard, abMove);
 
@@ -1392,7 +1390,8 @@ void main() {
                if (currentBoard.getTurn() == WHITE) { currentBoard.incrementMoveNumber(); }
 
                //  Check if game is over
-               gamePlaying = !(checkGameState(currentBoard)==NOTMATE);
+               std::cout << checkGameState(currentBoard) << std::endl;
+               gamePlaying = (checkGameState(currentBoard) == NOTMATE);
                if (!gamePlaying) { break; }
 
                // Check Threefold repetition
