@@ -467,7 +467,7 @@ std::string numberToFilerank(const int position) {
      return fileRank;
 }
 void printMove(const Move& move) {
-     std::cout << numberToFilerank(move.getInitial()) << " " << numberToFilerank(move.getTerminal()) << " (" << move.getType() << ")" << std::endl;
+     printf("%s %s (%d)\n", numberToFilerank(move.getInitial()), numberToFilerank(move.getTerminal()), move.getType());
 }
 
 /*                             EVALUATION FUNCTIONS                           */
@@ -1120,7 +1120,10 @@ void main() {
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("Engine Search Depth: %d\n", EVAL_DEPTH);
-     printf("Castling - WK:%d WQ:%d BK:%d BQ:%d\n", currentBoard.getCastling(WKCASTLING), currentBoard.getCastling(WQCASTLING), currentBoard.getCastling(BKCASTLING), currentBoard.getCastling(BQCASTLING));
+     printf("Castling - WK:%d WQ:%d BK:%d BQ:%d\n", currentBoard.getCastling(WKCASTLING), 
+                                                    currentBoard.getCastling(WQCASTLING), 
+                                                    currentBoard.getCastling(BKCASTLING), 
+                                                    currentBoard.getCastling(BQCASTLING));
      printf("en passant Square: %d\n", currentBoard.getEnpassantSquare());
      printf("Move number: %d\n", currentBoard.getMoveNumber());
      if (currentBoard.getTurn() == WHITE) { printf("Turn: White\n"); }
@@ -1629,24 +1632,22 @@ void main() {
      }
 
      //  Print Game Result
-     printf("Game Result: ");
-     logtext << "Game Result: ";
      switch (gameResult) {
      case BLACK_WIN:
-          printf("0-1\n");
-          logtext << "0-1" << std::endl;
+          printf("Game Result: 0-1\n");
+          logtext << "Game Result: 0-1" << std::endl;
           break;
      case TIE:
-          printf("1/2-1/2\n");
-          logtext << "1/2-1/2" << std::endl;
+          printf("Game Result: 1/2-1/2\n");
+          logtext << "Game Result: 1/2-1/2" << std::endl;
           break;
      case WHITE_WIN:
-          printf("1-0\n");
-          logtext << "1-0" << std::endl;
+          printf("Game Result: 1-0\n");
+          logtext << "Game Result: 1-0" << std::endl;
           break;
      case NOT_FINISHED:
-          printf("0-0: Game not finished\n");
-          logtext << "0-0: Game not finished" << std::endl;
+          printf("Game Result: 0-0: Game not finished\n");
+          logtext << "Game Result: 0-0: Game not finished" << std::endl;
      }
 
      //  Stop timer and print elapsed time
