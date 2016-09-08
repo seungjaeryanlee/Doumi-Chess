@@ -760,7 +760,7 @@ int makeMove(Board &board, Move& move) {
           }
      }
      else {
-          printf("makeMove unreachable error\n");
+          printf("Invalid moveType\n");
           return 0;
      }
 }
