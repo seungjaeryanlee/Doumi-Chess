@@ -653,6 +653,7 @@ int makeMove(Board &board, Move& move) {
 
      board.setEnpassantSquare(0);
      board.changeTurn();
+     board.updateEndgame(move);
 
      if (moveType == NORMAL) {
           terminalValue = board.getSquare(terminal);
@@ -768,6 +769,8 @@ void undoMove(Board &board, Move& move, int terminalValue) {
      int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
      board.changeTurn();
+     board.updateEndgame(move);
+
      if (moveType == NORMAL) {
           board.setSquare(initial, board.getSquare(terminal));
           board.setSquare(terminal, terminalValue);
