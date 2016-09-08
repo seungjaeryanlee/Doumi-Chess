@@ -16,8 +16,6 @@
 bool endGame = false;
 //  Current Half Move Number, starts at 0
 int halfMoveCount = 0;
-Move depthAllMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT];
-int depthAllMoveCount[MAXIMUM_DEPTH + 1];
 Move depthLegalMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT];
 int depthLegalMoveCount[MAXIMUM_DEPTH + 1];
 
@@ -701,7 +699,6 @@ u64 divide(int depth, int maxDepth, Board& board, bool showOutput) {
 
      if (depth == 0) { return 1; }
 
-     depthAllMoveCount[depth] = 0;
      depthLegalMoveCount[depth] = 0;
 
      u64 node = 0, individualNode = 0;
@@ -748,7 +745,6 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
      std::ofstream output2;
      output2.open("divide.txt");
 
-     depthAllMoveCount[depth] = 0;
      depthLegalMoveCount[depth] = 0;
 
      u64 node = 0, individualNode = 0;
@@ -990,8 +986,6 @@ void castlingUpdate(Board& board, const Move& move) {
      }
 }
 int isTerminalNode(Board& board) {
-     Move tempBoardMoveList[MAX_MOVEGEN_COUNT];
-     int tempBoardMoveCount;
      Move tempBoardLegalMoveList[MAX_MOVEGEN_COUNT];
      int tempBoardLegalMoveCount;
      
@@ -1087,8 +1081,6 @@ bool fiftyMoveCheck(Board& board, Move& move) {
 /******************************************************************************/
 void main() {
      Board currentBoard;
-     Move currentBoardMoveList[MAX_MOVEGEN_COUNT];
-     int currentBoardMoveCount;
      Move currentBoardLegalMoveList[MAX_MOVEGEN_COUNT];
      int currentBoardLegalMoveCount;
 
@@ -1234,8 +1226,6 @@ void main() {
                     savedBoard[halfMoveCount] = currentBoard;
 
                     //  Movelist used for legality/movetype check
-                    currentBoardMoveCount = 0;
-                    currentBoardLegalMoveCount = 0;
                     moveGeneration(currentBoard, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
 
                     // Get user input for move
