@@ -10,6 +10,7 @@ private:
      int enpassantSquare;
      int fiftyMoveCount;
      int moveNumber;
+     bool isEndgame;
 
 public:
      
@@ -95,6 +96,19 @@ public:
      void setEnpassantSquare(const int e) { enpassantSquare = e; }
      void setFiftyMoveCount(const int f) { fiftyMoveCount = f; }
      void setMoveNumber(const int m) { moveNumber = m; }
+     void updateEndgame() {
+          if (isEndgame) { return; }
+          else {
+               int queenCount = 0;
+               for (int i = 0; i < 120; i++) {
+                    if (board[i] == WHITEQUEEN || board[i] == BLACKQUEEN) {
+                         queenCount++;
+                    }
+               }
+               if (queenCount == 0) { isEndgame = true; }
+               else { isEndgame = false; }
+          }
+     }
 
      //  Accessors
      const std::array<int, 120> getBoard() const { return board; }
@@ -105,6 +119,7 @@ public:
      const int getEnpassantSquare() const { return enpassantSquare; }
      const int getFiftyMoveCount() const { return fiftyMoveCount; }
      const int getMoveNumber() const { return moveNumber; }
+     const bool getEndgame() const { return isEndgame; }
 
      //  Other Functions
      void changeTurn() { turn = (color)-turn; }
@@ -277,7 +292,6 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
 
 /*                                   GAME CYCLE                               */
 bool checkGameEnd(const Board& board);
-bool checkEndgame(const Board& board);
 
 
 /*                                   RECURSION                                */

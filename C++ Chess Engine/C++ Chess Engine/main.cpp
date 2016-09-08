@@ -560,19 +560,6 @@ bool checkGameEnd(const Board& board) {
      }
      return !(whiteKing && blackKing);
 }
-bool checkEndgame(const Board& board) {
-     if (endGame) { return true; }
-     else {
-          int queenCount = 0;
-          for (int i = 0; i < 120; i++) {
-               if (board.getSquare(i) == WHITEQUEEN || board.getSquare(i) == BLACKQUEEN) {
-                    queenCount++;
-               }
-          }
-          if (queenCount == 0) { return true; }
-          else { return false; }
-     }
-}
 
 
 /*                             RECURSION FUNCTIONS                             */
@@ -968,7 +955,7 @@ void main() {
 /******************************************************************************/
 
      while (gamePlaying) {
-          checkEndgame(currentBoard);
+          currentBoard.updateEndgame();
 
           //  Detect Checkmate/Stalemate
           switch (isTerminalNode(currentBoard)) {
