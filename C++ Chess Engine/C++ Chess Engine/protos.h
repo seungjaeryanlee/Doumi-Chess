@@ -324,5 +324,5 @@ void undoMove(Board &board, Move& move, int terminalValue);
 // TODO: Check if this can be integrated inside makeMove
 void castlingUpdate(Board& board, const Move& move);
 // Checks if the board is at the end state: returns -1 if false, return board value otherwise
-int isTerminalNode(Board& board);
+int checkGameState(Board& board);
 

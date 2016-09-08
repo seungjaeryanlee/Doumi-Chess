@@ -853,7 +853,7 @@ void castlingUpdate(Board& board, const Move& move) {
           }
      }
 }
-int isTerminalNode(Board& board) {
+int checkGameState(Board& board) {
      MoveList tempBoardLegalMoveList = moveGeneration(board);
      
      int kingPos = -1;
@@ -925,9 +925,9 @@ void main() {
      bool spectate = false;            // if true, the game is between two computers
      LARGE_INTEGER frequency, beginTime, endTime; //  added for time performance check
 
-     std::ofstream logtext;
-     logtext.open("log.txt");
-     logtext << "COM Search Depth: " << EVAL_DEPTH << std::endl;
+     std::ofstream log;
+     log.open("log.txt");
+     log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
 
      board120Setup(currentBoard);
      //FENboardSetup("8/8/8/8/6k1/2KNR3/8/8 w - - 99 75");
@@ -960,7 +960,7 @@ void main() {
           currentBoard.updateEndgame();
 
           //  Detect Checkmate/Stalemate
-          switch (isTerminalNode(currentBoard)) {
+          switch (checkGameState(currentBoard)) {
           case CHECKMATE:
                if (currentBoard.getTurn() == WHITE) {
                     gameResult = BLACK_WIN;
@@ -997,20 +997,20 @@ void main() {
                if (userCommand.at(0) == 'W') {
                     userColor = WHITE;
                     correctInput = true;
-                    logtext << "Player (White) vs. COM (Black)" << std::endl;
+                    log << "Player (White) vs. COM (Black)" << std::endl;
                     break;
                }
                else if (userCommand.at(0) == 'B') {
                     userColor = BLACK;
                     correctInput = true;
-                    logtext << "COM (White) vs. Player (Black)" << std::endl;
+                    log << "COM (White) vs. Player (Black)" << std::endl;
                     break;
                }
                else if (userCommand.at(0) == 'N') {
                     spectate = true;
                     correctInput = true;
                     userColor = NEITHER;
-                    logtext << "COM (White) vs. COM (Black)" << std::endl;
+                    log << "COM (White) vs. COM (Black)" << std::endl;
                     break;
                }
                else {
@@ -1211,7 +1211,7 @@ void main() {
                     saveIndex++;
 
                     // add to log file
-                    logtext << currentBoard.getMoveNumber() << ": " << numberToFile(initialSquare) << numberToRank(initialSquare) << " " 
+                    log << currentBoard.getMoveNumber() << ": " << numberToFile(initialSquare) << numberToRank(initialSquare) << " " 
                          << numberToFile(terminalSquare) << numberToRank(terminalSquare) << std::endl;
 
                     continue;
@@ -1334,15 +1334,15 @@ void main() {
 
                savedBoard[saveIndex] = currentBoard;
 
-               Move alphabetaMove;
-               int alphabetaValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, alphabetaMove);
-               printf("Alphabeta Value: %d\n", alphabetaValue);
+               Move abMove;
+               int abValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, abMove);
+               printf("Alphabeta Value: %d\n", abValue);
                printf("Alphabeta Move: ");
-               printMove(alphabetaMove);
+               printMove(abMove);
 
-               int initial = alphabetaMove.getInitial();
-               int terminal = alphabetaMove.getTerminal();
-               int moveType = alphabetaMove.getType();
+               int initial = abMove.getInitial();
+               int terminal = abMove.getTerminal();
+               int moveType = abMove.getType();
 
                //  Increment or reset Fifty move count
                //  TODO: Add 50 Move Rule option in move generation / selection
@@ -1354,11 +1354,11 @@ void main() {
                else { currentBoard.setHalfMoveClock(0); }
 
                // Check Fifty move rule
-               if (fiftyMoveCheck(currentBoard, alphabetaMove)) {
+               if (fiftyMoveCheck(currentBoard, abMove)) {
                     // If in bad position, declare fifty move rule
                     printf("Computer declares Fifty Move Rule.\n");
-                    logtext << "Computer declares Fifty Move Rule." << std::endl;
-                    if (alphabetaValue <= STALEMATE_BOUND) {
+                    log << "Computer declares Fifty Move Rule." << std::endl;
+                    if (abValue <= STALEMATE_BOUND) {
                          gamePlaying = false;
                          gameResult = TIE;
                          break;
@@ -1368,7 +1368,7 @@ void main() {
                //  Save castlingCheck for undoMove
                savedBoard[saveIndex].setCastlingRights(currentBoard.getCastlingRights());
                //  Update castlingCheck
-               castlingUpdate(currentBoard, alphabetaMove);
+               castlingUpdate(currentBoard, abMove);
 
                //  Update enpassant square
                if (moveType == DOUBLEMOVE) {
@@ -1377,10 +1377,10 @@ void main() {
                else { currentBoard.setEnpassantSquare(0); }
 
                //  Make best move and print board
-               savedTerminalValue[saveIndex] = makeMove(currentBoard, alphabetaMove);
+               savedTerminalValue[saveIndex] = makeMove(currentBoard, abMove);
                //  Save move for undoMove
-               savedMove[saveIndex] = Move(alphabetaMove);
-               logtext << currentBoard.getMoveNumber() << ": " << numberToFilerank(initial) << " " << numberToFilerank(terminal) << std::endl;
+               savedMove[saveIndex] = Move(abMove);
+               log << currentBoard.getMoveNumber() << ": " << numberToFilerank(initial) << " " << numberToFilerank(terminal) << std::endl;
 
                printSimpleBoard(currentBoard);
 
@@ -1393,7 +1393,7 @@ void main() {
                }
                else {
                     printf("%d: ", currentBoard.getMoveNumber());
-                    printMove(alphabetaMove);
+                    printMove(abMove);
                }
 
                //  Increment move
@@ -1446,23 +1446,23 @@ void main() {
      switch (gameResult) {
      case BLACK_WIN:
           printf("Game Result: 0-1\n");
-          logtext << "Game Result: 0-1" << std::endl;
+          log << "Game Result: 0-1" << std::endl;
           break;
      case TIE:
           printf("Game Result: 1/2-1/2\n");
-          logtext << "Game Result: 1/2-1/2" << std::endl;
+          log << "Game Result: 1/2-1/2" << std::endl;
           break;
      case WHITE_WIN:
           printf("Game Result: 1-0\n");
-          logtext << "Game Result: 1-0" << std::endl;
+          log << "Game Result: 1-0" << std::endl;
           break;
      case NOT_FINISHED:
           printf("Game Result: 0-0: Game not finished\n");
-          logtext << "Game Result: 0-0: Game not finished" << std::endl;
+          log << "Game Result: 0-0: Game not finished" << std::endl;
      }
 
      //  Stop timer and print elapsed time
      stopTimer(&endTime, 1);
      printElapsedTime(beginTime, endTime, frequency, 1);
-     logtext << "Total Time: " << elapsedTime(beginTime, endTime, frequency, 1) << "ms" << std::endl;
+     log << "Total Time: " << elapsedTime(beginTime, endTime, frequency, 1) << "ms" << std::endl;
 }
