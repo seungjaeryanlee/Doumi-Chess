@@ -164,10 +164,12 @@ public:
      inline Move getMove(int index) { return movelist[index]; }
      inline int getCounter() { return moveCounter; }
 
+     // Mutator
      void addMove(Move& move) {
           movelist[moveCounter] = move;
           moveCounter++;
      }
+     void setCounterToZero() { moveCounter = 0; }
 };
 
 /*                                  BOARD SETUP                               */

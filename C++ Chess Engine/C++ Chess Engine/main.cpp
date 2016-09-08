@@ -16,8 +16,7 @@
 bool endGame = false;
 //  Current Half Move Number, starts at 0
 int halfMoveCount = 0;
-Move depthMoveList[MAXIMUM_DEPTH + 1][MAX_MOVEGEN_COUNT];
-int depthMoveCount[MAXIMUM_DEPTH + 1];
+MoveList depthMoveList[MAXIMUM_DEPTH + 1];
 
 /******************************************************************************/
 /*                                  FUNCTIONS                                 */
@@ -550,14 +549,14 @@ int negaMax(const int depth, Board& board) {
      int score;
      int terminalValue;
 
-     moveGeneration(board, depthMoveList[depth], &depthMoveCount[depth]);
+     moveGeneration(board, depthMoveList[depth]);
 
-     for (int i = 0; i < depthMoveCount[depth]; i++) {
+     for (int i = 0; i < depthMoveList[depth].getCounter(); i++) {
 
-          castlingUpdate(board, depthMoveList[depth][i]);
+          castlingUpdate(board, depthMoveList[depth].getMove(i));
           int enpassantSquare = board.getEnpassantSquare();
 
-          terminalValue = makeMove(board, depthMoveList[depth][i]);
+          terminalValue = makeMove(board, depthMoveList[depth].getMove(i));
 
           score = -negaMax(depth-1, board);
 
@@ -565,7 +564,7 @@ int negaMax(const int depth, Board& board) {
                max_Score = score;
           }
 
-          undoMove(board, depthMoveList[depth][i], terminalValue);
+          undoMove(board, depthMoveList[depth].getMove(i), terminalValue);
           board.setEnpassantSquare(enpassantSquare);
      }
 
@@ -577,22 +576,22 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
      int score;
      int terminalValue;
 
-     moveGeneration(board, depthMoveList[maxDepth], &depthMoveCount[maxDepth]);
+     moveGeneration(board, depthMoveList[maxDepth]);
 
-     for (int i = 0; i < depthMoveCount[maxDepth]; i++) {
-          castlingUpdate(board, depthMoveList[maxDepth][i]);
+     for (int i = 0; i < depthMoveList[maxDepth].getCounter(); i++) {
+          castlingUpdate(board, depthMoveList[maxDepth].getMove(i));
 
           int enpassantSquare = board.getEnpassantSquare();
-          terminalValue = makeMove(board, depthMoveList[maxDepth][i]);
+          terminalValue = makeMove(board, depthMoveList[maxDepth].getMove(i));
 
           score = -negaMax(maxDepth - 1, board);
 
           if (score > max_Score) {
                max_Score = score;
-               bestMove = Move(depthMoveList[maxDepth][i]);
+               bestMove = Move(depthMoveList[maxDepth].getMove(i));
           }
 
-          undoMove(board, depthMoveList[maxDepth][i], terminalValue);
+          undoMove(board, depthMoveList[maxDepth].getMove(i), terminalValue);
           board.setEnpassantSquare(enpassantSquare);
      }
 
@@ -607,21 +606,21 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
      int terminalValue;
 
      
-     moveGeneration(board, depthMoveList[depth], &depthMoveCount[depth]);
+     moveGeneration(board, depthMoveList[depth]);
 
-     for (int i = 0; i < depthMoveCount[depth]; i++) {
+     for (int i = 0; i < depthMoveList[depth].getCounter(); i++) {
 
-          castlingUpdate(board, depthMoveList[depth][i]);
+          castlingUpdate(board, depthMoveList[depth].getMove(i));
 
           // Save enpassantSquare so it doesn't get lost while making move
           int enpassantSquare = board.getEnpassantSquare();
          
-          terminalValue = makeMove(board, depthMoveList[depth][i]);
+          terminalValue = makeMove(board, depthMoveList[depth].getMove(i));
 
           score = -alphabeta(depth - 1, board, -beta, -alpha);
 
           if (score >= beta) {
-               undoMove(board, depthMoveList[depth][i], terminalValue);
+               undoMove(board, depthMoveList[depth].getMove(i), terminalValue);
                board.setEnpassantSquare(enpassantSquare);
                return beta;
           }
@@ -629,7 +628,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
           if (score > alpha) {
                alpha = score;
           }
-          undoMove(board, depthMoveList[depth][i], terminalValue);
+          undoMove(board, depthMoveList[depth].getMove(i), terminalValue);
           board.setEnpassantSquare(enpassantSquare);
      }
 
@@ -639,20 +638,20 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
      int score;
      int terminalValue;
 
-     moveGeneration(board, depthMoveList[maxDepth], &depthMoveCount[maxDepth]);
+     moveGeneration(board, depthMoveList[maxDepth]);
 
-     for (int i = 0; i < depthMoveCount[maxDepth]; i++) {
+     for (int i = 0; i < depthMoveList[maxDepth].getCounter(); i++) {
 
-          castlingUpdate(board, depthMoveList[maxDepth][i]);
+          castlingUpdate(board, depthMoveList[maxDepth].getMove(i));
           int enpassantSquare = board.getEnpassantSquare();
-          terminalValue = makeMove(board, depthMoveList[maxDepth][i]);
+          terminalValue = makeMove(board, depthMoveList[maxDepth].getMove(i));
 
           score = -alphabeta(maxDepth - 1, board, -beta, -alpha);
 
           // TODO: Check if this is needed and change it
           if (score >= beta) {
 
-               undoMove(board, depthMoveList[maxDepth][i], terminalValue);
+               undoMove(board, depthMoveList[maxDepth].getMove(i), terminalValue);
                // TODO: Make sure Castling & EP Square & other details are also undo-ed
                board.setEnpassantSquare(enpassantSquare);
                return beta;
@@ -660,10 +659,10 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
 
           if (score > alpha) {
                alpha = score;
-               bestMove = Move(depthMoveList[maxDepth][i]);
+               bestMove = Move(depthMoveList[maxDepth].getMove(i));
           }
 
-          undoMove(board, depthMoveList[maxDepth][i], terminalValue);
+          undoMove(board, depthMoveList[maxDepth].getMove(i), terminalValue);
           board.setEnpassantSquare(enpassantSquare);
      }
 
@@ -698,26 +697,26 @@ bool checkEndgame(const Board& board) {
 u64 divide(int depth, int maxDepth, Board& board, bool showOutput) {
 
      if (depth == 0) { return 1; }
-
-     depthMoveCount[depth] = 0;
+     
+     depthMoveList[depth].setCounterToZero();
 
      u64 node = 0, individualNode = 0;
      int terminalValue;
 
-     moveGeneration(board, depthMoveList[depth], &depthMoveCount[depth]);
+     moveGeneration(board, depthMoveList[depth]);
 
-     if (depth == 1) { return depthMoveCount[depth]; }
+     if (depth == 1) { return depthMoveList[depth].getCounter(); }
 
-     for (int i = 0; i < depthMoveCount[depth]; i++) {
+     for (int i = 0; i < depthMoveList[depth].getCounter(); i++) {
 
-          int initial = depthMoveList[depth][i].getInitial();
-          int terminal = depthMoveList[depth][i].getTerminal();
+          int initial = depthMoveList[depth].getMove(i).getInitial();
+          int terminal = depthMoveList[depth].getMove(i).getTerminal();
 
-          castlingUpdate(board, depthMoveList[maxDepth][i]);
+          castlingUpdate(board, depthMoveList[maxDepth].getMove(i));
 
           int enpassantSquare = board.getEnpassantSquare();
           
-          terminalValue = makeMove(board, depthMoveList[depth][i]);
+          terminalValue = makeMove(board, depthMoveList[depth].getMove(i));
           
           node += divide(depth - 1, maxDepth, board, showOutput);
           if (showOutput) {
@@ -731,7 +730,7 @@ u64 divide(int depth, int maxDepth, Board& board, bool showOutput) {
                printf("\n");
           }
 
-          undoMove(board, depthMoveList[depth][i], terminalValue);
+          undoMove(board, depthMoveList[depth].getMove(i), terminalValue);
           board.setEnpassantSquare(enpassantSquare);
      }
      return node;
@@ -745,22 +744,22 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
      std::ofstream output2;
      output2.open("divide.txt");
 
-     depthMoveCount[depth] = 0;
+     depthMoveList[depth].setCounterToZero();
 
      u64 node = 0, individualNode = 0;
      int terminalValue;
 
-     moveGeneration(board, depthMoveList[depth], &depthMoveCount[depth]);
+     moveGeneration(board, depthMoveList[depth]);
 
      //if (depth == 1) { return depthLegalMoveCount[depth]; }
 
-     for (int i = 0; i < depthMoveCount[depth]; i++) {
-          int initial = depthMoveList[depth][i].getInitial();
-          int terminal = depthMoveList[depth][i].getTerminal();
+     for (int i = 0; i < depthMoveList[depth].getCounter(); i++) {
+          int initial = depthMoveList[depth].getMove(i).getInitial();
+          int terminal = depthMoveList[depth].getMove(i).getTerminal();
 
-          castlingUpdate(board, depthMoveList[maxDepth][i]);
+          castlingUpdate(board, depthMoveList[maxDepth].getMove(i));
           int enpassantSquare = board.getEnpassantSquare();
-          terminalValue = makeMove(board, depthMoveList[depth][i]);
+          terminalValue = makeMove(board, depthMoveList[depth].getMove(i));
 
 
           node += divide(depth - 1, maxDepth, board, showOutput);
@@ -773,7 +772,7 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
                     numberToFile(terminal) << numberToRank(terminal) << ": " << individualNode << std::endl;
           }
 
-          undoMove(board, depthMoveList[depth][i], terminalValue);
+          undoMove(board, depthMoveList[depth].getMove(i), terminalValue);
           board.setEnpassantSquare(enpassantSquare);
      }
      return node;
@@ -986,11 +985,10 @@ void castlingUpdate(Board& board, const Move& move) {
      }
 }
 int isTerminalNode(Board& board) {
-     Move tempBoardLegalMoveList[MAX_MOVEGEN_COUNT];
-     int tempBoardLegalMoveCount;
+     MoveList tempBoardLegalMoveList;
      
 
-     moveGeneration(board, tempBoardLegalMoveList, &tempBoardLegalMoveCount);
+     moveGeneration(board, tempBoardLegalMoveList);
      
      int kingPos = -1;
      for (int i = 0; i < 120; i++) {
@@ -1005,12 +1003,12 @@ int isTerminalNode(Board& board) {
      }
 
      // Checkmate                                                                                                                 
-     if (tempBoardLegalMoveCount == 0 && squareAttackCheck(board, kingPos)) {
+     if (tempBoardLegalMoveList.getCounter() == 0 && squareAttackCheck(board, kingPos)) {
           return CHECKMATE;
      }
 
      // Stalemate: No legal move
-     if (tempBoardLegalMoveCount == 0) {
+     if (tempBoardLegalMoveList.getCounter() == 0) {
           return STALEMATE_MOVE;
      }
      
@@ -1081,8 +1079,7 @@ bool fiftyMoveCheck(Board& board, Move& move) {
 /******************************************************************************/
 void main() {
      Board currentBoard;
-     Move currentBoardMoveList[MAX_MOVEGEN_COUNT];
-     int currentBoardMoveCount;
+     MoveList currentBoardMoveList;
 
      Board savedBoard[MAX_MOVENUMBER + 1];    //  Stores Board and Board States for threefold repetition
      // TODO: Check if it should be initialized as ERROR_INTEGER
@@ -1226,7 +1223,7 @@ void main() {
                     savedBoard[halfMoveCount] = currentBoard;
 
                     //  Movelist used for legality/movetype check
-                    moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount);
+                    moveGeneration(currentBoard, currentBoardMoveList);
 
                     // Get user input for move
                     int moveType = NORMAL;
@@ -1252,10 +1249,10 @@ void main() {
 
                          //  Check legality & movetype
                          bool legal = false;
-                         for (int i = 0; i < currentBoardMoveCount; i++) {
-                              if (initialSquare == currentBoardMoveList[i].getInitial() && terminalSquare == currentBoardMoveList[i].getTerminal()) {
+                         for (int i = 0; i < currentBoardMoveList.getCounter(); i++) {
+                              if (initialSquare == currentBoardMoveList.getMove(i).getInitial() && terminalSquare == currentBoardMoveList.getMove(i).getTerminal()) {
                                    legal = true;
-                                   moveType = currentBoardMoveList[i].getType();
+                                   moveType = currentBoardMoveList.getMove(i).getType();
                                    break;
                               }
                          }
@@ -1453,12 +1450,12 @@ void main() {
                     continue;
                }
                else if (commandType == PRINT_ALL_MOVES) {
-                    moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount);
+                    moveGeneration(currentBoard, currentBoardMoveList);
 
-                    printf("Movecount: %d\n", currentBoardMoveCount);
-                    for (int i = 0; i < currentBoardMoveCount; i++) {
+                    printf("Movecount: %d\n", currentBoardMoveList.getCounter());
+                    for (int i = 0; i <  currentBoardMoveList.getCounter(); i++) {
                          printf("%d: ", i + 1);
-                         printMove(currentBoardMoveList[i]);
+                         printMove(currentBoardMoveList.getMove(i));
                     }
                     continue;
                }
