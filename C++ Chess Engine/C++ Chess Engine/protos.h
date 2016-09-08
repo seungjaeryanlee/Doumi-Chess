@@ -2,6 +2,64 @@
 #include "defs.h"
 #include <Windows.h>
 
+class Move {
+private:
+     int initialSquare;
+     int terminalSquare;
+     int moveType;
+public:
+     // Constructors
+     Move() {}
+     Move(int i, int t, int m) {
+          initialSquare = i;
+          terminalSquare = t;
+          moveType = m;
+     }
+
+     // Clone Methods
+     Move(const Move& originalMove) {
+          initialSquare = originalMove.getInitial();
+          terminalSquare = originalMove.getTerminal();
+          moveType = originalMove.getType();
+     }
+     Move(int originalMove[3]) {
+          initialSquare = originalMove[0];
+          terminalSquare = originalMove[1];
+          moveType = originalMove[2];
+     }
+
+     // Mutators
+     void setInitial(const int i) { initialSquare = i; }
+     void setTerminal(const int t) { terminalSquare = t; }
+     void setType(const int t) { moveType = t; }
+     // Accessors
+     const int getInitial() const { return initialSquare; }
+     const int getTerminal() const { return terminalSquare; }
+     const int getType() const { return moveType; }
+
+};
+class MoveList {
+private:
+     std::array<Move, MAX_MOVEGEN_COUNT> movelist;
+     int moveCounter;
+public:
+     // Construcctor
+     MoveList() {
+          moveCounter = 0;
+     }
+
+     // Accessor
+     inline std::array<Move, MAX_MOVEGEN_COUNT> getList() { return movelist; }
+     inline Move getMove(int index) { return movelist[index]; }
+     inline int getCounter() { return moveCounter; }
+
+     // Mutator
+     void addMove(Move& move) {
+          movelist[moveCounter] = move;
+          moveCounter++;
+     }
+     void setCounterToZero() { moveCounter = 0; }
+};
 class Board {
 private:
      std::array<int, 120> board;
@@ -10,6 +68,7 @@ private:
      int enpassantSquare;
      int fiftyMoveCount;
      int moveNumber;
+     bool isEndgame;
 
 public:
      
@@ -95,6 +154,33 @@ public:
      void setEnpassantSquare(const int e) { enpassantSquare = e; }
      void setFiftyMoveCount(const int f) { fiftyMoveCount = f; }
      void setMoveNumber(const int m) { moveNumber = m; }
+     void updateEndgame() {
+          if (isEndgame) { return; }
+          else {
+               int queenCount = 0;
+               for (int i = 0; i < 120; i++) {
+                    if (board[i] == WHITEQUEEN || board[i] == BLACKQUEEN) {
+                         queenCount++;
+                    }
+               }
+               if (queenCount == 0) { isEndgame = true; }
+               else { isEndgame = false; }
+          }
+     }
+     void updateEndgame(Move move) {
+          if (isEndgame) { return; }
+          if (move.getTerminal() != WHITEQUEEN && move.getTerminal() != BLACKQUEEN) { return; }
+          else {
+               int queenCount = 0;
+               for (int i = 0; i < 120; i++) {
+                    if (board[i] == WHITEQUEEN || board[i] == BLACKQUEEN) {
+                         queenCount++;
+                    }
+               }
+               if (queenCount == 0) { isEndgame = true; }
+               else { isEndgame = false; }
+          }
+     }
 
      //  Accessors
      const std::array<int, 120> getBoard() const { return board; }
@@ -105,6 +191,7 @@ public:
      const int getEnpassantSquare() const { return enpassantSquare; }
      const int getFiftyMoveCount() const { return fiftyMoveCount; }
      const int getMoveNumber() const { return moveNumber; }
+     const bool getEndgame() const { return isEndgame; }
 
      //  Other Functions
      void changeTurn() { turn = (color)-turn; }
@@ -113,64 +200,7 @@ public:
      void moveNumberDecrement() { moveNumber--; }
      void moveNumberIncrement() { moveNumber++; }
 };
-class Move {
-private:
-     int initialSquare;
-     int terminalSquare;
-     int moveType;
-public:
-     // Constructors
-     Move() {}
-     Move(int i, int t, int m) {
-          initialSquare = i;
-          terminalSquare = t;
-          moveType = m;
-     }
 
-     // Clone Methods
-     Move(const Move& originalMove) {
-          initialSquare = originalMove.getInitial();
-          terminalSquare = originalMove.getTerminal();
-          moveType = originalMove.getType();
-     }
-     Move(int originalMove[3]) {
-          initialSquare = originalMove[0];
-          terminalSquare = originalMove[1];
-          moveType = originalMove[2];
-     }
-
-     // Mutators
-     void setInitial(const int i) { initialSquare = i; }
-     void setTerminal(const int t) { terminalSquare = t; }
-     void setType(const int t) { moveType = t; }
-     // Accessors
-     const int getInitial() const { return initialSquare; }
-     const int getTerminal() const { return terminalSquare; }
-     const int getType() const { return moveType; }
-
-};
-class MoveList {
-private:
-     std::array<Move, MAX_MOVEGEN_COUNT> movelist;
-     int moveCounter;
-public:
-     // Construcctor
-     MoveList() {
-          moveCounter = 0;
-     }
-
-     // Accessor
-     inline std::array<Move, MAX_MOVEGEN_COUNT> getList() { return movelist; }
-     inline Move getMove(int index) { return movelist[index]; }
-     inline int getCounter() { return moveCounter; }
-
-     // Mutator
-     void addMove(Move& move) {
-          movelist[moveCounter] = move;
-          moveCounter++;
-     }
-     void setCounterToZero() { moveCounter = 0; }
-};
 
 /*                                  BOARD SETUP                               */
 /// <summary>
@@ -277,7 +307,6 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
 
 /*                                   GAME CYCLE                               */
 bool checkGameEnd(const Board& board);
-bool checkEndgame(const Board& board);
 
 
 /*                                   RECURSION                                */

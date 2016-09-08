@@ -14,7 +14,6 @@
 /******************************************************************************/
 /*                                 GLOBAL VARIABLE                            */
 /******************************************************************************/
-bool endGame = false;
 //  Current Half Move Number, starts at 0
 int halfMoveCount = 0;
 MoveList depthMoveList[MAXIMUM_DEPTH + 1];
@@ -378,7 +377,7 @@ int boardEvaluation(const Board& board) {
                break;
           case WHITEKING:
                score += KINGVALUE;
-               if (endGame) {
+               if (board.getEndgame()) {
                     score += KING_PCSQTable_ENDGAME.at(i);
                }
                else {
@@ -407,7 +406,7 @@ int boardEvaluation(const Board& board) {
                break;
           case BLACKKING:
                score -= KINGVALUE;
-               if (endGame) {
+               if (board.getEndgame()) {
                     score -= KING_PCSQTable_ENDGAME.at(reversePosition(i));
                }
                else {
@@ -560,19 +559,6 @@ bool checkGameEnd(const Board& board) {
      }
      return !(whiteKing && blackKing);
 }
-bool checkEndgame(const Board& board) {
-     if (endGame) { return true; }
-     else {
-          int queenCount = 0;
-          for (int i = 0; i < 120; i++) {
-               if (board.getSquare(i) == WHITEQUEEN || board.getSquare(i) == BLACKQUEEN) {
-                    queenCount++;
-               }
-          }
-          if (queenCount == 0) { return true; }
-          else { return false; }
-     }
-}
 
 
 /*                             RECURSION FUNCTIONS                             */
@@ -667,6 +653,7 @@ int makeMove(Board &board, Move& move) {
 
      board.setEnpassantSquare(0);
      board.changeTurn();
+     board.updateEndgame(move);
 
      if (moveType == NORMAL) {
           terminalValue = board.getSquare(terminal);
@@ -774,7 +761,7 @@ int makeMove(Board &board, Move& move) {
           }
      }
      else {
-          printf("makeMove unreachable error\n");
+          printf("Invalid moveType\n");
           return 0;
      }
 }
@@ -782,6 +769,8 @@ void undoMove(Board &board, Move& move, int terminalValue) {
      int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
      board.changeTurn();
+     board.updateEndgame(move);
+
      if (moveType == NORMAL) {
           board.setSquare(initial, board.getSquare(terminal));
           board.setSquare(terminal, terminalValue);
@@ -968,7 +957,7 @@ void main() {
 /******************************************************************************/
 
      while (gamePlaying) {
-          checkEndgame(currentBoard);
+          currentBoard.updateEndgame();
 
           //  Detect Checkmate/Stalemate
           switch (isTerminalNode(currentBoard)) {
