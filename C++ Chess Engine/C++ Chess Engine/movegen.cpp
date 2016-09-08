@@ -2,7 +2,7 @@
 #include "protos.h"
 #include "movegen.h"
 
-void moveGeneration(const Board& board, MoveList& moveList) {
+MoveList moveGeneration(const Board& board) {
      MoveList pseudolegalMoveList;
      // STEP 1: PSEUDOLEGAL MOVEGEN
      castlingMoveGeneration(board, pseudolegalMoveList);
@@ -58,6 +58,7 @@ void moveGeneration(const Board& board, MoveList& moveList) {
      }
 
      // STEP 2: CHECK LEGALITY
+     MoveList moveList;
      moveList.setCounterToZero();
      Board copiedBoard(board); // Clone
 
@@ -103,7 +104,8 @@ void moveGeneration(const Board& board, MoveList& moveList) {
           //  Same reason as above
           copiedBoard.changeTurn();
      }
-
+     
+     return moveList;
 }
 void pawnMoveGeneration(const Board& board, const int position, MoveList& moveList) {
      if (board.getTurn() == WHITE) {

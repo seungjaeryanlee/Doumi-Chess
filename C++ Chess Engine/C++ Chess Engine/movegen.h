@@ -1,5 +1,5 @@
 #pragma once
-void moveGeneration(const Board& board, MoveList& moveList);
+MoveList moveGeneration(const Board& board);
 void pawnMoveGeneration(const Board& board, const int position, MoveList& moveList);
 void knightMoveGeneration(const Board& board, const int position, MoveList& moveList);
 void bishopMoveGeneration(const Board& board, const int position, MoveList& moveList);

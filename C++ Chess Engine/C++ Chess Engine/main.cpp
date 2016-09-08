@@ -549,7 +549,7 @@ int negaMax(const int depth, Board& board) {
      int score;
      int terminalValue;
 
-     moveGeneration(board, depthMoveList[depth]);
+     depthMoveList[depth] = moveGeneration(board);
 
      for (int i = 0; i < depthMoveList[depth].getCounter(); i++) {
 
@@ -576,7 +576,7 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
      int score;
      int terminalValue;
 
-     moveGeneration(board, depthMoveList[maxDepth]);
+     depthMoveList[maxDepth] = moveGeneration(board);
 
      for (int i = 0; i < depthMoveList[maxDepth].getCounter(); i++) {
           castlingUpdate(board, depthMoveList[maxDepth].getMove(i));
@@ -606,7 +606,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
      int terminalValue;
 
      
-     moveGeneration(board, depthMoveList[depth]);
+     depthMoveList[depth] = moveGeneration(board);
 
      for (int i = 0; i < depthMoveList[depth].getCounter(); i++) {
 
@@ -638,7 +638,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
      int score;
      int terminalValue;
 
-     moveGeneration(board, depthMoveList[maxDepth]);
+     depthMoveList[maxDepth] = moveGeneration(board);
 
      for (int i = 0; i < depthMoveList[maxDepth].getCounter(); i++) {
 
@@ -703,7 +703,7 @@ u64 divide(int depth, int maxDepth, Board& board, bool showOutput) {
      u64 node = 0, individualNode = 0;
      int terminalValue;
 
-     moveGeneration(board, depthMoveList[depth]);
+     depthMoveList[depth] = moveGeneration(board);
 
      if (depth == 1) { return depthMoveList[depth].getCounter(); }
 
@@ -749,7 +749,7 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
      u64 node = 0, individualNode = 0;
      int terminalValue;
 
-     moveGeneration(board, depthMoveList[depth]);
+     depthMoveList[depth] = moveGeneration(board);
 
      //if (depth == 1) { return depthLegalMoveCount[depth]; }
 
@@ -985,10 +985,7 @@ void castlingUpdate(Board& board, const Move& move) {
      }
 }
 int isTerminalNode(Board& board) {
-     MoveList tempBoardLegalMoveList;
-     
-
-     moveGeneration(board, tempBoardLegalMoveList);
+     MoveList tempBoardLegalMoveList = moveGeneration(board);
      
      int kingPos = -1;
      for (int i = 0; i < 120; i++) {
@@ -1223,7 +1220,7 @@ void main() {
                     savedBoard[halfMoveCount] = currentBoard;
 
                     //  Movelist used for legality/movetype check
-                    moveGeneration(currentBoard, currentBoardMoveList);
+                    currentBoardMoveList = moveGeneration(currentBoard);
 
                     // Get user input for move
                     int moveType = NORMAL;
@@ -1450,7 +1447,7 @@ void main() {
                     continue;
                }
                else if (commandType == PRINT_ALL_MOVES) {
-                    moveGeneration(currentBoard, currentBoardMoveList);
+                    currentBoardMoveList = moveGeneration(currentBoard);
 
                     printf("Movecount: %d\n", currentBoardMoveList.getCounter());
                     for (int i = 0; i <  currentBoardMoveList.getCounter(); i++) {
