@@ -2,32 +2,33 @@
 #include "protos.h"
 #include "movegen.h"
 
-void moveGeneration(const Board& board, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
-     *moveCount = 0;
-
-     castlingMoveGeneration(board, moveList, moveCount);
-     enpassantMoveGeneration(board, moveList, moveCount);
+void moveGeneration(const Board& board, Move legalMoveList[MAX_MOVEGEN_COUNT], int *legalMoveCount) {
+     Move moveList[MAX_MOVEGEN_COUNT];
+     int moveCount = 0;
+     // STEP 1: PSEUDOLEGAL MOVEGEN
+     castlingMoveGeneration(board, moveList, &moveCount);
+     enpassantMoveGeneration(board, moveList, &moveCount);
 
      if (board.getTurn() == WHITE) {
           for (int i = 0; i < 120; i++) {
                switch (board.getSquare(i)) {
                case WHITEPAWN:
-                    pawnMoveGeneration(board, i, moveList, moveCount);
+                    pawnMoveGeneration(board, i, moveList, &moveCount);
                     break;
                case WHITEKNIGHT:
-                    knightMoveGeneration(board, i, moveList, moveCount);
+                    knightMoveGeneration(board, i, moveList, &moveCount);
                     break;
                case WHITEBISHOP:
-                    bishopMoveGeneration(board, i, moveList, moveCount);
+                    bishopMoveGeneration(board, i, moveList, &moveCount);
                     break;
                case WHITEROOK:
-                    rookMoveGeneration(board, i, moveList, moveCount);
+                    rookMoveGeneration(board, i, moveList, &moveCount);
                     break;
                case WHITEQUEEN:
-                    queenMoveGeneration(board, i, moveList, moveCount);
+                    queenMoveGeneration(board, i, moveList, &moveCount);
                     break;
                case WHITEKING:
-                    kingMoveGeneration(board, i, moveList, moveCount);
+                    kingMoveGeneration(board, i, moveList, &moveCount);
                     break;
                }
           }
@@ -36,26 +37,75 @@ void moveGeneration(const Board& board, Move moveList[MAX_MOVEGEN_COUNT], int *m
           for (int i = 0; i < 120; i++) {
                switch (board.getSquare(i)) {
                case BLACKPAWN:
-                    pawnMoveGeneration(board, i, moveList, moveCount);
+                    pawnMoveGeneration(board, i, moveList, &moveCount);
                     break;
                case BLACKKNIGHT:
-                    knightMoveGeneration(board, i, moveList, moveCount);
+                    knightMoveGeneration(board, i, moveList, &moveCount);
                     break;
                case BLACKBISHOP:
-                    bishopMoveGeneration(board, i, moveList, moveCount);
+                    bishopMoveGeneration(board, i, moveList, &moveCount);
                     break;
                case BLACKROOK:
-                    rookMoveGeneration(board, i, moveList, moveCount);
+                    rookMoveGeneration(board, i, moveList, &moveCount);
                     break;
                case BLACKQUEEN:
-                    queenMoveGeneration(board, i, moveList, moveCount);
+                    queenMoveGeneration(board, i, moveList, &moveCount);
                     break;
                case BLACKKING:
-                    kingMoveGeneration(board, i, moveList, moveCount);
+                    kingMoveGeneration(board, i, moveList, &moveCount);
                     break;
                }
           }
      }
+
+     // STEP 2: CHECK LEGALITY
+     *legalMoveCount = 0;
+     Board copiedBoard(board);
+
+     //  find king position
+     int kingPosition = 0, changedKingPosition = 0;
+     int terminalValue;
+     for (int i = 0; i < 120; i++) {
+          if (copiedBoard.getTurn() == WHITE && copiedBoard.getSquare(i) == WHITEKING ||
+               copiedBoard.getTurn() == BLACK && copiedBoard.getSquare(i) == BLACKKING) {
+               kingPosition = i;
+               break;
+          }
+     }
+
+     for (int i = 0; i < moveCount; i++) {
+          //  check if king will be moved
+          if (copiedBoard.getSquare(moveList[i].getInitial()) == WHITEKING || copiedBoard.getSquare(moveList[i].getInitial()) == BLACKKING) {
+               if (moveList[i].getType() == NORMAL) {
+                    changedKingPosition = moveList[i].getTerminal();
+               }
+               if (moveList[i].getType() == KINGSIDE_CASTLING) {
+                    changedKingPosition = moveList[i].getInitial() + 2 * COLUMN;
+               }
+               if (moveList[i].getType() == QUEENSIDE_CASTLING) {
+                    changedKingPosition = moveList[i].getInitial() - 2 * COLUMN;
+               }
+
+          }
+          else { changedKingPosition = kingPosition; }
+
+          //  make move
+          terminalValue = makeMove(copiedBoard, moveList[i]);
+          //  In this case, we don't want makeMove to change turn, so let's change it again
+          copiedBoard.changeTurn();
+
+          //  if king is safe
+          if (!squareAttackCheck(copiedBoard, changedKingPosition)) {
+               legalMoveList[*legalMoveCount] = Move(moveList[i]);
+               *legalMoveCount += 1;
+          }
+
+          //  undo move
+          undoMove(copiedBoard, moveList[i], terminalValue);
+          //  Same reason as above
+          copiedBoard.changeTurn();
+     }
+
 }
 void pawnMoveGeneration(const Board& board, const int position, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
      if (board.getTurn() == WHITE) {
@@ -376,53 +426,6 @@ void addPromotionMove(int initial, int terminal, Move moveList[MAX_MOVEGEN_COUNT
      addMove(initial, terminal, QUEEN_PROMOTION, moveList, moveCount);
 }
 
-void legalMoves(Board board, Move moveList[MAX_MOVEGEN_COUNT], int moveCount, Move legalMoveList[MAX_MOVEGEN_COUNT], int *legalMoveCount) {
-     *legalMoveCount = 0;
-
-     //  find king position
-     int kingPosition = 0, changedKingPosition = 0;
-     int terminalValue;
-     for (int i = 0; i < 120; i++) {
-          if (board.getTurn() == WHITE && board.getSquare(i) == WHITEKING ||
-               board.getTurn() == BLACK && board.getSquare(i) == BLACKKING) {
-               kingPosition = i;
-               break;
-          }
-     }
-
-     for (int i = 0; i < moveCount; i++) {
-          //  check if king will be moved
-          if (board.getSquare(moveList[i].getInitial()) == WHITEKING || board.getSquare(moveList[i].getInitial()) == BLACKKING) {
-               if (moveList[i].getType() == NORMAL) {
-                    changedKingPosition = moveList[i].getTerminal();
-               }
-               if (moveList[i].getType() == KINGSIDE_CASTLING) {
-                    changedKingPosition = moveList[i].getInitial() + 2 * COLUMN;
-               }
-               if (moveList[i].getType() == QUEENSIDE_CASTLING) {
-                    changedKingPosition = moveList[i].getInitial() - 2 * COLUMN;
-               }
-
-          }
-          else { changedKingPosition = kingPosition; }
-
-          //  make move
-          terminalValue = makeMove(board, moveList[i]);
-          //  In this case, we don't want makeMove to change turn, so let's change it again
-          board.changeTurn();
-
-          //  if king is safe
-          if (!squareAttackCheck(board, changedKingPosition)) {
-               legalMoveList[*legalMoveCount] = Move(moveList[i]);
-               *legalMoveCount += 1;
-          }
-
-          //  undo move
-          undoMove(board, moveList[i], terminalValue);
-          //  Same reason as above
-          board.changeTurn();
-     }
-}
 bool squareAttackCheck(Board board, int position) {
      if (board.getTurn() == WHITE) {
           //  1. pawn

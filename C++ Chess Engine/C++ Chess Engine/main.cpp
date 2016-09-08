@@ -467,7 +467,9 @@ std::string numberToFilerank(const int position) {
      return fileRank;
 }
 void printMove(const Move& move) {
-     printf("%s %s (%d)\n", numberToFilerank(move.getInitial()), numberToFilerank(move.getTerminal()), move.getType());
+     std::cout << numberToFilerank(move.getInitial()) << " "
+               << numberToFilerank(move.getTerminal()) << " ("
+               << move.getType() << ")" << std::endl;
 }
 
 /*                             EVALUATION FUNCTIONS                           */
@@ -550,8 +552,7 @@ int negaMax(const int depth, Board& board) {
      int score;
      int terminalValue;
 
-     moveGeneration(board, depthAllMoveList[depth], &depthAllMoveCount[depth]);
-     legalMoves(board, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+     moveGeneration(board, depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
 
@@ -578,8 +579,7 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
      int score;
      int terminalValue;
 
-     moveGeneration(board, depthAllMoveList[maxDepth], &depthAllMoveCount[maxDepth]);
-     legalMoves(board, depthAllMoveList[maxDepth], depthAllMoveCount[maxDepth], depthLegalMoveList[maxDepth], &depthLegalMoveCount[maxDepth]);
+     moveGeneration(board, depthLegalMoveList[maxDepth], &depthLegalMoveCount[maxDepth]);
 
      for (int i = 0; i < depthLegalMoveCount[maxDepth]; i++) {
           castlingUpdate(board, depthLegalMoveList[maxDepth][i]);
@@ -608,8 +608,8 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
      int score;
      int terminalValue;
 
-     moveGeneration(board, depthAllMoveList[depth], &depthAllMoveCount[depth]);
-     legalMoves(board, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+     
+     moveGeneration(board, depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
      for (int i = 0; i < depthLegalMoveCount[depth]; i++) {
 
@@ -641,8 +641,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
      int score;
      int terminalValue;
 
-     moveGeneration(board, depthAllMoveList[maxDepth], &depthAllMoveCount[maxDepth]);
-     legalMoves(board, depthAllMoveList[maxDepth], depthAllMoveCount[maxDepth], depthLegalMoveList[maxDepth], &depthLegalMoveCount[maxDepth]);
+     moveGeneration(board, depthLegalMoveList[maxDepth], &depthLegalMoveCount[maxDepth]);
 
      for (int i = 0; i < depthLegalMoveCount[maxDepth]; i++) {
 
@@ -708,10 +707,7 @@ u64 divide(int depth, int maxDepth, Board& board, bool showOutput) {
      u64 node = 0, individualNode = 0;
      int terminalValue;
 
-     // MOVEGEN
-     moveGeneration(board, depthAllMoveList[depth], &depthAllMoveCount[depth]);
-     // CHECK FOR LEGALS
-     legalMoves(board, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+     moveGeneration(board, depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
      if (depth == 1) { return depthLegalMoveCount[depth]; }
 
@@ -758,10 +754,7 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
      u64 node = 0, individualNode = 0;
      int terminalValue;
 
-     // MOVEGEN
-     moveGeneration(board, depthAllMoveList[depth], &depthAllMoveCount[depth]);
-     // CHECK FOR LEGALS
-     legalMoves(board, depthAllMoveList[depth], depthAllMoveCount[depth], depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
+     moveGeneration(board, depthLegalMoveList[depth], &depthLegalMoveCount[depth]);
 
      //if (depth == 1) { return depthLegalMoveCount[depth]; }
 
@@ -1002,8 +995,8 @@ int isTerminalNode(Board& board) {
      Move tempBoardLegalMoveList[MAX_MOVEGEN_COUNT];
      int tempBoardLegalMoveCount;
      
-     moveGeneration(board, tempBoardMoveList, &tempBoardMoveCount);
-     legalMoves(board, tempBoardMoveList, tempBoardMoveCount, tempBoardLegalMoveList, &tempBoardLegalMoveCount);
+
+     moveGeneration(board, tempBoardLegalMoveList, &tempBoardLegalMoveCount);
      
      int kingPos = -1;
      for (int i = 0; i < 120; i++) {
@@ -1243,8 +1236,7 @@ void main() {
                     //  Movelist used for legality/movetype check
                     currentBoardMoveCount = 0;
                     currentBoardLegalMoveCount = 0;
-                    moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount);
-                    legalMoves(currentBoard, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
+                    moveGeneration(currentBoard, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
 
                     // Get user input for move
                     int moveType = NORMAL;
@@ -1471,8 +1463,7 @@ void main() {
                     continue;
                }
                else if (commandType == PRINT_ALL_MOVES) {
-                    moveGeneration(currentBoard, currentBoardMoveList, &currentBoardMoveCount);
-                    legalMoves(currentBoard, currentBoardMoveList, currentBoardMoveCount, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
+                    moveGeneration(currentBoard, currentBoardLegalMoveList, &currentBoardLegalMoveCount);
 
                     printf("Movecount: %d\n", currentBoardLegalMoveCount);
                     for (int i = 0; i < currentBoardLegalMoveCount; i++) {
