@@ -2,7 +2,7 @@
 #include "protos.h"
 #include "movegen.h"
 
-void moveGeneration(const Board& board, Move legalMoveList[MAX_MOVEGEN_COUNT], int *legalMoveCount) {
+void moveGeneration(const Board& board, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
      Move moveList[MAX_MOVEGEN_COUNT];
      int moveCount = 0;
      // STEP 1: PSEUDOLEGAL MOVEGEN
@@ -59,7 +59,7 @@ void moveGeneration(const Board& board, Move legalMoveList[MAX_MOVEGEN_COUNT], i
      }
 
      // STEP 2: CHECK LEGALITY
-     *legalMoveCount = 0;
+     *moveCount = 0;
      Board copiedBoard(board);
 
      //  find king position
@@ -96,8 +96,8 @@ void moveGeneration(const Board& board, Move legalMoveList[MAX_MOVEGEN_COUNT], i
 
           //  if king is safe
           if (!squareAttackCheck(copiedBoard, changedKingPosition)) {
-               legalMoveList[*legalMoveCount] = Move(moveList[i]);
-               *legalMoveCount += 1;
+               moveList[*moveCount] = Move(moveList[i]);
+               *moveCount += 1;
           }
 
           //  undo move
