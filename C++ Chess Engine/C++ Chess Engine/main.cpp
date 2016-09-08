@@ -16,7 +16,7 @@
 /******************************************************************************/
 //  Current Half Move Number, starts at 0
 int halfMoveCount = 0;
-MoveList depthMoveList[MAXIMUM_DEPTH + 1];
+MoveList depthMoveList[MAX_DEPTH + 1];
 
 /******************************************************************************/
 /*                                  FUNCTIONS                                 */
@@ -341,7 +341,7 @@ int numberToRank(const int position) {
 int filerankToNumber(const char file, const int rank) {
      //  if it is not a correct filerank format, return error
      if ('a' > file || file > 'h' || 1 > rank || rank > 8 ) {
-          return ERROR_INTEGER;
+          return ERRORCODE;
      }
      return COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - '1'));
 }
@@ -921,7 +921,7 @@ void main() {
 
      bool gamePlaying = true;
      result gameResult = NOT_FINISHED; // Records the result of the game
-     int userColor = ERROR_INTEGER;    // Which color user plays
+     int userColor = ERRORCODE;    // Which color user plays
      bool spectate = false;            // if true, the game is between two computers
      LARGE_INTEGER frequency, beginTime, endTime; //  added for time performance check
 
@@ -987,7 +987,7 @@ void main() {
 
           //  Let user determine color to play
           correctInput = false;
-          while (!correctInput && userColor == ERROR_INTEGER) {
+          while (!correctInput && userColor == ERRORCODE) {
                printf("Which color would you like to play? (W, B or N): ");
                std::getline(std::cin, userCommand);
                if (userCommand.size() == 0) {
@@ -1075,7 +1075,7 @@ void main() {
                          terminalSquare = filerankToNumber(userCommand.at(2), userCommand.at(3)-'0');
 
                          //  Check if Filerank format is correct
-                         if (initialSquare == ERROR_INTEGER || terminalSquare == ERROR_INTEGER) {
+                         if (initialSquare == ERRORCODE || terminalSquare == ERRORCODE) {
                               printf("Wrong format: correct format is [char][int][char][int].\n");
                               continue;
                          }
@@ -1232,9 +1232,9 @@ void main() {
                else if (commandType == PERFT) {
                     correctInput = false;
                     while (!correctInput) {
-                         printf("What depth? (1~%d): ", MAXIMUM_DEPTH);
+                         printf("What depth? (1~%d): ", MAX_DEPTH);
                          std::getline(std::cin, userCommand);
-                         if (userCommand.size() == 0 || userCommand.at(0) - '0' < 1 || userCommand.at(0) - '0' > MAXIMUM_DEPTH) {
+                         if (userCommand.size() == 0 || userCommand.at(0) - '0' < 1 || userCommand.at(0) - '0' > MAX_DEPTH) {
                               printf("Wrong Input!\n");
                               continue;
                          }
@@ -1253,9 +1253,9 @@ void main() {
                else if (commandType == DIVIDE) {
                     correctInput = false;
                     while (!correctInput) {
-                         printf("What depth? (1~%d): ", MAXIMUM_DEPTH);
+                         printf("What depth? (1~%d): ", MAX_DEPTH);
                          std::getline(std::cin, userCommand);
-                         if (userCommand.size() == 0 || userCommand.at(0) - '0' < 1 || userCommand.at(0) - '0' > MAXIMUM_DEPTH) {
+                         if (userCommand.size() == 0 || userCommand.at(0) - '0' < 1 || userCommand.at(0) - '0' > MAX_DEPTH) {
                               printf("Wrong Input!\n");
                               continue;
                          }
@@ -1268,7 +1268,7 @@ void main() {
                }
                else if (commandType == UNDO_MOVE) {
                     //  TerminalSquare needs to be saved
-                    if (savedTerminalValue[halfMoveCount] == ERROR_INTEGER || halfMoveCount == 0) {
+                    if (savedTerminalValue[halfMoveCount] == ERRORCODE || halfMoveCount == 0) {
                          printf("No move can be undone!\n");
                          continue;
                     }

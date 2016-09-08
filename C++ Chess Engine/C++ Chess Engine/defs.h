@@ -10,9 +10,9 @@
 #define COLUMN 1
 #define MAX_MOVEGEN_COUNT 250
 #define MAX_MOVENUMBER 200
-#define MAXIMUM_DEPTH 6
+#define MAX_DEPTH 6
 #define EVAL_DEPTH 4
-#define ERROR_INTEGER 970201
+#define ERRORCODE 970201
 #define STALEMATE_BOUND -100
 
 #include <array>
