@@ -1,13 +1,12 @@
 #pragma once
 #include "defs.h"
-
-using namespace std;
+#include <Windows.h>
 
 class Board {
 private:
-     array<int, 120> board;
-     array<bool, 4> castlingCheck;
-     int turn;
+     std::array<int, 120> board;
+     std::array<bool, 4> castlingCheck;
+     color turn;
      int enpassantSquare;
      int fiftyMoveCount;
      int moveNumber;
@@ -35,7 +34,7 @@ public:
      */
 
      // Constructor adding all content at once
-     Board(array<int, 120> b, array<bool, 4> cc, int t, int e, int f, int m) {
+     Board(std::array<int, 120> b, std::array<bool, 4> cc, color t, int e, int f, int m) {
           board = b;
           castlingCheck = cc;
           turn = t;
@@ -88,27 +87,27 @@ public:
      }
 
      //  Mutators
-     void setBoard(const array<int, 120> b) { board = b; }
+     void setBoard(const std::array<int, 120> b) { board = b; }
      void setSquare(const int square, const int value) { board.at(square) = value; }
-     void setCastlingArray(const array<bool, 4> cc) { castlingCheck = cc; }
+     void setCastlingArray(const std::array<bool, 4> cc) { castlingCheck = cc; }
      void setCastling(const int index, const bool value) { castlingCheck.at(index) = value; }
-     void setTurn(const int t) { turn = t; }
+     void setTurn(const color t) { turn = t; }
      void setEnpassantSquare(const int e) { enpassantSquare = e; }
      void setFiftyMoveCount(const int f) { fiftyMoveCount = f; }
      void setMoveNumber(const int m) { moveNumber = m; }
 
      //  Accessors
-     const array<int, 120> getBoard() const { return board; }
+     const std::array<int, 120> getBoard() const { return board; }
      const int getSquare(int square) const { return board.at(square); }
-     const array<bool, 4> getCastlingArray() const { return castlingCheck; }
+     const std::array<bool, 4> getCastlingArray() const { return castlingCheck; }
      const bool getCastling(int index) const { return castlingCheck.at(index); }
-     const int getTurn() const { return turn; }
+     const color getTurn() const { return turn; }
      const int getEnpassantSquare() const { return enpassantSquare; }
      const int getFiftyMoveCount() const { return fiftyMoveCount; }
      const int getMoveNumber() const { return moveNumber; }
 
      //  Other Functions
-     void changeTurn() { turn = -turn; }
+     void changeTurn() { turn = (color)-turn; }
      void fiftyMoveCountDecrement() { fiftyMoveCount--; }
      void fiftyMoveCountIncrement() { fiftyMoveCount++; }
      void moveNumberDecrement() { moveNumber--; }
@@ -139,6 +138,7 @@ public:
           terminalSquare = originalMove[1];
           moveType = originalMove[2];
      }
+
      // Mutators
      void setInitial(const int i) { initialSquare = i; }
      void setTerminal(const int t) { terminalSquare = t; }
@@ -149,70 +149,146 @@ public:
      const int getType() const { return moveType; }
 
 };
+class MoveList {
+private:
+     std::array<Move, MAX_MOVEGEN_COUNT> movelist;
+     int moveCounter;
+public:
+     // Construcctor
+     MoveList() {
+          moveCounter = 0;
+     }
+
+     // Accessor
+     inline std::array<Move, MAX_MOVEGEN_COUNT> getList() { return movelist; }
+     inline Move getMove(int index) { return movelist[index]; }
+     inline int getCounter() { return moveCounter; }
+
+     void addMove(Move& move) {
+          movelist[moveCounter] = move;
+          moveCounter++;
+     }
+};
 
 /*                                  BOARD SETUP                               */
-//  This function sets up currentboard[120] for the initial position of pieces.
-void board120Setup();
-//  receives a FEN string to setup board
-void FENboardSetup(const string FEN);
-string boardToFEN(const Board& board);
-//  This functions prints the board from the parameter.
+/// <summary>
+/// This function sets the given board to the initial state.
+/// </summary>
+/// <param name="board">The board that will be changed to initial state.</param>
+void board120Setup(Board& board);
+/// <summary>
+/// This function sets the given board according to the FEN.
+/// </summary>
+/// <param name="board">The board that will be changed to initial state.</param>
+/// <param name="FEN">The desired board in FEN notation.</param>
+void FENboardSetup(Board& board, const std::string FEN);
+/// <summary>
+/// This function converts the given board to FEN notation.
+/// </summary>
+/// <param name="board">The board that will be converted to FEN notation.</param>
+/// <returns>FEN notation of the given board.</returns>
+std::string boardToFEN(const Board& board);
+/// <summary>
+/// This function prints the given board to console.
+/// </summary>
+/// <param name="board">The board that will be printed to console.</param>
 void printBoard(const Board& board);
-//  This functions prints simple version of the board from the parameter.
+/// <summary>
+/// This function prints the given board to console excluding the error squares.
+/// </summary>
+/// <param name="board">The board that will be printed to console.</param>
 void printSimpleBoard(const Board& board);
-//  Gets a piece and returns the color of the piece
-int checkColor(int pieceType);
-char numberToFile(int position);
-int numberToRank(int position);
-int filerankToNumber(char file, int rank);
-std::string numberToFilerank(int position);
+
+/// <summary>
+/// This function returns the color of the given piece type
+/// </summary>
+/// <param name="pieceType">The piece that will be checked its color</param>
+/// <returns>The color of the given piece</returns>
+int checkColor(const int pieceType);
+/// <summary>
+/// This function returns the column character (file) of a given square.
+/// </summary>
+/// <param name="position">The square that the function will give its file</param>
+/// <returns>The file of the given square</returns>
+char numberToFile(const int position);
+/// <summary>
+/// This function returns the row number (rank) of a given square.
+/// </summary>
+/// <param name="position">The square that the function will give its rank</param>
+/// <returns>The rank of the given square</returns>
+int numberToRank(const int position);
+/// <summary>
+/// This function converts the file and rank notation to board index of a board. 
+/// </summary>
+/// <param name="file">The file of the square</param>
+/// <param name="rank">The rank of the square</param>
+/// <returns>The board index notation of the square</returns>
+int filerankToNumber(const char file, const int rank);
+/// <summary>
+/// This function converts a position's notation from board index to file rank.
+/// </summary>
+/// <param name="position">The square in board index notation.</param>
+/// <returns>A two-letter string with file rank notation of the given square.</returns>
+std::string numberToFilerank(const int position);
+/// <summary>
+/// This function prints the given move to console in filerank-filerank notation.
+/// </summary>
+/// <param name="move">The move that will be printed to console</param>
 void printMove(const Move& move);
 
 
-
 /*                                BOARD EVALUATION                            */
-//  Returns evaluation score based on parameter board given.
+/// <summary>
+/// This function returns evaluation score of the given board using piece values and PCSQ tables. Positive score signifies white's advantage.
+/// </summary>
+/// <param name="board">The board that will be evaluated.</param>
+/// <returns>The score of the board</returns>
 int boardEvaluation(const Board& board);
-//  Gets a position number and returns the row-reversed position number
-int reversePosition(int position);
-//  negaMax implemented for board evaluation
-int negaMax(int depth, Board& board);
-//  function to call negaMax. bestMoves is the output
-int rootNegaMax(int depth, Board& board, Move& bestMove);
-//  negaMax with alphaBeta pruning implemented for board evaluation
-int alphabeta(int depth, Board& board, int alpha, int beta);
-int rootAlphabeta(int maxDepth, Board board, int alpha, int beta, Move& bestMove);
-
-
+/// <summary>
+/// This function returns the row-reversed position of the given position in board index notation. Used in applying PCSQ table for black.
+/// </summary>
+/// <param name="position">The position that will be row-reversed.</param>
+/// <returns>The row-reversed position</returns>
+int reversePosition(const int position);
+/// <summary>
+/// This function finds the best move using negaMax recursion on the given board for given depth. This function should only be called in rootNegaMax().
+/// </summary>
+/// <param name="depth">The depth of the recursion.</param>
+/// <param name="board">The board that will be analyzed.</param>
+/// <returns>The evaluation score of best move.</returns>
+int negaMax(const int depth, Board& board);
+/// <summary>
+/// This function is the root function for negaMax().
+/// </summary>
+/// <param name="depth">The depth of the recursion.</param>
+/// <param name="board">The board that will be analyzed.</param>
+/// <param name="bestMove">The best move found.</param>
+/// <returns>The evaluation score of best move.</returns>
+int rootNegaMax(const int depth, Board& board, Move& bestMove);
+/// <summary>
+/// This function finds the best move using negaMax recursion and alpha-beta pruning on the given board for given depth. This function should only be called in rootAlphabeta().
+/// </summary>
+/// <param name="maxDepth">The depth of the recursion.</param>
+/// <param name="board">The board that will be analyzed.</param>
+/// <param name="alpha">The alpha value used for alpha-beta pruning.</param>
+/// <param name="beta">The beta value used for alpha-beta pruning.</param>
+/// <returns>The evaluation score of best move.</returns>
+int alphabeta(const int maxDepth, Board& board, int alpha, int beta);
+/// <summary>
+/// This function is the root function for negaMax().
+/// </summary>
+/// <param name="maxDepth">The depth of the recursion.</param>
+/// <param name="board">The board that will be analyzed.</param>
+/// <param name="alpha">The alpha value used for alpha-beta pruning.</param>
+/// <param name="beta">The beta value used for alpha-beta pruning.</param>
+/// <param name="bestMove">The best move found.</param>
+/// <returns>The evaluation score of best move.</returns>
+int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& bestMove);
 
 
 /*                                   GAME CYCLE                               */
 bool checkGameEnd(const Board& board);
-
-
-
-
-/*                                MOVE GENERATION                             */
-void moveGeneration(const Board& board, Move moveList[250], int *moveCount);
-void pawnMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
-void knightMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
-void bishopMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
-void rookMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
-void queenMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
-void kingMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
-
-void castlingMoveGeneration(const Board& board, Move moveList[250], int *moveCount);
-void promotionMoveGeneration(const Board& board, int position, Move moveList[250], int *moveCount);
-void enpassantMoveGeneration(const Board& board, Move moveList[250], int *moveCount);
-
-void addMove(int initial, int terminal, int moveType, Move moveList[250], int *moveCount);
-void addPromotionMove(int initial, int terminal, Move moveList[250], int *moveCount);
-
-void legalMoves(Board board, Move moveList[250], int moveCount, Move legalMoveList[250], int *legalMoveCount);
-bool squareAttackCheck(Board board, int position);
-
-
-
+bool checkEndgame(const Board& board);
 
 
 /*                                   RECURSION                                */
@@ -224,18 +300,18 @@ int makeMove(Board &board, Move& move);
 void undoMove(Board &board, Move& move, int terminalValue);
 
 
-
-
-
 /*                                  MISC                                      */
-LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex);
-void stopTimer(LARGE_INTEGER *endTime, int timerIndex);
-void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex);
-double elapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex);
 // Helper function that updates castling array inside board based on given move
 // TODO: Check if this can be integrated inside makeMove
 void castlingUpdate(Board& board, const Move& move);
 // Checks if the board is at the end state: returns -1 if false, return board value otherwise
 int isTerminalNode(Board& board);
+
+/// <summary>
+/// This function prints the basic menu of possible user commands.
+/// </summary>
 void printMenu();
+/// <summary>
+/// This function prints the extensive menu of possible user commands, including some options created for debugging the code.
+/// </summary>
 void printDebugMenu();

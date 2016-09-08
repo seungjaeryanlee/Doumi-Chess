@@ -147,12 +147,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="movegen.cpp" />
+    <ClCompile Include="timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defs.h" />
+    <ClInclude Include="movegen.h" />
     <ClInclude Include="protos.h" />
+    <ClInclude Include="timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Dictionary.txt" />
+    <Text Include="Improvements.txt" />
     <Text Include="log.txt" />
     <Text Include="README.txt" />
   </ItemGroup>
