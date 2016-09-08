@@ -329,35 +329,25 @@ int checkColor(const int pieceType) {
           return NEITHER;
      }
      else {
-          printf("checkColor unreachable error\n");
+          printf("Invalid pieceType\n");
           return 0;
      }
 }
 char numberToFile(const int position) {
-     char file = 'a' + position % 10 - 1;
-     return file;
+     return ('a' + position % ROW - 1);
 }
 int numberToRank(const int position) {
-     int rank = 10 - position / 10;
-     return rank;
+     return (10 - position / ROW);
 }
 int filerankToNumber(const char file, const int rank) {
      //  if it is not a correct filerank format, return error
      if ('a' > file || file > 'h' || 1 > rank || rank > 8 ) {
           return ERROR_INTEGER;
      }
-
-     int position120;
-     position120 = COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - '1'));
-     return position120;
+     return COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - '1'));
 }
 std::string numberToFilerank(const int position) {
-     std::string fileRank = "";
-     char file = 'a' + position % 10 - 1; 
-     int rank = 10 - position / 10;
-     fileRank += file;
-     fileRank += std::to_string(rank);
-     return fileRank;
+     return numberToFile(position) + std::to_string(numberToRank(position));
 }
 
 
