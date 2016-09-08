@@ -312,7 +312,7 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput);
 // Makes the given move and changes turn
 int makeMove(Board &board, Move& move);
 // Undos the given move and changes turn
-void undoMove(Board &board, Move& move, int terminalValue);
+void undoMove(Board &board, Move& move, int capturedPiece);
 
 
 /*                                  MISC                                      */
