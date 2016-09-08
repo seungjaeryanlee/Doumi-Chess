@@ -190,16 +190,7 @@ void FENboardSetup(Board& board, const std::string FEN);
 /// <param name="board">The board that will be converted to FEN notation.</param>
 /// <returns>FEN notation of the given board.</returns>
 std::string boardToFEN(const Board& board);
-/// <summary>
-/// This function prints the given board to console.
-/// </summary>
-/// <param name="board">The board that will be printed to console.</param>
-void printBoard(const Board& board);
-/// <summary>
-/// This function prints the given board to console excluding the error squares.
-/// </summary>
-/// <param name="board">The board that will be printed to console.</param>
-void printSimpleBoard(const Board& board);
+
 
 /// <summary>
 /// This function returns the color of the given piece type
@@ -232,11 +223,7 @@ int filerankToNumber(const char file, const int rank);
 /// <param name="position">The square in board index notation.</param>
 /// <returns>A two-letter string with file rank notation of the given square.</returns>
 std::string numberToFilerank(const int position);
-/// <summary>
-/// This function prints the given move to console in filerank-filerank notation.
-/// </summary>
-/// <param name="move">The move that will be printed to console</param>
-void printMove(const Move& move);
+
 
 
 /*                                BOARD EVALUATION                            */
@@ -309,11 +296,3 @@ void castlingUpdate(Board& board, const Move& move);
 // Checks if the board is at the end state: returns -1 if false, return board value otherwise
 int isTerminalNode(Board& board);
 
-/// <summary>
-/// This function prints the basic menu of possible user commands.
-/// </summary>
-void printMenu();
-/// <summary>
-/// This function prints the extensive menu of possible user commands, including some options created for debugging the code.
-/// </summary>
-void printDebugMenu();
