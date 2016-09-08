@@ -14,8 +14,6 @@
 /******************************************************************************/
 /*                                 GLOBAL VARIABLE                            */
 /******************************************************************************/
-//  Current Half Move Number, starts at 0
-int halfMoveCount = 0;
 MoveList depthMoveList[MAX_DEPTH + 1];
 
 /******************************************************************************/
@@ -907,6 +905,7 @@ bool fiftyMoveCheck(Board& board, Move& move) {
      return false;
 }
 
+
 /******************************************************************************/
 /*                               MAIN FUNCTION                                */
 /******************************************************************************/
@@ -918,6 +917,7 @@ void main() {
      // TODO: Check if it should be initialized as ERROR_INTEGER
      int savedTerminalValue[MAX_MOVENUMBER];  //  Saved values for UNDO_MOVE command
      Move savedMove[MAX_MOVENUMBER + 1];
+     int saveIndex = 0;
 
      bool gamePlaying = true;
      result gameResult = NOT_FINISHED; // Records the result of the game
@@ -1053,7 +1053,7 @@ void main() {
                
                if (commandType == MOVE) {
                     
-                    savedBoard[halfMoveCount] = currentBoard;
+                    savedBoard[saveIndex] = currentBoard;
 
                     //  Movelist used for legality/movetype check
                     currentBoardMoveList = moveGeneration(currentBoard);
@@ -1139,7 +1139,7 @@ void main() {
 
                     // Check Threefold repetition
                     int repetitionCount = 0;
-                    for (int i = 0; i < halfMoveCount; i++) {
+                    for (int i = 0; i < saveIndex; i++) {
                          if (currentBoard.isAlmostEqual(savedBoard[i])) {
                               repetitionCount++;
                          }
@@ -1201,14 +1201,14 @@ void main() {
 
                     
                     // save terminalValue for undoMove;
-                    savedTerminalValue[halfMoveCount] = makeMove(currentBoard, userMove);
+                    savedTerminalValue[saveIndex] = makeMove(currentBoard, userMove);
                     
-                    savedMove[halfMoveCount] = Move(userMove);
+                    savedMove[saveIndex] = Move(userMove);
                     
 
                     if (currentBoard.getTurn() == WHITE) { currentBoard.moveNumberIncrement(); }
                     
-                    halfMoveCount++;
+                    saveIndex++;
 
                     // add to log file
                     logtext << currentBoard.getMoveNumber() << ": " << numberToFile(initialSquare) << numberToRank(initialSquare) << " " 
@@ -1268,13 +1268,13 @@ void main() {
                }
                else if (commandType == UNDO_MOVE) {
                     //  TerminalSquare needs to be saved
-                    if (savedTerminalValue[halfMoveCount] == ERRORCODE || halfMoveCount == 0) {
+                    if (savedTerminalValue[saveIndex] == ERRORCODE || saveIndex == 0) {
                          printf("No move can be undone!\n");
                          continue;
                     }
                     else {
-                         halfMoveCount--;
-                         currentBoard = Board(savedBoard[halfMoveCount]);
+                         saveIndex--;
+                         currentBoard = Board(savedBoard[saveIndex]);
                          userColor = -userColor;
                     }
                }
@@ -1323,7 +1323,7 @@ void main() {
                     std::cout << "Alphabeta timer : " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
                }
                else if (commandType == PRINT_SAVED_FEN) {
-                    for (int i = 0; i < halfMoveCount; i++) {
+                    for (int i = 0; i < saveIndex; i++) {
                          boardToFEN(savedBoard[i]); // Print statement inside boardToFEN() prints the FEN
                     }
                }
@@ -1332,7 +1332,7 @@ void main() {
           //  Computer turn
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
 
-               savedBoard[halfMoveCount] = currentBoard;
+               savedBoard[saveIndex] = currentBoard;
 
                Move alphabetaMove;
                int alphabetaValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, alphabetaMove);
@@ -1366,7 +1366,7 @@ void main() {
                }
                     
                //  Save castlingCheck for undoMove
-               savedBoard[halfMoveCount].setCastlingArray(currentBoard.getCastlingArray());
+               savedBoard[saveIndex].setCastlingArray(currentBoard.getCastlingArray());
                //  Update castlingCheck
                castlingUpdate(currentBoard, alphabetaMove);
 
@@ -1377,9 +1377,9 @@ void main() {
                else { currentBoard.setEnpassantSquare(0); }
 
                //  Make best move and print board
-               savedTerminalValue[halfMoveCount] = makeMove(currentBoard, alphabetaMove);
+               savedTerminalValue[saveIndex] = makeMove(currentBoard, alphabetaMove);
                //  Save move for undoMove
-               savedMove[halfMoveCount] = Move(alphabetaMove);
+               savedMove[saveIndex] = Move(alphabetaMove);
                logtext << currentBoard.getMoveNumber() << ": " << numberToFilerank(initial) << " " << numberToFilerank(terminal) << std::endl;
 
                printSimpleBoard(currentBoard);
@@ -1405,7 +1405,7 @@ void main() {
 
                // Check Threefold repetition
                int repetitionCount = 0;
-               for (int i = 0; i < halfMoveCount; i++) {
+               for (int i = 0; i < saveIndex; i++) {
                     if (currentBoard.isAlmostEqual(savedBoard[i])) {
                          repetitionCount++;
                     }
@@ -1438,7 +1438,7 @@ void main() {
                }
 
                // At the very end since multiple things are saved while the computer makes a move
-               halfMoveCount++;
+               saveIndex++;
           }
      }
 
