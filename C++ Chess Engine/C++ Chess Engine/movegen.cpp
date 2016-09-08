@@ -3,32 +3,32 @@
 #include "movegen.h"
 
 void moveGeneration(const Board& board, Move moveList[MAX_MOVEGEN_COUNT], int *moveCount) {
-     Move moveList[MAX_MOVEGEN_COUNT];
-     int moveCount = 0;
+     Move pseudolegalMoveList[MAX_MOVEGEN_COUNT];
+     int pseudolegalMoveCount = 0;
      // STEP 1: PSEUDOLEGAL MOVEGEN
-     castlingMoveGeneration(board, moveList, &moveCount);
-     enpassantMoveGeneration(board, moveList, &moveCount);
+     castlingMoveGeneration(board, pseudolegalMoveList, &pseudolegalMoveCount);
+     enpassantMoveGeneration(board, pseudolegalMoveList, &pseudolegalMoveCount);
 
      if (board.getTurn() == WHITE) {
           for (int i = 0; i < 120; i++) {
                switch (board.getSquare(i)) {
                case WHITEPAWN:
-                    pawnMoveGeneration(board, i, moveList, &moveCount);
+                    pawnMoveGeneration(board, i, pseudolegalMoveList, &pseudolegalMoveCount);
                     break;
                case WHITEKNIGHT:
-                    knightMoveGeneration(board, i, moveList, &moveCount);
+                    knightMoveGeneration(board, i, pseudolegalMoveList, &pseudolegalMoveCount);
                     break;
                case WHITEBISHOP:
-                    bishopMoveGeneration(board, i, moveList, &moveCount);
+                    bishopMoveGeneration(board, i, pseudolegalMoveList, &pseudolegalMoveCount);
                     break;
                case WHITEROOK:
-                    rookMoveGeneration(board, i, moveList, &moveCount);
+                    rookMoveGeneration(board, i, pseudolegalMoveList, &pseudolegalMoveCount);
                     break;
                case WHITEQUEEN:
-                    queenMoveGeneration(board, i, moveList, &moveCount);
+                    queenMoveGeneration(board, i, pseudolegalMoveList, &pseudolegalMoveCount);
                     break;
                case WHITEKING:
-                    kingMoveGeneration(board, i, moveList, &moveCount);
+                    kingMoveGeneration(board, i, pseudolegalMoveList, &pseudolegalMoveCount);
                     break;
                }
           }
@@ -37,22 +37,22 @@ void moveGeneration(const Board& board, Move moveList[MAX_MOVEGEN_COUNT], int *m
           for (int i = 0; i < 120; i++) {
                switch (board.getSquare(i)) {
                case BLACKPAWN:
-                    pawnMoveGeneration(board, i, moveList, &moveCount);
+                    pawnMoveGeneration(board, i, pseudolegalMoveList, &pseudolegalMoveCount);
                     break;
                case BLACKKNIGHT:
-                    knightMoveGeneration(board, i, moveList, &moveCount);
+                    knightMoveGeneration(board, i, pseudolegalMoveList, &pseudolegalMoveCount);
                     break;
                case BLACKBISHOP:
-                    bishopMoveGeneration(board, i, moveList, &moveCount);
+                    bishopMoveGeneration(board, i, pseudolegalMoveList, &pseudolegalMoveCount);
                     break;
                case BLACKROOK:
-                    rookMoveGeneration(board, i, moveList, &moveCount);
+                    rookMoveGeneration(board, i, pseudolegalMoveList, &pseudolegalMoveCount);
                     break;
                case BLACKQUEEN:
-                    queenMoveGeneration(board, i, moveList, &moveCount);
+                    queenMoveGeneration(board, i, pseudolegalMoveList, &pseudolegalMoveCount);
                     break;
                case BLACKKING:
-                    kingMoveGeneration(board, i, moveList, &moveCount);
+                    kingMoveGeneration(board, i, pseudolegalMoveList, &pseudolegalMoveCount);
                     break;
                }
           }
@@ -73,35 +73,35 @@ void moveGeneration(const Board& board, Move moveList[MAX_MOVEGEN_COUNT], int *m
           }
      }
 
-     for (int i = 0; i < moveCount; i++) {
+     for (int i = 0; i < pseudolegalMoveCount; i++) {
           //  check if king will be moved
-          if (copiedBoard.getSquare(moveList[i].getInitial()) == WHITEKING || copiedBoard.getSquare(moveList[i].getInitial()) == BLACKKING) {
-               if (moveList[i].getType() == NORMAL) {
-                    changedKingPosition = moveList[i].getTerminal();
+          if (copiedBoard.getSquare(pseudolegalMoveList[i].getInitial()) == WHITEKING || copiedBoard.getSquare(pseudolegalMoveList[i].getInitial()) == BLACKKING) {
+               if (pseudolegalMoveList[i].getType() == NORMAL) {
+                    changedKingPosition = pseudolegalMoveList[i].getTerminal();
                }
-               if (moveList[i].getType() == KINGSIDE_CASTLING) {
-                    changedKingPosition = moveList[i].getInitial() + 2 * COLUMN;
+               if (pseudolegalMoveList[i].getType() == KINGSIDE_CASTLING) {
+                    changedKingPosition = pseudolegalMoveList[i].getInitial() + 2 * COLUMN;
                }
-               if (moveList[i].getType() == QUEENSIDE_CASTLING) {
-                    changedKingPosition = moveList[i].getInitial() - 2 * COLUMN;
+               if (pseudolegalMoveList[i].getType() == QUEENSIDE_CASTLING) {
+                    changedKingPosition = pseudolegalMoveList[i].getInitial() - 2 * COLUMN;
                }
 
           }
           else { changedKingPosition = kingPosition; }
 
           //  make move
-          terminalValue = makeMove(copiedBoard, moveList[i]);
+          terminalValue = makeMove(copiedBoard, pseudolegalMoveList[i]);
           //  In this case, we don't want makeMove to change turn, so let's change it again
           copiedBoard.changeTurn();
 
           //  if king is safe
           if (!squareAttackCheck(copiedBoard, changedKingPosition)) {
-               moveList[*moveCount] = Move(moveList[i]);
+               moveList[*moveCount] = Move(pseudolegalMoveList[i]);
                *moveCount += 1;
           }
 
           //  undo move
-          undoMove(copiedBoard, moveList[i], terminalValue);
+          undoMove(copiedBoard, pseudolegalMoveList[i], terminalValue);
           //  Same reason as above
           copiedBoard.changeTurn();
      }
