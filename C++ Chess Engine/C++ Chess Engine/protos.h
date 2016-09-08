@@ -306,10 +306,6 @@ int alphabeta(const int maxDepth, Board& board, int alpha, int beta);
 int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& bestMove);
 
 
-/*                                   GAME CYCLE                               */
-bool checkGameEnd(const Board& board);
-
-
 /*                                   RECURSION                                */
 u64 divide(int depth, int maxDepth, Board& board, bool showOutput);
 u64 divide2(int depth, int maxDepth, Board& board, bool showOutput);

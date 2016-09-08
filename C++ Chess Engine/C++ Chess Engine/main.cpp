@@ -548,15 +548,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
      return alpha;
 }
 
-/*                             GAME CYCLE FUNCTIONS                           */
-bool checkGameEnd(const Board& board) {
-     bool whiteKing = false, blackKing = false;
-     for (int i = 0; i < 120; i++) {
-          if (board.getSquare(i) == WHITEKING) { whiteKing = true; }
-          if (board.getSquare(i) == BLACKKING) { blackKing = true; }
-     }
-     return !(whiteKing && blackKing);
-}
+
 
 
 /*                             RECURSION FUNCTIONS                             */
@@ -1400,7 +1392,7 @@ void main() {
                if (currentBoard.getTurn() == WHITE) { currentBoard.incrementMoveNumber(); }
 
                //  Check if game is over
-               gamePlaying = !checkGameEnd(currentBoard);
+               gamePlaying = !(checkGameState(currentBoard)==NOTMATE);
                if (!gamePlaying) { break; }
 
                // Check Threefold repetition
