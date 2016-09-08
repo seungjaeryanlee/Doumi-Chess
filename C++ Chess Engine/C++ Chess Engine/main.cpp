@@ -14,7 +14,6 @@
 /******************************************************************************/
 /*                                 GLOBAL VARIABLE                            */
 /******************************************************************************/
-bool endGame = false;
 //  Current Half Move Number, starts at 0
 int halfMoveCount = 0;
 MoveList depthMoveList[MAXIMUM_DEPTH + 1];
@@ -378,7 +377,7 @@ int boardEvaluation(const Board& board) {
                break;
           case WHITEKING:
                score += KINGVALUE;
-               if (endGame) {
+               if (board.getEndgame()) {
                     score += KING_PCSQTable_ENDGAME.at(i);
                }
                else {
@@ -407,7 +406,7 @@ int boardEvaluation(const Board& board) {
                break;
           case BLACKKING:
                score -= KINGVALUE;
-               if (endGame) {
+               if (board.getEndgame()) {
                     score -= KING_PCSQTable_ENDGAME.at(reversePosition(i));
                }
                else {
