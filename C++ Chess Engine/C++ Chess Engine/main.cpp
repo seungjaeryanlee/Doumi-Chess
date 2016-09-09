@@ -588,7 +588,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
 
 
 /*                             RECURSION FUNCTIONS                             */
-u64 divide(int depth, int maxDepth, Board& board, bool showOutput) {
+u64 divide(const int depth, const int maxDepth, Board& board, const bool showOutput) {
 
      if (depth == 0) { return 1; }
 
@@ -628,7 +628,7 @@ u64 divide(int depth, int maxDepth, Board& board, bool showOutput) {
      return node;
 
 }
-u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
+u64 divide2(const int depth, const int maxDepth, Board& board, const bool showOutput) {
 
      if (depth == 0) { return 1; }
 
@@ -669,7 +669,7 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
      output2.close();
 }
 
-int makeMove(Board &board, Move& move) {
+int makeMove(Board &board, const Move& move) {
      int capturedPiece;
      int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
@@ -786,7 +786,7 @@ int makeMove(Board &board, Move& move) {
           return 0;
      }
 }
-void undoMove(Board &board, Move& move, int capturedPiece) {
+void undoMove(Board &board, const Move& move, const int capturedPiece) {
      int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
      board.changeTurn();
@@ -940,7 +940,6 @@ gameState checkGameState(const Board& board) {
      
      return NOTMATE;
 }
-// TODO: Board's halfmoveclock should not change here
 bool fiftyMoveCheck(const Board& board, const Move& move) {
      return (board.getHalfMoveClock() >= 100);
 }

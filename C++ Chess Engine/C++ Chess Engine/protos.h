@@ -307,18 +307,22 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
 
 
 /*                                   RECURSION                                */
-u64 divide(int depth, int maxDepth, Board& board, bool showOutput);
-u64 divide2(int depth, int maxDepth, Board& board, bool showOutput);
+u64 divide(const int depth, const int maxDepth, Board& board, const bool showOutput);
+u64 divide2(const int depth, const int maxDepth, Board& board, const bool showOutput);
 // Makes the given move and changes turn
-int makeMove(Board &board, Move& move);
+int makeMove(Board &board, const Move& move);
 // Undos the given move and changes turn
-void undoMove(Board &board, Move& move, int capturedPiece);
+void undoMove(Board &board, const Move& move, const int capturedPiece);
 
 
 /*                                  MISC                                      */
 // Helper function that updates castling array inside board based on given move
 // TODO: Check if this can be integrated inside makeMove
 void updateCastling(Board& board, const Move& move);
+void updateEnPassant(Board& board, const Move& move);
+void updateHalfMoveClock(Board& board, const Move& move);
+void updateMoveNumber(Board& board);
+void updateBoard(Board& board, const Move& move);
 // Checks if the board is at the end state: returns -1 if false, return board value otherwise
 gameState checkGameState(const Board& board);
-
+bool fiftyMoveCheck(const Board& board, const Move& move);
