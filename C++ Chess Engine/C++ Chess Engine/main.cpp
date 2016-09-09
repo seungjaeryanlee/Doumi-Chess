@@ -920,8 +920,9 @@ void main() {
      log.open("log.txt");
      log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
 
-     board120Setup(currentBoard);
+     //board120Setup(currentBoard);
      //FENboardSetup("8/8/8/8/6k1/2KNR3/8/8 w - - 99 75");
+     FENboardSetup(currentBoard, "6k1/8/8/8/8/8/7P/4K2R w K - 1 0");
 
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -1278,8 +1279,7 @@ void main() {
 
                     printf("Movecount: %d\n", currentBoardMoveList.getCounter());
                     for (int i = 0; i <  currentBoardMoveList.getCounter(); i++) {
-                         printf("%d: ", i + 1);
-                         printMove(currentBoardMoveList.getMove(i));
+                         std::cout << printMove(i + 1, currentBoardMoveList.getMove(i));
                     }
                     continue;
                }
@@ -1328,8 +1328,8 @@ void main() {
                Move abMove;
                int abValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, abMove);
                printf("Alphabeta Value: %d\n", abValue);
-               printf("Alphabeta Move: ");
-               printMove(abMove);
+               std::cout << "Alphabeta Move: " << printMove(currentBoard.getMoveNumber(), abMove);
+               
 
                int initial = abMove.getInitial();
                int terminal = abMove.getTerminal();
@@ -1373,23 +1373,13 @@ void main() {
 
                printSimpleBoard(currentBoard);
 
-               //  Print out move and move number
-               if (moveType == KINGSIDE_CASTLING) {
-                    printf("%d: O-O\n", currentBoard.getMoveNumber());
-               }
-               else if (moveType == QUEENSIDE_CASTLING) {
-                    printf("%d: O-O-O\n", currentBoard.getMoveNumber());
-               }
-               else {
-                    printf("%d: ", currentBoard.getMoveNumber());
-                    printMove(abMove);
-               }
+               std::cout << printMove(currentBoard.getMoveNumber(), abMove);
+               
 
                //  Increment move
                if (currentBoard.getTurn() == WHITE) { currentBoard.incrementMoveNumber(); }
 
                //  Check if game is over
-               std::cout << checkGameState(currentBoard) << std::endl;
                gamePlaying = (checkGameState(currentBoard) == NOTMATE);
                if (!gamePlaying) { break; }
 
