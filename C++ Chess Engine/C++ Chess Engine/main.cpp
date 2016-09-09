@@ -447,14 +447,14 @@ int negaMax(const int depth, Board& board) {
      int score;
      int capturedPiece;
 
-     depthMoveList[depth] = moveGeneration(board);
+     MoveList moveList = moveGeneration(board);
 
-     for (int i = 0; i < depthMoveList[depth].getCounter(); i++) {
+     for (int i = 0; i <moveList.getCounter(); i++) {
 
-          updateCastling(board, depthMoveList[depth].getMove(i));
+          updateCastling(board, moveList.getMove(i));
           int enpassantSquare = board.getEnpassantSquare();
 
-          capturedPiece = makeMove(board, depthMoveList[depth].getMove(i));
+          capturedPiece = makeMove(board, moveList.getMove(i));
 
           score = -negaMax(depth-1, board);
 
@@ -462,7 +462,7 @@ int negaMax(const int depth, Board& board) {
                max_Score = score;
           }
 
-          undoMove(board, depthMoveList[depth].getMove(i), capturedPiece);
+          undoMove(board, moveList.getMove(i), capturedPiece);
           board.setEnpassantSquare(enpassantSquare);
      }
 
@@ -474,22 +474,22 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
      int score;
      int capturedPiece;
 
-     depthMoveList[maxDepth] = moveGeneration(board);
+     MoveList moveList = moveGeneration(board);
 
-     for (int i = 0; i < depthMoveList[maxDepth].getCounter(); i++) {
-          updateCastling(board, depthMoveList[maxDepth].getMove(i));
+     for (int i = 0; i < moveList.getCounter(); i++) {
+          updateCastling(board, moveList.getMove(i));
 
           int enpassantSquare = board.getEnpassantSquare();
-          capturedPiece = makeMove(board, depthMoveList[maxDepth].getMove(i));
+          capturedPiece = makeMove(board, moveList.getMove(i));
 
           score = -negaMax(maxDepth - 1, board);
 
           if (score > max_Score) {
                max_Score = score;
-               bestMove = Move(depthMoveList[maxDepth].getMove(i));
+               bestMove = moveList.getMove(i);
           }
 
-          undoMove(board, depthMoveList[maxDepth].getMove(i), capturedPiece);
+          undoMove(board, moveList.getMove(i), capturedPiece);
           board.setEnpassantSquare(enpassantSquare);
      }
 
@@ -521,22 +521,21 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
      int score;
      int capturedPiece;
 
-     
-     depthMoveList[depth] = moveGeneration(board);
+     MoveList moveList = moveGeneration(board);
 
-     for (int i = 0; i < depthMoveList[depth].getCounter(); i++) {
+     for (int i = 0; i < moveList.getCounter(); i++) {
 
-          updateCastling(board, depthMoveList[depth].getMove(i));
+          updateCastling(board, moveList.getMove(i));
 
           // Save enpassantSquare so it doesn't get lost while making move
           int enpassantSquare = board.getEnpassantSquare();
          
-          capturedPiece = makeMove(board, depthMoveList[depth].getMove(i));
+          capturedPiece = makeMove(board, moveList.getMove(i));
 
           score = -alphabeta(depth - 1, board, -beta, -alpha);
 
           if (score >= beta) {
-               undoMove(board, depthMoveList[depth].getMove(i), capturedPiece);
+               undoMove(board, moveList.getMove(i), capturedPiece);
                board.setEnpassantSquare(enpassantSquare);
                return beta;
           }
@@ -544,7 +543,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
           if (score > alpha) {
                alpha = score;
           }
-          undoMove(board, depthMoveList[depth].getMove(i), capturedPiece);
+          undoMove(board, moveList.getMove(i), capturedPiece);
           board.setEnpassantSquare(enpassantSquare);
      }
 
@@ -554,20 +553,20 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
      int score;
      int capturedPiece;
 
-     depthMoveList[maxDepth] = moveGeneration(board);
+     MoveList moveList = moveGeneration(board);
 
-     for (int i = 0; i < depthMoveList[maxDepth].getCounter(); i++) {
+     for (int i = 0; i < moveList.getCounter(); i++) {
 
-          updateCastling(board, depthMoveList[maxDepth].getMove(i));
+          updateCastling(board, moveList.getMove(i));
           int enpassantSquare = board.getEnpassantSquare();
-          capturedPiece = makeMove(board, depthMoveList[maxDepth].getMove(i));
+          capturedPiece = makeMove(board, moveList.getMove(i));
 
           score = -alphabeta(maxDepth - 1, board, -beta, -alpha);
 
           // TODO: Check if this is needed and change it
           if (score >= beta) {
 
-               undoMove(board, depthMoveList[maxDepth].getMove(i), capturedPiece);
+               undoMove(board, moveList.getMove(i), capturedPiece);
                // TODO: Make sure Castling & EP Square & other details are also undo-ed
                board.setEnpassantSquare(enpassantSquare);
                return beta;
@@ -575,10 +574,10 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
 
           if (score > alpha) {
                alpha = score;
-               bestMove = Move(depthMoveList[maxDepth].getMove(i));
+               bestMove = moveList.getMove(i);
           }
 
-          undoMove(board, depthMoveList[maxDepth].getMove(i), capturedPiece);
+          undoMove(board, moveList.getMove(i), capturedPiece);
           board.setEnpassantSquare(enpassantSquare);
      }
 
