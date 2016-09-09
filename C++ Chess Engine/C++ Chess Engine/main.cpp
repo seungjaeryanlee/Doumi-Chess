@@ -148,7 +148,7 @@ void FENboardSetup(Board& board, const std::string FEN) {
      }
      i++;
      if (FEN.at(i) == 'w') { board.setTurn(WHITE); }
-     else { board.setTurn(WHITE); }
+     else { board.setTurn(BLACK); }
 
      i += 2;
      if (FEN.at(i) != '-') {
@@ -421,6 +421,23 @@ int reversePosition(const int position) {
 }
 
 int negaMax(const int depth, Board& board) {
+     int gameState = checkGameState(board);
+     if (gameState != NOTMATE) {
+          printf("Terminal node!: %d\n", depth);
+          switch (gameState) {
+          case WHITE_CHECKMATE:
+               return -1 * (MATE_VALUE + depth);
+               break;
+          case BLACK_CHECKMATE:
+               return (MATE_VALUE + depth);
+               break;
+          case STALEMATE_3F:
+          case STALEMATE_50:
+          case STALEMATE_75:
+               return 0;
+               break;
+          }
+     }
      if (depth == 0) {
           return board.getTurn() * boardEvaluation(board);
      }
@@ -478,6 +495,23 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
 }
 
 int alphabeta(const int depth, Board& board, int alpha, int beta) {
+     int gameState = checkGameState(board);
+     if (gameState != NOTMATE) {
+          printf("Terminal node!: %d\n", depth);
+          switch (gameState) {
+          case WHITE_CHECKMATE:
+               return -1 * (MATE_VALUE + depth);
+               break;
+          case BLACK_CHECKMATE:
+               return (MATE_VALUE + depth);
+               break;
+          case STALEMATE_3F:
+          case STALEMATE_50:
+          case STALEMATE_75:
+               return 0;
+               break;
+          }
+     }
      if (depth == 0) {
           return board.getTurn() * boardEvaluation(board);
      }
@@ -870,8 +904,17 @@ int checkGameState(Board& board) {
 
      // Checkmate                                                                                                                 
      if (tempBoardLegalMoveList.getCounter() == 0 && squareAttackCheck(board, kingPos)) {
+<<<<<<< HEAD
           if (board.getTurn() == WHITE) { return WHITE_CHECKMATE; }
           else { return BLACK_CHECKMATE; }
+=======
+          if (board.getSquare(kingPos) == WHITE) {
+               return BLACK_CHECKMATE;
+          }
+          else {
+               return WHITE_CHECKMATE;
+          }
+>>>>>>> feature-terminalnoderecursion
      }
 
      // Stalemate: No legal move
@@ -931,7 +974,7 @@ void main() {
      log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
 
      board120Setup(currentBoard);
-     //FENboardSetup("8/8/8/8/6k1/2KNR3/8/8 w - - 99 75");
+     //FENboardSetup(currentBoard, "k7/pp4pR/7p/8/8/8/n7/Kn6 w - - 0 1");
      //FENboardSetup(currentBoard, "6k1/8/8/8/8/8/7P/4K2R w K - 1 0");
 
      printSimpleBoard(currentBoard);
@@ -963,13 +1006,12 @@ void main() {
 
           //  Detect Checkmate/Stalemate
           switch (checkGameState(currentBoard)) {
-          case CHECKMATE:
-               if (currentBoard.getTurn() == WHITE) {
-                    gameResult = BLACK_WIN;
-               }
-               if (currentBoard.getTurn() == BLACK) {
-                    gameResult = WHITE_WIN;
-               }
+          case WHITE_CHECKMATE:
+               gameResult = WHITE_WIN;
+               gamePlaying = false;
+               break;
+          case BLACK_CHECKMATE:
+               gameResult = BLACK_WIN;
                gamePlaying = false;
                break;
           case STALEMATE_MOVE:
@@ -1371,10 +1413,6 @@ void main() {
                printSimpleBoard(currentBoard);
                std::cout << printMove(currentBoard.getMoveNumber(), abMove);
                log << printMove(currentBoard.getMoveNumber(), abMove);
-
-               //  Check if game is over
-               gamePlaying = (checkGameState(currentBoard) == NOTMATE);
-               if (!gamePlaying) { break; }
 
                // Update Board
                updateCastling(currentBoard, abMove);
