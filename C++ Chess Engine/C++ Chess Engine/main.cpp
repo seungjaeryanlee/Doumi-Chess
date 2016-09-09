@@ -1374,14 +1374,12 @@ void main() {
                int abValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, abMove);
                printf("Alphabeta Value: %d\n", abValue);
                std::cout << "Alphabeta Move: " << printMove(currentBoard.getMoveNumber(), abMove);
-               
-               const int initial = abMove.getInitial();
-               const int terminal = abMove.getTerminal();
-               const int moveType = abMove.getType();
 
                // Make Move, Save and Print
                savedCapturedPiece[saveIndex] = makeMove(currentBoard, abMove);
                savedMove[saveIndex] = abMove;
+               saveIndex++;
+
                printSimpleBoard(currentBoard);
                std::cout << printMove(currentBoard.getMoveNumber(), abMove);
                log << printMove(currentBoard.getMoveNumber(), abMove);
@@ -1409,7 +1407,6 @@ void main() {
                     }
                     if (repetitionCount >= 3) { break; }
                }
-
                if (repetitionCount >= 3) {
                     if (abValue <= STALEMATE_BOUND) {
                          printf("Computer declares Threefold Repetition.\n");
@@ -1419,9 +1416,6 @@ void main() {
                          break;
                     }
                }
-
-               // At the very end since multiple things are saved while the computer makes a move
-               saveIndex++;
           }
      }
 
