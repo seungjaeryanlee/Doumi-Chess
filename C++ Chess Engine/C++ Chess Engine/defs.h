@@ -22,6 +22,7 @@ const int EVAL_DEPTH = 4;
 const int ERRORCODE = 970201;
 const int STALEMATE_BOUND = -100;
 
+const int MATE_VALUE 40000;
 
 /*                                   ENUMERATION                              */
 enum squareType {

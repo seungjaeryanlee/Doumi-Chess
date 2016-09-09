@@ -481,6 +481,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
      if (depth == 0) {
           return board.getTurn() * boardEvaluation(board);
      }
+
      int score;
      int capturedPiece;
 
