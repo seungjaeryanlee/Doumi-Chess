@@ -1391,10 +1391,6 @@ void main() {
                std::cout << printMove(currentBoard.getMoveNumber(), abMove);
                log << printMove(currentBoard.getMoveNumber(), abMove);
 
-               //  Check if game is over
-               gamePlaying = (checkGameState(currentBoard) == NOTMATE);
-               if (!gamePlaying) { break; }
-
                // Update Board
                updateCastling(currentBoard, abMove);
                updateEnPassant(currentBoard, abMove);
