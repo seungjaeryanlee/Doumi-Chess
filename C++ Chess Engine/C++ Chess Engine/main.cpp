@@ -483,10 +483,10 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
           printf("Terminal node!: %d\n", depth);
           switch (gameState) {
           case WHITE_CHECKMATE:
-               return (MATE_VALUE + depth);
+               return -1 * (MATE_VALUE + depth);
                break;
           case BLACK_CHECKMATE:
-               return -1 * (MATE_VALUE + depth);
+               return (MATE_VALUE + depth);
                break;
           case STALEMATE_3F:
           case STALEMATE_50:
