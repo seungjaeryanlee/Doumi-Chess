@@ -1,24 +1,26 @@
 #pragma once
-/*                                    DEFINITION                              */
-#define PAWNVALUE 100
-#define KNIGHTVALUE 300
-#define BISHOPVALUE 300
-#define ROOKVALUE 500
-#define QUEENVALUE 900
-#define KINGVALUE 9999
-#define ROW 10
-#define COLUMN 1
-#define MAX_MOVEGEN_COUNT 250
-#define MAX_MOVENUMBER 200
-#define MAXIMUM_DEPTH 6
-#define EVAL_DEPTH 4
-#define ERROR_INTEGER 970201
-#define STALEMATE_BOUND -100
-
 #include <array>
 
 typedef unsigned long long u64;
 
+/*                                    DEFINITION                              */
+const int PAWNVALUE = 100;
+const int KNIGHTVALUE = 300;
+const int BISHOPVALUE = 300;
+const int ROOKVALUE = 500;
+const int QUEENVALUE = 900;
+const int KINGVALUE = 20000;
+
+const int ROW = 10;
+const int COLUMN = 1;
+
+const int MAX_MOVEGEN_COUNT = 250;
+const int MAX_MOVENUMBER = 200;
+const int MAX_DEPTH = 6;
+const int EVAL_DEPTH = 4;
+
+const int ERRORCODE = 970201;
+const int STALEMATE_BOUND = -100;
 
 
 /*                                   ENUMERATION                              */

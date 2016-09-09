@@ -2,117 +2,6 @@
 #include "defs.h"
 #include <Windows.h>
 
-class Board {
-private:
-     std::array<int, 120> board;
-     std::array<bool, 4> castlingCheck;
-     color turn;
-     int enpassantSquare;
-     int fiftyMoveCount;
-     int moveNumber;
-
-public:
-     
-     // Default Constructor
-     Board() {}
-     /*
-     Board() {
-          for (int i = 0; i < 120; i++) {
-               board[i] = ERRORSQUARE;
-          }
-          for (int i = 2; i < 10; i++) {
-               for (int j = 1; j < 9; j++) {
-                    board[i * 8 + j] = EMPTYSQUARE;
-               }
-          }
-
-          turn = WHITE;
-          enpassantSquare = 0;
-          fiftyMoveCount = 0;
-          moveNumber = 1;
-     }
-     */
-
-     // Constructor adding all content at once
-     Board(std::array<int, 120> b, std::array<bool, 4> cc, color t, int e, int f, int m) {
-          board = b;
-          castlingCheck = cc;
-          turn = t;
-          enpassantSquare = e;
-          fiftyMoveCount = f;
-          moveNumber = m;
-     }
-     
-     //  Clone Method
-     Board(const Board& originalBoard) {
-          board = originalBoard.getBoard();
-          castlingCheck = originalBoard.getCastlingArray();
-          turn = originalBoard.getTurn();
-          enpassantSquare = originalBoard.getEnpassantSquare();
-          fiftyMoveCount = originalBoard.getFiftyMoveCount();
-          moveNumber = originalBoard.getMoveNumber();
-     }
-
-     //  isEqual Method
-     bool isEqual(const Board& thatBoard) {
-          if (this == &thatBoard) {
-               return true;
-          }
-          if (board == thatBoard.board &&
-               castlingCheck == thatBoard.castlingCheck &&
-               turn == thatBoard.turn &&
-               enpassantSquare == thatBoard.enpassantSquare &&
-               fiftyMoveCount == thatBoard.fiftyMoveCount &&
-               moveNumber && thatBoard.moveNumber) {
-               return true;
-          }
-          else {
-               return false;
-          }
-     }
-
-     //  isAlmostEqual Method (for threefold repetition checking)
-     bool isAlmostEqual(const Board& thatBoard) {
-          if (this == &thatBoard) {
-               return true;
-          }
-          if (board == thatBoard.board &&
-               castlingCheck == thatBoard.castlingCheck &&
-               enpassantSquare == thatBoard.enpassantSquare) {
-               return true;
-          }
-          else {
-               return false;
-          }
-     }
-
-     //  Mutators
-     void setBoard(const std::array<int, 120> b) { board = b; }
-     void setSquare(const int square, const int value) { board.at(square) = value; }
-     void setCastlingArray(const std::array<bool, 4> cc) { castlingCheck = cc; }
-     void setCastling(const int index, const bool value) { castlingCheck.at(index) = value; }
-     void setTurn(const color t) { turn = t; }
-     void setEnpassantSquare(const int e) { enpassantSquare = e; }
-     void setFiftyMoveCount(const int f) { fiftyMoveCount = f; }
-     void setMoveNumber(const int m) { moveNumber = m; }
-
-     //  Accessors
-     const std::array<int, 120> getBoard() const { return board; }
-     const int getSquare(int square) const { return board.at(square); }
-     const std::array<bool, 4> getCastlingArray() const { return castlingCheck; }
-     const bool getCastling(int index) const { return castlingCheck.at(index); }
-     const color getTurn() const { return turn; }
-     const int getEnpassantSquare() const { return enpassantSquare; }
-     const int getFiftyMoveCount() const { return fiftyMoveCount; }
-     const int getMoveNumber() const { return moveNumber; }
-
-     //  Other Functions
-     void changeTurn() { turn = (color)-turn; }
-     void fiftyMoveCountDecrement() { fiftyMoveCount--; }
-     void fiftyMoveCountIncrement() { fiftyMoveCount++; }
-     void moveNumberDecrement() { moveNumber--; }
-     void moveNumberIncrement() { moveNumber++; }
-};
 class Move {
 private:
      int initialSquare;
@@ -164,11 +53,155 @@ public:
      inline Move getMove(int index) { return movelist[index]; }
      inline int getCounter() { return moveCounter; }
 
+     // Mutator
      void addMove(Move& move) {
           movelist[moveCounter] = move;
           moveCounter++;
      }
+     void setCounterToZero() { moveCounter = 0; }
 };
+class Board {
+private:
+     std::array<int, 120> board;
+     std::array<bool, 4> castlingRights;
+     color turn;
+     int enpassantSquare;
+     int halfMoveClock;
+     int moveNumber;
+     bool isEndgame;
+
+public:
+     
+     // Default Constructor
+     Board() {}
+     /*
+     Board() {
+          for (int i = 0; i < 120; i++) {
+               board[i] = ERRORSQUARE;
+          }
+          for (int i = 2; i < 10; i++) {
+               for (int j = 1; j < 9; j++) {
+                    board[i * 8 + j] = EMPTYSQUARE;
+               }
+          }
+
+          turn = WHITE;
+          enpassantSquare = 0;
+          fiftyMoveCount = 0;
+          moveNumber = 1;
+     }
+     */
+
+     // Constructor adding all content at once
+     Board(std::array<int, 120> b, std::array<bool, 4> cc, color t, int e, int f, int m) {
+          board = b;
+          castlingRights = cc;
+          turn = t;
+          enpassantSquare = e;
+          halfMoveClock = f;
+          moveNumber = m;
+     }
+     
+     //  Clone Method
+     Board(const Board& originalBoard) {
+          board = originalBoard.getBoard();
+          castlingRights = originalBoard.getCastlingRights();
+          turn = originalBoard.getTurn();
+          enpassantSquare = originalBoard.getEnpassantSquare();
+          halfMoveClock = originalBoard.getHalfMoveClock();
+          moveNumber = originalBoard.getMoveNumber();
+     }
+
+     //  isEqual Method
+     bool isEqual(const Board& thatBoard) {
+          if (this == &thatBoard) {
+               return true;
+          }
+          if (board == thatBoard.board &&
+               castlingRights == thatBoard.castlingRights &&
+               turn == thatBoard.turn &&
+               enpassantSquare == thatBoard.enpassantSquare &&
+               halfMoveClock == thatBoard.halfMoveClock &&
+               moveNumber && thatBoard.moveNumber) {
+               return true;
+          }
+          else {
+               return false;
+          }
+     }
+
+     //  isAlmostEqual Method (for threefold repetition checking)
+     bool isAlmostEqual(const Board& thatBoard) {
+          if (this == &thatBoard) {
+               return true;
+          }
+          if (board == thatBoard.board &&
+               castlingRights == thatBoard.castlingRights &&
+               enpassantSquare == thatBoard.enpassantSquare) {
+               return true;
+          }
+          else {
+               return false;
+          }
+     }
+
+     //  Mutators
+     void setBoard(const std::array<int, 120> b) { board = b; }
+     void setSquare(const int square, const int value) { board.at(square) = value; }
+     void setCastlingRights(const std::array<bool, 4> cc) { castlingRights = cc; }
+     void setCastlingRight(const int index, const bool value) { castlingRights.at(index) = value; }
+     void setTurn(const color t) { turn = t; }
+     void setEnpassantSquare(const int e) { enpassantSquare = e; }
+     void setHalfMoveClock(const int f) { halfMoveClock = f; }
+     void setMoveNumber(const int m) { moveNumber = m; }
+     void updateEndgame() {
+          if (isEndgame) { return; }
+          else {
+               int queenCount = 0;
+               for (int i = 0; i < 120; i++) {
+                    if (board[i] == WHITEQUEEN || board[i] == BLACKQUEEN) {
+                         queenCount++;
+                    }
+               }
+               if (queenCount == 0) { isEndgame = true; }
+               else { isEndgame = false; }
+          }
+     }
+     void updateEndgame(Move move) {
+          if (isEndgame) { return; }
+          if (move.getTerminal() != WHITEQUEEN && move.getTerminal() != BLACKQUEEN) { return; }
+          else {
+               int queenCount = 0;
+               for (int i = 0; i < 120; i++) {
+                    if (board[i] == WHITEQUEEN || board[i] == BLACKQUEEN) {
+                         queenCount++;
+                    }
+               }
+               if (queenCount == 0) { isEndgame = true; }
+               else { isEndgame = false; }
+          }
+     }
+
+     //  Accessors
+     const std::array<int, 120> getBoard() const { return board; }
+     const int getSquare(int square) const { return board.at(square); }
+     const std::array<bool, 4> getCastlingRights() const { return castlingRights; }
+     const bool getCastlingRight(int index) const { return castlingRights.at(index); }
+     const color getTurn() const { return turn; }
+     const int getEnpassantSquare() const { return enpassantSquare; }
+     const int getHalfMoveClock() const { return halfMoveClock; }
+     const int getMoveNumber() const { return moveNumber; }
+     const bool getEndgame() const { return isEndgame; }
+
+     //  Other Functions
+     void changeTurn() { turn = (color)-turn; }
+     void incrementHalfMoveClock() { halfMoveClock++; }
+     void decrementHalfMoveClock() { halfMoveClock--; }
+     void incrementMoveNumber() { moveNumber++; }
+     void decrementMoveNumber() { moveNumber--; }
+     
+};
+
 
 /*                                  BOARD SETUP                               */
 /// <summary>
@@ -188,16 +221,7 @@ void FENboardSetup(Board& board, const std::string FEN);
 /// <param name="board">The board that will be converted to FEN notation.</param>
 /// <returns>FEN notation of the given board.</returns>
 std::string boardToFEN(const Board& board);
-/// <summary>
-/// This function prints the given board to console.
-/// </summary>
-/// <param name="board">The board that will be printed to console.</param>
-void printBoard(const Board& board);
-/// <summary>
-/// This function prints the given board to console excluding the error squares.
-/// </summary>
-/// <param name="board">The board that will be printed to console.</param>
-void printSimpleBoard(const Board& board);
+
 
 /// <summary>
 /// This function returns the color of the given piece type
@@ -230,11 +254,7 @@ int filerankToNumber(const char file, const int rank);
 /// <param name="position">The square in board index notation.</param>
 /// <returns>A two-letter string with file rank notation of the given square.</returns>
 std::string numberToFilerank(const int position);
-/// <summary>
-/// This function prints the given move to console in filerank-filerank notation.
-/// </summary>
-/// <param name="move">The move that will be printed to console</param>
-void printMove(const Move& move);
+
 
 
 /*                                BOARD EVALUATION                            */
@@ -286,32 +306,19 @@ int alphabeta(const int maxDepth, Board& board, int alpha, int beta);
 int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& bestMove);
 
 
-/*                                   GAME CYCLE                               */
-bool checkGameEnd(const Board& board);
-bool checkEndgame(const Board& board);
-
-
 /*                                   RECURSION                                */
 u64 divide(int depth, int maxDepth, Board& board, bool showOutput);
 u64 divide2(int depth, int maxDepth, Board& board, bool showOutput);
 // Makes the given move and changes turn
 int makeMove(Board &board, Move& move);
 // Undos the given move and changes turn
-void undoMove(Board &board, Move& move, int terminalValue);
+void undoMove(Board &board, Move& move, int capturedPiece);
 
 
 /*                                  MISC                                      */
 // Helper function that updates castling array inside board based on given move
 // TODO: Check if this can be integrated inside makeMove
-void castlingUpdate(Board& board, const Move& move);
+void updateCastling(Board& board, const Move& move);
 // Checks if the board is at the end state: returns -1 if false, return board value otherwise
-int isTerminalNode(Board& board);
+int checkGameState(Board& board);
 
-/// <summary>
-/// This function prints the basic menu of possible user commands.
-/// </summary>
-void printMenu();
-/// <summary>
-/// This function prints the extensive menu of possible user commands, including some options created for debugging the code.
-/// </summary>
-void printDebugMenu();
