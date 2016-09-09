@@ -951,7 +951,7 @@ void main() {
      log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
 
      //board120Setup(currentBoard);
-     FENboardSetup(currentBoard, "k7/pp6/8/8/8/8/8/K6R w - - 0 1");
+     FENboardSetup(currentBoard, "k7/pp4pR/7p/8/8/8/n7/Kn6 w - - 0 1");
      //FENboardSetup(currentBoard, "6k1/8/8/8/8/8/7P/4K2R w K - 1 0");
 
      printSimpleBoard(currentBoard);
