@@ -940,10 +940,7 @@ gameState checkGameState(const Board& board) {
      if (board.getHalfMoveClock() >= 150) {
           return STALEMATE_75;
      }
-
-     // Stalemate: Threefold Repetition
-     // TODO: Implement
-
+     
      return NOTMATE;
 }
 // TODO: Board's halfmoveclock should not change here
@@ -960,7 +957,6 @@ void main() {
      MoveList currentBoardMoveList;
 
      Board savedBoard[MAX_MOVENUMBER + 1];    //  Stores Board and Board States for threefold repetition
-     // TODO: Check if it should be initialized as ERROR_INTEGER
      int savedCapturedPiece[MAX_MOVENUMBER];  //  Saved values for UNDO_MOVE command
      Move savedMove[MAX_MOVENUMBER + 1];
      int saveIndex = 0;
@@ -1109,7 +1105,7 @@ void main() {
                     correctInput = false;
                     while (!correctInput) {
                          printf("Please enter your move: ");
-                         std::getline(std::cin, userCommand); // TODO: do I want to get the entire command?
+                         std::getline(std::cin, userCommand);
 
                          //  Check size
                          if (userCommand.size() < 4) {
@@ -1142,7 +1138,6 @@ void main() {
                          else {
                               correctInput = true;
                          }
-                         //  TODO: check if there is anything else to check :D
                     }
                     // Check Promotion
                     if (currentBoard.getSquare(initialSquare) == WHITEPAWN && A8 <= terminalSquare && terminalSquare <= H8 ||
