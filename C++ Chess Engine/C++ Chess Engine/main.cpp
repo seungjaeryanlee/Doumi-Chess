@@ -341,7 +341,7 @@ int filerankToNumber(const char file, const int rank) {
      if ('a' > file || file > 'h' || 1 > rank || rank > 8 ) {
           return ERRORCODE;
      }
-     return COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - '1'));
+     return COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - 1));
 }
 std::string numberToFilerank(const int position) {
      return numberToFile(position) + std::to_string(numberToRank(position));
