@@ -1375,14 +1375,13 @@ void main() {
                printf("Alphabeta Value: %d\n", abValue);
                std::cout << "Alphabeta Move: " << printMove(currentBoard.getMoveNumber(), abMove);
                
-
-               int initial = abMove.getInitial();
-               int terminal = abMove.getTerminal();
-               int moveType = abMove.getType();
+               const int initial = abMove.getInitial();
+               const int terminal = abMove.getTerminal();
+               const int moveType = abMove.getType();
 
                // Make Move, Save and Print
                savedCapturedPiece[saveIndex] = makeMove(currentBoard, abMove);
-               savedMove[saveIndex] = Move(abMove);
+               savedMove[saveIndex] = abMove;
                printSimpleBoard(currentBoard);
                std::cout << printMove(currentBoard.getMoveNumber(), abMove);
                log << printMove(currentBoard.getMoveNumber(), abMove);
