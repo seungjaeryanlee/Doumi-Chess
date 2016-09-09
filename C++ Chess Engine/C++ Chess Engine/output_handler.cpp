@@ -109,10 +109,43 @@ void printSimpleBoard(const Board& board) {
      printf("  ----------------\n");
      printf("   a b c d e f g h\n");
 }
-void printMove(const Move& move) {
-     std::cout << numberToFilerank(move.getInitial()) << " "
-          << numberToFilerank(move.getTerminal()) << " ("
-          << move.getType() << ")" << std::endl;
+std::string printMove(const int moveNumber, const Move& move) {
+     std::string output = std::to_string(moveNumber) + ": " + numberToFilerank(move.getInitial()) + " "
+          + numberToFilerank(move.getTerminal()) + " ";
+
+     switch (move.getType()) {
+     case NORMAL:
+          output += "\n";
+          break;
+     case DOUBLEMOVE:
+          output += "\n";
+          break;
+     case ENPASSANT:
+          output += "En passant\n";
+          break;
+     case QUEENSIDE_CASTLING:
+          output = std::to_string(moveNumber) + ": O-O-O\n";
+          break;
+     case KINGSIDE_CASTLING:
+          output = std::to_string(moveNumber) + ": O-O\n";
+          break;
+     case KNIGHT_PROMOTION:
+          output += "Promotion to Knight\n";
+          break;
+     case BISHOP_PROMOTION:
+          output += "Promotion to Bishopn";
+          break;
+     case ROOK_PROMOTION:
+          output += "Promotion to Rook\n";
+          break;
+     case QUEEN_PROMOTION:
+          output += "Promotion to Queen\n";
+          break;
+     case DECLARE_50:
+          break;
+     }
+
+     return output;
 }
 void printDebugMenu() {
      printf("--------------------------------------------------\n");

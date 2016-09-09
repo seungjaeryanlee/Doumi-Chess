@@ -12,8 +12,9 @@ void printSimpleBoard(const Board& board);
 /// <summary>
 /// This function prints the given move to console in filerank-filerank notation.
 /// </summary>
+/// <param name="moveNumber">The move number of the move that will be printed to console</param>
 /// <param name="move">The move that will be printed to console</param>
-void printMove(const Move& move);
+std::string printMove(const int moveNumber, const Move& move);
 /// <summary>
 /// This function prints the basic menu of possible user commands.
 /// </summary>

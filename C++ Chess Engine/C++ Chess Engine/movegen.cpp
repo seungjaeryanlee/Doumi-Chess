@@ -329,7 +329,7 @@ void kingMoveGeneration(const Board& board, const int position, MoveList& moveLi
 
 void castlingMoveGeneration(const Board& board, MoveList& moveList) {
      if (board.getTurn() == WHITE) {
-          if (board.getCastling(WKCASTLING) &&                                             //  neither piece moved
+          if (board.getCastlingRight(WKCASTLING) &&                                             //  neither piece moved
                board.getSquare(E1) == WHITEKING && board.getSquare(H1) == WHITEROOK &&     //  both pieces exists on board
                board.getSquare(F1) == EMPTYSQUARE && board.getSquare(G1) == EMPTYSQUARE && //  between them are empty
                squareAttackCheck(board, E1) == false &&                                    //  not in check
@@ -338,7 +338,7 @@ void castlingMoveGeneration(const Board& board, MoveList& moveList) {
 
                addMove(E1, G1, KINGSIDE_CASTLING, moveList);
           }
-          if (board.getCastling(WQCASTLING) && board.getSquare(B1) == EMPTYSQUARE &&
+          if (board.getCastlingRight(WQCASTLING) && board.getSquare(B1) == EMPTYSQUARE &&
                board.getSquare(C1) == EMPTYSQUARE && board.getSquare(D1) == EMPTYSQUARE &&
                board.getSquare(E1) == WHITEKING && board.getSquare(A1) == WHITEROOK &&
                squareAttackCheck(board, E1) == false &&
@@ -349,7 +349,7 @@ void castlingMoveGeneration(const Board& board, MoveList& moveList) {
 
      }
      if (board.getTurn() == BLACK) {
-          if (board.getCastling(BKCASTLING) &&                                             //  neither piece moved
+          if (board.getCastlingRight(BKCASTLING) &&                                             //  neither piece moved
                board.getSquare(E8) == BLACKKING && board.getSquare(H8) == BLACKROOK &&     //  both pieces exists on board
                board.getSquare(F8) == EMPTYSQUARE && board.getSquare(G8) == EMPTYSQUARE && //  between them are empty
                squareAttackCheck(board, E8) == false &&                                    //  not in check
@@ -358,7 +358,7 @@ void castlingMoveGeneration(const Board& board, MoveList& moveList) {
 
                addMove(E8, G8, KINGSIDE_CASTLING, moveList);
           }
-          if (board.getCastling(BQCASTLING) && board.getSquare(B8) == EMPTYSQUARE &&
+          if (board.getCastlingRight(BQCASTLING) && board.getSquare(B8) == EMPTYSQUARE &&
                board.getSquare(C8) == EMPTYSQUARE && board.getSquare(D8) == EMPTYSQUARE &&
                board.getSquare(E8) == BLACKKING && board.getSquare(A8) == BLACKROOK &&
                squareAttackCheck(board, E8) == false &&
