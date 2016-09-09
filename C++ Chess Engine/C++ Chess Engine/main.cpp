@@ -421,6 +421,23 @@ int reversePosition(const int position) {
 }
 
 int negaMax(const int depth, Board& board) {
+     int gameState = checkGameState(board);
+     if (gameState != NOTMATE) {
+          printf("Terminal node!: %d\n", depth);
+          switch (gameState) {
+          case WHITE_CHECKMATE:
+               return -1 * (MATE_VALUE + depth);
+               break;
+          case BLACK_CHECKMATE:
+               return (MATE_VALUE + depth);
+               break;
+          case STALEMATE_3F:
+          case STALEMATE_50:
+          case STALEMATE_75:
+               return 0;
+               break;
+          }
+     }
      if (depth == 0) {
           return board.getTurn() * boardEvaluation(board);
      }
@@ -950,8 +967,8 @@ void main() {
      log.open("log.txt");
      log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
 
-     //board120Setup(currentBoard);
-     FENboardSetup(currentBoard, "k7/pp4pR/7p/8/8/8/n7/Kn6 w - - 0 1");
+     board120Setup(currentBoard);
+     //FENboardSetup(currentBoard, "k7/pp4pR/7p/8/8/8/n7/Kn6 w - - 0 1");
      //FENboardSetup(currentBoard, "6k1/8/8/8/8/8/7P/4K2R w K - 1 0");
 
      printSimpleBoard(currentBoard);
