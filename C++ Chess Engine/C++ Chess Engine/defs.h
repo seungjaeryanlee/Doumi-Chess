@@ -9,7 +9,7 @@ const int KNIGHTVALUE = 300;
 const int BISHOPVALUE = 300;
 const int ROOKVALUE = 500;
 const int QUEENVALUE = 900;
-const int KINGVALUE = 9999;
+const int KINGVALUE = 20000;
 
 const int ROW = 10;
 const int COLUMN = 1;
