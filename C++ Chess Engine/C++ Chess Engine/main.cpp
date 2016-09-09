@@ -1392,9 +1392,9 @@ void main() {
                // Check Fifty move rule
                if (fiftyMoveCheck(currentBoard, abMove)) {
                     // If in bad position, declare fifty move rule
-                    printf("Computer declares Fifty Move Rule.\n");
-                    log << "Computer declares Fifty Move Rule." << std::endl;
                     if (abValue <= STALEMATE_BOUND) {
+                         printf("Computer declares Fifty Move Rule.\n");
+                         log << "Computer declares Fifty Move Rule." << std::endl;
                          gamePlaying = false;
                          gameResult = TIE;
                          break;
@@ -1411,24 +1411,9 @@ void main() {
                }
 
                if (repetitionCount >= 3) {
-                    correctInput = false;
-                    bool declareTie = false;
-                    while (!correctInput) {
-                         printf("Computer: Declare Threefold Repetition? (Y/N):");
-                         std::getline(std::cin, userCommand);
-                         if (userCommand.size() == 0 || (userCommand.at(0) != 'Y' && userCommand.at(0) != 'N')) {
-                              printf("Wrong Input!\n");
-                              continue;
-                         }
-                         else {
-                              correctInput = true;
-                              if (userCommand.at(0) == 'Y') {
-                                   declareTie = true;
-                              }
-                              break;
-                         }
-                    }
-                    if (declareTie) {
+                    if (abValue <= STALEMATE_BOUND) {
+                         printf("Computer declares Threefold Repetition.\n");
+                         log << "Computer declares Threefold Repetition." << std::endl;
                          gamePlaying = false;
                          gameResult = TIE;
                          break;
