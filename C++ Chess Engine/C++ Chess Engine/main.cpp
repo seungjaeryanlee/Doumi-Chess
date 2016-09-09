@@ -148,7 +148,7 @@ void FENboardSetup(Board& board, const std::string FEN) {
      }
      i++;
      if (FEN.at(i) == 'w') { board.setTurn(WHITE); }
-     else { board.setTurn(WHITE); }
+     else { board.setTurn(BLACK); }
 
      i += 2;
      if (FEN.at(i) != '-') {
