@@ -897,6 +897,14 @@ void updateMoveNumber(Board& board) {
      if (board.getTurn() == WHITE) { board.incrementMoveNumber(); }
 }
 
+void updateBoard(Board& board, const Move& move) {
+     updateCastling(board, move);
+     updateEnPassant(board, move);
+     updateHalfMoveClock(board, move);
+     board.updateEndgame(move);
+     updateMoveNumber(board);
+}
+
 gameState checkGameState(const Board& board) {
      int kingPos = -1;
      for (int i = 0; i < 120; i++) {
@@ -1379,12 +1387,7 @@ void main() {
                std::cout << printMove(currentBoard.getMoveNumber(), abMove);
                log << printMove(currentBoard.getMoveNumber(), abMove);
 
-               // Update Board
-               updateCastling(currentBoard, abMove);
-               updateEnPassant(currentBoard, abMove);
-               currentBoard.updateEndgame(abMove);
-               updateMoveNumber(currentBoard);
-               updateHalfMoveClock(currentBoard, abMove);
+               updateBoard(currentBoard, abMove);
 
                //  TODO: Add 50 Move Rule option in move generation / selection?               
                // Check Fifty move rule
@@ -1398,7 +1401,6 @@ void main() {
                          break;
                     }
                }
-
 
                // Check Threefold repetition
                int repetitionCount = 0;
