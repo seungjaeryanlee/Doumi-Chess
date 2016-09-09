@@ -273,3 +273,4 @@ output.txt
 log.txt
 C++ Chess Engine/C++ Chess Engine.VC.db
 C++ Chess Engine/C++ Chess Engine.VC.VC.opendb
+*.pgn

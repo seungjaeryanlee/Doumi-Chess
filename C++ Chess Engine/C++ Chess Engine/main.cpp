@@ -5,6 +5,8 @@
 #include <fstream>
 #include <climits>
 #include <array>
+#include <ctime>
+#include <iomanip>
 #include "protos.h"
 #include "defs.h"
 #include "movegen.h"
@@ -971,16 +973,6 @@ void main() {
      log.open("log.txt");
      log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
 
-     std::ofstream pgn;
-     pgn.open("output.pgn");
-     pgn << "[Event \"Friendly Match\"]\n";
-     pgn << "[Site \"Princeton, NJ USA\"]\n";
-     pgn << "[Date \"\"]\n";
-     pgn << "[Round \"1\"]\n";
-     // pgn << "[White \"\"]\n";
-     // pgn << "[Black \"\"]\n";
-     // pgn << "[Result \"\"]\n";
-
      board120Setup(currentBoard);
      //FENboardSetup(currentBoard, "k7/pp4pR/7p/8/8/8/n7/Kn6 w - - 0 1");
      //FENboardSetup(currentBoard, "6k1/8/8/8/8/8/7P/4K2R w K - 1 0");
@@ -1423,23 +1415,50 @@ void main() {
           }
      }
 
+     std::ofstream pgn;
+     pgn.open("output.pgn");
+     pgn << "[Event \"Friendly Match\"]\n";
+     pgn << "[Site \"Princeton, NJ USA\"]\n";
+     time_t now = time(0);
+     struct tm timeInfo;
+     localtime_s(&timeInfo, &now);
+     pgn << "[Date \"" << timeInfo.tm_year + 1900 << "." << std::setfill('0')
+         << std::setw(2) << timeInfo.tm_mon + 1 << "." << std::setfill('0')
+          << std::setw(2) << timeInfo.tm_mday << "\"]\n";
+     pgn << "[Round \"1\"]\n";
+     if (spectate) {
+          pgn << "[White \"Computer\"]\n";
+          pgn << "[Black \"Computer\"]\n";
+     }
+     else if (userColor == WHITE) {
+          pgn << "[White \"User\"]\n";
+          pgn << "[Black \"Computer\"]\n";
+     }
+     else {
+          pgn << "[White \"Computer\"]\n";
+          pgn << "[Black \"User\"]\n";
+     }
      //  Print Game Result
      switch (gameResult) {
      case BLACK_WIN:
           printf("Game Result: 0-1\n");
           log << "Game Result: 0-1" << std::endl;
+          pgn << "[Result \"0-1\"]\n";
           break;
      case TIE:
           printf("Game Result: 1/2-1/2\n");
           log << "Game Result: 1/2-1/2" << std::endl;
+          pgn << "[Result \"1/2-1/2\"]\n";
           break;
      case WHITE_WIN:
           printf("Game Result: 1-0\n");
           log << "Game Result: 1-0" << std::endl;
+          pgn << "[Result \"1-0\"]\n";
           break;
      case NOT_FINISHED:
           printf("Game Result: 0-0: Game not finished\n");
           log << "Game Result: 0-0: Game not finished" << std::endl;
+          pgn << "[Result \"*\"]\n";
      }
 
      //  Stop timer and print elapsed time
