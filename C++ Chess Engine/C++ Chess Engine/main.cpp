@@ -15,11 +15,6 @@
 #include "evaluation.h"
 
 /******************************************************************************/
-/*                                 GLOBAL VARIABLE                            */
-/******************************************************************************/
-
-
-/******************************************************************************/
 /*                                  FUNCTIONS                                 */
 /******************************************************************************/
 
@@ -349,8 +344,6 @@ int filerankToNumber(const char file, const int rank) {
 std::string numberToFilerank(const int position) {
      return numberToFile(position) + std::to_string(numberToRank(position));
 }
-
-
 
 
 /*                             RECURSION FUNCTIONS                             */
@@ -718,9 +711,9 @@ void main() {
      Board currentBoard;
      MoveList currentBoardMoveList;
 
-     Board savedBoard[MAX_MOVENUMBER + 1];    //  Stores Board and Board States for threefold repetition
+     Board savedBoard[MAX_MOVENUMBER];    //  Stores Board and Board States for threefold repetition
      int savedCapturedPiece[MAX_MOVENUMBER];  //  Saved values for UNDO_MOVE command
-     Move savedMove[MAX_MOVENUMBER + 1];
+     Move savedMove[MAX_MOVENUMBER];
      int saveIndex = 0;
 
      bool gamePlaying = true;
@@ -734,8 +727,6 @@ void main() {
      log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
 
      board120Setup(currentBoard);
-     //FENboardSetup(currentBoard, "k7/pp4pR/7p/8/8/8/n7/Kn6 w - - 0 1");
-     //FENboardSetup(currentBoard, "6k1/8/8/8/8/8/7P/4K2R w K - 1 0");
 
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
