@@ -228,7 +228,6 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
 
           // TODO: Check if this is needed and change it
           if (score >= beta) {
-
                undoMove(board, moveList.getMove(i), capturedPiece);
                board.setCastlingRights(castlingRights);
                board.setEnpassantSquare(enpassantSquare);

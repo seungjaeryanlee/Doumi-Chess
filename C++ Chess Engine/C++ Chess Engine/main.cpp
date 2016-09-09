@@ -439,7 +439,6 @@ int makeMove(Board &board, const Move& move) {
 
      board.setEnpassantSquare(0);
      board.changeTurn();
-     board.updateEndgame(move);
 
      if (moveType == NORMAL) {
           capturedPiece = board.getSquare(terminal);
