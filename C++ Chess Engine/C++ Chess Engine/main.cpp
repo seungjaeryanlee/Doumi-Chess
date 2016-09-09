@@ -478,6 +478,23 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
 }
 
 int alphabeta(const int depth, Board& board, int alpha, int beta) {
+     int gameState = checkGameState(board);
+     if (gameState != NOTMATE) {
+          printf("Terminal node!: %d\n", depth);
+          switch (gameState) {
+          case WHITE_CHECKMATE:
+               return (MATE_VALUE + depth);
+               break;
+          case BLACK_CHECKMATE:
+               return -1 * (MATE_VALUE + depth);
+               break;
+          case STALEMATE_3F:
+          case STALEMATE_50:
+          case STALEMATE_75:
+               return 0;
+               break;
+          }
+     }
      if (depth == 0) {
           return board.getTurn() * boardEvaluation(board);
      }
@@ -869,7 +886,12 @@ int checkGameState(Board& board) {
 
      // Checkmate                                                                                                                 
      if (tempBoardLegalMoveList.getCounter() == 0 && squareAttackCheck(board, kingPos)) {
-          return CHECKMATE;
+          if (board.getSquare(kingPos) == WHITE) {
+               return BLACK_CHECKMATE;
+          }
+          else {
+               return WHITE_CHECKMATE;
+          }
      }
 
      // Stalemate: No legal move
@@ -928,8 +950,8 @@ void main() {
      log.open("log.txt");
      log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
 
-     board120Setup(currentBoard);
-     //FENboardSetup("8/8/8/8/6k1/2KNR3/8/8 w - - 99 75");
+     //board120Setup(currentBoard);
+     FENboardSetup(currentBoard, "6k1/p1b3p1/4p2r/1Pp4b/3pPp1q/1P1P1P2/2P1QR2/R5KN b - - 0 1");
      //FENboardSetup(currentBoard, "6k1/8/8/8/8/8/7P/4K2R w K - 1 0");
 
      printSimpleBoard(currentBoard);
@@ -961,13 +983,12 @@ void main() {
 
           //  Detect Checkmate/Stalemate
           switch (checkGameState(currentBoard)) {
-          case CHECKMATE:
-               if (currentBoard.getTurn() == WHITE) {
-                    gameResult = BLACK_WIN;
-               }
-               if (currentBoard.getTurn() == BLACK) {
-                    gameResult = WHITE_WIN;
-               }
+          case WHITE_CHECKMATE:
+               gameResult = WHITE_WIN;
+               gamePlaying = false;
+               break;
+          case BLACK_CHECKMATE:
+               gameResult = BLACK_WIN;
                gamePlaying = false;
                break;
           case STALEMATE_MOVE:

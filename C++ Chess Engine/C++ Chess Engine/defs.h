@@ -17,11 +17,12 @@ const int COLUMN = 1;
 const int MAX_MOVEGEN_COUNT = 250;
 const int MAX_MOVENUMBER = 200;
 const int MAX_DEPTH = 6;
-const int EVAL_DEPTH = 4;
+const int EVAL_DEPTH = 2;
 
 const int ERRORCODE = 970201;
 const int STALEMATE_BOUND = -100;
 
+const int MATE_VALUE = 40000;
 
 /*                                   ENUMERATION                              */
 enum squareType {
@@ -67,7 +68,7 @@ enum commandType {ERROR_COMMAND,
      ALPHABETA_SPEED_CHECK,
      PRINT_SAVED_FEN
 };
-enum endType {CHECKMATE, STALEMATE_MOVE, STALEMATE_50, STALEMATE_75, STALEMATE_3F, NOTMATE};
+enum gameState {WHITE_CHECKMATE, BLACK_CHECKMATE, STALEMATE_MOVE, STALEMATE_50, STALEMATE_75, STALEMATE_3F, NOTMATE};
 
 //  PCSQ Tables from 
 //  https://chessprogramming.wikispaces.com/Simplified+evaluation+function
