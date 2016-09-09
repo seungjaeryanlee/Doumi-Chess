@@ -920,9 +920,9 @@ void main() {
      log.open("log.txt");
      log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
 
-     //board120Setup(currentBoard);
+     board120Setup(currentBoard);
      //FENboardSetup("8/8/8/8/6k1/2KNR3/8/8 w - - 99 75");
-     FENboardSetup(currentBoard, "6k1/8/8/8/8/8/7P/4K2R w K - 1 0");
+     //FENboardSetup(currentBoard, "6k1/8/8/8/8/8/7P/4K2R w K - 1 0");
 
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -1065,7 +1065,7 @@ void main() {
 
                          initialSquare = filerankToNumber(userCommand.at(0), userCommand.at(1)-'0');
                          terminalSquare = filerankToNumber(userCommand.at(2), userCommand.at(3)-'0');
-
+                         
                          //  Check if Filerank format is correct
                          if (initialSquare == ERRORCODE || terminalSquare == ERRORCODE) {
                               printf("Wrong format: correct format is [char][int][char][int].\n");
@@ -1203,8 +1203,7 @@ void main() {
                     saveIndex++;
 
                     // add to log file
-                    log << currentBoard.getMoveNumber() << ": " << numberToFile(initialSquare) << numberToRank(initialSquare) << " " 
-                         << numberToFile(terminalSquare) << numberToRank(terminalSquare) << std::endl;
+                    log << printMove(currentBoard.getMoveNumber(), userMove);
 
                     continue;
                }
@@ -1369,12 +1368,10 @@ void main() {
                savedCapturedPiece[saveIndex] = makeMove(currentBoard, abMove);
                //  Save move for undoMove
                savedMove[saveIndex] = Move(abMove);
-               log << currentBoard.getMoveNumber() << ": " << numberToFilerank(initial) << " " << numberToFilerank(terminal) << std::endl;
-
-               printSimpleBoard(currentBoard);
-
-               std::cout << printMove(currentBoard.getMoveNumber(), abMove);
                
+               printSimpleBoard(currentBoard);
+               std::cout << printMove(currentBoard.getMoveNumber(), abMove);
+               log << printMove(currentBoard.getMoveNumber(), abMove);
 
                //  Increment move
                if (currentBoard.getTurn() == WHITE) { currentBoard.incrementMoveNumber(); }
