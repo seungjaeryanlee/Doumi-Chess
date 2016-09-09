@@ -554,7 +554,6 @@ void undoMove(Board &board, const Move& move, const int capturedPiece) {
      int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
      board.changeTurn();
-     board.updateEndgame(move);
 
      if (moveType == NORMAL) {
           board.setSquare(initial, board.getSquare(terminal));

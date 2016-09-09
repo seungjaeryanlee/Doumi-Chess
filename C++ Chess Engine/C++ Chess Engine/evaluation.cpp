@@ -174,7 +174,13 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
      int capturedPiece;
 
      MoveList moveList = moveGeneration(board);
-     Board savedBoard = board;
+     std::array<bool, 4> castlingRights = board.getCastlingRights();
+     int enpassantSquare = board.getEnpassantSquare();
+     int halfMoveClock = board.getHalfMoveClock();
+     int moveNumber = board.getMoveNumber();
+     bool isEndgame = board.getEndgame();
+
+
      for (int i = 0; i < moveList.getCounter(); i++) {
 
           updateCastling(board, moveList.getMove(i));
@@ -187,14 +193,24 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
           score = -alphabeta(depth - 1, board, -beta, -alpha);
 
           if (score >= beta) {
-               board = savedBoard;
+               undoMove(board, moveList.getMove(i), capturedPiece);
+               board.setCastlingRights(castlingRights);
+               board.setEnpassantSquare(enpassantSquare);
+               board.setHalfMoveClock(halfMoveClock);
+               board.setMoveNumber(moveNumber);
+               board.setEndgame(isEndgame);
                return beta;
           }
 
           if (score > alpha) {
                alpha = score;
           }
-          board = savedBoard;
+          undoMove(board, moveList.getMove(i), capturedPiece);
+          board.setCastlingRights(castlingRights);
+          board.setEnpassantSquare(enpassantSquare);
+          board.setHalfMoveClock(halfMoveClock);
+          board.setMoveNumber(moveNumber);
+          board.setEndgame(isEndgame);
      }
 
      return alpha;
@@ -204,7 +220,11 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
      int capturedPiece;
 
      MoveList moveList = moveGeneration(board);
-     Board savedBoard = board;
+     std::array<bool, 4> castlingRights = board.getCastlingRights();
+     int enpassantSquare = board.getEnpassantSquare();
+     int halfMoveClock = board.getHalfMoveClock();
+     int moveNumber = board.getMoveNumber();
+     bool isEndgame = board.getEndgame();
      for (int i = 0; i < moveList.getCounter(); i++) {
 
           updateCastling(board, moveList.getMove(i));
@@ -216,7 +236,12 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
           // TODO: Check if this is needed and change it
           if (score >= beta) {
 
-               board = savedBoard;
+               undoMove(board, moveList.getMove(i), capturedPiece);
+               board.setCastlingRights(castlingRights);
+               board.setEnpassantSquare(enpassantSquare);
+               board.setHalfMoveClock(halfMoveClock);
+               board.setMoveNumber(moveNumber);
+               board.setEndgame(isEndgame);
                return beta;
           }
 
@@ -225,7 +250,12 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
                bestMove = moveList.getMove(i);
           }
 
-          board = savedBoard;
+          undoMove(board, moveList.getMove(i), capturedPiece);
+          board.setCastlingRights(castlingRights);
+          board.setEnpassantSquare(enpassantSquare);
+          board.setHalfMoveClock(halfMoveClock);
+          board.setMoveNumber(moveNumber);
+          board.setEndgame(isEndgame);
      }
 
      return alpha;

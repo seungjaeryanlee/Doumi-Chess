@@ -154,6 +154,7 @@ public:
      void setEnpassantSquare(const int e) { enpassantSquare = e; }
      void setHalfMoveClock(const int f) { halfMoveClock = f; }
      void setMoveNumber(const int m) { moveNumber = m; }
+     void setEndgame(bool e) { isEndgame = e; }
      void updateEndgame() {
           if (isEndgame) { return; }
           else {
