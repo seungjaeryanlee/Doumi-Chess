@@ -16,7 +16,7 @@
 /******************************************************************************/
 /*                                 GLOBAL VARIABLE                            */
 /******************************************************************************/
-MoveList depthMoveList[MAX_DEPTH + 1];
+
 
 /******************************************************************************/
 /*                                  FUNCTIONS                                 */
@@ -591,26 +591,24 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
 u64 divide(int depth, int maxDepth, Board& board, bool showOutput) {
 
      if (depth == 0) { return 1; }
-     
-     depthMoveList[depth].setCounterToZero();
 
      u64 node = 0, individualNode = 0;
      int capturedPiece;
 
-     depthMoveList[depth] = moveGeneration(board);
+     MoveList moveList = moveGeneration(board);
 
-     if (depth == 1) { return depthMoveList[depth].getCounter(); }
+     if (depth == 1) { return moveList.getCounter(); }
 
-     for (int i = 0; i < depthMoveList[depth].getCounter(); i++) {
+     for (int i = 0; i <moveList.getCounter(); i++) {
 
-          int initial = depthMoveList[depth].getMove(i).getInitial();
-          int terminal = depthMoveList[depth].getMove(i).getTerminal();
+          int initial = moveList.getMove(i).getInitial();
+          int terminal = moveList.getMove(i).getTerminal();
 
-          updateCastling(board, depthMoveList[maxDepth].getMove(i));
+          updateCastling(board, moveList.getMove(i));
 
           int enpassantSquare = board.getEnpassantSquare();
           
-          capturedPiece = makeMove(board, depthMoveList[depth].getMove(i));
+          capturedPiece = makeMove(board, moveList.getMove(i));
           
           node += divide(depth - 1, maxDepth, board, showOutput);
           if (showOutput) {
@@ -624,7 +622,7 @@ u64 divide(int depth, int maxDepth, Board& board, bool showOutput) {
                printf("\n");
           }
 
-          undoMove(board, depthMoveList[depth].getMove(i), capturedPiece);
+          undoMove(board, moveList.getMove(i), capturedPiece);
           board.setEnpassantSquare(enpassantSquare);
      }
      return node;
@@ -638,22 +636,20 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
      std::ofstream output2;
      output2.open("divide.txt");
 
-     depthMoveList[depth].setCounterToZero();
-
      u64 node = 0, individualNode = 0;
      int capturedPiece;
 
-     depthMoveList[depth] = moveGeneration(board);
+     MoveList moveList = moveGeneration(board);
 
      //if (depth == 1) { return depthLegalMoveCount[depth]; }
 
-     for (int i = 0; i < depthMoveList[depth].getCounter(); i++) {
-          int initial = depthMoveList[depth].getMove(i).getInitial();
-          int terminal = depthMoveList[depth].getMove(i).getTerminal();
+     for (int i = 0; i < moveList.getCounter(); i++) {
+          int initial = moveList.getMove(i).getInitial();
+          int terminal = moveList.getMove(i).getTerminal();
 
-          updateCastling(board, depthMoveList[maxDepth].getMove(i));
+          updateCastling(board, moveList.getMove(i));
           int enpassantSquare = board.getEnpassantSquare();
-          capturedPiece = makeMove(board, depthMoveList[depth].getMove(i));
+          capturedPiece = makeMove(board, moveList.getMove(i));
 
 
           node += divide(depth - 1, maxDepth, board, showOutput);
@@ -666,7 +662,7 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
                     numberToFile(terminal) << numberToRank(terminal) << ": " << individualNode << std::endl;
           }
 
-          undoMove(board, depthMoveList[depth].getMove(i), capturedPiece);
+          undoMove(board, moveList.getMove(i), capturedPiece);
           board.setEnpassantSquare(enpassantSquare);
      }
      return node;
