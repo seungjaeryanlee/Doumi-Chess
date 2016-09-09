@@ -1438,27 +1438,84 @@ void main() {
           pgn << "[White \"Computer\"]\n";
           pgn << "[Black \"User\"]\n";
      }
-     //  Print Game Result
+     switch (gameResult) {
+     case BLACK_WIN:
+          pgn << "[Result \"0-1\"]\n";
+          break;
+     case TIE:
+          pgn << "[Result \"1/2-1/2\"]\n";
+          break;
+     case WHITE_WIN:
+          pgn << "[Result \"1-0\"]\n";
+          break;
+     case NOT_FINISHED:
+          pgn << "[Result \"*\"]\n";
+     }
+     for (int i = 0; i < saveIndex; i++) {
+          if (i % 2 == 0) {
+               pgn << i/2 + 1 << ". ";
+          }
+          int initial = savedMove[i].getInitial();
+          int terminal = savedMove[i].getTerminal();
+          int type = savedMove[i].getType();
+
+          switch (type) {
+          case KINGSIDE_CASTLING:
+               pgn << "O-O ";
+               break;
+          case QUEENSIDE_CASTLING:
+               pgn << "O-O-O ";
+               break;
+          case KNIGHT_PROMOTION:
+               pgn << numberToFilerank(terminal) << "=N";
+               break;
+          case BISHOP_PROMOTION:
+               pgn << numberToFilerank(terminal) << "=B";
+               break;
+          case ROOK_PROMOTION:
+               pgn << numberToFilerank(terminal) << "=R";
+               break;
+          case QUEEN_PROMOTION:
+               pgn << numberToFilerank(terminal) << "=Q";
+               break;
+          case ENPASSANT:
+               // TODO: Find correct way
+               pgn << numberToFilerank(initial) << numberToFilerank(terminal) << " ";
+               break;
+          case DOUBLEMOVE:
+               pgn << numberToFilerank(terminal) << " ";
+               break;
+          case NORMAL:
+               // TODO: Find correct way
+               pgn << numberToFilerank(initial) << numberToFilerank(terminal) << " ";
+               break;
+          }
+          // TODO: Check captures
+          // TODO: Check checks (CHECKCEPTION)
+          // TODO: Check checkmates
+     }
+
+     // Print Game Result
      switch (gameResult) {
      case BLACK_WIN:
           printf("Game Result: 0-1\n");
           log << "Game Result: 0-1" << std::endl;
-          pgn << "[Result \"0-1\"]\n";
+          pgn << "0-1\n";
           break;
      case TIE:
           printf("Game Result: 1/2-1/2\n");
           log << "Game Result: 1/2-1/2" << std::endl;
-          pgn << "[Result \"1/2-1/2\"]\n";
+          pgn << "1/2-1/2\n";
           break;
      case WHITE_WIN:
           printf("Game Result: 1-0\n");
           log << "Game Result: 1-0" << std::endl;
-          pgn << "[Result \"1-0\"]\n";
+          pgn << "1-0\n";
           break;
      case NOT_FINISHED:
-          printf("Game Result: 0-0: Game not finished\n");
-          log << "Game Result: 0-0: Game not finished" << std::endl;
-          pgn << "[Result \"*\"]\n";
+          printf("Game Result: *: Game not finished\n");
+          log << "Game Result: *: Game not finished" << std::endl;
+          pgn << "*\n";
      }
 
      //  Stop timer and print elapsed time
