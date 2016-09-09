@@ -893,6 +893,9 @@ void updateHalfMoveClock(Board& board, const Move& move) {
      }
      else { board.setHalfMoveClock(0); }
 }
+void updateMoveNumber(Board& board) {
+     if (board.getTurn() == WHITE) { board.incrementMoveNumber(); }
+}
 
 gameState checkGameState(const Board& board) {
      int kingPos = -1;
@@ -1380,7 +1383,7 @@ void main() {
                updateCastling(currentBoard, abMove);
                updateEnPassant(currentBoard, abMove);
                currentBoard.updateEndgame(abMove);
-               if (currentBoard.getTurn() == WHITE) { currentBoard.incrementMoveNumber(); }
+               updateMoveNumber(currentBoard);
                updateHalfMoveClock(currentBoard, abMove);
 
                //  TODO: Add 50 Move Rule option in move generation / selection?               
