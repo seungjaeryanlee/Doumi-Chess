@@ -69,8 +69,7 @@ int boardEvaluation(const Board& board) {
      return score;
 }
 int reversePosition(const int position) {
-     int row = position / 10, column = position % 10;
-     return (12 - row - 1) * 10 + column;
+     return (11 - position / 10) * 10 + position % 10;
 }
 
 int negaMax(const int depth, Board& board) {
