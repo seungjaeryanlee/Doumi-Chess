@@ -318,7 +318,7 @@ void undoMove(Board &board, Move& move, int capturedPiece);
 /*                                  MISC                                      */
 // Helper function that updates castling array inside board based on given move
 // TODO: Check if this can be integrated inside makeMove
-void castlingUpdate(Board& board, const Move& move);
+void updateCastling(Board& board, const Move& move);
 // Checks if the board is at the end state: returns -1 if false, return board value otherwise
 int checkGameState(Board& board);
 

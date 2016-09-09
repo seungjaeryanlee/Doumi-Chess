@@ -432,7 +432,7 @@ int negaMax(const int depth, Board& board) {
 
      for (int i = 0; i < depthMoveList[depth].getCounter(); i++) {
 
-          castlingUpdate(board, depthMoveList[depth].getMove(i));
+          updateCastling(board, depthMoveList[depth].getMove(i));
           int enpassantSquare = board.getEnpassantSquare();
 
           capturedPiece = makeMove(board, depthMoveList[depth].getMove(i));
@@ -458,7 +458,7 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
      depthMoveList[maxDepth] = moveGeneration(board);
 
      for (int i = 0; i < depthMoveList[maxDepth].getCounter(); i++) {
-          castlingUpdate(board, depthMoveList[maxDepth].getMove(i));
+          updateCastling(board, depthMoveList[maxDepth].getMove(i));
 
           int enpassantSquare = board.getEnpassantSquare();
           capturedPiece = makeMove(board, depthMoveList[maxDepth].getMove(i));
@@ -489,7 +489,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
 
      for (int i = 0; i < depthMoveList[depth].getCounter(); i++) {
 
-          castlingUpdate(board, depthMoveList[depth].getMove(i));
+          updateCastling(board, depthMoveList[depth].getMove(i));
 
           // Save enpassantSquare so it doesn't get lost while making move
           int enpassantSquare = board.getEnpassantSquare();
@@ -521,7 +521,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
 
      for (int i = 0; i < depthMoveList[maxDepth].getCounter(); i++) {
 
-          castlingUpdate(board, depthMoveList[maxDepth].getMove(i));
+          updateCastling(board, depthMoveList[maxDepth].getMove(i));
           int enpassantSquare = board.getEnpassantSquare();
           capturedPiece = makeMove(board, depthMoveList[maxDepth].getMove(i));
 
@@ -570,7 +570,7 @@ u64 divide(int depth, int maxDepth, Board& board, bool showOutput) {
           int initial = depthMoveList[depth].getMove(i).getInitial();
           int terminal = depthMoveList[depth].getMove(i).getTerminal();
 
-          castlingUpdate(board, depthMoveList[maxDepth].getMove(i));
+          updateCastling(board, depthMoveList[maxDepth].getMove(i));
 
           int enpassantSquare = board.getEnpassantSquare();
           
@@ -615,7 +615,7 @@ u64 divide2(int depth, int maxDepth, Board& board, bool showOutput) {
           int initial = depthMoveList[depth].getMove(i).getInitial();
           int terminal = depthMoveList[depth].getMove(i).getTerminal();
 
-          castlingUpdate(board, depthMoveList[maxDepth].getMove(i));
+          updateCastling(board, depthMoveList[maxDepth].getMove(i));
           int enpassantSquare = board.getEnpassantSquare();
           capturedPiece = makeMove(board, depthMoveList[depth].getMove(i));
 
@@ -818,7 +818,7 @@ void undoMove(Board &board, Move& move, int capturedPiece) {
 
 
 /*                                  MISC                                      */
-void castlingUpdate(Board& board, const Move& move) {
+void updateCastling(Board& board, const Move& move) {
      if (board.getSquare(move.getInitial()) == WHITEKING) {
           board.setCastlingRight(WKCASTLING, false);
           board.setCastlingRight(WQCASTLING, false);
@@ -844,6 +844,14 @@ void castlingUpdate(Board& board, const Move& move) {
           }
      }
 }
+void updateEnPassant(Board& board, const Move& move) {
+     if (move.getType() == DOUBLEMOVE) {
+          board.setEnpassantSquare((move.getInitial() + move.getTerminal()) / 2);
+     }
+     else { board.setEnpassantSquare(0); }
+}
+
+
 int checkGameState(Board& board) {
      MoveList tempBoardLegalMoveList = moveGeneration(board);
      
@@ -1355,31 +1363,23 @@ void main() {
                     }
                }
 
-               //  Update castlingCheck
-               castlingUpdate(currentBoard, abMove);
-
-               //  Update enpassant square
-               if (moveType == DOUBLEMOVE) {
-                    currentBoard.setEnpassantSquare((initial + terminal) / 2);
-               }
-               else { currentBoard.setEnpassantSquare(0); }
-
-               //  Make best move and print board
+               // Make Move, Save and Print
                savedCapturedPiece[saveIndex] = makeMove(currentBoard, abMove);
-               //  Save move for undoMove
                savedMove[saveIndex] = Move(abMove);
-               
                printSimpleBoard(currentBoard);
                std::cout << printMove(currentBoard.getMoveNumber(), abMove);
                log << printMove(currentBoard.getMoveNumber(), abMove);
-
-               //  Increment move
-               if (currentBoard.getTurn() == WHITE) { currentBoard.incrementMoveNumber(); }
 
                //  Check if game is over
                gamePlaying = (checkGameState(currentBoard) == NOTMATE);
                if (!gamePlaying) { break; }
 
+               // Update Board
+               updateCastling(currentBoard, abMove);
+               updateEnPassant(currentBoard, abMove);
+               currentBoard.updateEndgame(abMove);
+               if (currentBoard.getTurn() == WHITE) { currentBoard.incrementMoveNumber(); }
+               
                // Check Threefold repetition
                int repetitionCount = 0;
                for (int i = 0; i < saveIndex; i++) {
