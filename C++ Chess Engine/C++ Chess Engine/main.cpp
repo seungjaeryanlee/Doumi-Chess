@@ -971,6 +971,16 @@ void main() {
      log.open("log.txt");
      log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
 
+     std::ofstream pgn;
+     pgn.open("output.pgn");
+     pgn << "[Event \"Friendly Match\"]\n";
+     pgn << "[Site \"Princeton, NJ USA\"]\n";
+     pgn << "[Date \"\"]\n";
+     pgn << "[Round \"1\"]\n";
+     // pgn << "[White \"\"]\n";
+     // pgn << "[Black \"\"]\n";
+     // pgn << "[Result \"\"]\n";
+
      board120Setup(currentBoard);
      //FENboardSetup(currentBoard, "k7/pp4pR/7p/8/8/8/n7/Kn6 w - - 0 1");
      //FENboardSetup(currentBoard, "6k1/8/8/8/8/8/7P/4K2R w K - 1 0");
@@ -998,9 +1008,8 @@ void main() {
 /******************************************************************************/
 /*                                 MAIN LOOP                                  */
 /******************************************************************************/
-
+     currentBoard.updateEndgame();
      while (gamePlaying) {
-          currentBoard.updateEndgame();
 
           //  Detect Checkmate/Stalemate
           switch (checkGameState(currentBoard)) {
@@ -1437,4 +1446,7 @@ void main() {
      stopTimer(&endTime, 1);
      printElapsedTime(beginTime, endTime, frequency, 1);
      log << "Total Time: " << elapsedTime(beginTime, endTime, frequency, 1) << "ms" << std::endl;
+
+     log.close();
+     pgn.close();
 }
