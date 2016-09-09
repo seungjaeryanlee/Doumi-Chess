@@ -421,10 +421,10 @@ int reversePosition(const int position) {
 }
 
 int negaMax(const int depth, Board& board) {
-     int gameState = checkGameState(board);
-     if (gameState != NOTMATE) {
+     gameState state = checkGameState(board);
+     if (state != NOTMATE) {
           printf("Terminal node!: %d\n", depth);
-          switch (gameState) {
+          switch (state) {
           case WHITE_CHECKMATE:
                return -1 * (MATE_VALUE + depth);
                break;
@@ -495,10 +495,10 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
 }
 
 int alphabeta(const int depth, Board& board, int alpha, int beta) {
-     int gameState = checkGameState(board);
-     if (gameState != NOTMATE) {
+     gameState state = checkGameState(board);
+     if (state != NOTMATE) {
           printf("Terminal node!: %d\n", depth);
-          switch (gameState) {
+          switch (state) {
           case WHITE_CHECKMATE:
                return -1 * (MATE_VALUE + depth);
                break;
@@ -887,9 +887,7 @@ void updateEnPassant(Board& board, const Move& move) {
 }
 
 
-int checkGameState(Board& board) {
-     MoveList tempBoardLegalMoveList = moveGeneration(board);
-     
+gameState checkGameState(const Board& board) {
      int kingPos = -1;
      for (int i = 0; i < 120; i++) {
           if (board.getSquare(i) == WHITEKING && board.getTurn() == WHITE) {
@@ -901,9 +899,11 @@ int checkGameState(Board& board) {
                break;
           }
      }
+     
+     MoveList moveList = moveGeneration(board);
 
-     // Checkmate                                                                                                                 
-     if (tempBoardLegalMoveList.getCounter() == 0 && squareAttackCheck(board, kingPos)) {
+     // Checkmate
+     if (moveList.getCounter() == 0 && squareAttackCheck(board, kingPos)) {
           if (board.getSquare(kingPos) == WHITE) {
                return BLACK_CHECKMATE;
           }
@@ -913,7 +913,7 @@ int checkGameState(Board& board) {
      }
 
      // Stalemate: No legal move
-     if (tempBoardLegalMoveList.getCounter() == 0) {
+     if (moveList.getCounter() == 0) {
           return STALEMATE_MOVE;
      }
      
@@ -928,6 +928,7 @@ int checkGameState(Board& board) {
 
      return NOTMATE;
 }
+// TODO: Board's halfmoveclock should not change here
 bool fiftyMoveCheck(Board& board, Move& move) {
      int initial = move.getInitial();
      int terminal = move.getTerminal();
@@ -1023,7 +1024,7 @@ void main() {
                break;
           }
           if (!gamePlaying) { break; }
-
+ 
           //  Let user determine color to play
           correctInput = false;
           while (!correctInput && userColor == ERRORCODE) {
