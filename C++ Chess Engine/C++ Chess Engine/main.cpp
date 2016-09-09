@@ -885,7 +885,14 @@ void updateEnPassant(Board& board, const Move& move) {
      }
      else { board.setEnpassantSquare(0); }
 }
-
+void updateHalfMoveClock(const Board& board, const Move& move) {
+     if (currentBoard.getSquare(terminal) == EMPTYSQUARE
+          && currentBoard.getSquare(initial) != WHITEPAWN
+          && currentBoard.getSquare(initial) != BLACKPAWN) {
+          currentBoard.incrementHalfMoveClock();
+     }
+     else { currentBoard.setHalfMoveClock(0); }
+}
 
 gameState checkGameState(const Board& board) {
      int kingPos = -1;
@@ -1384,12 +1391,7 @@ void main() {
 
                //  Update Fifty move count
                //  TODO: Add 50 Move Rule option in move generation / selection
-               if (currentBoard.getSquare(terminal) == EMPTYSQUARE
-                    && currentBoard.getSquare(initial) != WHITEPAWN
-                    && currentBoard.getSquare(initial) != BLACKPAWN) {
-                    currentBoard.incrementHalfMoveClock();
-               }
-               else { currentBoard.setHalfMoveClock(0); }
+               updateHalfMoveClock(currentBoard, abMove);
 
                // Check Fifty move rule
                if (fiftyMoveCheck(currentBoard, abMove)) {
