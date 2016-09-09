@@ -870,7 +870,8 @@ int checkGameState(Board& board) {
 
      // Checkmate                                                                                                                 
      if (tempBoardLegalMoveList.getCounter() == 0 && squareAttackCheck(board, kingPos)) {
-          return CHECKMATE;
+          if (board.getTurn() == WHITE) { return WHITE_CHECKMATE; }
+          else { return BLACK_CHECKMATE; }
      }
 
      // Stalemate: No legal move
