@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="evaluation.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="movegen.cpp" />
     <ClCompile Include="output_handler.cpp" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defs.h" />
+    <ClInclude Include="evaluation.h" />
     <ClInclude Include="movegen.h" />
     <ClInclude Include="output_handler.h" />
     <ClInclude Include="protos.h" />
