@@ -885,13 +885,13 @@ void updateEnPassant(Board& board, const Move& move) {
      }
      else { board.setEnpassantSquare(0); }
 }
-void updateHalfMoveClock(const Board& board, const Move& move) {
-     if (currentBoard.getSquare(terminal) == EMPTYSQUARE
-          && currentBoard.getSquare(initial) != WHITEPAWN
-          && currentBoard.getSquare(initial) != BLACKPAWN) {
-          currentBoard.incrementHalfMoveClock();
+void updateHalfMoveClock(Board& board, const Move& move) {
+     if (board.getSquare(move.getTerminal()) == EMPTYSQUARE
+          && board.getSquare(move.getInitial()) != WHITEPAWN
+          && board.getSquare(move.getInitial()) != BLACKPAWN) {
+          board.incrementHalfMoveClock();
      }
-     else { currentBoard.setHalfMoveClock(0); }
+     else { board.setHalfMoveClock(0); }
 }
 
 gameState checkGameState(const Board& board) {
@@ -936,20 +936,8 @@ gameState checkGameState(const Board& board) {
      return NOTMATE;
 }
 // TODO: Board's halfmoveclock should not change here
-bool fiftyMoveCheck(Board& board, Move& move) {
-     int initial = move.getInitial();
-     int terminal = move.getTerminal();
-
-     if (board.getSquare(terminal) == EMPTYSQUARE
-          && board.getSquare(initial) != WHITEPAWN
-          && board.getSquare(initial) != BLACKPAWN) {
-          board.incrementHalfMoveClock();
-          if (board.getHalfMoveClock() >= 100) {
-               return true;
-          }
-     }
-     else { board.setHalfMoveClock(0); }
-     return false;
+bool fiftyMoveCheck(const Board& board, const Move& move) {
+     return (board.getHalfMoveClock() >= 100);
 }
 
 
@@ -1217,12 +1205,13 @@ void main() {
                               break;
                          }
                     }
-
-                    
-                    // Check Fifty Move rule
                     Move userMove = Move(initialSquare, terminalSquare, moveType);
-                    if (fiftyMoveCheck(currentBoard, userMove)) {
+                    savedCapturedPiece[saveIndex] = makeMove(currentBoard, userMove);
+                    savedMove[saveIndex] = Move(userMove);
+                    saveIndex++;
 
+                    // Check Fifty Move rule
+                    if (fiftyMoveCheck(currentBoard, userMove)) {
                          bool correctInput = false, declareTie = false;
                          while (!correctInput) {
                               printf("Declare Fifty Move Rule? (Y/N):");
@@ -1246,17 +1235,8 @@ void main() {
                          }
                     }
 
-                    
-                    // save captured piece for undoMove;
-                    savedCapturedPiece[saveIndex] = makeMove(currentBoard, userMove);
-                    
-                    savedMove[saveIndex] = Move(userMove);
-                    
-
                     if (currentBoard.getTurn() == WHITE) { currentBoard.incrementMoveNumber(); }
                     
-                    saveIndex++;
-
                     // add to log file
                     log << printMove(currentBoard.getMoveNumber(), userMove);
 
@@ -1389,22 +1369,6 @@ void main() {
                int terminal = abMove.getTerminal();
                int moveType = abMove.getType();
 
-               //  Update Fifty move count
-               //  TODO: Add 50 Move Rule option in move generation / selection
-               updateHalfMoveClock(currentBoard, abMove);
-
-               // Check Fifty move rule
-               if (fiftyMoveCheck(currentBoard, abMove)) {
-                    // If in bad position, declare fifty move rule
-                    printf("Computer declares Fifty Move Rule.\n");
-                    log << "Computer declares Fifty Move Rule." << std::endl;
-                    if (abValue <= STALEMATE_BOUND) {
-                         gamePlaying = false;
-                         gameResult = TIE;
-                         break;
-                    }
-               }
-
                // Make Move, Save and Print
                savedCapturedPiece[saveIndex] = makeMove(currentBoard, abMove);
                savedMove[saveIndex] = Move(abMove);
@@ -1417,7 +1381,22 @@ void main() {
                updateEnPassant(currentBoard, abMove);
                currentBoard.updateEndgame(abMove);
                if (currentBoard.getTurn() == WHITE) { currentBoard.incrementMoveNumber(); }
-               
+               updateHalfMoveClock(currentBoard, abMove);
+
+               //  TODO: Add 50 Move Rule option in move generation / selection?               
+               // Check Fifty move rule
+               if (fiftyMoveCheck(currentBoard, abMove)) {
+                    // If in bad position, declare fifty move rule
+                    printf("Computer declares Fifty Move Rule.\n");
+                    log << "Computer declares Fifty Move Rule." << std::endl;
+                    if (abValue <= STALEMATE_BOUND) {
+                         gamePlaying = false;
+                         gameResult = TIE;
+                         break;
+                    }
+               }
+
+
                // Check Threefold repetition
                int repetitionCount = 0;
                for (int i = 0; i < saveIndex; i++) {
