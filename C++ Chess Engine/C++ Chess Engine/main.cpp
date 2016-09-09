@@ -706,7 +706,7 @@ gameState checkGameState(const Board& board) {
      
      return NOTMATE;
 }
-bool fiftyMoveCheck(const Board& board, const Move& move) {
+bool fiftyMoveCheck(const Board& board) {
      return (board.getHalfMoveClock() >= 100);
 }
 
@@ -978,7 +978,7 @@ void main() {
                     saveIndex++;
 
                     // Check Fifty Move rule
-                    if (fiftyMoveCheck(currentBoard, userMove)) {
+                    if (fiftyMoveCheck(currentBoard)) {
                          bool correctInput = false, declareTie = false;
                          while (!correctInput) {
                               printf("Declare Fifty Move Rule? (Y/N):");
@@ -1144,7 +1144,7 @@ void main() {
 
                //  TODO: Add 50 Move Rule option in move generation / selection?               
                // Check Fifty move rule
-               if (fiftyMoveCheck(currentBoard, abMove)) {
+               if (fiftyMoveCheck(currentBoard)) {
                     // If in bad position, declare fifty move rule
                     if (abValue <= STALEMATE_BOUND) {
                          printf("Computer declares Fifty Move Rule.\n");

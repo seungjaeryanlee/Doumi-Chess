@@ -278,4 +278,4 @@ void updateMoveNumber(Board& board);
 void updateBoard(Board& board, const Move& move);
 // Checks if the board is at the end state: returns -1 if false, return board value otherwise
 gameState checkGameState(const Board& board);
-bool fiftyMoveCheck(const Board& board, const Move& move);
+bool fiftyMoveCheck(const Board& board);
