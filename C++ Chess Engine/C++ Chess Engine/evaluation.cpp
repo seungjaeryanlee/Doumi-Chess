@@ -147,6 +147,7 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
      return max_Score;
 }
 
+// REMINDER: Whatever is changed here should be changed in negaMax and divide too
 int alphabeta(const int depth, Board& board, int alpha, int beta) {
      gameState state = checkGameState(board);
      if (state != NOTMATE) {
@@ -173,7 +174,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
      int capturedPiece;
 
      MoveList moveList = moveGeneration(board);
-
+     Board savedBoard = board;
      for (int i = 0; i < moveList.getCounter(); i++) {
 
           updateCastling(board, moveList.getMove(i));
@@ -186,16 +187,14 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
           score = -alphabeta(depth - 1, board, -beta, -alpha);
 
           if (score >= beta) {
-               undoMove(board, moveList.getMove(i), capturedPiece);
-               board.setEnpassantSquare(enpassantSquare);
+               board = savedBoard;
                return beta;
           }
 
           if (score > alpha) {
                alpha = score;
           }
-          undoMove(board, moveList.getMove(i), capturedPiece);
-          board.setEnpassantSquare(enpassantSquare);
+          board = savedBoard;
      }
 
      return alpha;
@@ -205,7 +204,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
      int capturedPiece;
 
      MoveList moveList = moveGeneration(board);
-
+     Board savedBoard = board;
      for (int i = 0; i < moveList.getCounter(); i++) {
 
           updateCastling(board, moveList.getMove(i));
@@ -217,9 +216,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
           // TODO: Check if this is needed and change it
           if (score >= beta) {
 
-               undoMove(board, moveList.getMove(i), capturedPiece);
-               // TODO: Make sure Castling & EP Square & other details are also undo-ed
-               board.setEnpassantSquare(enpassantSquare);
+               board = savedBoard;
                return beta;
           }
 
@@ -228,8 +225,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
                bestMove = moveList.getMove(i);
           }
 
-          undoMove(board, moveList.getMove(i), capturedPiece);
-          board.setEnpassantSquare(enpassantSquare);
+          board = savedBoard;
      }
 
      return alpha;

@@ -351,8 +351,6 @@ std::string numberToFilerank(const int position) {
 }
 
 
-
-
 /*                             RECURSION FUNCTIONS                             */
 u64 divide(const int depth, const int maxDepth, Board& board, const bool showOutput) {
 
@@ -613,7 +611,6 @@ void undoMove(Board &board, const Move& move, const int capturedPiece) {
           }
      }
 }
-
 
 /*                                  MISC                                      */
 void updateCastling(Board& board, const Move& move) {
