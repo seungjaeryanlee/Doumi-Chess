@@ -182,13 +182,8 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
 
 
      for (int i = 0; i < moveList.getCounter(); i++) {
-
-          updateCastling(board, moveList.getMove(i));
-
-          // Save enpassantSquare so it doesn't get lost while making move
-          int enpassantSquare = board.getEnpassantSquare();
-
           capturedPiece = makeMove(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i));
 
           score = -alphabeta(depth - 1, board, -beta, -alpha);
 
@@ -226,10 +221,8 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
      int moveNumber = board.getMoveNumber();
      bool isEndgame = board.getEndgame();
      for (int i = 0; i < moveList.getCounter(); i++) {
-
-          updateCastling(board, moveList.getMove(i));
-          int enpassantSquare = board.getEnpassantSquare();
           capturedPiece = makeMove(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i));
 
           score = -alphabeta(maxDepth - 1, board, -beta, -alpha);
 
