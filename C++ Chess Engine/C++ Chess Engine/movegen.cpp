@@ -59,12 +59,11 @@ MoveList moveGeneration(const Board& board) {
 
      // STEP 2: CHECK LEGALITY
      MoveList moveList;
-     moveList.setCounterToZero();
-     Board copiedBoard(board); // Clone
+     Board copiedBoard = board; // QUESTION: Make argument not-const and skip this?
 
      //  find king position
      int kingPosition = 0, changedKingPosition = 0;
-     int terminalValue;
+     int capturedPiece;
      for (int i = 0; i < 120; i++) {
           if (copiedBoard.getTurn() == WHITE && copiedBoard.getSquare(i) == WHITEKING ||
                copiedBoard.getTurn() == BLACK && copiedBoard.getSquare(i) == BLACKKING) {
@@ -90,7 +89,7 @@ MoveList moveGeneration(const Board& board) {
           else { changedKingPosition = kingPosition; }
 
           //  make move
-          terminalValue = makeMove(copiedBoard, pseudolegalMoveList.getMove(i));
+          capturedPiece = makeMove(copiedBoard, pseudolegalMoveList.getMove(i));
           //  In this case, we don't want makeMove to change turn, so let's change it again
           copiedBoard.changeTurn();
 
@@ -100,7 +99,7 @@ MoveList moveGeneration(const Board& board) {
           }
 
           //  undo move
-          undoMove(copiedBoard, pseudolegalMoveList.getMove(i), terminalValue);
+          undoMove(copiedBoard, pseudolegalMoveList.getMove(i), capturedPiece);
           //  Same reason as above
           copiedBoard.changeTurn();
      }
