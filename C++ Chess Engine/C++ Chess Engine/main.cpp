@@ -15,11 +15,6 @@
 #include "evaluation.h"
 
 /******************************************************************************/
-/*                                 GLOBAL VARIABLE                            */
-/******************************************************************************/
-
-
-/******************************************************************************/
 /*                                  FUNCTIONS                                 */
 /******************************************************************************/
 
@@ -701,7 +696,7 @@ gameState checkGameState(const Board& board) {
      
      return NOTMATE;
 }
-bool fiftyMoveCheck(const Board& board, const Move& move) {
+bool fiftyMoveCheck(const Board& board) {
      return (board.getHalfMoveClock() >= 100);
 }
 
@@ -713,9 +708,9 @@ void main() {
      Board currentBoard;
      MoveList currentBoardMoveList;
 
-     Board savedBoard[MAX_MOVENUMBER + 1];    //  Stores Board and Board States for threefold repetition
+     Board savedBoard[MAX_MOVENUMBER];    //  Stores Board and Board States for threefold repetition
      int savedCapturedPiece[MAX_MOVENUMBER];  //  Saved values for UNDO_MOVE command
-     Move savedMove[MAX_MOVENUMBER + 1];
+     Move savedMove[MAX_MOVENUMBER];
      int saveIndex = 0;
 
      bool gamePlaying = true;
@@ -729,8 +724,6 @@ void main() {
      log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
 
      board120Setup(currentBoard);
-     //FENboardSetup(currentBoard, "k7/pp4pR/7p/8/8/8/n7/Kn6 w - - 0 1");
-     //FENboardSetup(currentBoard, "6k1/8/8/8/8/8/7P/4K2R w K - 1 0");
 
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -973,7 +966,7 @@ void main() {
                     saveIndex++;
 
                     // Check Fifty Move rule
-                    if (fiftyMoveCheck(currentBoard, userMove)) {
+                    if (fiftyMoveCheck(currentBoard)) {
                          bool correctInput = false, declareTie = false;
                          while (!correctInput) {
                               printf("Declare Fifty Move Rule? (Y/N):");
@@ -1139,7 +1132,7 @@ void main() {
 
                //  TODO: Add 50 Move Rule option in move generation / selection?               
                // Check Fifty move rule
-               if (fiftyMoveCheck(currentBoard, abMove)) {
+               if (fiftyMoveCheck(currentBoard)) {
                     // If in bad position, declare fifty move rule
                     if (abValue <= STALEMATE_BOUND) {
                          printf("Computer declares Fifty Move Rule.\n");
