@@ -98,13 +98,16 @@ int negaMax(const int depth, Board& board) {
      int capturedPiece;
 
      MoveList moveList = moveGeneration(board);
+     std::array<bool, 4> castlingRights = board.getCastlingRights();
+     int enpassantSquare = board.getEnpassantSquare();
+     int halfMoveClock = board.getHalfMoveClock();
+     int moveNumber = board.getMoveNumber();
+     bool isEndgame = board.getEndgame();
 
      for (int i = 0; i <moveList.getCounter(); i++) {
 
-          updateCastling(board, moveList.getMove(i));
-          int enpassantSquare = board.getEnpassantSquare();
-
           capturedPiece = makeMove(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i));
 
           score = -negaMax(depth - 1, board);
 
@@ -113,7 +116,11 @@ int negaMax(const int depth, Board& board) {
           }
 
           undoMove(board, moveList.getMove(i), capturedPiece);
+          board.setCastlingRights(castlingRights);
           board.setEnpassantSquare(enpassantSquare);
+          board.setHalfMoveClock(halfMoveClock);
+          board.setMoveNumber(moveNumber);
+          board.setEndgame(isEndgame);
      }
 
      return max_Score;
@@ -125,12 +132,15 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
      int capturedPiece;
 
      MoveList moveList = moveGeneration(board);
+     std::array<bool, 4> castlingRights = board.getCastlingRights();
+     int enpassantSquare = board.getEnpassantSquare();
+     int halfMoveClock = board.getHalfMoveClock();
+     int moveNumber = board.getMoveNumber();
+     bool isEndgame = board.getEndgame();
 
-     for (int i = 0; i < moveList.getCounter(); i++) {
-          updateCastling(board, moveList.getMove(i));
-
-          int enpassantSquare = board.getEnpassantSquare();
+     for (int i = 0; i < moveList.getCounter(); i++) {     
           capturedPiece = makeMove(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i));
 
           score = -negaMax(maxDepth - 1, board);
 
@@ -140,7 +150,11 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
           }
 
           undoMove(board, moveList.getMove(i), capturedPiece);
+          board.setCastlingRights(castlingRights);
           board.setEnpassantSquare(enpassantSquare);
+          board.setHalfMoveClock(halfMoveClock);
+          board.setMoveNumber(moveNumber);
+          board.setEndgame(isEndgame);
      }
 
      return max_Score;
