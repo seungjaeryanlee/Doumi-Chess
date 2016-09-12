@@ -194,6 +194,21 @@ public:
      const int getHalfMoveClock() const { return halfMoveClock; }
      const int getMoveNumber() const { return moveNumber; }
      const bool getEndgame() const { return isEndgame; }
+     const uint64_t getWKBB() { return wKingBitBoard; }
+     const uint64_t getWQBB() { return wQueenBitBoard; }
+     const uint64_t getWRBB() { return wRookBitBoard; }
+     const uint64_t getWBBB() { return wBishopBitBoard; }
+     const uint64_t getWNBB() { return wKnightBitBoard; }
+     const uint64_t getWPBB() { return wPawnBitBoard; }
+     const uint64_t getWBB() { return wBitBoard; }
+     const uint64_t getBKBB() { return bKingBitBoard; }
+     const uint64_t getBQBB() { return bQueenBitBoard; }
+     const uint64_t getBRBB() { return bRookBitBoard; }
+     const uint64_t getBBBB() { return bBishopBitBoard; }
+     const uint64_t getBNBB() { return bKnightBitBoard; }
+     const uint64_t getBPBB() { return bPawnBitBoard; }
+     const uint64_t getBBB() { return bBitBoard; }
+     const uint64_t getOccupiedBB() { return occupiedBitBoard; }
 
      //  Other Functions
      void changeTurn() { turn = (color)-turn; }
