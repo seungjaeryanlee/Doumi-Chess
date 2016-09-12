@@ -217,9 +217,7 @@ public:
      void incrementMoveNumber() { moveNumber++; }
      void decrementMoveNumber() { moveNumber--; }
      
-     int board120To64(int pos120) {
-          return (pos120 / 10 - 2) * 8 + pos120 % 10 - 1;
-     }
+     
      void initBitBoard() {
            wKingBitBoard = 0;
            wQueenBitBoard = 0;
@@ -282,13 +280,6 @@ public:
            bBitBoard = bKingBitBoard | bQueenBitBoard | bRookBitBoard | bBishopBitBoard | bKnightBitBoard | bPawnBitBoard;
            occupiedBitBoard = wBitBoard | bBitBoard;
      }
-     int bitCount(uint64_t bb) {
-          int count = 0;
-          for (count = 0; bb; count++) {
-               bb &= bb - 1;
-          }
-          return count;
-     }
 };
 
 
@@ -343,7 +334,12 @@ int filerankToNumber(const char file, const int rank);
 /// <param name="position">The square in board index notation.</param>
 /// <returns>A two-letter string with file rank notation of the given square.</returns>
 std::string numberToFilerank(const int position);
-
+/// <summary>
+/// This function converts 12x10 position to 8x8 position.
+/// </summary>
+/// <param name="pos120">The 12x10 position that will be converted.</param>
+/// <returns>The equivalent 8x8 position of the given 12x10 position.</returns>
+int board120To64(int pos120);
 
 
 

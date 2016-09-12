@@ -13,6 +13,7 @@
 #include "timer.h"
 #include "output_handler.h"
 #include "evaluation.h"
+#include "bitboard.h"
 
 /******************************************************************************/
 /*                                  FUNCTIONS                                 */
@@ -343,7 +344,9 @@ int filerankToNumber(const char file, const int rank) {
 std::string numberToFilerank(const int position) {
      return numberToFile(position) + std::to_string(numberToRank(position));
 }
-
+int board120To64(int pos120) {
+     return (pos120 / 10 - 2) * 8 + pos120 % 10 - 1;
+}
 
 
 /*                             RECURSION FUNCTIONS                             */
