@@ -24,9 +24,8 @@ void board120Setup(Board& board) {
      board.setEnpassantSquare(0);
      board.setMoveNumber(1);
      board.setHalfMoveClock(0);
-
      board.setCastlingRights({ true, true, true, true });
-     
+
      //  Add Empty Squares
      for (int i = 0; i < 8; i++) {
           for (int j = 0; j < 8; j++) {
@@ -686,6 +685,12 @@ gameState checkGameState(const Board& board) {
           }
      }
      
+     // Stalemate: 75 Move Rule
+     // TODO: 50 Move rule will be implemented in moveGen
+     if (board.getHalfMoveClock() >= 150) {
+          return STALEMATE_75;
+     }
+
      MoveList moveList = moveGeneration(board);
 
      // Checkmate
@@ -701,12 +706,6 @@ gameState checkGameState(const Board& board) {
      // Stalemate: No legal move
      if (moveList.getCounter() == 0) {
           return STALEMATE_MOVE;
-     }
-     
-     // Stalemate: 75 Move Rule
-     // TODO: 50 Move rule will be implemented in moveGen
-     if (board.getHalfMoveClock() >= 150) {
-          return STALEMATE_75;
      }
      
      return NOTMATE;
