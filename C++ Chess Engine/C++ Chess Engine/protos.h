@@ -2,6 +2,13 @@
 #include "defs.h"
 #include <Windows.h>
 
+/// <summary>
+/// This function converts 12x10 position to 8x8 position.
+/// </summary>
+/// <param name="pos120">The 12x10 position that will be converted.</param>
+/// <returns>The equivalent 8x8 position of the given 12x10 position.</returns>
+int board120To64(int pos120);
+
 class Move {
 private:
      int initialSquare;
@@ -334,12 +341,7 @@ int filerankToNumber(const char file, const int rank);
 /// <param name="position">The square in board index notation.</param>
 /// <returns>A two-letter string with file rank notation of the given square.</returns>
 std::string numberToFilerank(const int position);
-/// <summary>
-/// This function converts 12x10 position to 8x8 position.
-/// </summary>
-/// <param name="pos120">The 12x10 position that will be converted.</param>
-/// <returns>The equivalent 8x8 position of the given 12x10 position.</returns>
-int board120To64(int pos120);
+
 
 
 

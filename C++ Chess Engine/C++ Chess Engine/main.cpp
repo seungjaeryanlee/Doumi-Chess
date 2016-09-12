@@ -761,7 +761,7 @@ void main() {
      frequency = startTimer(&beginTime, 1);
 
      currentBoard.initBitBoard();
-     printf("%d\n", currentBoard.bitCount(currentBoard.getBBB()));
+     printf("%d\n", bitCount(currentBoard.getBBB()));
 
      bool correctInput = false;
      std::string userCommand;
