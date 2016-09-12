@@ -2,6 +2,8 @@
 #include <array>
 #include <stdint.h>
 
+typedef uint64_t bitboard;
+
 /*                                    DEFINITION                              */
 const int PAWNVALUE = 100;
 const int KNIGHTVALUE = 300;

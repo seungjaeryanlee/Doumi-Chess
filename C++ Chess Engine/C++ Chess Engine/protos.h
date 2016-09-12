@@ -77,21 +77,21 @@ private:
      int moveNumber;
      bool isEndgame;
 
-     uint16_t wKingBitBoard;
-     uint16_t wQueenBitBoard;
-     uint16_t wRookBitBoard;
-     uint16_t wBishopBitBoard;
-     uint16_t wKnightBitBoard;
-     uint16_t wPawnBitBoard;
-     uint16_t wBitBoard;
+     bitboard wKingBitBoard;
+     bitboard wQueenBitBoard;
+     bitboard wRookBitBoard;
+     bitboard wBishopBitBoard;
+     bitboard wKnightBitBoard;
+     bitboard wPawnBitBoard;
+     bitboard wBitBoard;
 
-     uint16_t bKingBitBoard;
-     uint16_t bQueenBitBoard;
-     uint16_t bRookBitBoard;
-     uint16_t bBishopBitBoard;
-     uint16_t bKnightBitBoard;
-     uint16_t bPawnBitBoard;
-     uint16_t bBitBoard;
+     bitboard bKingBitBoard;
+     bitboard bQueenBitBoard;
+     bitboard bRookBitBoard;
+     bitboard bBishopBitBoard;
+     bitboard bKnightBitBoard;
+     bitboard bPawnBitBoard;
+     bitboard bBitBoard;
 
      uint16_t occupiedBitBoard;
 
@@ -201,21 +201,21 @@ public:
      const int getHalfMoveClock() const { return halfMoveClock; }
      const int getMoveNumber() const { return moveNumber; }
      const bool getEndgame() const { return isEndgame; }
-     const uint64_t getWKBB() { return wKingBitBoard; }
-     const uint64_t getWQBB() { return wQueenBitBoard; }
-     const uint64_t getWRBB() { return wRookBitBoard; }
-     const uint64_t getWBBB() { return wBishopBitBoard; }
-     const uint64_t getWNBB() { return wKnightBitBoard; }
-     const uint64_t getWPBB() { return wPawnBitBoard; }
-     const uint64_t getWBB() { return wBitBoard; }
-     const uint64_t getBKBB() { return bKingBitBoard; }
-     const uint64_t getBQBB() { return bQueenBitBoard; }
-     const uint64_t getBRBB() { return bRookBitBoard; }
-     const uint64_t getBBBB() { return bBishopBitBoard; }
-     const uint64_t getBNBB() { return bKnightBitBoard; }
-     const uint64_t getBPBB() { return bPawnBitBoard; }
-     const uint64_t getBBB() { return bBitBoard; }
-     const uint64_t getOccupiedBB() { return occupiedBitBoard; }
+     const bitboard getWKBB() { return wKingBitBoard; }
+     const bitboard getWQBB() { return wQueenBitBoard; }
+     const bitboard getWRBB() { return wRookBitBoard; }
+     const bitboard getWBBB() { return wBishopBitBoard; }
+     const bitboard getWNBB() { return wKnightBitBoard; }
+     const bitboard getWPBB() { return wPawnBitBoard; }
+     const bitboard getWBB() { return wBitBoard; }
+     const bitboard getBKBB() { return bKingBitBoard; }
+     const bitboard getBQBB() { return bQueenBitBoard; }
+     const bitboard getBRBB() { return bRookBitBoard; }
+     const bitboard getBBBB() { return bBishopBitBoard; }
+     const bitboard getBNBB() { return bKnightBitBoard; }
+     const bitboard getBPBB() { return bPawnBitBoard; }
+     const bitboard getBBB() { return bBitBoard; }
+     const bitboard getOccupiedBB() { return occupiedBitBoard; }
 
      //  Other Functions
      void changeTurn() { turn = (color)-turn; }
