@@ -355,6 +355,11 @@ u64 divide(const int depth, const int maxDepth, Board& board, const bool showOut
      int capturedPiece;
 
      MoveList moveList = moveGeneration(board);
+     std::array<bool, 4> castlingRights = board.getCastlingRights();
+     int enpassantSquare = board.getEnpassantSquare();
+     int halfMoveClock = board.getHalfMoveClock();
+     int moveNumber = board.getMoveNumber();
+     bool isEndgame = board.getEndgame();
 
      if (depth == 1) { return moveList.getCounter(); }
 
@@ -362,12 +367,9 @@ u64 divide(const int depth, const int maxDepth, Board& board, const bool showOut
 
           int initial = moveList.getMove(i).getInitial();
           int terminal = moveList.getMove(i).getTerminal();
-
-          updateCastling(board, moveList.getMove(i));
-
-          int enpassantSquare = board.getEnpassantSquare();
-          
+                   
           capturedPiece = makeMove(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i));
           
           node += divide(depth - 1, maxDepth, board, showOutput);
           if (showOutput) {
@@ -382,7 +384,11 @@ u64 divide(const int depth, const int maxDepth, Board& board, const bool showOut
           }
 
           undoMove(board, moveList.getMove(i), capturedPiece);
+          board.setCastlingRights(castlingRights);
           board.setEnpassantSquare(enpassantSquare);
+          board.setHalfMoveClock(halfMoveClock);
+          board.setMoveNumber(moveNumber);
+          board.setEndgame(isEndgame);
      }
      return node;
 
@@ -399,6 +405,11 @@ u64 divide2(const int depth, const int maxDepth, Board& board, const bool showOu
      int capturedPiece;
 
      MoveList moveList = moveGeneration(board);
+     std::array<bool, 4> castlingRights = board.getCastlingRights();
+     int enpassantSquare = board.getEnpassantSquare();
+     int halfMoveClock = board.getHalfMoveClock();
+     int moveNumber = board.getMoveNumber();
+     bool isEndgame = board.getEndgame();
 
      //if (depth == 1) { return depthLegalMoveCount[depth]; }
 
@@ -406,9 +417,8 @@ u64 divide2(const int depth, const int maxDepth, Board& board, const bool showOu
           int initial = moveList.getMove(i).getInitial();
           int terminal = moveList.getMove(i).getTerminal();
 
-          updateCastling(board, moveList.getMove(i));
-          int enpassantSquare = board.getEnpassantSquare();
           capturedPiece = makeMove(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i));
 
 
           node += divide(depth - 1, maxDepth, board, showOutput);
@@ -421,8 +431,13 @@ u64 divide2(const int depth, const int maxDepth, Board& board, const bool showOu
                     numberToFile(terminal) << numberToRank(terminal) << ": " << individualNode << std::endl;
           }
 
+
           undoMove(board, moveList.getMove(i), capturedPiece);
+          board.setCastlingRights(castlingRights);
           board.setEnpassantSquare(enpassantSquare);
+          board.setHalfMoveClock(halfMoveClock);
+          board.setMoveNumber(moveNumber);
+          board.setEndgame(isEndgame);
      }
      return node;
      output2.close();
@@ -434,7 +449,6 @@ int makeMove(Board &board, const Move& move) {
 
      board.setEnpassantSquare(0);
      board.changeTurn();
-     board.updateEndgame(move);
 
      if (moveType == NORMAL) {
           capturedPiece = board.getSquare(terminal);
@@ -549,7 +563,6 @@ void undoMove(Board &board, const Move& move, const int capturedPiece) {
      int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
      board.changeTurn();
-     board.updateEndgame(move);
 
      if (moveType == NORMAL) {
           board.setSquare(initial, board.getSquare(terminal));
@@ -606,7 +619,6 @@ void undoMove(Board &board, const Move& move, const int capturedPiece) {
           }
      }
 }
-
 
 /*                                  MISC                                      */
 void updateCastling(Board& board, const Move& move) {
