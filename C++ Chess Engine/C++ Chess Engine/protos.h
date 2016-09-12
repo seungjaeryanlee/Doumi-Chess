@@ -70,6 +70,24 @@ private:
      int moveNumber;
      bool isEndgame;
 
+     uint16_t wKingBitBoard;
+     uint16_t wQueenBitBoard;
+     uint16_t wRookBitBoard;
+     uint16_t wBishopBitBoard;
+     uint16_t wKnightBitBoard;
+     uint16_t wPawnBitBoard;
+     uint16_t wBitBoard;
+
+     uint16_t bKingBitBoard;
+     uint16_t bQueenBitBoard;
+     uint16_t bRookBitBoard;
+     uint16_t bBishopBitBoard;
+     uint16_t bKnightBitBoard;
+     uint16_t bPawnBitBoard;
+     uint16_t bBitBoard;
+
+     uint16_t occupiedBitBoard;
+
 public:
      
      // Default Constructor
@@ -184,6 +202,68 @@ public:
      void incrementMoveNumber() { moveNumber++; }
      void decrementMoveNumber() { moveNumber--; }
      
+     void initBitBoard() {
+           wKingBitBoard = 0;
+           wQueenBitBoard = 0;
+           wRookBitBoard = 0;
+           wBishopBitBoard = 0;
+           wKnightBitBoard = 0;
+           wPawnBitBoard = 0;
+
+           bKingBitBoard = 0;
+           bQueenBitBoard = 0;
+           bRookBitBoard = 0;
+           bBishopBitBoard = 0;
+           bKnightBitBoard = 0;
+           bPawnBitBoard = 0;
+
+
+           // Populate Bitboards
+           for (int i = 0; i < 120; i++) {
+                switch (board[i]) {
+                case WHITEKING:
+                     wKingBitBoard |= 1 << i;
+                     break;
+                case WHITEQUEEN:
+                     wQueenBitBoard |= 1 << i;
+                     break;
+                case WHITEROOK:
+                     wRookBitBoard |= 1 << i;
+                     break;
+                case WHITEBISHOP:
+                     wBishopBitBoard |= 1 << i;
+                     break;
+                case WHITEKNIGHT:
+                     wKnightBitBoard |= 1 << i;
+                     break;
+                case WHITEPAWN:
+                     wPawnBitBoard |= 1 << i;
+                     break;
+                case BLACKKING:
+                     bKingBitBoard |= 1 << i;
+                     break;
+                case BLACKQUEEN:
+                     bQueenBitBoard |= 1 << i;
+                     break;
+                case BLACKROOK:
+                     bRookBitBoard |= 1 << i;
+                     break;
+                case BLACKBISHOP:
+                     bBishopBitBoard |= 1 << i;
+                     break;
+                case BLACKKNIGHT:
+                     bKnightBitBoard |= 1 << i;
+                     break;
+                case BLACKPAWN:
+                     bPawnBitBoard |= 1 << i;
+                     break;
+                }
+           }
+
+           wBitBoard = wKingBitBoard | wQueenBitBoard | wRookBitBoard | wBishopBitBoard | wKnightBitBoard | wPawnBitBoard;
+           bBitBoard = bKingBitBoard | bQueenBitBoard | bRookBitBoard | bBishopBitBoard | bKnightBitBoard | bPawnBitBoard;
+           occupiedBitBoard = wBitBoard | bBitBoard;
+     }
 };
 
 
