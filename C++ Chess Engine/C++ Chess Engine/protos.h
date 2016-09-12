@@ -252,7 +252,7 @@ std::string numberToFilerank(const int position);
 /// <param name="board">The board being checked.</param>
 /// <param name="showOutput">Wheter or not to show intermediate output.</param>
 /// <returns>The number of possible move sequences of given depth.</returns>
-u64 divide(const int depth, const int maxDepth, Board& board, const bool showOutput);
+uint64_t divide(const int depth, const int maxDepth, Board& board, const bool showOutput);
 /// <summary>
 /// This function finds the number of possible move sequences for given depth and divides them into categories of first few moves given by maxDepth amd saves them into a file.
 /// </summary>
@@ -261,7 +261,7 @@ u64 divide(const int depth, const int maxDepth, Board& board, const bool showOut
 /// <param name="board">The board being checked.</param>
 /// <param name="showOutput">Wheter or not to show intermediate output.</param>
 /// <returns>The number of possible move sequences of given depth.</returns>
-u64 divide2(const int depth, const int maxDepth, Board& board, const bool showOutput);
+uint64_t divide2(const int depth, const int maxDepth, Board& board, const bool showOutput);
 /// <summary>
 /// This function applies the given move to the given board.
 /// </summary>

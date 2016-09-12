@@ -346,11 +346,11 @@ std::string numberToFilerank(const int position) {
 
 
 /*                             RECURSION FUNCTIONS                             */
-u64 divide(const int depth, const int maxDepth, Board& board, const bool showOutput) {
+uint64_t divide(const int depth, const int maxDepth, Board& board, const bool showOutput) {
 
      if (depth == 0) { return 1; }
 
-     u64 node = 0, individualNode = 0;
+     uint64_t node = 0, individualNode = 0;
      int capturedPiece;
 
      MoveList moveList = moveGeneration(board);
@@ -392,7 +392,7 @@ u64 divide(const int depth, const int maxDepth, Board& board, const bool showOut
      return node;
 
 }
-u64 divide2(const int depth, const int maxDepth, Board& board, const bool showOutput) {
+uint64_t divide2(const int depth, const int maxDepth, Board& board, const bool showOutput) {
 
      if (depth == 0) { return 1; }
 
@@ -400,7 +400,7 @@ u64 divide2(const int depth, const int maxDepth, Board& board, const bool showOu
      std::ofstream output2;
      output2.open("divide.txt");
 
-     u64 node = 0, individualNode = 0;
+     uint64_t node = 0, individualNode = 0;
      int capturedPiece;
 
      MoveList moveList = moveGeneration(board);

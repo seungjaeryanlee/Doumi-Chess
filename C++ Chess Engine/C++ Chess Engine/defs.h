@@ -1,7 +1,6 @@
 #pragma once
 #include <array>
-
-typedef unsigned long long u64;
+#include <stdint.h>
 
 /*                                    DEFINITION                              */
 const int PAWNVALUE = 100;
