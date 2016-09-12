@@ -217,6 +217,9 @@ public:
      void incrementMoveNumber() { moveNumber++; }
      void decrementMoveNumber() { moveNumber--; }
      
+     int board120To64(int pos120) {
+          return (pos120 / 10 - 2) * 8 + pos120 % 10 - 1;
+     }
      void initBitBoard() {
            wKingBitBoard = 0;
            wQueenBitBoard = 0;
@@ -237,40 +240,40 @@ public:
            for (int i = 0; i < 120; i++) {
                 switch (board[i]) {
                 case WHITEKING:
-                     wKingBitBoard |= 1 << i;
+                     wKingBitBoard |= 1 << board120To64(i);
                      break;
                 case WHITEQUEEN:
-                     wQueenBitBoard |= 1 << i;
+                     wQueenBitBoard |= 1 << board120To64(i);
                      break;
                 case WHITEROOK:
-                     wRookBitBoard |= 1 << i;
+                     wRookBitBoard |= 1 << board120To64(i);
                      break;
                 case WHITEBISHOP:
-                     wBishopBitBoard |= 1 << i;
+                     wBishopBitBoard |= 1 << board120To64(i);
                      break;
                 case WHITEKNIGHT:
-                     wKnightBitBoard |= 1 << i;
+                     wKnightBitBoard |= 1 << board120To64(i);
                      break;
                 case WHITEPAWN:
-                     wPawnBitBoard |= 1 << i;
+                     wPawnBitBoard |= 1 << board120To64(i);
                      break;
                 case BLACKKING:
-                     bKingBitBoard |= 1 << i;
+                     bKingBitBoard |= 1 << board120To64(i);
                      break;
                 case BLACKQUEEN:
-                     bQueenBitBoard |= 1 << i;
+                     bQueenBitBoard |= 1 << board120To64(i);
                      break;
                 case BLACKROOK:
-                     bRookBitBoard |= 1 << i;
+                     bRookBitBoard |= 1 << board120To64(i);
                      break;
                 case BLACKBISHOP:
-                     bBishopBitBoard |= 1 << i;
+                     bBishopBitBoard |= 1 << board120To64(i);
                      break;
                 case BLACKKNIGHT:
-                     bKnightBitBoard |= 1 << i;
+                     bKnightBitBoard |= 1 << board120To64(i);
                      break;
                 case BLACKPAWN:
-                     bPawnBitBoard |= 1 << i;
+                     bPawnBitBoard |= 1 << board120To64(i);
                      break;
                 }
            }
@@ -340,7 +343,6 @@ int filerankToNumber(const char file, const int rank);
 /// <param name="position">The square in board index notation.</param>
 /// <returns>A two-letter string with file rank notation of the given square.</returns>
 std::string numberToFilerank(const int position);
-
 
 
 

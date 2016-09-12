@@ -345,6 +345,7 @@ std::string numberToFilerank(const int position) {
 }
 
 
+
 /*                             RECURSION FUNCTIONS                             */
 uint64_t divide(const int depth, const int maxDepth, Board& board, const bool showOutput) {
 
@@ -755,7 +756,10 @@ void main() {
 
      // Begin timer
      frequency = startTimer(&beginTime, 1);
-     
+
+     printf("%d\n", currentBoard.getBKBB());
+     printf("%d\n", currentBoard.bitCount(currentBoard.getWKBB()));
+
      bool correctInput = false;
      std::string userCommand;
 
