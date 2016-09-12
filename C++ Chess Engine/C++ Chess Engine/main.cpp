@@ -757,8 +757,8 @@ void main() {
      // Begin timer
      frequency = startTimer(&beginTime, 1);
 
-     printf("%d\n", currentBoard.getBKBB());
-     printf("%d\n", currentBoard.bitCount(currentBoard.getWKBB()));
+     currentBoard.initBitBoard();
+     printf("%d\n", currentBoard.bitCount(currentBoard.getBBB()));
 
      bool correctInput = false;
      std::string userCommand;
