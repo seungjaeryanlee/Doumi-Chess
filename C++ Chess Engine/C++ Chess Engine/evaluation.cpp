@@ -160,7 +160,6 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
      return max_Score;
 }
 
-// REMINDER: Whatever is changed here should be changed in negaMax and divide too
 int alphabeta(const int depth, Board& board, int alpha, int beta) {
      gameState state = checkGameState(board);
      if (state != NOTMATE) {
