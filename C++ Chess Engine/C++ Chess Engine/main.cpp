@@ -1117,10 +1117,15 @@ void main() {
                     LARGE_INTEGER frequency2, beginTime2, endTime2;
 
                     frequency2 = startTimer(&beginTime2, 2);
-                    int alphabetaValue = alphabeta(EVAL_DEPTH, currentBoard, -999999, 999999);
+                    int alphabetaValue = alphabeta(6, currentBoard, -999999, 999999);
                     stopTimer(&endTime2, 2);
                     printf("Alphabeta Value: %d\n", alphabetaValue);
                     std::cout << "Alphabeta timer : " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
+                    std::ofstream speedlog;
+                    speedlog.open("speed.log");
+
+                    speedlog << "Alphabeta Timer for Depth 6: " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms." << std::endl;
+                    speedlog.close();
                }
                else if (commandType == PRINT_SAVED_FEN) {
                     for (int i = 0; i < saveIndex; i++) {
