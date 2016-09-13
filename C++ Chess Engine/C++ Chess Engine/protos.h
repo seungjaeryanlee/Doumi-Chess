@@ -253,13 +253,16 @@ public:
      /// <returns>The score of the board</returns>
      int boardEvaluation() {
           int score = 0;
-          for (int i = 0; i < 120; i++) {
-               score += PIECEVALUE[board[i]];
-               if (!isEndgame) {
-                    score += PCSQVALUE[board[i]][i];
-               }
-               else {
-                    score += PCSQVALUE_ENDGAME[board[i]][i];
+          for (int i = 0; i < 8; i++) {
+               for (int j = 0; j < 8; j++) {
+                    int position120 = ROW*(i + 2) + (j + 1);
+                    score += PIECEVALUE[board[position120]];
+                    if (!isEndgame) {
+                         score += PCSQVALUE[board[position120]][position120];
+                    }
+                    else {
+                         score += PCSQVALUE_ENDGAME[board[position120]][position120];
+                    }
                }
           }
           return score;
