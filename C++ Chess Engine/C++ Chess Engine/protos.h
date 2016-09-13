@@ -2,6 +2,8 @@
 #include "defs.h"
 #include <Windows.h>
 
+
+
 class Move {
 private:
      int initialSquare;
@@ -69,6 +71,7 @@ private:
      int halfMoveClock;
      int moveNumber;
      bool isEndgame;
+     int score;
 
 public:
      
@@ -184,6 +187,85 @@ public:
      void incrementMoveNumber() { moveNumber++; }
      void decrementMoveNumber() { moveNumber--; }
      
+     /// <summary>
+     /// This function returns the row-reversed position of the given position in board index notation. Used in applying PCSQ table for black.
+     /// </summary>
+     /// <param name="position">The position that will be row-reversed.</param>
+     /// <returns>The row-reversed position</returns>
+     int reversePosition(const int position) {
+          return (11 - position / 10) * 10 + position % 10;
+     }
+
+     /// <summary>
+     /// This function returns evaluation score of the board using piece values and PCSQ tables. Positive score signifies white's advantage.
+     /// </summary>
+     /// <returns>The score of the board</returns>
+     int boardEvaluation() {
+          int score = 0;
+          for (int i = 0; i < 120; i++) {
+               switch (board[i]) {
+               case WHITEPAWN:
+                    score += PAWNVALUE;
+                    score += PAWN_PCSQTable.at(i);
+                    break;
+               case WHITEKNIGHT:
+                    score += KNIGHTVALUE;
+                    score += KNIGHT_PCSQTable.at(i);
+                    break;
+               case WHITEBISHOP:
+                    score += BISHOPVALUE;
+                    score += BISHOP_PCSQTable.at(i);
+                    break;
+               case WHITEROOK:
+                    score += ROOKVALUE;
+                    score += ROOK_PCSQTable.at(i);
+                    break;
+               case WHITEQUEEN:
+                    score += QUEENVALUE;
+                    score += QUEEN_PCSQTable.at(i);
+                    break;
+               case WHITEKING:
+                    score += KINGVALUE;
+                    if (isEndgame) {
+                         score += KING_PCSQTable_ENDGAME.at(i);
+                    }
+                    else {
+                         score += KING_PCSQTable.at(i);
+                    }
+                    break;
+               case BLACKPAWN:
+                    score -= PAWNVALUE;
+                    score -= PAWN_PCSQTable.at(reversePosition(i));
+                    break;
+               case BLACKKNIGHT:
+                    score -= KNIGHTVALUE;
+                    score -= KNIGHT_PCSQTable.at(reversePosition(i));
+                    break;
+               case BLACKBISHOP:
+                    score -= BISHOPVALUE;
+                    score -= BISHOP_PCSQTable.at(reversePosition(i));
+                    break;
+               case BLACKROOK:
+                    score -= ROOKVALUE;
+                    score -= ROOK_PCSQTable.at(reversePosition(i));
+                    break;
+               case BLACKQUEEN:
+                    score -= QUEENVALUE;
+                    score -= QUEEN_PCSQTable.at(reversePosition(i));
+                    break;
+               case BLACKKING:
+                    score -= KINGVALUE;
+                    if (isEndgame) {
+                         score -= KING_PCSQTable_ENDGAME.at(reversePosition(i));
+                    }
+                    else {
+                         score -= KING_PCSQTable.at(reversePosition(i));
+                    }
+                    break;
+               }
+          }
+          return score;
+     }
 };
 
 

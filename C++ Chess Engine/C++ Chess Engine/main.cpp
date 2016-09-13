@@ -1110,7 +1110,7 @@ void main() {
 
                }
                else if (commandType == EVALUATE_BOARD) {
-                    printf("Current Board Evaluation: %d\n", boardEvaluation(currentBoard));
+                    printf("Current Board Evaluation: %d\n", currentBoard.boardEvaluation());
                     continue;
                }
                else if (commandType == ALPHABETA_SPEED_CHECK) {
