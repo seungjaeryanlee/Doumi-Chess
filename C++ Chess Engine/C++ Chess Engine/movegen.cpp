@@ -417,6 +417,7 @@ void enpassantMoveGeneration(const Board& board, MoveList& moveList) {
 void addMove(int initial, int terminal, int moveType, MoveList& moveList) {
      moveList.addMove(Move(initial, terminal, moveType));
 }
+
 void addPromotionMove(int initial, int terminal, MoveList& moveList) {
      addMove(initial, terminal, KNIGHT_PROMOTION, moveList);
      addMove(initial, terminal, BISHOP_PROMOTION, moveList);

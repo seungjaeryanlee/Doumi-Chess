@@ -16,6 +16,12 @@ public:
           terminalSquare = t;
           moveType = m;
      }
+     Move(int i, int t, int m, int c) {
+          initialSquare = i;
+          terminalSquare = t;
+          moveType = m;
+          capturedPiece = c;
+     }
 
      // Clone Methods
      Move(const Move& originalMove) {

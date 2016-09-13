@@ -619,6 +619,67 @@ void undoMove(Board &board, const Move& move, const int capturedPiece) {
      }
 }
 
+void undoMove(Board &board, const Move& move) {
+     int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType(), capturedPiece = move.getCapturedPiece();
+
+     board.changeTurn();
+
+     if (moveType == NORMAL) {
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, capturedPiece);
+     }
+     else if (moveType == DOUBLEMOVE) {
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, EMPTYSQUARE);
+     }
+     else if (moveType == QUEENSIDE_CASTLING) {
+          //  undo king move
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, EMPTYSQUARE);
+
+          //  undo rook move
+          board.setSquare(initial - 4 * COLUMN, board.getSquare(terminal + COLUMN));
+          board.setSquare(terminal + COLUMN, EMPTYSQUARE);
+
+     }
+     else if (moveType == KINGSIDE_CASTLING) {
+          //  undo king move
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, EMPTYSQUARE);
+
+          //  undo rook move
+          board.setSquare(terminal + COLUMN, board.getSquare(terminal - COLUMN));
+          board.setSquare(terminal - COLUMN, EMPTYSQUARE);
+     }
+     else if (moveType == KNIGHT_PROMOTION || moveType == BISHOP_PROMOTION ||
+          moveType == ROOK_PROMOTION || moveType == QUEEN_PROMOTION) {
+          //  white turn
+          if (checkColor(board.getSquare(terminal)) == WHITE) {
+               board.setSquare(terminal, capturedPiece);
+               board.setSquare(initial, WHITEPAWN);
+          }
+          //  black turn
+          else {
+               board.setSquare(terminal, capturedPiece);
+               board.setSquare(initial, BLACKPAWN);
+          }
+     }
+     else if (moveType == ENPASSANT) {
+          //  white turn
+          if (board.getSquare(terminal) == WHITEPAWN) {
+               board.setSquare(terminal, EMPTYSQUARE);
+               board.setSquare(initial, WHITEPAWN);
+               board.setSquare(terminal + ROW, BLACKPAWN);
+          }
+          //  black turn
+          else {
+               board.setSquare(terminal, EMPTYSQUARE);
+               board.setSquare(initial, BLACKPAWN);
+               board.setSquare(terminal - ROW, WHITEPAWN);
+          }
+     }
+}
+
 /*                                  MISC                                      */
 void updateCastling(Board& board, const Move& move) {
      if (board.getSquare(move.getInitial()) == WHITEKING) {
