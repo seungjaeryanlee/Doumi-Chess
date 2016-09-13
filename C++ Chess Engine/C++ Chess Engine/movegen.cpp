@@ -418,14 +418,14 @@ void addMove(int initial, int terminal, int moveType, MoveList& moveList) {
      moveList.addMove(Move(initial, terminal, moveType));
 }
 void addPromotionMove(int initial, int terminal, MoveList& moveList) {
-     addMove(initial, terminal, KNIGHT_PROMOTION, EMPTYSQUARE, moveList);
-     addMove(initial, terminal, BISHOP_PROMOTION, EMPTYSQUARE, moveList);
-     addMove(initial, terminal, ROOK_PROMOTION, EMPTYSQUARE, moveList);
-     addMove(initial, terminal, QUEEN_PROMOTION, EMPTYSQUARE, moveList);
+     moveList.addMove(Move(initial, terminal, KNIGHT_PROMOTION, EMPTYSQUARE));
+     moveList.addMove(Move(initial, terminal, BISHOP_PROMOTION, EMPTYSQUARE));
+     moveList.addMove(Move(initial, terminal, ROOK_PROMOTION, EMPTYSQUARE));
+     moveList.addMove(Move(initial, terminal, QUEEN_PROMOTION, EMPTYSQUARE));
 }
 
-void addMove(int initial, int terminal, int moveType, int capturedPiece, MoveList& moveList) {
-     moveList.addMove(Move(initial, terminal, moveType, capturedPiece));
+void addMove(int initial, int terminal, int moveType, Board& board, MoveList& moveList) {
+     moveList.addMove(Move(initial, terminal, moveType, board.getSquare(terminal)));
 }
 
 bool squareAttackCheck(Board board, int kingPos) {
