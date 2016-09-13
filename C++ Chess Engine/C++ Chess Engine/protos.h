@@ -187,16 +187,7 @@ public:
      void incrementMoveNumber() { moveNumber++; }
      void decrementMoveNumber() { moveNumber--; }
      
-     /// <summary>
-     /// This function returns the row-reversed position of the given position in board index notation. Used in applying PCSQ table for black.
-     /// </summary>
-     /// <param name="position">The position that will be row-reversed.</param>
-     /// <returns>The row-reversed position</returns>
-     int reversePosition(const int position) {
-          return (11 - position / 10) * 10 + position % 10;
-     }
-
-
+     
      /// <summary>
      /// This function returns evaluation score of the board using piece values and PCSQ tables. Positive score signifies white's advantage.
      /// </summary>
