@@ -266,6 +266,15 @@ public:
           }
           return score;
      }
+
+     void updateScore(Move& move) {
+          if (move.getTerminal() != EMPTYSQUARE) {
+               score -= PIECEVALUE[move.getTerminal()];
+               // TODO: Subtract PCSQ Value of Captured Piece
+          }
+          // TODO: Add PCSQ Value of Moved Piece at Terminal Pos
+          // TODO: Subtract PCSQ Value of Moved Piece at Terminal Pos
+     }
 };
 
 

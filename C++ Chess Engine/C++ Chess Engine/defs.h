@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 /*                                    DEFINITION                              */
-const int PIECEVALUE[13] = {0, 100, 300, 300, 500, 900, 20000, -100, -300, -300, -500, -900, -20000};
+const int PIECEVALUE[14] = {0, 100, 300, 300, 500, 900, 20000, -100, -300, -300, -500, -900, -20000, 0};
 const int PAWNVALUE = 100;
 const int KNIGHTVALUE = 300;
 const int BISHOPVALUE = 300;
