@@ -255,53 +255,11 @@ public:
           int score = 0;
           for (int i = 0; i < 120; i++) {
                score += PIECEVALUE[board[i]];
-               switch (board[i]) {
-               case WHITEPAWN:
-                    score += PAWN_PCSQTable.at(i);
-                    break;
-               case WHITEKNIGHT:
-                    score += KNIGHT_PCSQTable.at(i);
-                    break;
-               case WHITEBISHOP:
-                    score += BISHOP_PCSQTable.at(i);
-                    break;
-               case WHITEROOK:
-                    score += ROOK_PCSQTable.at(i);
-                    break;
-               case WHITEQUEEN:
-                    score += QUEEN_PCSQTable.at(i);
-                    break;
-               case WHITEKING:
-                    if (isEndgame) {
-                         score += KING_PCSQTable_ENDGAME.at(i);
-                    }
-                    else {
-                         score += KING_PCSQTable.at(i);
-                    }
-                    break;
-               case BLACKPAWN:
-                    score -= PAWN_PCSQTable.at(reversePosition(i));
-                    break;
-               case BLACKKNIGHT:
-                    score -= KNIGHT_PCSQTable.at(reversePosition(i));
-                    break;
-               case BLACKBISHOP:
-                    score -= BISHOP_PCSQTable.at(reversePosition(i));
-                    break;
-               case BLACKROOK:
-                    score -= ROOK_PCSQTable.at(reversePosition(i));
-                    break;
-               case BLACKQUEEN:
-                    score -= QUEEN_PCSQTable.at(reversePosition(i));
-                    break;
-               case BLACKKING:
-                    if (isEndgame) {
-                         score -= KING_PCSQTable_ENDGAME.at(reversePosition(i));
-                    }
-                    else {
-                         score -= KING_PCSQTable.at(reversePosition(i));
-                    }
-                    break;
+               if (!isEndgame) {
+                    score += PCSQVALUE[board[i]][i];
+               }
+               else {
+                    score += PCSQVALUE_ENDGAME[board[i]][i];
                }
           }
           return score;
