@@ -335,7 +335,7 @@ void castlingMoveGeneration(const Board& board, MoveList& moveList) {
                squareAttackCheck(board, F1) == false &&                                    //  not attacked while moving
                squareAttackCheck(board, G1) == false) {
 
-               addMove(E1, G1, KINGSIDE_CASTLING, EMPTYSQUARE, moveList);
+               addMove(E1, G1, KINGSIDE_CASTLING, moveList);
           }
           if (board.getCastlingRight(WQCASTLING) && board.getSquare(B1) == EMPTYSQUARE &&
                board.getSquare(C1) == EMPTYSQUARE && board.getSquare(D1) == EMPTYSQUARE &&
@@ -343,7 +343,7 @@ void castlingMoveGeneration(const Board& board, MoveList& moveList) {
                squareAttackCheck(board, E1) == false &&
                squareAttackCheck(board, C1) == false &&
                squareAttackCheck(board, D1) == false) {
-               addMove(E1, C1, QUEENSIDE_CASTLING, EMPTYSQUARE, moveList);
+               addMove(E1, C1, QUEENSIDE_CASTLING, moveList);
           }
 
      }
@@ -355,7 +355,7 @@ void castlingMoveGeneration(const Board& board, MoveList& moveList) {
                squareAttackCheck(board, F8) == false &&                                    //  not attacked while moving
                squareAttackCheck(board, G8) == false) {
 
-               addMove(E8, G8, KINGSIDE_CASTLING, EMPTYSQUARE, moveList);
+               addMove(E8, G8, KINGSIDE_CASTLING, moveList);
           }
           if (board.getCastlingRight(BQCASTLING) && board.getSquare(B8) == EMPTYSQUARE &&
                board.getSquare(C8) == EMPTYSQUARE && board.getSquare(D8) == EMPTYSQUARE &&
@@ -363,7 +363,7 @@ void castlingMoveGeneration(const Board& board, MoveList& moveList) {
                squareAttackCheck(board, E8) == false &&
                squareAttackCheck(board, C8) == false &&
                squareAttackCheck(board, D8) == false) {
-               addMove(E8, C8, QUEENSIDE_CASTLING, EMPTYSQUARE, moveList);
+               addMove(E8, C8, QUEENSIDE_CASTLING, moveList);
           }
      }
 }
@@ -401,15 +401,15 @@ void enpassantMoveGeneration(const Board& board, MoveList& moveList) {
                addMove(enpassantSquare + ROW + COLUMN, enpassantSquare, ENPASSANT, BLACKPAWN, moveList);
           }
           if (board.getSquare(enpassantSquare + ROW - COLUMN) == WHITEPAWN) {
-               addMove(enpassantSquare + ROW - COLUMN, enpassantSquare, ENPASSANT, BLACKPAWN, moveList);
+               addMove(enpassantSquare + ROW - COLUMN, enpassantSquare, ENPASSANT, moveList);
           }
      }
      if (board.getTurn() == BLACK) {
           if (board.getSquare(enpassantSquare - ROW + COLUMN) == BLACKPAWN) {
-               addMove(enpassantSquare - ROW + COLUMN, enpassantSquare, ENPASSANT, WHITEPAWN, moveList);
+               addMove(enpassantSquare - ROW + COLUMN, enpassantSquare, ENPASSANT, moveList);
           }
           if (board.getSquare(enpassantSquare - ROW - COLUMN) == BLACKPAWN) {
-               addMove(enpassantSquare - ROW - COLUMN, enpassantSquare, ENPASSANT, WHITEPAWN, moveList);
+               addMove(enpassantSquare - ROW - COLUMN, enpassantSquare, ENPASSANT, moveList);
           }
      }
 }
