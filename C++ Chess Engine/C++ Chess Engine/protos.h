@@ -271,54 +271,7 @@ public:
      void updateScore(Move& move, int capturedPiece) {
           if (capturedPiece != EMPTYSQUARE) {
                score -= PIECEVALUE[capturedPiece];
-               switch (capturedPiece) {
-               case WHITEPAWN:
-                    score -= PAWN_PCSQTable.at(move.getTerminal());
-                    break;
-               case WHITEKNIGHT:
-                    score -= KNIGHT_PCSQTable.at(move.getTerminal());
-                    break;
-               case WHITEBISHOP:
-                    score -= BISHOP_PCSQTable.at(move.getTerminal());
-                    break;
-               case WHITEROOK:
-                    score -= ROOK_PCSQTable.at(move.getTerminal());
-                    break;
-               case WHITEQUEEN:
-                    score -= QUEEN_PCSQTable.at(move.getTerminal());
-                    break;
-               case WHITEKING:
-                    if (isEndgame) {
-                         score -= KING_PCSQTable_ENDGAME.at(move.getTerminal());
-                    }
-                    else {
-                         score -= KING_PCSQTable.at(move.getTerminal());
-                    }
-                    break;
-               case BLACKPAWN:
-                    score += PAWN_PCSQTable.at(reversePosition(move.getTerminal()));
-                    break;
-               case BLACKKNIGHT:
-                    score += KNIGHT_PCSQTable.at(reversePosition(move.getTerminal()));
-                    break;
-               case BLACKBISHOP:
-                    score += BISHOP_PCSQTable.at(reversePosition(move.getTerminal()));
-                    break;
-               case BLACKROOK:
-                    score += ROOK_PCSQTable.at(reversePosition(move.getTerminal()));
-                    break;
-               case BLACKQUEEN:
-                    score += QUEEN_PCSQTable.at(reversePosition(move.getTerminal()));
-                    break;
-               case BLACKKING:
-                    if (isEndgame) {
-                         score += KING_PCSQTable_ENDGAME.at(reversePosition(move.getTerminal()));
-                    }
-                    else {
-                         score += KING_PCSQTable.at(reversePosition(move.getTerminal()));
-                    }
-                    break;
-               }
+               score -= PCSQVALUE[capturedPiece][move.getTerminal()];
           }
           score += getPCSQValue(move.getTerminal());
           score -= getPCSQValue(move.getInitial());
