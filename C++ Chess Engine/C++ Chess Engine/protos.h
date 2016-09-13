@@ -70,12 +70,12 @@ private:
      int enpassantSquare;
      int halfMoveClock;
      int moveNumber;
-     
+
      bool isEndgame;
      std::array<int, 14> pieceCount;
 
 public:
-     
+
      // Default Constructor
      Board() {}
 
@@ -88,7 +88,7 @@ public:
           halfMoveClock = f;
           moveNumber = m;
      }
-     
+
      //  Clone Method
      Board(const Board& originalBoard) {
           board = originalBoard.getBoard();
@@ -187,7 +187,7 @@ public:
      void decrementHalfMoveClock() { halfMoveClock--; }
      void incrementMoveNumber() { moveNumber++; }
      void decrementMoveNumber() { moveNumber--; }
-     
+
      void updatePieceCount(Move& move, int capturedPiece) {
           if (capturedPiece != EMPTYSQUARE) {
                pieceCount[capturedPiece]--;
@@ -259,10 +259,16 @@ public:
      /// <returns>The score of the board</returns>
      int boardEvaluation() {
           int score = 0;
+          score += (pieceCount[WHITEPAWN] - pieceCount[BLACKPAWN])*PAWNVALUE
+               + (pieceCount[WHITEKNIGHT] - pieceCount[BLACKKNIGHT])*KNIGHTVALUE
+               + (pieceCount[WHITEBISHOP] - pieceCount[BLACKBISHOP])*BISHOPVALUE
+               + (pieceCount[WHITEROOK] - pieceCount[BLACKROOK])*ROOKVALUE
+               + (pieceCount[WHITEQUEEN] - pieceCount[BLACKQUEEN])*QUEENVALUE
+               + (pieceCount[WHITEKING] - pieceCount[BLACKKING])*KINGVALUE;
+         
           for (int i = 0; i < 8; i++) {
                for (int j = 0; j < 8; j++) {
                     int position120 = ROW*(i + 2) + (j + 1);
-                    score += PIECEVALUE[board[position120]];
                     if (!isEndgame) {
                          score += PCSQVALUE[board[position120]][position120];
                     }
@@ -273,22 +279,7 @@ public:
           }
           return score;
      }
-
-     /*
-     void updateScore(Move& move, int capturedPiece) {
-          if (capturedPiece != EMPTYSQUARE) {
-               score -= PIECEVALUE[capturedPiece];
-               score -= PCSQVALUE[capturedPiece][move.getTerminal()];
-          }
-          if (!isEndgame) {
-               score += PCSQVALUE[board[move.getTerminal()]][move.getTerminal()] - PCSQVALUE[board[move.getInitial()]][move.getInitial()];
-          }
-          else {
-               score += PCSQVALUE_ENDGAME[board[move.getTerminal()]][move.getTerminal()] - PCSQVALUE_ENDGAME[board[move.getInitial()]][move.getInitial()];
-          }
-     }
-     //*/
-
+};
 
 /*                                  BOARD SETUP                               */
 /// <summary>
