@@ -669,6 +669,7 @@ void updateBoard(Board& board, const Move& move) {
      updateEnPassant(board, move);
      updateHalfMoveClock(board, move);
      board.updateEndgame(move);
+     // TODO: Add updatePieceCount
      updateMoveNumber(board);
 }
 
@@ -763,6 +764,7 @@ void main() {
 /*                                 MAIN LOOP                                  */
 /******************************************************************************/
      currentBoard.updateEndgame();
+     currentBoard.updatePieceCount();
      while (gamePlaying) {
 
           //  Detect Checkmate/Stalemate

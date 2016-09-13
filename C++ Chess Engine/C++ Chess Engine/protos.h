@@ -188,6 +188,17 @@ public:
      void incrementMoveNumber() { moveNumber++; }
      void decrementMoveNumber() { moveNumber--; }
 
+     void updatePieceCount() {
+          for (int i = 0; i < 14; i++) {
+               pieceCount[i] = 0;
+          }
+          for (int i = 0; i < 8; i++) {
+               for (int j = 0; j < 8; j++) {
+                    int position120 = ROW*(i + 2) + (j + 1);
+                    pieceCount[board[position120]]++;
+               }
+          }
+     }
      void updatePieceCount(Move& move, int capturedPiece) {
           if (capturedPiece != EMPTYSQUARE) {
                pieceCount[capturedPiece]--;
