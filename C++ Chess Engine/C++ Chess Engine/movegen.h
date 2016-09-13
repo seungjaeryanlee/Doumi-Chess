@@ -77,7 +77,8 @@ void enpassantMoveGeneration(const Board& board, MoveList& moveList);
 /// <param name="terminal">The terminal square of the move in board index notation.</param>
 /// <param name="moveType">The type of the move.</param>
 /// <param name="moveList">The list of moves where the new move will be added in.</param>
-void addMove(int initial, int terminal, int moveType, MoveList& moveList);
+// TODO: UPDATE
+void addMove(int initial, int terminal, int moveType, const Board& board, MoveList& moveList);
 /// <summary>
 /// This function adds four promotion moves from the initial square to the terminal square to the given movelist.
 /// </summary>
