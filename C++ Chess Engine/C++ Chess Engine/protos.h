@@ -196,56 +196,6 @@ public:
           return (11 - position / 10) * 10 + position % 10;
      }
 
-     int getPCSQValue(int position) {
-          switch (board[position]) {
-          case WHITEPAWN:
-               return PAWN_PCSQTable.at(position);
-               break;
-          case WHITEKNIGHT:
-               return KNIGHT_PCSQTable.at(position);
-               break;
-          case WHITEBISHOP:
-               return BISHOP_PCSQTable.at(position);
-               break;
-          case WHITEROOK:
-               return ROOK_PCSQTable.at(position);
-               break;
-          case WHITEQUEEN:
-               return QUEEN_PCSQTable.at(position);
-               break;
-          case WHITEKING:
-               if (isEndgame) {
-                    return KING_PCSQTable_ENDGAME.at(position);
-               }
-               else {
-                    return KING_PCSQTable.at(position);
-               }
-               break;
-          case BLACKPAWN:
-               return -1*PAWN_PCSQTable.at(reversePosition(position));
-               break;
-          case BLACKKNIGHT:
-               return -1*KNIGHT_PCSQTable.at(reversePosition(position));
-               break;
-          case BLACKBISHOP:
-               return -1*BISHOP_PCSQTable.at(reversePosition(position));
-               break;
-          case BLACKROOK:
-               return -1*ROOK_PCSQTable.at(reversePosition(position));
-               break;
-          case BLACKQUEEN:
-               return -1*QUEEN_PCSQTable.at(reversePosition(position));
-               break;
-          case BLACKKING:
-               if (isEndgame) {
-                    return -1*KING_PCSQTable_ENDGAME.at(reversePosition(position));
-               }
-               else {
-                    return -1*KING_PCSQTable.at(reversePosition(position));
-               }
-               break;
-          }
-     }
 
      /// <summary>
      /// This function returns evaluation score of the board using piece values and PCSQ tables. Positive score signifies white's advantage.
@@ -273,8 +223,12 @@ public:
                score -= PIECEVALUE[capturedPiece];
                score -= PCSQVALUE[capturedPiece][move.getTerminal()];
           }
-          score += getPCSQValue(move.getTerminal());
-          score -= getPCSQValue(move.getInitial());
+          if (!isEndgame) {
+               score += PCSQVALUE[board[move.getTerminal()]][move.getTerminal()] - PCSQVALUE[board[move.getInitial()]][move.getInitial()];
+          }
+          else {
+               score += PCSQVALUE_ENDGAME[board[move.getTerminal()]][move.getTerminal()] - PCSQVALUE_ENDGAME[board[move.getInitial()]][move.getInitial()];
+          }
      }
 };
 
