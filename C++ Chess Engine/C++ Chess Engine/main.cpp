@@ -1126,6 +1126,10 @@ void main() {
           //  Computer turn
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
 
+
+               LARGE_INTEGER frequency, beginTime, endTime;
+               frequency = startTimer(&beginTime, 2);
+
                savedBoard[saveIndex] = currentBoard;
 
                Move abMove;
@@ -1174,6 +1178,10 @@ void main() {
                          break;
                     }
                }
+
+               stopTimer(&endTime, 2);
+               std::cout << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
+               log << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
           }
      }
 
