@@ -70,8 +70,9 @@ private:
      int enpassantSquare;
      int halfMoveClock;
      int moveNumber;
+     
      bool isEndgame;
-     int score;
+     std::array<int, 14> pieceCount;
 
 public:
      
@@ -187,7 +188,71 @@ public:
      void incrementMoveNumber() { moveNumber++; }
      void decrementMoveNumber() { moveNumber--; }
      
-     
+     void updatePieceCount(Move& move, int capturedPiece) {
+          if (capturedPiece != EMPTYSQUARE) {
+               pieceCount[capturedPiece]--;
+               return;
+          }
+          else if (move.getType() == KNIGHT_PROMOTION) {
+               if (move.getTerminal() == WHITEKNIGHT) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEKNIGHT]++;
+                    return;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKKNIGHT]++;
+                    return;
+               }
+          }
+          else if (move.getType() == KNIGHT_PROMOTION) {
+               if (move.getTerminal() == WHITEKNIGHT) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEKNIGHT]++;
+                    return;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKKNIGHT]++;
+                    return;
+               }
+          }
+          else if (move.getType() == BISHOP_PROMOTION) {
+               if (move.getTerminal() == WHITEBISHOP) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEBISHOP]++;
+                    return;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKBISHOP]++;
+                    return;
+               }
+          }
+          else if (move.getType() == ROOK_PROMOTION) {
+               if (move.getTerminal() == WHITEROOK) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEROOK]++;
+                    return;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKROOK]++;
+                    return;
+               }
+          }
+          else if (move.getType() == QUEEN_PROMOTION) {
+               if (move.getTerminal() == WHITEQUEEN) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEQUEEN]++;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKQUEEN]++;
+               }
+          }
+     }
+
      /// <summary>
      /// This function returns evaluation score of the board using piece values and PCSQ tables. Positive score signifies white's advantage.
      /// </summary>
@@ -209,6 +274,7 @@ public:
           return score;
      }
 
+     /*
      void updateScore(Move& move, int capturedPiece) {
           if (capturedPiece != EMPTYSQUARE) {
                score -= PIECEVALUE[capturedPiece];
@@ -221,7 +287,7 @@ public:
                score += PCSQVALUE_ENDGAME[board[move.getTerminal()]][move.getTerminal()] - PCSQVALUE_ENDGAME[board[move.getInitial()]][move.getInitial()];
           }
      }
-};
+     //*/
 
 
 /*                                  BOARD SETUP                               */
