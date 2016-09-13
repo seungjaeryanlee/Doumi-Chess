@@ -857,7 +857,9 @@ void main() {
                }
                
                if (commandType == MOVE) {
-                    
+                    LARGE_INTEGER frequency, beginTime, endTime;
+                    frequency = startTimer(&beginTime, 2);
+
                     savedBoard[saveIndex] = currentBoard;
 
                     //  Movelist used for legality/movetype check
@@ -1008,6 +1010,10 @@ void main() {
                     
                     // add to log file
                     log << printMove(currentBoard.getMoveNumber(), userMove);
+
+                    stopTimer(&endTime, 2);
+                    std::cout << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
+                    log << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
 
                     continue;
                }
