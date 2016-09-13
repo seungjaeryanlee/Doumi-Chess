@@ -857,8 +857,8 @@ void main() {
                }
                
                if (commandType == MOVE) {
-                    LARGE_INTEGER frequency, beginTime, endTime;
-                    frequency = startTimer(&beginTime, 2);
+                    LARGE_INTEGER frequency2, beginTime2, endTime2;
+                    frequency2 = startTimer(&beginTime2, 2);
 
                     savedBoard[saveIndex] = currentBoard;
 
@@ -1011,9 +1011,9 @@ void main() {
                     // add to log file
                     log << printMove(currentBoard.getMoveNumber(), userMove);
 
-                    stopTimer(&endTime, 2);
-                    std::cout << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
-                    log << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
+                    stopTimer(&endTime2, 2);
+                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for this move.\n";
+                    log << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for this move.\n";
 
                     continue;
                }
