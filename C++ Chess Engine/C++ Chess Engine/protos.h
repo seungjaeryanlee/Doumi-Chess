@@ -254,29 +254,24 @@ public:
      int boardEvaluation() {
           int score = 0;
           for (int i = 0; i < 120; i++) {
+               score += PIECEVALUE[board[i]];
                switch (board[i]) {
                case WHITEPAWN:
-                    score += PAWNVALUE;
                     score += PAWN_PCSQTable.at(i);
                     break;
                case WHITEKNIGHT:
-                    score += KNIGHTVALUE;
                     score += KNIGHT_PCSQTable.at(i);
                     break;
                case WHITEBISHOP:
-                    score += BISHOPVALUE;
                     score += BISHOP_PCSQTable.at(i);
                     break;
                case WHITEROOK:
-                    score += ROOKVALUE;
                     score += ROOK_PCSQTable.at(i);
                     break;
                case WHITEQUEEN:
-                    score += QUEENVALUE;
                     score += QUEEN_PCSQTable.at(i);
                     break;
                case WHITEKING:
-                    score += KINGVALUE;
                     if (isEndgame) {
                          score += KING_PCSQTable_ENDGAME.at(i);
                     }
@@ -285,27 +280,21 @@ public:
                     }
                     break;
                case BLACKPAWN:
-                    score -= PAWNVALUE;
                     score -= PAWN_PCSQTable.at(reversePosition(i));
                     break;
                case BLACKKNIGHT:
-                    score -= KNIGHTVALUE;
                     score -= KNIGHT_PCSQTable.at(reversePosition(i));
                     break;
                case BLACKBISHOP:
-                    score -= BISHOPVALUE;
                     score -= BISHOP_PCSQTable.at(reversePosition(i));
                     break;
                case BLACKROOK:
-                    score -= ROOKVALUE;
                     score -= ROOK_PCSQTable.at(reversePosition(i));
                     break;
                case BLACKQUEEN:
-                    score -= QUEENVALUE;
                     score -= QUEEN_PCSQTable.at(reversePosition(i));
                     break;
                case BLACKKING:
-                    score -= KINGVALUE;
                     if (isEndgame) {
                          score -= KING_PCSQTable_ENDGAME.at(reversePosition(i));
                     }
