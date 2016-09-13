@@ -116,7 +116,7 @@ void pawnMoveGeneration(const Board& board, const int position, MoveList& moveLi
 
           //  Advance 1 square
           if (board.getSquare(position - ROW) == EMPTYSQUARE) {
-               addMove(position, position - ROW, NORMAL, moveList);
+               addMove(position, position - ROW, NORMAL, EMPTYSQUARE, moveList);
                //  Advance 2 squares
                if (A2 <= position && position <= H2 &&
                     board.getSquare(position - 2 * ROW) == EMPTYSQUARE) {
@@ -398,7 +398,7 @@ void enpassantMoveGeneration(const Board& board, MoveList& moveList) {
 
      if (board.getTurn() == WHITE) {
           if (board.getSquare(enpassantSquare + ROW + COLUMN) == WHITEPAWN) {
-               addMove(enpassantSquare + ROW + COLUMN, enpassantSquare, ENPASSANT, moveList);
+               addMove(enpassantSquare + ROW + COLUMN, enpassantSquare, ENPASSANT, BLACKPAWN, moveList);
           }
           if (board.getSquare(enpassantSquare + ROW - COLUMN) == WHITEPAWN) {
                addMove(enpassantSquare + ROW - COLUMN, enpassantSquare, ENPASSANT, moveList);
@@ -417,14 +417,16 @@ void enpassantMoveGeneration(const Board& board, MoveList& moveList) {
 void addMove(int initial, int terminal, int moveType, MoveList& moveList) {
      moveList.addMove(Move(initial, terminal, moveType));
 }
-
 void addPromotionMove(int initial, int terminal, MoveList& moveList) {
-     addMove(initial, terminal, KNIGHT_PROMOTION, moveList);
-     addMove(initial, terminal, BISHOP_PROMOTION, moveList);
-     addMove(initial, terminal, ROOK_PROMOTION, moveList);
-     addMove(initial, terminal, QUEEN_PROMOTION, moveList);
+     addMove(initial, terminal, KNIGHT_PROMOTION, EMPTYSQUARE, moveList);
+     addMove(initial, terminal, BISHOP_PROMOTION, EMPTYSQUARE, moveList);
+     addMove(initial, terminal, ROOK_PROMOTION, EMPTYSQUARE, moveList);
+     addMove(initial, terminal, QUEEN_PROMOTION, EMPTYSQUARE, moveList);
 }
 
+void addMove(int initial, int terminal, int moveType, int capturedPiece, MoveList& moveList) {
+     moveList.addMove(Move(initial, terminal, moveType, capturedPiece));
+}
 
 bool squareAttackCheck(Board board, int kingPos) {
      if (board.getTurn() == WHITE) {
