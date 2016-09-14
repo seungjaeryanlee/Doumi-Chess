@@ -669,7 +669,8 @@ void updateBoard(Board& board, const Move& move) {
      updateEnPassant(board, move);
      updateHalfMoveClock(board, move);
      board.updateEndgame(move);
-     // TODO: Add updatePieceCount
+     // TODO: Use the faster version
+     board.updatePieceCount();
      updateMoveNumber(board);
 }
 
