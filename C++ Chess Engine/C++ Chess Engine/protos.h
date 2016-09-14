@@ -9,6 +9,7 @@ private:
      int initialSquare;
      int terminalSquare;
      int moveType;
+     int capturedPiece;
 public:
      // Constructors
      Move() {}
@@ -34,10 +35,12 @@ public:
      void setInitial(const int i) { initialSquare = i; }
      void setTerminal(const int t) { terminalSquare = t; }
      void setType(const int t) { moveType = t; }
+     void setCapturedPiece(const int c) { capturedPiece = c; }
      // Accessors
      const int getInitial() const { return initialSquare; }
      const int getTerminal() const { return terminalSquare; }
      const int getType() const { return moveType; }
+     const int getCapturedPiece() const { return capturedPiece; }
 
 };
 class MoveList {
