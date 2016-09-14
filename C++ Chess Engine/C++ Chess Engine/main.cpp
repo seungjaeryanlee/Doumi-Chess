@@ -368,7 +368,7 @@ uint64_t divide(const int depth, const int maxDepth, Board& board, const bool sh
           int terminal = moveList.getMove(i).getTerminal();
                    
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i), capturedPiece);
           
           node += divide(depth - 1, maxDepth, board, showOutput);
           if (showOutput) {
@@ -417,7 +417,7 @@ uint64_t divide2(const int depth, const int maxDepth, Board& board, const bool s
           int terminal = moveList.getMove(i).getTerminal();
 
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i), capturedPiece);
 
 
           node += divide(depth - 1, maxDepth, board, showOutput);
@@ -664,13 +664,12 @@ void updateMoveNumber(Board& board) {
      if (board.getTurn() == WHITE) { board.incrementMoveNumber(); }
 }
 
-void updateBoard(Board& board, const Move& move) {
+void updateBoard(Board& board, const Move& move, const int capturedPiece) {
      updateCastling(board, move);
      updateEnPassant(board, move);
      updateHalfMoveClock(board, move);
      board.updateEndgame(move);
-     // TODO: Use the faster version
-     board.updatePieceCount();
+     board.updatePieceCount(move, capturedPiece);
      updateMoveNumber(board);
 }
 
@@ -1153,14 +1152,13 @@ void main() {
 
                // Make Move, Save and Print
                savedCapturedPiece[saveIndex] = makeMove(currentBoard, abMove);
+               updateBoard(currentBoard, abMove, savedCapturedPiece[saveIndex]);
                savedMove[saveIndex] = abMove;
                saveIndex++;
 
                printSimpleBoard(currentBoard);
                std::cout << printMove(currentBoard.getMoveNumber(), abMove);
                log << printMove(currentBoard.getMoveNumber(), abMove);
-
-               updateBoard(currentBoard, abMove);
 
                //  TODO: Add 50 Move Rule option in move generation / selection?               
                // Check Fifty move rule

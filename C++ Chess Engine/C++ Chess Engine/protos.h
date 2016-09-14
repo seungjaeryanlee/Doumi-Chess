@@ -201,7 +201,7 @@ public:
                }
           }
      }
-     void updatePieceCount(Move& move, int capturedPiece) {
+     void updatePieceCount(const Move& move, const int capturedPiece) {
           if (capturedPiece != EMPTYSQUARE) {
                pieceCount[capturedPiece]--;
                return;
@@ -416,7 +416,8 @@ void updateMoveNumber(Board& board);
 /// </summary>
 /// <param name="board">The board that will be checked.</param>
 /// <param name="move">The move that was made that could have changed the board properties.</param>
-void updateBoard(Board& board, const Move& move);
+// TODO: UPDATE
+void updateBoard(Board& board, const Move& move, const int capturedPiece);
 
 /// <summary>
 /// This function checks the game state of the given board.

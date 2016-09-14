@@ -37,7 +37,7 @@ int negaMax(const int depth, Board& board) {
      for (int i = 0; i <moveList.getCounter(); i++) {
 
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i), capturedPiece);
 
           score = -negaMax(depth - 1, board);
 
@@ -70,7 +70,7 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
 
      for (int i = 0; i < moveList.getCounter(); i++) {     
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i), capturedPiece);
 
           score = -negaMax(maxDepth - 1, board);
 
@@ -125,7 +125,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
 
      for (int i = 0; i < moveList.getCounter(); i++) {
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i), capturedPiece);
 
           score = -alphabeta(depth - 1, board, -beta, -alpha);
 
@@ -164,7 +164,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
      bool isEndgame = board.getEndgame();
      for (int i = 0; i < moveList.getCounter(); i++) {
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i), capturedPiece);
 
           score = -alphabeta(maxDepth - 1, board, -beta, -alpha);
 
