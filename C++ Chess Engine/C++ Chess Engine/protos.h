@@ -2,6 +2,8 @@
 #include "defs.h"
 #include <Windows.h>
 
+
+
 class Move {
 private:
      int initialSquare;
@@ -71,10 +73,12 @@ private:
      int enpassantSquare;
      int halfMoveClock;
      int moveNumber;
+
      bool isEndgame;
+     std::array<int, 14> pieceCount;
 
 public:
-     
+
      // Default Constructor
      Board() {}
 
@@ -87,7 +91,7 @@ public:
           halfMoveClock = f;
           moveNumber = m;
      }
-     
+
      //  Clone Method
      Board(const Board& originalBoard) {
           board = originalBoard.getBoard();
@@ -141,6 +145,7 @@ public:
      void setHalfMoveClock(const int f) { halfMoveClock = f; }
      void setMoveNumber(const int m) { moveNumber = m; }
      void setEndgame(bool e) { isEndgame = e; }
+     void setPieceCount(const std::array<int, 14> pc) { pieceCount = pc; }
      void updateEndgame() {
           if (isEndgame) { return; }
           else {
@@ -179,6 +184,7 @@ public:
      const int getHalfMoveClock() const { return halfMoveClock; }
      const int getMoveNumber() const { return moveNumber; }
      const bool getEndgame() const { return isEndgame; }
+     const std::array<int, 14> getPieceCount() const { return pieceCount; }
 
      //  Other Functions
      void changeTurn() { turn = (color)-turn; }
@@ -186,9 +192,110 @@ public:
      void decrementHalfMoveClock() { halfMoveClock--; }
      void incrementMoveNumber() { moveNumber++; }
      void decrementMoveNumber() { moveNumber--; }
-     
-};
 
+     void updatePieceCount() {
+          for (int i = 0; i < 14; i++) {
+               pieceCount[i] = 0;
+          }
+          for (int i = 0; i < 8; i++) {
+               for (int j = 0; j < 8; j++) {
+                    int position120 = ROW*(i + 2) + (j + 1);
+                    pieceCount[board[position120]]++;
+               }
+          }
+     }
+     void updatePieceCount(const Move& move, const int capturedPiece) {
+          if (capturedPiece != EMPTYSQUARE) {
+               pieceCount[capturedPiece]--;
+               return;
+          }
+          else if (move.getType() == KNIGHT_PROMOTION) {
+               if (move.getTerminal() == WHITEKNIGHT) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEKNIGHT]++;
+                    return;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKKNIGHT]++;
+                    return;
+               }
+          }
+          else if (move.getType() == KNIGHT_PROMOTION) {
+               if (move.getTerminal() == WHITEKNIGHT) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEKNIGHT]++;
+                    return;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKKNIGHT]++;
+                    return;
+               }
+          }
+          else if (move.getType() == BISHOP_PROMOTION) {
+               if (move.getTerminal() == WHITEBISHOP) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEBISHOP]++;
+                    return;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKBISHOP]++;
+                    return;
+               }
+          }
+          else if (move.getType() == ROOK_PROMOTION) {
+               if (move.getTerminal() == WHITEROOK) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEROOK]++;
+                    return;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKROOK]++;
+                    return;
+               }
+          }
+          else if (move.getType() == QUEEN_PROMOTION) {
+               if (move.getTerminal() == WHITEQUEEN) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEQUEEN]++;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKQUEEN]++;
+               }
+          }
+     }
+
+     /// <summary>
+     /// This function returns evaluation score of the board using piece values and PCSQ tables. Positive score signifies white's advantage.
+     /// </summary>
+     /// <returns>The score of the board</returns>
+     int boardEvaluation() {
+          int score = 0;
+          score += (pieceCount[WHITEPAWN] - pieceCount[BLACKPAWN])*PAWNVALUE
+               + (pieceCount[WHITEKNIGHT] - pieceCount[BLACKKNIGHT])*KNIGHTVALUE
+               + (pieceCount[WHITEBISHOP] - pieceCount[BLACKBISHOP])*BISHOPVALUE
+               + (pieceCount[WHITEROOK] - pieceCount[BLACKROOK])*ROOKVALUE
+               + (pieceCount[WHITEQUEEN] - pieceCount[BLACKQUEEN])*QUEENVALUE
+               + (pieceCount[WHITEKING] - pieceCount[BLACKKING])*KINGVALUE;
+         
+          for (int i = 0; i < 8; i++) {
+               for (int j = 0; j < 8; j++) {
+                    int position120 = ROW*(i + 2) + (j + 1);
+                    if (!isEndgame) {
+                         score += PCSQVALUE[board[position120]][position120];
+                    }
+                    else {
+                         score += PCSQVALUE_ENDGAME[board[position120]][position120];
+                    }
+               }
+          }
+          return score;
+     }
+};
 
 /*                                  BOARD SETUP                               */
 /// <summary>
@@ -312,7 +419,8 @@ void updateMoveNumber(Board& board);
 /// </summary>
 /// <param name="board">The board that will be checked.</param>
 /// <param name="move">The move that was made that could have changed the board properties.</param>
-void updateBoard(Board& board, const Move& move);
+// TODO: UPDATE
+void updateBoard(Board& board, const Move& move, const int capturedPiece);
 
 /// <summary>
 /// This function checks the game state of the given board.

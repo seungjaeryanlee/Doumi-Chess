@@ -2,76 +2,6 @@
 #include "defs.h"
 #include "movegen.h"
 
-int boardEvaluation(const Board& board) {
-     int score = 0;
-     for (int i = 0; i < 120; i++) {
-          switch (board.getSquare(i)) {
-          case WHITEPAWN:
-               score += PAWNVALUE;
-               score += PAWN_PCSQTable.at(i);
-               break;
-          case WHITEKNIGHT:
-               score += KNIGHTVALUE;
-               score += KNIGHT_PCSQTable.at(i);
-               break;
-          case WHITEBISHOP:
-               score += BISHOPVALUE;
-               score += BISHOP_PCSQTable.at(i);
-               break;
-          case WHITEROOK:
-               score += ROOKVALUE;
-               score += ROOK_PCSQTable.at(i);
-               break;
-          case WHITEQUEEN:
-               score += QUEENVALUE;
-               score += QUEEN_PCSQTable.at(i);
-               break;
-          case WHITEKING:
-               score += KINGVALUE;
-               if (board.getEndgame()) {
-                    score += KING_PCSQTable_ENDGAME.at(i);
-               }
-               else {
-                    score += KING_PCSQTable.at(i);
-               }
-               break;
-          case BLACKPAWN:
-               score -= PAWNVALUE;
-               score -= PAWN_PCSQTable.at(reversePosition(i));
-               break;
-          case BLACKKNIGHT:
-               score -= KNIGHTVALUE;
-               score -= KNIGHT_PCSQTable.at(reversePosition(i));
-               break;
-          case BLACKBISHOP:
-               score -= BISHOPVALUE;
-               score -= BISHOP_PCSQTable.at(reversePosition(i));
-               break;
-          case BLACKROOK:
-               score -= ROOKVALUE;
-               score -= ROOK_PCSQTable.at(reversePosition(i));
-               break;
-          case BLACKQUEEN:
-               score -= QUEENVALUE;
-               score -= QUEEN_PCSQTable.at(reversePosition(i));
-               break;
-          case BLACKKING:
-               score -= KINGVALUE;
-               if (board.getEndgame()) {
-                    score -= KING_PCSQTable_ENDGAME.at(reversePosition(i));
-               }
-               else {
-                    score -= KING_PCSQTable.at(reversePosition(i));
-               }
-               break;
-          }
-     }
-     return score;
-}
-int reversePosition(const int position) {
-     return (11 - position / 10) * 10 + position % 10;
-}
-
 int negaMax(const int depth, Board& board) {
      gameState state = checkGameState(board);
      if (state != NOTMATE) {
@@ -91,7 +21,7 @@ int negaMax(const int depth, Board& board) {
           }
      }
      if (depth == 0) {
-          return board.getTurn() * boardEvaluation(board);
+          return board.getTurn() * board.boardEvaluation();
      }
      int max_Score = INT_MIN;
      int score;
@@ -103,11 +33,12 @@ int negaMax(const int depth, Board& board) {
      int halfMoveClock = board.getHalfMoveClock();
      int moveNumber = board.getMoveNumber();
      bool isEndgame = board.getEndgame();
+     std::array<int, 14> pieceCount = board.getPieceCount();
 
      for (int i = 0; i <moveList.getCounter(); i++) {
 
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i), capturedPiece);
 
           score = -negaMax(depth - 1, board);
 
@@ -121,6 +52,7 @@ int negaMax(const int depth, Board& board) {
           board.setHalfMoveClock(halfMoveClock);
           board.setMoveNumber(moveNumber);
           board.setEndgame(isEndgame);
+          board.setPieceCount(pieceCount);
      }
 
      return max_Score;
@@ -137,10 +69,11 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
      int halfMoveClock = board.getHalfMoveClock();
      int moveNumber = board.getMoveNumber();
      bool isEndgame = board.getEndgame();
+     std::array<int, 14> pieceCount = board.getPieceCount();
 
      for (int i = 0; i < moveList.getCounter(); i++) {     
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i), capturedPiece);
 
           score = -negaMax(maxDepth - 1, board);
 
@@ -155,6 +88,7 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
           board.setHalfMoveClock(halfMoveClock);
           board.setMoveNumber(moveNumber);
           board.setEndgame(isEndgame);
+          board.setPieceCount(pieceCount);
      }
 
      return max_Score;
@@ -179,7 +113,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
           }
      }
      if (depth == 0) {
-          return board.getTurn() * boardEvaluation(board);
+          return board.getTurn() * board.boardEvaluation();
      }
 
      int score;
@@ -191,11 +125,12 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
      int halfMoveClock = board.getHalfMoveClock();
      int moveNumber = board.getMoveNumber();
      bool isEndgame = board.getEndgame();
+     std::array<int, 14> pieceCount = board.getPieceCount();
 
 
      for (int i = 0; i < moveList.getCounter(); i++) {
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i), capturedPiece);
 
           score = -alphabeta(depth - 1, board, -beta, -alpha);
 
@@ -206,6 +141,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
                board.setHalfMoveClock(halfMoveClock);
                board.setMoveNumber(moveNumber);
                board.setEndgame(isEndgame);
+               board.setPieceCount(pieceCount);
                return beta;
           }
 
@@ -218,6 +154,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
           board.setHalfMoveClock(halfMoveClock);
           board.setMoveNumber(moveNumber);
           board.setEndgame(isEndgame);
+          board.setPieceCount(pieceCount);
      }
 
      return alpha;
@@ -232,9 +169,12 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
      int halfMoveClock = board.getHalfMoveClock();
      int moveNumber = board.getMoveNumber();
      bool isEndgame = board.getEndgame();
+     std::array<int, 14> pieceCount = board.getPieceCount();
+
+
      for (int i = 0; i < moveList.getCounter(); i++) {
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i), capturedPiece);
 
           score = -alphabeta(maxDepth - 1, board, -beta, -alpha);
 
@@ -246,6 +186,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
                board.setHalfMoveClock(halfMoveClock);
                board.setMoveNumber(moveNumber);
                board.setEndgame(isEndgame);
+               board.setPieceCount(pieceCount);
                return beta;
           }
 
@@ -260,6 +201,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
           board.setHalfMoveClock(halfMoveClock);
           board.setMoveNumber(moveNumber);
           board.setEndgame(isEndgame);
+          board.setPieceCount(pieceCount);
      }
 
      return alpha;
