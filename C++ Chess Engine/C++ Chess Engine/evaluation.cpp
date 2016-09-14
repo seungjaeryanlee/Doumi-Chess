@@ -33,6 +33,7 @@ int negaMax(const int depth, Board& board) {
      int halfMoveClock = board.getHalfMoveClock();
      int moveNumber = board.getMoveNumber();
      bool isEndgame = board.getEndgame();
+     std::array<int, 14> pieceCount = board.getPieceCount();
 
      for (int i = 0; i <moveList.getCounter(); i++) {
 
@@ -51,6 +52,7 @@ int negaMax(const int depth, Board& board) {
           board.setHalfMoveClock(halfMoveClock);
           board.setMoveNumber(moveNumber);
           board.setEndgame(isEndgame);
+          board.setPieceCount(pieceCount);
      }
 
      return max_Score;
@@ -67,6 +69,7 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
      int halfMoveClock = board.getHalfMoveClock();
      int moveNumber = board.getMoveNumber();
      bool isEndgame = board.getEndgame();
+     std::array<int, 14> pieceCount = board.getPieceCount();
 
      for (int i = 0; i < moveList.getCounter(); i++) {     
           capturedPiece = makeMove(board, moveList.getMove(i));
@@ -85,6 +88,7 @@ int rootNegaMax(const int maxDepth, Board& board, Move& bestMove) {
           board.setHalfMoveClock(halfMoveClock);
           board.setMoveNumber(moveNumber);
           board.setEndgame(isEndgame);
+          board.setPieceCount(pieceCount);
      }
 
      return max_Score;
@@ -121,6 +125,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
      int halfMoveClock = board.getHalfMoveClock();
      int moveNumber = board.getMoveNumber();
      bool isEndgame = board.getEndgame();
+     std::array<int, 14> pieceCount = board.getPieceCount();
 
 
      for (int i = 0; i < moveList.getCounter(); i++) {
@@ -136,6 +141,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
                board.setHalfMoveClock(halfMoveClock);
                board.setMoveNumber(moveNumber);
                board.setEndgame(isEndgame);
+               board.setPieceCount(pieceCount);
                return beta;
           }
 
@@ -148,6 +154,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
           board.setHalfMoveClock(halfMoveClock);
           board.setMoveNumber(moveNumber);
           board.setEndgame(isEndgame);
+          board.setPieceCount(pieceCount);
      }
 
      return alpha;
@@ -162,6 +169,9 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
      int halfMoveClock = board.getHalfMoveClock();
      int moveNumber = board.getMoveNumber();
      bool isEndgame = board.getEndgame();
+     std::array<int, 14> pieceCount = board.getPieceCount();
+
+
      for (int i = 0; i < moveList.getCounter(); i++) {
           capturedPiece = makeMove(board, moveList.getMove(i));
           updateBoard(board, moveList.getMove(i), capturedPiece);
@@ -176,6 +186,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
                board.setHalfMoveClock(halfMoveClock);
                board.setMoveNumber(moveNumber);
                board.setEndgame(isEndgame);
+               board.setPieceCount(pieceCount);
                return beta;
           }
 
@@ -190,6 +201,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
           board.setHalfMoveClock(halfMoveClock);
           board.setMoveNumber(moveNumber);
           board.setEndgame(isEndgame);
+          board.setPieceCount(pieceCount);
      }
 
      return alpha;
