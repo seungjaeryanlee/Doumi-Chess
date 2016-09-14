@@ -142,6 +142,7 @@ public:
      void setHalfMoveClock(const int f) { halfMoveClock = f; }
      void setMoveNumber(const int m) { moveNumber = m; }
      void setEndgame(bool e) { isEndgame = e; }
+     void setPieceCount(const std::array<int, 14> pc) { pieceCount = pc; }
      void updateEndgame() {
           if (isEndgame) { return; }
           else {
@@ -180,6 +181,7 @@ public:
      const int getHalfMoveClock() const { return halfMoveClock; }
      const int getMoveNumber() const { return moveNumber; }
      const bool getEndgame() const { return isEndgame; }
+     const std::array<int, 14> getPieceCount() const { return pieceCount; }
 
      //  Other Functions
      void changeTurn() { turn = (color)-turn; }
