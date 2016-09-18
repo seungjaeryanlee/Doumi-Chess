@@ -3,11 +3,11 @@
 sjlee235
 ## Code Explained (In construction)
 1. Board Representation  
-I use size 120 array to represent a board. The 12x10 array uses the middle 8x8 as the chessboard, and all the other squares are declared error squares. With these error squares, it is easier to generate moves for bishop, rook, queen and knight.
+I use size 120 array to represent a board. The 12x10 array uses the middle 8x8 as the chessboard, and all the other squares are declared error squares. With these error squares, it is easier to generate moves for bishop, rook, queen and knight. Eventually I plan to change to bitboard mechanism.
 2. Board Evaluation  
 3. Move Generation  
 4. Recursion  
-I plan to use Negamax algorithm for this engine.
+I am using Negamax algorithm for this engine.
 
 ## Current Progress
 1. Board Representation - **Complete**  
