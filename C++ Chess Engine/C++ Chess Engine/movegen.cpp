@@ -197,48 +197,54 @@ void knightMoveGeneration(const Board& board, const int position, MoveList& move
 }
 void bishopMoveGeneration(const Board& board, const int position, MoveList& moveList) {
      int turn = board.getTurn();
-     bool topright = true, downright = true, downleft = true, topleft = true;
+
+     // TOPRIGHT
      for (int i = 1; i < 8; i++) {
-          if (topright == true &&
-               (checkColor(board.getSquare(position - i*ROW + i*COLUMN)) == -turn ||
-                    board.getSquare(position - i*ROW + i*COLUMN) == EMPTYSQUARE)) {
+          if (board.getSquare(position - i*ROW + i*COLUMN) == EMPTYSQUARE) {
                addMove(position, position - i*ROW + i*COLUMN, NORMAL, moveList);
-               if (checkColor(board.getSquare(position - i*ROW + i*COLUMN)) == -turn) {
-                    topright = false;
-               }
           }
-          else { topright = false; }
-
-          if (downright == true &&
-               (checkColor(board.getSquare(position + i*ROW + i*COLUMN)) == -turn ||
-                    board.getSquare(position + i*ROW + i*COLUMN) == EMPTYSQUARE)) {
-               addMove(position, position + i*ROW + i*COLUMN, NORMAL, moveList);
-               if (checkColor(board.getSquare(position + i*ROW + i*COLUMN)) == -turn) {
-                    downright = false;
-               }
+          else if (checkColor(board.getSquare(position - i*ROW + i*COLUMN)) == -turn) {
+               addMove(position, position - i*ROW + i*COLUMN, NORMAL, moveList);
+               break;
           }
-          else { downright = false; }
-
-          if (downleft == true &&
-               (checkColor(board.getSquare(position + i*ROW - i*COLUMN)) == -turn ||
-                    board.getSquare(position + i*ROW - i*COLUMN) == EMPTYSQUARE)) {
-               addMove(position, position + i*ROW - i*COLUMN, NORMAL, moveList);
-               if (checkColor(board.getSquare(position + i*ROW - i*COLUMN)) == -turn) {
-                    downleft = false;
-               }
-          }
-          else { downleft = false; }
-
-          if (topleft == true &&
-               (checkColor(board.getSquare(position - i*ROW - i*COLUMN)) == -turn ||
-                    board.getSquare(position - i*ROW - i*COLUMN) == EMPTYSQUARE)) {
-               addMove(position, position - i*ROW - i*COLUMN, NORMAL, moveList);
-               if (checkColor(board.getSquare(position - i*ROW - i*COLUMN)) == -turn) {
-                    topleft = false;
-               }
-          }
-          else { topleft = false; }
+          else { break; }
      }
+
+     // DOWNRIGHT
+     for (int i = 1; i < 8; i++) {
+          if (board.getSquare(position + i*ROW + i*COLUMN) == EMPTYSQUARE) {
+               addMove(position, position + i*ROW + i*COLUMN, NORMAL, moveList);
+          }
+          else if (checkColor(board.getSquare(position + i*ROW + i*COLUMN)) == -turn) {
+               addMove(position, position + i*ROW + i*COLUMN, NORMAL, moveList);
+               break;
+          }
+          else { break; }
+     }
+
+     // DOWNLEFT
+     for (int i = 1; i < 8; i++) {
+          if (board.getSquare(position + i*ROW - i*COLUMN) == EMPTYSQUARE) {
+               addMove(position, position + i*ROW - i*COLUMN, NORMAL, moveList);
+          }
+          else if (checkColor(board.getSquare(position + i*ROW - i*COLUMN)) == -turn) {
+               addMove(position, position + i*ROW - i*COLUMN, NORMAL, moveList);
+               break;
+          }
+          else { break; }
+     }
+
+     // TOPLEFT
+     for (int i = 1; i < 8; i++) {
+          if (board.getSquare(position - i*ROW - i*COLUMN) == EMPTYSQUARE) {
+               addMove(position, position - i*ROW - i*COLUMN, NORMAL, moveList);
+          }
+          else if (checkColor(board.getSquare(position - i*ROW - i*COLUMN)) == -turn) {
+               addMove(position, position - i*ROW - i*COLUMN, NORMAL, moveList);
+               break;
+          }
+          else { break; }
+     }     
 }
 void rookMoveGeneration(const Board& board, const int position, MoveList& moveList) {
      int turn = board.getTurn();
