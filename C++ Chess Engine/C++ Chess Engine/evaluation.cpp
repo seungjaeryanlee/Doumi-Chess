@@ -27,14 +27,8 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
      int score;
      int capturedPiece;
 
+     Board oldBoard = board;
      MoveList moveList = moveGeneration(board);
-     std::array<bool, 4> castlingRights = board.getCastlingRights();
-     int enpassantSquare = board.getEnpassantSquare();
-     int halfMoveClock = board.getHalfMoveClock();
-     int moveNumber = board.getMoveNumber();
-     bool isEndgame = board.getEndgame();
-     std::array<int, 14> pieceCount = board.getPieceCount();
-
 
      for (int i = 0; i < moveList.getCounter(); i++) {
           capturedPiece = makeMove(board, moveList.getMove(i));
@@ -43,26 +37,14 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
           score = -alphabeta(depth - 1, board, -beta, -alpha);
 
           if (score >= beta) {
-               undoMove(board, moveList.getMove(i), capturedPiece);
-               board.setCastlingRights(castlingRights);
-               board.setEnpassantSquare(enpassantSquare);
-               board.setHalfMoveClock(halfMoveClock);
-               board.setMoveNumber(moveNumber);
-               board.setEndgame(isEndgame);
-               board.setPieceCount(pieceCount);
+               board = oldBoard;
                return beta;
           }
 
           if (score > alpha) {
                alpha = score;
           }
-          undoMove(board, moveList.getMove(i), capturedPiece);
-          board.setCastlingRights(castlingRights);
-          board.setEnpassantSquare(enpassantSquare);
-          board.setHalfMoveClock(halfMoveClock);
-          board.setMoveNumber(moveNumber);
-          board.setEndgame(isEndgame);
-          board.setPieceCount(pieceCount);
+          board = oldBoard;
      }
 
      return alpha;
@@ -71,14 +53,9 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
      int score;
      int capturedPiece;
 
+     Board oldBoard = board;
      MoveList moveList = moveGeneration(board);
-     std::array<bool, 4> castlingRights = board.getCastlingRights();
-     int enpassantSquare = board.getEnpassantSquare();
-     int halfMoveClock = board.getHalfMoveClock();
-     int moveNumber = board.getMoveNumber();
-     bool isEndgame = board.getEndgame();
-     std::array<int, 14> pieceCount = board.getPieceCount();
-
+     
 
      for (int i = 0; i < moveList.getCounter(); i++) {
           capturedPiece = makeMove(board, moveList.getMove(i));
@@ -88,13 +65,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
 
           // TODO: Check if this is needed and change it
           if (score >= beta) {
-               undoMove(board, moveList.getMove(i), capturedPiece);
-               board.setCastlingRights(castlingRights);
-               board.setEnpassantSquare(enpassantSquare);
-               board.setHalfMoveClock(halfMoveClock);
-               board.setMoveNumber(moveNumber);
-               board.setEndgame(isEndgame);
-               board.setPieceCount(pieceCount);
+               board = oldBoard;
                return beta;
           }
 
@@ -102,14 +73,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
                alpha = score;
                bestMove = moveList.getMove(i);
           }
-
-          undoMove(board, moveList.getMove(i), capturedPiece);
-          board.setCastlingRights(castlingRights);
-          board.setEnpassantSquare(enpassantSquare);
-          board.setHalfMoveClock(halfMoveClock);
-          board.setMoveNumber(moveNumber);
-          board.setEndgame(isEndgame);
-          board.setPieceCount(pieceCount);
+          board = oldBoard;
      }
 
      return alpha;
