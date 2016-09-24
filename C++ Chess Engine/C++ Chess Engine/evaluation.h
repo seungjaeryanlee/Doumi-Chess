@@ -3,21 +3,6 @@
 
 
 /// <summary>
-/// This function finds the best move using negaMax recursion on the given board for given depth. This function should only be called in rootNegaMax().
-/// </summary>
-/// <param name="depth">The depth of the recursion.</param>
-/// <param name="board">The board that will be analyzed.</param>
-/// <returns>The evaluation score of best move.</returns>
-int negaMax(const int depth, Board& board);
-/// <summary>
-/// This function is the root function for negaMax().
-/// </summary>
-/// <param name="depth">The depth of the recursion.</param>
-/// <param name="board">The board that will be analyzed.</param>
-/// <param name="bestMove">The best move found.</param>
-/// <returns>The evaluation score of best move.</returns>
-int rootNegaMax(const int depth, Board& board, Move& bestMove);
-/// <summary>
 /// This function finds the best move using negaMax recursion and alpha-beta pruning on the given board for given depth. This function should only be called in rootAlphabeta().
 /// </summary>
 /// <param name="maxDepth">The depth of the recursion.</param>

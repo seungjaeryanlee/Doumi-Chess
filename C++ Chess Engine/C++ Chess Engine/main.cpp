@@ -1095,21 +1095,8 @@ void main() {
                     continue;
                }
                else if (commandType == ALPHABETA_COMPARE) {
-
-                    LARGE_INTEGER frequency2, beginTime2, endTime2;
-                    
-                    frequency2 = startTimer(&beginTime2, 2);
-                    int negamaxValue = negaMax(EVAL_DEPTH, currentBoard);
-                    stopTimer(&endTime2, 2);
-                    printf("Negamax Value: %d\n", negamaxValue);
-                    std::cout << "Negamax timer " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
-
-                    frequency2 = startTimer(&beginTime2, 2);
-                    int alphabetaValue = alphabeta(EVAL_DEPTH, currentBoard, -999999, 999999);
-                    stopTimer(&endTime2, 2);
-                    printf("Alphabeta Value: %d\n", alphabetaValue);
-                    std::cout << "Alphabeta timer : " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
-
+                    printf("Comparison is no longer possible. Sorry!\n");
+                    continue;
                }
                else if (commandType == EVALUATE_BOARD) {
                     printf("Current Board Evaluation: %d\n", currentBoard.boardEvaluation());
