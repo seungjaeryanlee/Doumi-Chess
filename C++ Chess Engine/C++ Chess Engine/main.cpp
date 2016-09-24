@@ -729,9 +729,9 @@ void main() {
      int saveIndex = 0;
 
      bool gamePlaying = true;
-     result gameResult = NOT_FINISHED; // Records the result of the game
-     int userColor = ERRORCODE;    // Which color user plays
-     bool spectate = false;            // if true, the game is between two computers
+     result gameResult = NOT_FINISHED;            // Records the result of the game
+     int userColor = ERRORCODE;                   // Which color user plays
+     bool spectate = false;                       // if true, the game is between two computers
      LARGE_INTEGER frequency, beginTime, endTime; //  added for time performance check
 
      std::ofstream log;
@@ -980,7 +980,7 @@ void main() {
                     }
                     Move userMove = Move(initialSquare, terminalSquare, moveType);
                     savedCapturedPiece[saveIndex] = makeMove(currentBoard, userMove);
-                    savedMove[saveIndex] = Move(userMove);
+                    savedMove[saveIndex] = userMove;
                     saveIndex++;
 
                     // Check Fifty Move rule
@@ -1070,14 +1070,13 @@ void main() {
                     }
                }
                else if (commandType == UNDO_MOVE) {
-                    //  TerminalSquare needs to be saved
                     if (savedCapturedPiece[saveIndex] == ERRORCODE || saveIndex == 0) {
                          printf("No move can be undone!\n");
                          continue;
                     }
                     else {
                          saveIndex--;
-                         currentBoard = Board(savedBoard[saveIndex]);
+                         currentBoard = savedBoard[saveIndex];
                          userColor = -userColor;
                     }
                }
@@ -1125,8 +1124,6 @@ void main() {
           
           //  Computer turn
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
-
-
                LARGE_INTEGER frequency, beginTime, endTime;
                frequency = startTimer(&beginTime, 2);
 
