@@ -74,6 +74,309 @@ MoveList moveGeneration(const Board& board) {
           }
      }
 
+     /*
+     // Find pinned pieces
+     bool maybePinned;            // There is a ally piece
+     bool pinned;                 // There is a rook/bishop/queen behind the ally piece
+     int pinnedPiece[8] = { 0, }; // The pinned piece
+     
+     // UPLEFT
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[UPLEFT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[UPLEFT] = kingPosition + i*GO[UPLEFT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[UPLEFT]) == WHITEBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[UPLEFT]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[UPLEFT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[UPLEFT] = kingPosition + i*GO[UPLEFT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[UPLEFT]) == BLACKBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[UPLEFT]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     
+     // UPRIGHT
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[UPRIGHT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[UPRIGHT] = kingPosition + i*GO[UPRIGHT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[UPRIGHT]) == WHITEBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[UPRIGHT]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[UPRIGHT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[UPRIGHT] = kingPosition + i*GO[UPRIGHT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[UPRIGHT]) == BLACKBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[UPRIGHT]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+
+     // DOWNLEFT
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[DOWNLEFT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[DOWNLEFT] = kingPosition + i*GO[DOWNLEFT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWNLEFT]) == WHITEBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[DOWNLEFT]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[DOWNLEFT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[DOWNLEFT] = kingPosition + i*GO[DOWNLEFT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWNLEFT]) == BLACKBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[DOWNLEFT]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+
+     // DOWNRIGHT
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[DOWNRIGHT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[DOWNRIGHT] = kingPosition + i*GO[DOWNRIGHT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWNRIGHT]) == WHITEBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[DOWNRIGHT]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[DOWNRIGHT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[DOWNRIGHT] = kingPosition + i*GO[DOWNRIGHT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWNRIGHT]) == BLACKBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[DOWNRIGHT]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+
+     // UP
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[UP])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[UP] = kingPosition + i*GO[UP];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[UP]) == WHITEROOK)
+                    || (board.getSquare(kingPosition + i*GO[UP]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[UP])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[UP] = kingPosition + i*GO[UP];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[UP]) == BLACKROOK)
+                    || (board.getSquare(kingPosition + i*GO[UP]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+
+     // DOWN
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[DOWN])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[DOWN] = kingPosition + i*GO[DOWN];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWN]) == WHITEROOK)
+                    || (board.getSquare(kingPosition + i*GO[DOWN]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[DOWN])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[DOWN] = kingPosition + i*GO[DOWN];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWN]) == BLACKROOK)
+                    || (board.getSquare(kingPosition + i*GO[DOWN]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+
+     // LEFT
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[LEFT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[LEFT] = kingPosition + i*GO[LEFT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[LEFT]) == WHITEROOK)
+                    || (board.getSquare(kingPosition + i*GO[LEFT]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[LEFT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[LEFT] = kingPosition + i*GO[LEFT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[LEFT]) == BLACKROOK)
+                    || (board.getSquare(kingPosition + i*GO[LEFT]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+
+     // RIGHT
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[RIGHT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[RIGHT] = kingPosition + i*GO[RIGHT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[RIGHT]) == WHITEROOK)
+                    || (board.getSquare(kingPosition + i*GO[RIGHT]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[RIGHT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[RIGHT] = kingPosition + i*GO[RIGHT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[RIGHT]) == BLACKROOK)
+                    || (board.getSquare(kingPosition + i*GO[RIGHT]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     */
+
      for (int i = 0; i < pseudolegalMoveList.getCounter(); i++) {
           //  check if king will be moved
           if (copiedBoard.getSquare(pseudolegalMoveList.getMove(i).getInitial()) == WHITEKING || copiedBoard.getSquare(pseudolegalMoveList.getMove(i).getInitial()) == BLACKKING) {
