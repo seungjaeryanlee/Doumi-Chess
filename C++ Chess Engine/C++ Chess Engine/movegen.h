@@ -92,4 +92,4 @@ void addPromotionMove(int initial, int terminal, MoveList& moveList);
 /// <param name="board">The board that will be checked.</param>
 /// <param name="kingPos">The position of the king</param>
 /// <returns>True if </returns>
-bool squareAttackCheck(Board board, int kingPos);
+bool squareAttackCheck(const Board& board, int kingPos);

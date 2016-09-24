@@ -425,7 +425,7 @@ void addPromotionMove(int initial, int terminal, MoveList& moveList) {
 }
 
 
-bool squareAttackCheck(Board board, int kingPos) {
+bool squareAttackCheck(const Board& board, int kingPos) {
      if (board.getTurn() == WHITE) {
           //  1. pawn
           if (board.getSquare(kingPos - ROW - COLUMN) == BLACKPAWN ||
