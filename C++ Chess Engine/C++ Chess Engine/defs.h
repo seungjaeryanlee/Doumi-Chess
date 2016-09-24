@@ -2,6 +2,7 @@
 #include <array>
 #include <stdint.h>
 
+
 /*                                    DEFINITION                              */
 const int PIECEVALUE[14] = {0, 100, 300, 300, 500, 900, 20000, -100, -300, -300, -500, -900, -20000, 0};
 const int PAWNVALUE = 100;
@@ -69,7 +70,8 @@ enum commandType {ERROR_COMMAND,
      ALPHABETA_COMPARE,
      EVALUATE_BOARD,
      ALPHABETA_SPEED_CHECK,
-     PRINT_SAVED_FEN
+     PRINT_SAVED_FEN,
+     DEBUG
 };
 enum gameState {WHITE_CHECKMATE, BLACK_CHECKMATE, STALEMATE_MOVE, STALEMATE_50, STALEMATE_75, STALEMATE_3F, NOTMATE};
 

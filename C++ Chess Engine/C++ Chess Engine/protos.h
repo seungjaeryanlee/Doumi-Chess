@@ -2,7 +2,9 @@
 #include "defs.h"
 #include <Windows.h>
 
-
+/*                                    CALL COUNT                               */
+void moveGenCalled();
+void boardEvalCalled();
 
 class Move {
 private:
@@ -274,6 +276,7 @@ public:
      /// </summary>
      /// <returns>The score of the board</returns>
      int boardEvaluation() {
+          boardEvalCalled();
           int score = 0;
           score += (pieceCount[WHITEPAWN] - pieceCount[BLACKPAWN])*PAWNVALUE
                + (pieceCount[WHITEKNIGHT] - pieceCount[BLACKKNIGHT])*KNIGHTVALUE
@@ -296,6 +299,9 @@ public:
           return score;
      }
 };
+
+
+
 
 /*                                  BOARD SETUP                               */
 /// <summary>

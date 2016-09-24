@@ -14,9 +14,20 @@
 #include "output_handler.h"
 #include "evaluation.h"
 
+
+
 /******************************************************************************/
 /*                                  FUNCTIONS                                 */
 /******************************************************************************/
+
+int moveGenCounter = 0;
+int boardEvalCounter = 0;
+void moveGenCalled() {
+     moveGenCounter++;
+}
+void boardEvalCalled() {
+     boardEvalCounter++;
+}
 
 /*                             BOARD SETUP FUNCTIONS                          */
 void board120Setup(Board& board) {
@@ -846,7 +857,7 @@ void main() {
                          printf("You must enter a number!\n");
                          continue;
                     }
-                    if ('A' <= userCommand.at(0) && userCommand.at(0) <= 'E') {
+                    if ('A' <= userCommand.at(0) && userCommand.at(0) <= 'F') {
                          commandType = userCommand.at(0) - 'A' + 10;
                          correctInput = true;
                          break;
@@ -1120,10 +1131,36 @@ void main() {
                          boardToFEN(savedBoard[i]); // Print statement inside boardToFEN() prints the FEN
                     }
                }
+               else if (commandType == DEBUG) {
+
+                    LARGE_INTEGER frequency2, beginTime2, endTime2;
+                    frequency2 = startTimer(&beginTime2, 2);
+
+                    for (int i = 0; i < 6300; i++) {
+                         moveGeneration(currentBoard);
+                    }
+
+                    stopTimer(&endTime2, 2);
+                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 moveGen.\n";
+
+                    LARGE_INTEGER frequency3, beginTime3, endTime3;
+                    frequency3 = startTimer(&beginTime3, 3);
+
+                    for (int i = 0; i < 4500; i++) {
+                         currentBoard.boardEvaluation();
+                    }
+
+                    stopTimer(&endTime3, 3);
+                    std::cout << elapsedTime(beginTime3, endTime3, frequency3, 3) << " ms for 4500 boardEval.\n";
+               }
           }
           
           //  Computer turn
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
+               // Reset Debug
+               moveGenCounter = 0;
+               boardEvalCounter = 0;
+
                LARGE_INTEGER frequency, beginTime, endTime;
                frequency = startTimer(&beginTime, 2);
 
@@ -1178,6 +1215,11 @@ void main() {
                stopTimer(&endTime, 2);
                std::cout << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
                log << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
+
+               // Output Call Count
+               printf("Move Gen Call Count: %d\n", moveGenCounter);
+               printf("Board Eval Call Count: %d\n", boardEvalCounter);
+
           }
      }
      savePGN(gameResult, savedMove, saveIndex, spectate, userColor);
