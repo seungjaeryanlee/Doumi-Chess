@@ -24,9 +24,8 @@ void board120Setup(Board& board) {
      board.setEnpassantSquare(0);
      board.setMoveNumber(1);
      board.setHalfMoveClock(0);
-
      board.setCastlingRights({ true, true, true, true });
-     
+
      //  Add Empty Squares
      for (int i = 0; i < 8; i++) {
           for (int j = 0; j < 8; j++) {
@@ -347,11 +346,11 @@ std::string numberToFilerank(const int position) {
 
 
 /*                             RECURSION FUNCTIONS                             */
-u64 divide(const int depth, const int maxDepth, Board& board, const bool showOutput) {
+uint64_t divide(const int depth, const int maxDepth, Board& board, const bool showOutput) {
 
      if (depth == 0) { return 1; }
 
-     u64 node = 0, individualNode = 0;
+     uint64_t node = 0, individualNode = 0;
      int capturedPiece;
 
      MoveList moveList = moveGeneration(board);
@@ -369,7 +368,7 @@ u64 divide(const int depth, const int maxDepth, Board& board, const bool showOut
           int terminal = moveList.getMove(i).getTerminal();
                    
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i), capturedPiece);
           
           node += divide(depth - 1, maxDepth, board, showOutput);
           if (showOutput) {
@@ -393,7 +392,7 @@ u64 divide(const int depth, const int maxDepth, Board& board, const bool showOut
      return node;
 
 }
-u64 divide2(const int depth, const int maxDepth, Board& board, const bool showOutput) {
+uint64_t divide2(const int depth, const int maxDepth, Board& board, const bool showOutput) {
 
      if (depth == 0) { return 1; }
 
@@ -401,7 +400,7 @@ u64 divide2(const int depth, const int maxDepth, Board& board, const bool showOu
      std::ofstream output2;
      output2.open("divide.txt");
 
-     u64 node = 0, individualNode = 0;
+     uint64_t node = 0, individualNode = 0;
      int capturedPiece;
 
      MoveList moveList = moveGeneration(board);
@@ -418,7 +417,7 @@ u64 divide2(const int depth, const int maxDepth, Board& board, const bool showOu
           int terminal = moveList.getMove(i).getTerminal();
 
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i));
+          updateBoard(board, moveList.getMove(i), capturedPiece);
 
 
           node += divide(depth - 1, maxDepth, board, showOutput);
@@ -665,11 +664,12 @@ void updateMoveNumber(Board& board) {
      if (board.getTurn() == WHITE) { board.incrementMoveNumber(); }
 }
 
-void updateBoard(Board& board, const Move& move) {
+void updateBoard(Board& board, const Move& move, const int capturedPiece) {
      updateCastling(board, move);
      updateEnPassant(board, move);
      updateHalfMoveClock(board, move);
      board.updateEndgame(move);
+     board.updatePieceCount(move, capturedPiece);
      updateMoveNumber(board);
 }
 
@@ -686,6 +686,12 @@ gameState checkGameState(const Board& board) {
           }
      }
      
+     // Stalemate: 75 Move Rule
+     // TODO: 50 Move rule will be implemented in moveGen
+     if (board.getHalfMoveClock() >= 150) {
+          return STALEMATE_75;
+     }
+
      MoveList moveList = moveGeneration(board);
 
      // Checkmate
@@ -701,12 +707,6 @@ gameState checkGameState(const Board& board) {
      // Stalemate: No legal move
      if (moveList.getCounter() == 0) {
           return STALEMATE_MOVE;
-     }
-     
-     // Stalemate: 75 Move Rule
-     // TODO: 50 Move rule will be implemented in moveGen
-     if (board.getHalfMoveClock() >= 150) {
-          return STALEMATE_75;
      }
      
      return NOTMATE;
@@ -729,9 +729,9 @@ void main() {
      int saveIndex = 0;
 
      bool gamePlaying = true;
-     result gameResult = NOT_FINISHED; // Records the result of the game
-     int userColor = ERRORCODE;    // Which color user plays
-     bool spectate = false;            // if true, the game is between two computers
+     result gameResult = NOT_FINISHED;            // Records the result of the game
+     int userColor = ERRORCODE;                   // Which color user plays
+     bool spectate = false;                       // if true, the game is between two computers
      LARGE_INTEGER frequency, beginTime, endTime; //  added for time performance check
 
      std::ofstream log;
@@ -764,6 +764,7 @@ void main() {
 /*                                 MAIN LOOP                                  */
 /******************************************************************************/
      currentBoard.updateEndgame();
+     currentBoard.updatePieceCount();
      while (gamePlaying) {
 
           //  Detect Checkmate/Stalemate
@@ -858,7 +859,9 @@ void main() {
                }
                
                if (commandType == MOVE) {
-                    
+                    LARGE_INTEGER frequency2, beginTime2, endTime2;
+                    frequency2 = startTimer(&beginTime2, 2);
+
                     savedBoard[saveIndex] = currentBoard;
 
                     //  Movelist used for legality/movetype check
@@ -977,7 +980,7 @@ void main() {
                     }
                     Move userMove = Move(initialSquare, terminalSquare, moveType);
                     savedCapturedPiece[saveIndex] = makeMove(currentBoard, userMove);
-                    savedMove[saveIndex] = Move(userMove);
+                    savedMove[saveIndex] = userMove;
                     saveIndex++;
 
                     // Check Fifty Move rule
@@ -1009,6 +1012,10 @@ void main() {
                     
                     // add to log file
                     log << printMove(currentBoard.getMoveNumber(), userMove);
+
+                    stopTimer(&endTime2, 2);
+                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for this move.\n";
+                    log << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for this move.\n";
 
                     continue;
                }
@@ -1063,14 +1070,13 @@ void main() {
                     }
                }
                else if (commandType == UNDO_MOVE) {
-                    //  TerminalSquare needs to be saved
                     if (savedCapturedPiece[saveIndex] == ERRORCODE || saveIndex == 0) {
                          printf("No move can be undone!\n");
                          continue;
                     }
                     else {
                          saveIndex--;
-                         currentBoard = Board(savedBoard[saveIndex]);
+                         currentBoard = savedBoard[saveIndex];
                          userColor = -userColor;
                     }
                }
@@ -1088,34 +1094,26 @@ void main() {
                     continue;
                }
                else if (commandType == ALPHABETA_COMPARE) {
-
-                    LARGE_INTEGER frequency2, beginTime2, endTime2;
-                    
-                    frequency2 = startTimer(&beginTime2, 2);
-                    int negamaxValue = negaMax(EVAL_DEPTH, currentBoard);
-                    stopTimer(&endTime2, 2);
-                    printf("Negamax Value: %d\n", negamaxValue);
-                    std::cout << "Negamax timer " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
-
-                    frequency2 = startTimer(&beginTime2, 2);
-                    int alphabetaValue = alphabeta(EVAL_DEPTH, currentBoard, -999999, 999999);
-                    stopTimer(&endTime2, 2);
-                    printf("Alphabeta Value: %d\n", alphabetaValue);
-                    std::cout << "Alphabeta timer : " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
-
+                    printf("Comparison is no longer possible. Sorry!\n");
+                    continue;
                }
                else if (commandType == EVALUATE_BOARD) {
-                    printf("Current Board Evaluation: %d\n", boardEvaluation(currentBoard));
+                    printf("Current Board Evaluation: %d\n", currentBoard.boardEvaluation());
                     continue;
                }
                else if (commandType == ALPHABETA_SPEED_CHECK) {
                     LARGE_INTEGER frequency2, beginTime2, endTime2;
 
                     frequency2 = startTimer(&beginTime2, 2);
-                    int alphabetaValue = alphabeta(EVAL_DEPTH, currentBoard, -999999, 999999);
+                    int alphabetaValue = alphabeta(6, currentBoard, DEFAULT_ALPHA, DEFAULT_BETA);
                     stopTimer(&endTime2, 2);
                     printf("Alphabeta Value: %d\n", alphabetaValue);
                     std::cout << "Alphabeta timer : " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
+                    std::ofstream speedlog;
+                    speedlog.open("speed.log");
+
+                    speedlog << "Alphabeta Timer for Depth 6: " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms." << std::endl;
+                    speedlog.close();
                }
                else if (commandType == PRINT_SAVED_FEN) {
                     for (int i = 0; i < saveIndex; i++) {
@@ -1126,24 +1124,25 @@ void main() {
           
           //  Computer turn
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
+               LARGE_INTEGER frequency, beginTime, endTime;
+               frequency = startTimer(&beginTime, 2);
 
                savedBoard[saveIndex] = currentBoard;
 
                Move abMove;
-               int abValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, abMove);
+               int abValue = rootAlphabeta(EVAL_DEPTH, currentBoard, DEFAULT_ALPHA, DEFAULT_BETA, abMove);
                printf("Alphabeta Value: %d\n", abValue);
                std::cout << "Alphabeta Move: " << printMove(currentBoard.getMoveNumber(), abMove);
 
                // Make Move, Save and Print
                savedCapturedPiece[saveIndex] = makeMove(currentBoard, abMove);
+               updateBoard(currentBoard, abMove, savedCapturedPiece[saveIndex]);
                savedMove[saveIndex] = abMove;
                saveIndex++;
 
                printSimpleBoard(currentBoard);
                std::cout << printMove(currentBoard.getMoveNumber(), abMove);
                log << printMove(currentBoard.getMoveNumber(), abMove);
-
-               updateBoard(currentBoard, abMove);
 
                //  TODO: Add 50 Move Rule option in move generation / selection?               
                // Check Fifty move rule
@@ -1175,110 +1174,31 @@ void main() {
                          break;
                     }
                }
-          }
-     }
 
-     std::ofstream pgn;
-     pgn.open("output.pgn");
-     pgn << "[Event \"Friendly Match\"]\n";
-     pgn << "[Site \"Princeton, NJ USA\"]\n";
-     time_t now = time(0);
-     struct tm timeInfo;
-     localtime_s(&timeInfo, &now);
-     pgn << "[Date \"" << timeInfo.tm_year + 1900 << "." << std::setfill('0')
-         << std::setw(2) << timeInfo.tm_mon + 1 << "." << std::setfill('0')
-          << std::setw(2) << timeInfo.tm_mday << "\"]\n";
-     pgn << "[Round \"1\"]\n";
-     if (spectate) {
-          pgn << "[White \"Computer\"]\n";
-          pgn << "[Black \"Computer\"]\n";
-     }
-     else if (userColor == WHITE) {
-          pgn << "[White \"User\"]\n";
-          pgn << "[Black \"Computer\"]\n";
-     }
-     else {
-          pgn << "[White \"Computer\"]\n";
-          pgn << "[Black \"User\"]\n";
-     }
-     switch (gameResult) {
-     case BLACK_WIN:
-          pgn << "[Result \"0-1\"]\n";
-          break;
-     case TIE:
-          pgn << "[Result \"1/2-1/2\"]\n";
-          break;
-     case WHITE_WIN:
-          pgn << "[Result \"1-0\"]\n";
-          break;
-     case NOT_FINISHED:
-          pgn << "[Result \"*\"]\n";
-     }
-     for (int i = 0; i < saveIndex; i++) {
-          if (i % 2 == 0) {
-               pgn << i/2 + 1 << ". ";
+               stopTimer(&endTime, 2);
+               std::cout << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
+               log << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
           }
-          int initial = savedMove[i].getInitial();
-          int terminal = savedMove[i].getTerminal();
-          int type = savedMove[i].getType();
-
-          switch (type) {
-          case KINGSIDE_CASTLING:
-               pgn << "O-O ";
-               break;
-          case QUEENSIDE_CASTLING:
-               pgn << "O-O-O ";
-               break;
-          case KNIGHT_PROMOTION:
-               pgn << numberToFilerank(terminal) << "=N";
-               break;
-          case BISHOP_PROMOTION:
-               pgn << numberToFilerank(terminal) << "=B";
-               break;
-          case ROOK_PROMOTION:
-               pgn << numberToFilerank(terminal) << "=R";
-               break;
-          case QUEEN_PROMOTION:
-               pgn << numberToFilerank(terminal) << "=Q";
-               break;
-          case ENPASSANT:
-               // TODO: Find correct way
-               pgn << numberToFilerank(initial) << numberToFilerank(terminal) << " ";
-               break;
-          case DOUBLEMOVE:
-               pgn << numberToFilerank(terminal) << " ";
-               break;
-          case NORMAL:
-               // TODO: Find correct way
-               pgn << numberToFilerank(initial) << numberToFilerank(terminal) << " ";
-               break;
-          }
-          // TODO: Check captures
-          // TODO: Check checks (CHECKCEPTION)
-          // TODO: Check checkmates
      }
+     savePGN(gameResult, savedMove, saveIndex, spectate, userColor);
 
      // Print Game Result
      switch (gameResult) {
      case BLACK_WIN:
           printf("Game Result: 0-1\n");
           log << "Game Result: 0-1" << std::endl;
-          pgn << "0-1\n";
           break;
      case TIE:
           printf("Game Result: 1/2-1/2\n");
           log << "Game Result: 1/2-1/2" << std::endl;
-          pgn << "1/2-1/2\n";
           break;
      case WHITE_WIN:
           printf("Game Result: 1-0\n");
           log << "Game Result: 1-0" << std::endl;
-          pgn << "1-0\n";
           break;
      case NOT_FINISHED:
           printf("Game Result: *: Game not finished\n");
           log << "Game Result: *: Game not finished" << std::endl;
-          pgn << "*\n";
      }
 
      //  Stop timer and print elapsed time
@@ -1287,5 +1207,4 @@ void main() {
      log << "Total Time: " << elapsedTime(beginTime, endTime, frequency, 1) << "ms" << std::endl;
 
      log.close();
-     pgn.close();
 }

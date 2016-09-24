@@ -2,11 +2,14 @@
 #include "defs.h"
 #include <Windows.h>
 
+
+
 class Move {
 private:
      int initialSquare;
      int terminalSquare;
      int moveType;
+     int capturedPiece;
 public:
      // Constructors
      Move() {}
@@ -32,10 +35,12 @@ public:
      void setInitial(const int i) { initialSquare = i; }
      void setTerminal(const int t) { terminalSquare = t; }
      void setType(const int t) { moveType = t; }
+     void setCapturedPiece(const int c) { capturedPiece = c; }
      // Accessors
      const int getInitial() const { return initialSquare; }
      const int getTerminal() const { return terminalSquare; }
      const int getType() const { return moveType; }
+     const int getCapturedPiece() const { return capturedPiece; }
 
 };
 class MoveList {
@@ -68,10 +73,12 @@ private:
      int enpassantSquare;
      int halfMoveClock;
      int moveNumber;
+
      bool isEndgame;
+     std::array<int, 14> pieceCount;
 
 public:
-     
+
      // Default Constructor
      Board() {}
 
@@ -84,7 +91,7 @@ public:
           halfMoveClock = f;
           moveNumber = m;
      }
-     
+
      //  Clone Method
      Board(const Board& originalBoard) {
           board = originalBoard.getBoard();
@@ -138,6 +145,7 @@ public:
      void setHalfMoveClock(const int f) { halfMoveClock = f; }
      void setMoveNumber(const int m) { moveNumber = m; }
      void setEndgame(bool e) { isEndgame = e; }
+     void setPieceCount(const std::array<int, 14> pc) { pieceCount = pc; }
      void updateEndgame() {
           if (isEndgame) { return; }
           else {
@@ -176,6 +184,7 @@ public:
      const int getHalfMoveClock() const { return halfMoveClock; }
      const int getMoveNumber() const { return moveNumber; }
      const bool getEndgame() const { return isEndgame; }
+     const std::array<int, 14> getPieceCount() const { return pieceCount; }
 
      //  Other Functions
      void changeTurn() { turn = (color)-turn; }
@@ -183,9 +192,110 @@ public:
      void decrementHalfMoveClock() { halfMoveClock--; }
      void incrementMoveNumber() { moveNumber++; }
      void decrementMoveNumber() { moveNumber--; }
-     
-};
 
+     void updatePieceCount() {
+          for (int i = 0; i < 14; i++) {
+               pieceCount[i] = 0;
+          }
+          for (int i = 0; i < 8; i++) {
+               for (int j = 0; j < 8; j++) {
+                    int position120 = ROW*(i + 2) + (j + 1);
+                    pieceCount[board[position120]]++;
+               }
+          }
+     }
+     void updatePieceCount(const Move& move, const int capturedPiece) {
+          if (capturedPiece != EMPTYSQUARE) {
+               pieceCount[capturedPiece]--;
+               return;
+          }
+          else if (move.getType() == KNIGHT_PROMOTION) {
+               if (move.getTerminal() == WHITEKNIGHT) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEKNIGHT]++;
+                    return;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKKNIGHT]++;
+                    return;
+               }
+          }
+          else if (move.getType() == KNIGHT_PROMOTION) {
+               if (move.getTerminal() == WHITEKNIGHT) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEKNIGHT]++;
+                    return;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKKNIGHT]++;
+                    return;
+               }
+          }
+          else if (move.getType() == BISHOP_PROMOTION) {
+               if (move.getTerminal() == WHITEBISHOP) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEBISHOP]++;
+                    return;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKBISHOP]++;
+                    return;
+               }
+          }
+          else if (move.getType() == ROOK_PROMOTION) {
+               if (move.getTerminal() == WHITEROOK) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEROOK]++;
+                    return;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKROOK]++;
+                    return;
+               }
+          }
+          else if (move.getType() == QUEEN_PROMOTION) {
+               if (move.getTerminal() == WHITEQUEEN) {
+                    pieceCount[WHITEPAWN]--;
+                    pieceCount[WHITEQUEEN]++;
+               }
+               else {
+                    pieceCount[BLACKPAWN]--;
+                    pieceCount[BLACKQUEEN]++;
+               }
+          }
+     }
+
+     /// <summary>
+     /// This function returns evaluation score of the board using piece values and PCSQ tables. Positive score signifies white's advantage.
+     /// </summary>
+     /// <returns>The score of the board</returns>
+     int boardEvaluation() {
+          int score = 0;
+          score += (pieceCount[WHITEPAWN] - pieceCount[BLACKPAWN])*PAWNVALUE
+               + (pieceCount[WHITEKNIGHT] - pieceCount[BLACKKNIGHT])*KNIGHTVALUE
+               + (pieceCount[WHITEBISHOP] - pieceCount[BLACKBISHOP])*BISHOPVALUE
+               + (pieceCount[WHITEROOK] - pieceCount[BLACKROOK])*ROOKVALUE
+               + (pieceCount[WHITEQUEEN] - pieceCount[BLACKQUEEN])*QUEENVALUE
+               + (pieceCount[WHITEKING] - pieceCount[BLACKKING])*KINGVALUE;
+         
+          for (int i = 0; i < 8; i++) {
+               for (int j = 0; j < 8; j++) {
+                    int position120 = ROW*(i + 2) + (j + 1);
+                    if (!isEndgame) {
+                         score += PCSQVALUE[board[position120]][position120];
+                    }
+                    else {
+                         score += PCSQVALUE_ENDGAME[board[position120]][position120];
+                    }
+               }
+          }
+          return score;
+     }
+};
 
 /*                                  BOARD SETUP                               */
 /// <summary>
@@ -252,7 +362,7 @@ std::string numberToFilerank(const int position);
 /// <param name="board">The board being checked.</param>
 /// <param name="showOutput">Wheter or not to show intermediate output.</param>
 /// <returns>The number of possible move sequences of given depth.</returns>
-u64 divide(const int depth, const int maxDepth, Board& board, const bool showOutput);
+uint64_t divide(const int depth, const int maxDepth, Board& board, const bool showOutput);
 /// <summary>
 /// This function finds the number of possible move sequences for given depth and divides them into categories of first few moves given by maxDepth amd saves them into a file.
 /// </summary>
@@ -261,7 +371,7 @@ u64 divide(const int depth, const int maxDepth, Board& board, const bool showOut
 /// <param name="board">The board being checked.</param>
 /// <param name="showOutput">Wheter or not to show intermediate output.</param>
 /// <returns>The number of possible move sequences of given depth.</returns>
-u64 divide2(const int depth, const int maxDepth, Board& board, const bool showOutput);
+uint64_t divide2(const int depth, const int maxDepth, Board& board, const bool showOutput);
 /// <summary>
 /// This function applies the given move to the given board.
 /// </summary>
@@ -309,7 +419,8 @@ void updateMoveNumber(Board& board);
 /// </summary>
 /// <param name="board">The board that will be checked.</param>
 /// <param name="move">The move that was made that could have changed the board properties.</param>
-void updateBoard(Board& board, const Move& move);
+// TODO: UPDATE
+void updateBoard(Board& board, const Move& move, const int capturedPiece);
 
 /// <summary>
 /// This function checks the game state of the given board.
