@@ -1137,33 +1137,28 @@ void main() {
                     // COMMIT 5edfb72
                     // PAWN 3 ms KNIGHT 8 ms BISHOP 15 ms ROOK 26ms QUEEN 28ms KING 10ms
                     // COMMIT ?
-                    // ATTACKCHECK 13 ms MAKEMOVE 3 UNDOMOVE 2
+                    // ATTACKCHECK 13 ms MAKEMOVE 3 UNDOMOVE 
 
+                    FENboardSetup(currentBoard, "8/8/8/4R3/8/8/8/7K w - - 0 1");
 
-                    MoveList moveList = moveGeneration(currentBoard);
+                    MoveList moveList;
                     LARGE_INTEGER frequency2, beginTime2, endTime2;
 
                     frequency2 = startTimer(&beginTime2, 2);
                     for (int i = 0; i < 6300; i++) {
-                         squareAttackCheck(currentBoard, E1);
+                         moveGeneration(currentBoard);
                     }
                     stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 squareAttackCheck.\n";
+                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 moveGen.\n";
 
-                    int capturedPiece;
                     frequency2 = startTimer(&beginTime2, 2);
                     for (int i = 0; i < 6300; i++) {
-                         capturedPiece = makeMove(currentBoard, moveList.getMove(0));
+                         moveList.setCounterToZero();
+                         rookMoveGeneration(currentBoard, E5, moveList);
                     }
                     stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 makeMove.\n";
-                    
-                    frequency2 = startTimer(&beginTime2, 2);
-                    for (int i = 0; i < 6300; i++) {
-                         undoMove(currentBoard, moveList.getMove(0), capturedPiece);
-                    }
-                    stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 undoMove.\n";
+                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 rookMoveGen.\n";
+
                     
                     
 
