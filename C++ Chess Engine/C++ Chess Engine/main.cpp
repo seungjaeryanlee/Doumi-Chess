@@ -1134,63 +1134,38 @@ void main() {
                else if (commandType == DEBUG) {
                     // COMMIT 4445572
                     // MoveGen 6300 calls: 769 ms, BoardEval 4500 calls: 23 ms
-                    FENboardSetup(currentBoard, "8/8/2N5/4Q3/3R4/5B2/7K/8 w - - 0 1");
+                    // COMMIT 5edfb72
+                    // PAWN 3 ms KNIGHT 8 ms BISHOP 15 ms ROOK 26ms QUEEN 28ms KING 10ms
+                    // COMMIT ?
+                    // ATTACKCHECK 13 ms MAKEMOVE 3 UNDOMOVE 2
 
-                    MoveList moveList;
+
+                    MoveList moveList = moveGeneration(currentBoard);
                     LARGE_INTEGER frequency2, beginTime2, endTime2;
 
                     frequency2 = startTimer(&beginTime2, 2);
                     for (int i = 0; i < 6300; i++) {
-                         moveList.setCounterToZero();
-                         pawnMoveGeneration(currentBoard, E2, moveList);
+                         squareAttackCheck(currentBoard, E1);
                     }
                     stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 pawnMoveGen.\n";
+                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 squareAttackCheck.\n";
 
+                    int capturedPiece;
+                    frequency2 = startTimer(&beginTime2, 2);
+                    for (int i = 0; i < 6300; i++) {
+                         capturedPiece = makeMove(currentBoard, moveList.getMove(0));
+                    }
+                    stopTimer(&endTime2, 2);
+                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 makeMove.\n";
                     
                     frequency2 = startTimer(&beginTime2, 2);
                     for (int i = 0; i < 6300; i++) {
-                         moveList.setCounterToZero();
-                         knightMoveGeneration(currentBoard, B1, moveList);
+                         undoMove(currentBoard, moveList.getMove(0), capturedPiece);
                     }
                     stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 knightMoveGen.\n";
-
-
-                    frequency2 = startTimer(&beginTime2, 2);
-                    for (int i = 0; i < 6300; i++) {
-                         moveList.setCounterToZero();
-                         bishopMoveGeneration(currentBoard, C1, moveList);
-                    }
-                    stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 bishopMoveGen.\n";
-
-
-                    frequency2 = startTimer(&beginTime2, 2);
-                    for (int i = 0; i < 6300; i++) {
-                         moveList.setCounterToZero();
-                         rookMoveGeneration(currentBoard, A1, moveList);
-                    }
-                    stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 rookMoveGen.\n";
-
-
-                    frequency2 = startTimer(&beginTime2, 2);
-                    for (int i = 0; i < 6300; i++) {
-                         moveList.setCounterToZero();
-                         queenMoveGeneration(currentBoard, D1, moveList);
-                    }
-                    stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 queenMoveGen.\n";
-
-
-                    frequency2 = startTimer(&beginTime2, 2);
-                    for (int i = 0; i < 6300; i++) {
-                         moveList.setCounterToZero();
-                         kingMoveGeneration(currentBoard, E1, moveList);
-                    }
-                    stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 kingMoveGen.\n";
+                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 undoMove.\n";
+                    
+                    
 
                }
           }
