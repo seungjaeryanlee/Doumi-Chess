@@ -23,3 +23,5 @@ void printMenu();
 /// This function prints the extensive menu of possible user commands, including some options created for debugging the code.
 /// </summary>
 void printDebugMenu();
+// TODO: Add documentation
+void savePGN(const result gameResult, const Move *savedMove, const int saveIndex, const bool spectate, const int userColor);
