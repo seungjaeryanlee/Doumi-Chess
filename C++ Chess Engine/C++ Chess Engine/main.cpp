@@ -1137,21 +1137,13 @@ void main() {
                     frequency2 = startTimer(&beginTime2, 2);
 
                     for (int i = 0; i < 6300; i++) {
-                         moveGeneration(currentBoard);
                     }
 
                     stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 moveGen.\n";
 
-                    LARGE_INTEGER frequency3, beginTime3, endTime3;
-                    frequency3 = startTimer(&beginTime3, 3);
 
-                    for (int i = 0; i < 4500; i++) {
-                         currentBoard.boardEvaluation();
                     }
 
-                    stopTimer(&endTime3, 3);
-                    std::cout << elapsedTime(beginTime3, endTime3, frequency3, 3) << " ms for 4500 boardEval.\n";
                }
           }
           
