@@ -74,6 +74,9 @@ enum commandType {ERROR_COMMAND,
      DEBUG
 };
 enum gameState {WHITE_CHECKMATE, BLACK_CHECKMATE, STALEMATE_MOVE, STALEMATE_50, STALEMATE_75, STALEMATE_3F, NOTMATE};
+enum direction {UP, UPRIGHT, RIGHT, DOWNRIGHT, DOWN, DOWNLEFT, LEFT, UPLEFT };
+const int GO[8] = { -ROW, -ROW + COLUMN, COLUMN, ROW + COLUMN,ROW,ROW - COLUMN,-COLUMN,-ROW - COLUMN };
+
 
 // PCSQ Tables from https://chessprogramming.wikispaces.com/Simplified+evaluation+function
 // All of them are absolute score (+ is WHITE, - is BLACK)

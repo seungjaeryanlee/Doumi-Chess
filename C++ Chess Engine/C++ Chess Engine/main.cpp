@@ -1139,7 +1139,7 @@ void main() {
                     // COMMIT ?
                     // ATTACKCHECK 13 ms MAKEMOVE 3 UNDOMOVE 
 
-                    FENboardSetup(currentBoard, "8/8/8/4R3/8/8/8/7K w - - 0 1");
+                    FENboardSetup(currentBoard, "8/8/8/4B3/8/3Q4/8/7K w - - 0 1");
 
                     MoveList moveList;
                     LARGE_INTEGER frequency2, beginTime2, endTime2;
@@ -1154,10 +1154,18 @@ void main() {
                     frequency2 = startTimer(&beginTime2, 2);
                     for (int i = 0; i < 6300; i++) {
                          moveList.setCounterToZero();
-                         rookMoveGeneration(currentBoard, E5, moveList);
+                         bishopMoveGeneration(currentBoard, E5, moveList);
                     }
                     stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 rookMoveGen.\n";
+                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 bishopMoveGen.\n";
+
+                    frequency2 = startTimer(&beginTime2, 2);
+                    for (int i = 0; i < 6300; i++) {
+                         moveList.setCounterToZero();
+                         queenMoveGeneration(currentBoard, D3, moveList);
+                    }
+                    stopTimer(&endTime2, 2);
+                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 queenMoveGen.\n";
 
                     
                     

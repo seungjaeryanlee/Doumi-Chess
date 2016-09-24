@@ -64,6 +64,7 @@ MoveList moveGeneration(const Board& board) {
 
      //  find king position
      int kingPosition = 0, changedKingPosition = 0;
+     int turn = board.getTurn();
      int capturedPiece;
      for (int i = 0; i < 120; i++) {
           if (copiedBoard.getTurn() == WHITE && copiedBoard.getSquare(i) == WHITEKING ||
@@ -72,6 +73,309 @@ MoveList moveGeneration(const Board& board) {
                break;
           }
      }
+
+     /*
+     // Find pinned pieces
+     bool maybePinned;            // There is a ally piece
+     bool pinned;                 // There is a rook/bishop/queen behind the ally piece
+     int pinnedPiece[8] = { 0, }; // The pinned piece
+     
+     // UPLEFT
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[UPLEFT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[UPLEFT] = kingPosition + i*GO[UPLEFT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[UPLEFT]) == WHITEBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[UPLEFT]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[UPLEFT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[UPLEFT] = kingPosition + i*GO[UPLEFT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[UPLEFT]) == BLACKBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[UPLEFT]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     
+     // UPRIGHT
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[UPRIGHT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[UPRIGHT] = kingPosition + i*GO[UPRIGHT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[UPRIGHT]) == WHITEBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[UPRIGHT]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[UPRIGHT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[UPRIGHT] = kingPosition + i*GO[UPRIGHT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[UPRIGHT]) == BLACKBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[UPRIGHT]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+
+     // DOWNLEFT
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[DOWNLEFT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[DOWNLEFT] = kingPosition + i*GO[DOWNLEFT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWNLEFT]) == WHITEBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[DOWNLEFT]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[DOWNLEFT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[DOWNLEFT] = kingPosition + i*GO[DOWNLEFT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWNLEFT]) == BLACKBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[DOWNLEFT]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+
+     // DOWNRIGHT
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[DOWNRIGHT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[DOWNRIGHT] = kingPosition + i*GO[DOWNRIGHT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWNRIGHT]) == WHITEBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[DOWNRIGHT]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[DOWNRIGHT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[DOWNRIGHT] = kingPosition + i*GO[DOWNRIGHT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWNRIGHT]) == BLACKBISHOP)
+                    || (board.getSquare(kingPosition + i*GO[DOWNRIGHT]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+
+     // UP
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[UP])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[UP] = kingPosition + i*GO[UP];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[UP]) == WHITEROOK)
+                    || (board.getSquare(kingPosition + i*GO[UP]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[UP])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[UP] = kingPosition + i*GO[UP];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[UP]) == BLACKROOK)
+                    || (board.getSquare(kingPosition + i*GO[UP]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+
+     // DOWN
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[DOWN])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[DOWN] = kingPosition + i*GO[DOWN];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWN]) == WHITEROOK)
+                    || (board.getSquare(kingPosition + i*GO[DOWN]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[DOWN])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[DOWN] = kingPosition + i*GO[DOWN];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWN]) == BLACKROOK)
+                    || (board.getSquare(kingPosition + i*GO[DOWN]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+
+     // LEFT
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[LEFT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[LEFT] = kingPosition + i*GO[LEFT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[LEFT]) == WHITEROOK)
+                    || (board.getSquare(kingPosition + i*GO[LEFT]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[LEFT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[LEFT] = kingPosition + i*GO[LEFT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[LEFT]) == BLACKROOK)
+                    || (board.getSquare(kingPosition + i*GO[LEFT]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+
+     // RIGHT
+     maybePinned = false; pinned = false;
+     if (turn == WHITE) {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[RIGHT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[RIGHT] = kingPosition + i*GO[RIGHT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[RIGHT]) == WHITEROOK)
+                    || (board.getSquare(kingPosition + i*GO[RIGHT]) == WHITEQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     else {
+          for (int i = 1; i < 8; i++) {
+               if (checkColor(board.getSquare(kingPosition + i*GO[RIGHT])) == turn) {
+                    if (maybePinned) { break; }
+                    else {
+                         maybePinned = true;
+                         pinnedPiece[RIGHT] = kingPosition + i*GO[RIGHT];
+                    }
+
+               }
+               if (maybePinned && (board.getSquare(kingPosition + i*GO[RIGHT]) == BLACKROOK)
+                    || (board.getSquare(kingPosition + i*GO[RIGHT]) == BLACKQUEEN)) {
+                    pinned = true;
+                    break;
+               }
+          }
+     }
+     */
 
      for (int i = 0; i < pseudolegalMoveList.getCounter(); i++) {
           //  check if king will be moved
@@ -116,21 +420,21 @@ void pawnMoveGeneration(const Board& board, const int position, MoveList& moveLi
           }
 
           //  Advance 1 square
-          if (board.getSquare(position - ROW) == EMPTYSQUARE) {
-               addMove(position, position - ROW, NORMAL, moveList);
+          if (board.getSquare(position + GO[UP]) == EMPTYSQUARE) {
+               addMove(position, position + GO[UP], NORMAL, moveList);
                //  Advance 2 squares
                if (A2 <= position && position <= H2 &&
-                    board.getSquare(position - 2 * ROW) == EMPTYSQUARE) {
-                    addMove(position, position - 2 * ROW, DOUBLEMOVE, moveList);
+                    board.getSquare(position + 2 * GO[UP]) == EMPTYSQUARE) {
+                    addMove(position, position + 2 * GO[UP], DOUBLEMOVE, moveList);
                }
           }
 
           //  attack diagonals
-          if (checkColor(board.getSquare(position - ROW - COLUMN)) == BLACK) {
-               addMove(position, position - ROW - COLUMN, NORMAL, moveList);
+          if (checkColor(board.getSquare(position + GO[UPLEFT])) == BLACK) {
+               addMove(position, position + GO[UPLEFT], NORMAL, moveList);
           }
-          if (checkColor(board.getSquare(position - ROW + COLUMN)) == BLACK) {
-               addMove(position, position - ROW + COLUMN, NORMAL, moveList);
+          if (checkColor(board.getSquare(position + GO[UPRIGHT])) == BLACK) {
+               addMove(position, position + GO[UPRIGHT], NORMAL, moveList);
           }
      }
      if (board.getTurn() == BLACK) {
@@ -141,21 +445,21 @@ void pawnMoveGeneration(const Board& board, const int position, MoveList& moveLi
           }
 
           //  Advance 1 square
-          if (board.getSquare(position + ROW) == EMPTYSQUARE) {
-               addMove(position, position + ROW, NORMAL, moveList);
+          if (board.getSquare(position + GO[DOWN]) == EMPTYSQUARE) {
+               addMove(position, position + GO[DOWN], NORMAL, moveList);
                //  Advance 2 squares
                if (A7 <= position && position <= H7 &&
-                    board.getSquare(position + 2 * ROW) == EMPTYSQUARE) {
-                    addMove(position, position + 2 * ROW, DOUBLEMOVE, moveList);
+                    board.getSquare(position + 2 * GO[DOWN]) == EMPTYSQUARE) {
+                    addMove(position, position + 2 * GO[DOWN], DOUBLEMOVE, moveList);
                }
           }
 
           //  attack diagonals
-          if (checkColor(board.getSquare(position + ROW - COLUMN)) == WHITE) {
-               addMove(position, position + ROW - COLUMN, NORMAL, moveList);
+          if (checkColor(board.getSquare(position + GO[DOWNLEFT])) == WHITE) {
+               addMove(position, position + GO[DOWNLEFT], NORMAL, moveList);
           }
-          if (checkColor(board.getSquare(position + ROW + COLUMN)) == WHITE) {
-               addMove(position, position + ROW + COLUMN, NORMAL, moveList);
+          if (checkColor(board.getSquare(position + GO[DOWNRIGHT])) == WHITE) {
+               addMove(position, position + GO[DOWNRIGHT], NORMAL, moveList);
           }
      }
 }
@@ -197,93 +501,104 @@ void knightMoveGeneration(const Board& board, const int position, MoveList& move
 }
 void bishopMoveGeneration(const Board& board, const int position, MoveList& moveList) {
      int turn = board.getTurn();
-     bool topright = true, downright = true, downleft = true, topleft = true;
+
+     // TOPRIGHT
      for (int i = 1; i < 8; i++) {
-          if (topright == true &&
-               (checkColor(board.getSquare(position - i*ROW + i*COLUMN)) == -turn ||
-                    board.getSquare(position - i*ROW + i*COLUMN) == EMPTYSQUARE)) {
-               addMove(position, position - i*ROW + i*COLUMN, NORMAL, moveList);
-               if (checkColor(board.getSquare(position - i*ROW + i*COLUMN)) == -turn) {
-                    topright = false;
-               }
+          if (board.getSquare(position + i*GO[UPRIGHT]) == EMPTYSQUARE) {
+               addMove(position, position + i*GO[UPRIGHT], NORMAL, moveList);
           }
-          else { topright = false; }
-
-          if (downright == true &&
-               (checkColor(board.getSquare(position + i*ROW + i*COLUMN)) == -turn ||
-                    board.getSquare(position + i*ROW + i*COLUMN) == EMPTYSQUARE)) {
-               addMove(position, position + i*ROW + i*COLUMN, NORMAL, moveList);
-               if (checkColor(board.getSquare(position + i*ROW + i*COLUMN)) == -turn) {
-                    downright = false;
-               }
+          else if (checkColor(board.getSquare(position + i*GO[UPRIGHT])) == -turn) {
+               addMove(position, position + i*GO[UPRIGHT], NORMAL, moveList);
+               break;
           }
-          else { downright = false; }
-
-          if (downleft == true &&
-               (checkColor(board.getSquare(position + i*ROW - i*COLUMN)) == -turn ||
-                    board.getSquare(position + i*ROW - i*COLUMN) == EMPTYSQUARE)) {
-               addMove(position, position + i*ROW - i*COLUMN, NORMAL, moveList);
-               if (checkColor(board.getSquare(position + i*ROW - i*COLUMN)) == -turn) {
-                    downleft = false;
-               }
-          }
-          else { downleft = false; }
-
-          if (topleft == true &&
-               (checkColor(board.getSquare(position - i*ROW - i*COLUMN)) == -turn ||
-                    board.getSquare(position - i*ROW - i*COLUMN) == EMPTYSQUARE)) {
-               addMove(position, position - i*ROW - i*COLUMN, NORMAL, moveList);
-               if (checkColor(board.getSquare(position - i*ROW - i*COLUMN)) == -turn) {
-                    topleft = false;
-               }
-          }
-          else { topleft = false; }
+          else { break; }
      }
+
+     // DOWNRIGHT
+     for (int i = 1; i < 8; i++) {
+          if (board.getSquare(position + i*GO[DOWNRIGHT]) == EMPTYSQUARE) {
+               addMove(position, position + i*GO[DOWNRIGHT], NORMAL, moveList);
+          }
+          else if (checkColor(board.getSquare(position + i*GO[DOWNRIGHT])) == -turn) {
+               addMove(position, position + i*GO[DOWNRIGHT], NORMAL, moveList);
+               break;
+          }
+          else { break; }
+     }
+
+     // DOWNLEFT
+     for (int i = 1; i < 8; i++) {
+          if (board.getSquare(position + i*GO[DOWNLEFT]) == EMPTYSQUARE) {
+               addMove(position, position + i*GO[DOWNLEFT], NORMAL, moveList);
+          }
+          else if (checkColor(board.getSquare(position + i*GO[DOWNLEFT])) == -turn) {
+               addMove(position, position + i*GO[DOWNLEFT], NORMAL, moveList);
+               break;
+          }
+          else { break; }
+     }
+
+     // TOPLEFT
+     for (int i = 1; i < 8; i++) {
+          if (board.getSquare(position + i*GO[UPLEFT]) == EMPTYSQUARE) {
+               addMove(position, position + i*GO[UPLEFT], NORMAL, moveList);
+          }
+          else if (checkColor(board.getSquare(position + i*GO[UPLEFT])) == -turn) {
+               addMove(position, position + i*GO[UPLEFT], NORMAL, moveList);
+               break;
+          }
+          else { break; }
+     }     
 }
 void rookMoveGeneration(const Board& board, const int position, MoveList& moveList) {
      int turn = board.getTurn();
-     bool top = true, right = true, down = true, left = true;
 
+     // UP
      for (int i = 1; i < 8; i++) {
-          if (top == true &&
-               (checkColor(board.getSquare(position - i*ROW)) == -turn ||
-                    board.getSquare(position - i*ROW) == EMPTYSQUARE)) {
-               addMove(position, position - i*ROW, NORMAL, moveList);
-               if (checkColor(board.getSquare(position - i*ROW)) == -turn) {
-                    top = false;
-               }
+          if (board.getSquare(position + i*GO[UP]) == EMPTYSQUARE) {
+               addMove(position, position + i*GO[UP], NORMAL, moveList);
           }
-          else { top = false; }
+          else if (checkColor(board.getSquare(position + i*GO[UP])) == -turn) {
+               addMove(position, position + i*GO[UP], NORMAL, moveList);
+               break;
+          }
+          else { break; }
+     }
 
-          if (right == true &&
-               (checkColor(board.getSquare(position + i*COLUMN)) == -turn ||
-                    board.getSquare(position + i*COLUMN) == EMPTYSQUARE)) {
-               addMove(position, position + i*COLUMN, NORMAL, moveList);
-               if (checkColor(board.getSquare(position + i*COLUMN)) == -turn) {
-                    right = false;
-               }
+     // DOWN
+     for (int i = 1; i < 8; i++) {
+          if (board.getSquare(position + i*GO[DOWN]) == EMPTYSQUARE) {
+               addMove(position, position + i*GO[DOWN], NORMAL, moveList);
           }
-          else { right = false; }
+          else if (checkColor(board.getSquare(position + i*GO[DOWN])) == -turn) {
+               addMove(position, position + i*GO[DOWN], NORMAL, moveList);
+               break;
+          }
+          else { break; }
+     }
 
-          if (down == true &&
-               (checkColor(board.getSquare(position + i*ROW)) == -turn ||
-                    board.getSquare(position + i*ROW) == EMPTYSQUARE)) {
-               addMove(position, position + i*ROW, NORMAL, moveList);
-               if (checkColor(board.getSquare(position + i*ROW)) == -turn) {
-                    down = false;
-               }
+     // LEFT
+     for (int i = 1; i < 8; i++) {
+          if (board.getSquare(position + i*GO[LEFT]) == EMPTYSQUARE) {
+               addMove(position, position + i*GO[LEFT], NORMAL, moveList);
           }
-          else { down = false; }
+          else if (checkColor(board.getSquare(position + i*GO[LEFT])) == -turn) {
+               addMove(position, position + i*GO[LEFT], NORMAL, moveList);
+               break;
+          }
+          else { break; }
+     }
 
-          if (left == true &&
-               (checkColor(board.getSquare(position - i*COLUMN)) == -turn ||
-                    board.getSquare(position - i*COLUMN) == EMPTYSQUARE)) {
-               addMove(position, position - i*COLUMN, NORMAL, moveList);
-               if (checkColor(board.getSquare(position - i*COLUMN)) == -turn) {
-                    left = false;
-               }
+     // RIGHT
+     for (int i = 1; i < 8; i++) {
+          if (board.getSquare(position + i*GO[RIGHT]) == EMPTYSQUARE) {
+               addMove(position, position + i*GO[RIGHT], NORMAL, moveList);
           }
-          else { left = false; }
+          else if (checkColor(board.getSquare(position + i*GO[RIGHT])) == -turn) {
+               addMove(position, position + i*GO[RIGHT], NORMAL, moveList);
+               break;
+          }
+          else { break; }
      }
 }
 void queenMoveGeneration(const Board& board, const int position, MoveList& moveList) {
@@ -291,39 +606,11 @@ void queenMoveGeneration(const Board& board, const int position, MoveList& moveL
      bishopMoveGeneration(board, position, moveList);
 }
 void kingMoveGeneration(const Board& board, const int position, MoveList& moveList) {
-     int turn = board.getTurn();
-
-     if (checkColor(board.getSquare(position + ROW)) == -turn ||
-          board.getSquare(position + ROW) == EMPTYSQUARE) {
-          addMove(position, position + ROW, NORMAL, moveList);
-     }
-     if (checkColor(board.getSquare(position - ROW)) == -turn ||
-          board.getSquare(position - ROW) == EMPTYSQUARE) {
-          addMove(position, position - ROW, NORMAL, moveList);
-     }
-     if (checkColor(board.getSquare(position + COLUMN)) == -turn ||
-          board.getSquare(position + COLUMN) == EMPTYSQUARE) {
-          addMove(position, position + COLUMN, NORMAL, moveList);
-     }
-     if (checkColor(board.getSquare(position - COLUMN)) == -turn ||
-          board.getSquare(position - COLUMN) == EMPTYSQUARE) {
-          addMove(position, position - COLUMN, NORMAL, moveList);
-     }
-     if (checkColor(board.getSquare(position + ROW + COLUMN)) == -turn ||
-          board.getSquare(position + ROW + COLUMN) == EMPTYSQUARE) {
-          addMove(position, position + ROW + COLUMN, NORMAL, moveList);
-     }
-     if (checkColor(board.getSquare(position + ROW - COLUMN)) == -turn ||
-          board.getSquare(position + ROW - COLUMN) == EMPTYSQUARE) {
-          addMove(position, position + ROW - COLUMN, NORMAL, moveList);
-     }
-     if (checkColor(board.getSquare(position - ROW + COLUMN)) == -turn ||
-          board.getSquare(position - ROW + COLUMN) == EMPTYSQUARE) {
-          addMove(position, position - ROW + COLUMN, NORMAL, moveList);
-     }
-     if (checkColor(board.getSquare(position - ROW - COLUMN)) == -turn ||
-          board.getSquare(position - ROW - COLUMN) == EMPTYSQUARE) {
-          addMove(position, position - ROW - COLUMN, NORMAL, moveList);
+     for (int i = 0; i < 8; i++) {
+          if (checkColor(board.getSquare(position + GO[i])) == -board.getTurn() ||
+               board.getSquare(position + GO[i]) == EMPTYSQUARE) {
+               addMove(position, position + GO[i], NORMAL, moveList);
+          }
      }
 }
 
@@ -370,25 +657,25 @@ void castlingMoveGeneration(const Board& board, MoveList& moveList) {
 }
 void promotionMoveGeneration(const Board& board, const int position, MoveList& moveList) {
      if (board.getTurn() == WHITE) {
-          if (checkColor(board.getSquare(position - ROW - COLUMN)) == -board.getTurn()) {
-               addPromotionMove(position, position - ROW - COLUMN, moveList);
+          if (checkColor(board.getSquare(position + GO[UPLEFT])) == -board.getTurn()) {
+               addPromotionMove(position, position + GO[UPLEFT], moveList);
           }
-          if (checkColor(board.getSquare(position - ROW + COLUMN)) == -board.getTurn()) {
-               addPromotionMove(position, position - ROW + COLUMN, moveList);
+          if (checkColor(board.getSquare(position + GO[UPRIGHT])) == -board.getTurn()) {
+               addPromotionMove(position, position + GO[UPRIGHT], moveList);
           }
-          if (board.getSquare(position - ROW) == EMPTYSQUARE) {
-               addPromotionMove(position, position - ROW, moveList);
+          if (board.getSquare(position + GO[UP]) == EMPTYSQUARE) {
+               addPromotionMove(position, position + GO[UP], moveList);
           }
      }
      if (board.getTurn() == BLACK) {
-          if (checkColor(board.getSquare(position + ROW - COLUMN)) == -board.getTurn()) {
-               addPromotionMove(position, position + ROW - COLUMN, moveList);
+          if (checkColor(board.getSquare(position + GO[DOWNLEFT])) == -board.getTurn()) {
+               addPromotionMove(position, position + GO[DOWNLEFT], moveList);
           }
-          if (checkColor(board.getSquare(position + ROW + COLUMN)) == -board.getTurn()) {
-               addPromotionMove(position, position + ROW + COLUMN, moveList);
+          if (checkColor(board.getSquare(position + GO[DOWNRIGHT])) == -board.getTurn()) {
+               addPromotionMove(position, position + GO[DOWNRIGHT], moveList);
           }
-          if (board.getSquare(position + ROW) == EMPTYSQUARE) {
-               addPromotionMove(position, position + ROW, moveList);
+          if (board.getSquare(position + GO[DOWN]) == EMPTYSQUARE) {
+               addPromotionMove(position, position + GO[DOWN], moveList);
           }
      }
 }
@@ -398,19 +685,19 @@ void enpassantMoveGeneration(const Board& board, MoveList& moveList) {
      int enpassantSquare = board.getEnpassantSquare();
 
      if (board.getTurn() == WHITE) {
-          if (board.getSquare(enpassantSquare + ROW + COLUMN) == WHITEPAWN) {
-               addMove(enpassantSquare + ROW + COLUMN, enpassantSquare, ENPASSANT, moveList);
+          if (board.getSquare(enpassantSquare + GO[DOWNRIGHT]) == WHITEPAWN) {
+               addMove(enpassantSquare + GO[DOWNRIGHT], enpassantSquare, ENPASSANT, moveList);
           }
-          if (board.getSquare(enpassantSquare + ROW - COLUMN) == WHITEPAWN) {
-               addMove(enpassantSquare + ROW - COLUMN, enpassantSquare, ENPASSANT, moveList);
+          if (board.getSquare(enpassantSquare + GO[DOWNLEFT]) == WHITEPAWN) {
+               addMove(enpassantSquare + GO[DOWNLEFT], enpassantSquare, ENPASSANT, moveList);
           }
      }
      if (board.getTurn() == BLACK) {
-          if (board.getSquare(enpassantSquare - ROW + COLUMN) == BLACKPAWN) {
-               addMove(enpassantSquare - ROW + COLUMN, enpassantSquare, ENPASSANT, moveList);
+          if (board.getSquare(enpassantSquare + GO[UPRIGHT]) == BLACKPAWN) {
+               addMove(enpassantSquare + GO[UPRIGHT], enpassantSquare, ENPASSANT, moveList);
           }
-          if (board.getSquare(enpassantSquare - ROW - COLUMN) == BLACKPAWN) {
-               addMove(enpassantSquare - ROW - COLUMN, enpassantSquare, ENPASSANT, moveList);
+          if (board.getSquare(enpassantSquare + GO[UPLEFT]) == BLACKPAWN) {
+               addMove(enpassantSquare + GO[UPLEFT], enpassantSquare, ENPASSANT, moveList);
           }
      }
 }
