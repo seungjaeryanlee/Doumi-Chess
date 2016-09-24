@@ -64,6 +64,7 @@ MoveList moveGeneration(const Board& board) {
 
      //  find king position
      int kingPosition = 0, changedKingPosition = 0;
+     int turn = board.getTurn();
      int capturedPiece;
      for (int i = 0; i < 120; i++) {
           if (copiedBoard.getTurn() == WHITE && copiedBoard.getSquare(i) == WHITEKING ||
