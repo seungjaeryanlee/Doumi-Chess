@@ -1106,7 +1106,7 @@ void main() {
                     LARGE_INTEGER frequency2, beginTime2, endTime2;
 
                     frequency2 = startTimer(&beginTime2, 2);
-                    int alphabetaValue = alphabeta(6, currentBoard, -999999, 999999);
+                    int alphabetaValue = alphabeta(6, currentBoard, DEFAULT_ALPHA, DEFAULT_BETA);
                     stopTimer(&endTime2, 2);
                     printf("Alphabeta Value: %d\n", alphabetaValue);
                     std::cout << "Alphabeta timer : " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
@@ -1133,7 +1133,7 @@ void main() {
                savedBoard[saveIndex] = currentBoard;
 
                Move abMove;
-               int abValue = rootAlphabeta(EVAL_DEPTH, currentBoard, -999999, 999999, abMove);
+               int abValue = rootAlphabeta(EVAL_DEPTH, currentBoard, DEFAULT_ALPHA, DEFAULT_BETA, abMove);
                printf("Alphabeta Value: %d\n", abValue);
                std::cout << "Alphabeta Move: " << printMove(currentBoard.getMoveNumber(), abMove);
 
