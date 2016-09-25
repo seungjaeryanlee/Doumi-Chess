@@ -1168,6 +1168,8 @@ void main() {
           
           //  Computer turn
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
+               printf("IsEndgame: %d\n", currentBoard.getEndgame());
+               
                // Reset Debug
                moveGenCounter = 0;
                boardEvalCounter = 0;

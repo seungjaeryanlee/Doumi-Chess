@@ -76,7 +76,7 @@ private:
      int halfMoveClock;
      int moveNumber;
 
-     bool isEndgame;
+     bool isEndgame = false;
      std::array<int, 14> pieceCount;
 
 public:
