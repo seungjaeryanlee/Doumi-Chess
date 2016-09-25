@@ -2,7 +2,7 @@
 #include "movegen.h"
 
 
-int alphabeta(const int depth, Board& board, int alpha, int beta) {   
+int alphabeta(const int depth, Board& board, int alpha, int beta, Board savedBoard[MAX_MOVENUMBER], int saveIndex) {   
      switch (checkGameState(board)) {
      case NOTMATE:
           break;
@@ -24,6 +24,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
           // If bad, declare stalemate
           // TODO: Should the check be deeper before stalemate is claimed?
           if (board.getTurn() * board.boardEvaluation() <= STALEMATE_BOUND) {
+               printf("Declare 50\n");
                return 0;
           }
      }
@@ -39,13 +40,13 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
                // If bad, declare stalemate
                // TODO: Should the check be deeper before stalemate is claimed?
                if (board.getTurn() * board.boardEvaluation() <= STALEMATE_BOUND) {
+                    printf("Declare 3Fold\n");
                     return 0;
                }
           }
      }
 
      if (depth == 0) {
-          
           return board.getTurn() * board.boardEvaluation();
      }
 
@@ -57,8 +58,9 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
 
      for (int i = 0; i < moveList.getCounter(); i++) {
           capturedPiece = makeMove(board, moveList.getMove(i));
+          savedBoard[saveIndex] = board;
 
-          score = -alphabeta(depth - 1, board, -beta, -alpha);
+          score = -alphabeta(depth - 1, board, -beta, -alpha, savedBoard, saveIndex + 1);
 
           if (score >= beta) {
                board = oldBoard;
@@ -73,7 +75,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
 
      return alpha;
 }
-int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& bestMove) {
+int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& bestMove, Board savedBoard[MAX_MOVENUMBER], int saveIndex) {
      int score;
      int capturedPiece;
 
@@ -83,8 +85,9 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
 
      for (int i = 0; i < moveList.getCounter(); i++) {
           capturedPiece = makeMove(board, moveList.getMove(i));
+          savedBoard[saveIndex] = board;
 
-          score = -alphabeta(maxDepth - 1, board, -beta, -alpha);
+          score = -alphabeta(maxDepth - 1, board, -beta, -alpha, savedBoard, saveIndex + 1);
           
           // TODO: Check if this is needed and change it
           if (score >= beta) {
