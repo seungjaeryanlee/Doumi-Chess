@@ -19,6 +19,31 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
           break;
      }
 
+     // Check 50 move rule
+     if (fiftyMoveCheck(board)) {
+          // If bad, declare stalemate
+          // TODO: Should the check be deeper before stalemate is claimed?
+          if (board.getTurn() * board.boardEvaluation() <= STALEMATE_BOUND) {
+               return 0;
+          }
+     }
+
+     // Check Threefold Repetition
+     // TODO: Pass savedBoard + saveIndex as arguments
+     int repetitionCount = 0;
+     for (int i = 0; i < saveIndex; i++) {
+          if (board.isAlmostEqual(savedBoard[i])) {
+               repetitionCount++;
+          }
+          if (repetitionCount >= 3) { 
+               // If bad, declare stalemate
+               // TODO: Should the check be deeper before stalemate is claimed?
+               if (board.getTurn() * board.boardEvaluation() <= STALEMATE_BOUND) {
+                    return 0;
+               }
+          }
+     }
+
      if (depth == 0) {
           
           return board.getTurn() * board.boardEvaluation();
