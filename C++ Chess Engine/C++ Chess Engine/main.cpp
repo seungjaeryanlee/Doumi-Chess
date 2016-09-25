@@ -379,7 +379,6 @@ uint64_t divide(const int depth, const int maxDepth, Board& board, const bool sh
           int terminal = moveList.getMove(i).getTerminal();
                    
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i), capturedPiece);
           
           node += divide(depth - 1, maxDepth, board, showOutput);
           if (showOutput) {
@@ -428,7 +427,6 @@ uint64_t divide2(const int depth, const int maxDepth, Board& board, const bool s
           int terminal = moveList.getMove(i).getTerminal();
 
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i), capturedPiece);
 
 
           node += divide(depth - 1, maxDepth, board, showOutput);
@@ -561,7 +559,7 @@ int makeMove(Board &board, const Move& move) {
           return 0;
      }
 
-
+     updateBoard(board, move, capturedPiece);
      return capturedPiece;
 }
 void undoMove(Board &board, const Move& move, const int capturedPiece) {
@@ -1186,7 +1184,6 @@ void main() {
 
                // Make Move, Save and Print
                savedCapturedPiece[saveIndex] = makeMove(currentBoard, abMove);
-               updateBoard(currentBoard, abMove, savedCapturedPiece[saveIndex]);
                savedMove[saveIndex] = abMove;
                saveIndex++;
 

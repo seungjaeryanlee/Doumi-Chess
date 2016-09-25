@@ -32,7 +32,6 @@ int alphabeta(const int depth, Board& board, int alpha, int beta) {
 
      for (int i = 0; i < moveList.getCounter(); i++) {
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i), capturedPiece);
 
           score = -alphabeta(depth - 1, board, -beta, -alpha);
 
@@ -59,7 +58,6 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
 
      for (int i = 0; i < moveList.getCounter(); i++) {
           capturedPiece = makeMove(board, moveList.getMove(i));
-          updateBoard(board, moveList.getMove(i), capturedPiece);
 
           score = -alphabeta(maxDepth - 1, board, -beta, -alpha);
           
