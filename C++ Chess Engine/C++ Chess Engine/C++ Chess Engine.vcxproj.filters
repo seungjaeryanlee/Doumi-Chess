@@ -42,11 +42,11 @@
     <ClCompile Include="command.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="debugmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="protos.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="defs.h">
       <Filter>Header Files</Filter>
     </ClInclude>

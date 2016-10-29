@@ -1,6 +1,7 @@
 #include "pgn.h"
 #include "defs.h"
-#include "protos.h"
+#include "move.h"
+#include "board.h"
 #include <string>
 #include <fstream>
 #include <iomanip> 

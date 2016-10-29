@@ -4,7 +4,6 @@
 #include "movegen.h"
 #include <fstream>
 
-
 void printDebugMenu() {
      printf("--------------------------------------------------\n");
      printf("%d: Make move\n", MOVE);
