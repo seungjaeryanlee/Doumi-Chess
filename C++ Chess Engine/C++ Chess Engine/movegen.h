@@ -1,4 +1,8 @@
 #pragma once
+
+//TODO: Add Comment
+void moveGenCalled();
+
 /// <summary>
 /// This function returns the list of possible legal moves
 /// </summary>

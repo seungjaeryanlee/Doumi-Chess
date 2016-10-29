@@ -770,3 +770,235 @@ void printSimpleBoard(const Board& board) {
      printf("  ----------------\n");
      printf("   a b c d e f g h\n");
 }
+
+
+int makeMove(Board &board, const Move& move) {
+     int capturedPiece = EMPTYSQUARE;
+     int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
+
+     board.setEnpassantSquare(0);
+     board.changeTurn();
+
+     if (moveType == NORMAL) {
+          capturedPiece = board.getSquare(terminal);
+          board.setSquare(terminal, board.getSquare(initial));
+          board.setSquare(initial, EMPTYSQUARE);
+     }
+     else if (moveType == DOUBLEMOVE) {
+          board.setSquare(terminal, board.getSquare(initial));
+          board.setSquare(initial, EMPTYSQUARE);
+          board.setEnpassantSquare((terminal + initial) / 2);
+     }
+     else if (moveType == QUEENSIDE_CASTLING) {
+          //  move king
+          board.setSquare(terminal, board.getSquare(initial));
+          board.setSquare(initial, EMPTYSQUARE);
+          //  move rook
+          board.setSquare(terminal + COLUMN, board.getSquare(initial - 4 * COLUMN));
+          board.setSquare(initial - 4 * COLUMN, EMPTYSQUARE);
+          //  castling does not involve capture
+     }
+     else if (moveType == KINGSIDE_CASTLING) {
+          //  move king
+          board.setSquare(terminal, board.getSquare(initial));
+          board.setSquare(initial, EMPTYSQUARE);
+          //  move rook
+          board.setSquare(terminal - COLUMN, board.getSquare(terminal + COLUMN));
+          board.setSquare(terminal + COLUMN, EMPTYSQUARE);
+          //  castling does not involve capture
+     }
+     else if (moveType == KNIGHT_PROMOTION) {
+          capturedPiece = board.getSquare(terminal);
+
+          //  white turn
+          if (board.getSquare(initial) == WHITEPAWN) {
+               board.setSquare(terminal, WHITEKNIGHT);
+          }
+          //  black turn
+          else {
+               board.setSquare(terminal, BLACKKNIGHT);
+          }
+          board.setSquare(initial, EMPTYSQUARE);
+     }
+     else if (moveType == BISHOP_PROMOTION) {
+          capturedPiece = board.getSquare(terminal);
+
+          //  white turn
+          if (board.getSquare(initial) == WHITEPAWN) {
+               board.setSquare(terminal, WHITEBISHOP);
+          }
+          //  black turn
+          else {
+               board.setSquare(terminal, BLACKBISHOP);
+          }
+          board.setSquare(initial, EMPTYSQUARE);
+     }
+     else if (moveType == ROOK_PROMOTION) {
+          capturedPiece = board.getSquare(terminal);
+
+          //  white turn
+          if (board.getSquare(initial) == WHITEPAWN) {
+               board.setSquare(terminal, WHITEROOK);
+          }
+          //  black turn
+          else {
+               board.setSquare(terminal, BLACKROOK);
+          }
+          board.setSquare(initial, EMPTYSQUARE);
+     }
+     else if (moveType == QUEEN_PROMOTION) {
+          capturedPiece = board.getSquare(terminal);
+
+          //  white turn
+          if (board.getSquare(initial) == WHITEPAWN) {
+               board.setSquare(terminal, WHITEQUEEN);
+          }
+          //  black turn
+          else {
+               board.setSquare(terminal, BLACKQUEEN);
+          }
+          board.setSquare(initial, EMPTYSQUARE);
+     }
+     else if (moveType == ENPASSANT) {
+          //  White turn
+          if (board.getSquare(initial) == WHITEPAWN) {
+               board.setSquare(terminal, board.getSquare(initial));
+               board.setSquare(initial, EMPTYSQUARE);
+               board.setSquare(terminal + ROW, EMPTYSQUARE);
+               capturedPiece = BLACKPAWN;
+          }
+          //  Black turn
+          else {
+               board.setSquare(terminal, board.getSquare(initial));
+               board.setSquare(initial, EMPTYSQUARE);
+               board.setSquare(terminal - ROW, EMPTYSQUARE);
+               capturedPiece = WHITEPAWN;
+          }
+     }
+     else {
+          printf("Invalid moveType\n");
+          return 0;
+     }
+
+     updateBoard(board, move, capturedPiece);
+     return capturedPiece;
+}
+void undoMove(Board &board, const Move& move, const int capturedPiece) {
+     int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
+
+     board.changeTurn();
+
+     if (moveType == NORMAL) {
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, capturedPiece);
+     }
+     else if (moveType == DOUBLEMOVE) {
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, EMPTYSQUARE);
+     }
+     else if (moveType == QUEENSIDE_CASTLING) {
+          //  undo king move
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, EMPTYSQUARE);
+
+          //  undo rook move
+          board.setSquare(initial - 4 * COLUMN, board.getSquare(terminal + COLUMN));
+          board.setSquare(terminal + COLUMN, EMPTYSQUARE);
+
+     }
+     else if (moveType == KINGSIDE_CASTLING) {
+          //  undo king move
+          board.setSquare(initial, board.getSquare(terminal));
+          board.setSquare(terminal, EMPTYSQUARE);
+
+          //  undo rook move
+          board.setSquare(terminal + COLUMN, board.getSquare(terminal - COLUMN));
+          board.setSquare(terminal - COLUMN, EMPTYSQUARE);
+     }
+     else if (moveType == KNIGHT_PROMOTION || moveType == BISHOP_PROMOTION ||
+          moveType == ROOK_PROMOTION || moveType == QUEEN_PROMOTION) {
+          //  white turn
+          if (checkColor(board.getSquare(terminal)) == WHITE) {
+               board.setSquare(terminal, capturedPiece);
+               board.setSquare(initial, WHITEPAWN);
+          }
+          //  black turn
+          else {
+               board.setSquare(terminal, capturedPiece);
+               board.setSquare(initial, BLACKPAWN);
+          }
+     }
+     else if (moveType == ENPASSANT) {
+          //  white turn
+          if (board.getSquare(terminal) == WHITEPAWN) {
+               board.setSquare(terminal, EMPTYSQUARE);
+               board.setSquare(initial, WHITEPAWN);
+               board.setSquare(terminal + ROW, BLACKPAWN);
+          }
+          //  black turn
+          else {
+               board.setSquare(terminal, EMPTYSQUARE);
+               board.setSquare(initial, BLACKPAWN);
+               board.setSquare(terminal - ROW, WHITEPAWN);
+          }
+     }
+}
+
+void updateCastling(Board& board, const Move& move) {
+     if (board.getSquare(move.getInitial()) == WHITEKING) {
+          board.setCastlingRight(WKCASTLING, false);
+          board.setCastlingRight(WQCASTLING, false);
+     }
+     if (board.getSquare(move.getInitial()) == BLACKKING) {
+          board.setCastlingRight(BKCASTLING, false);
+          board.setCastlingRight(BQCASTLING, false);
+     }
+     if (board.getSquare(move.getInitial()) == WHITEROOK) {
+          if (move.getInitial() == A1) {
+               board.setCastlingRight(WQCASTLING, false);
+          }
+          if (move.getInitial() == H1) {
+               board.setCastlingRight(WKCASTLING, false);
+          }
+     }
+     if (board.getSquare(move.getInitial()) == BLACKROOK) {
+          if (move.getInitial() == A8) {
+               board.setCastlingRight(BQCASTLING, false);
+          }
+          if (move.getInitial() == H8) {
+               board.setCastlingRight(BKCASTLING, false);
+          }
+     }
+}
+void updateEnPassant(Board& board, const Move& move) {
+     if (move.getType() == DOUBLEMOVE) {
+          board.setEnpassantSquare((move.getInitial() + move.getTerminal()) / 2);
+     }
+     else { board.setEnpassantSquare(0); }
+}
+void updateHalfMoveClock(Board& board, const Move& move) {
+     if (board.getSquare(move.getTerminal()) == EMPTYSQUARE
+          && board.getSquare(move.getInitial()) != WHITEPAWN
+          && board.getSquare(move.getInitial()) != BLACKPAWN) {
+          board.incrementHalfMoveClock();
+     }
+     else { board.setHalfMoveClock(0); }
+}
+void updateMoveNumber(Board& board) {
+     if (board.getTurn() == WHITE) { board.incrementMoveNumber(); }
+}
+
+void updateBoard(Board& board, const Move& move, const int capturedPiece) {
+     updateCastling(board, move);
+     updateEnPassant(board, move);
+     updateHalfMoveClock(board, move);
+     board.updateEndgame(move);
+     board.updatePieceCount(move, capturedPiece);
+     updateMoveNumber(board);
+}
+
+bool fiftyMoveCheck(const Board& board) {
+     return (board.getHalfMoveClock() >= 100);
+}
+
+

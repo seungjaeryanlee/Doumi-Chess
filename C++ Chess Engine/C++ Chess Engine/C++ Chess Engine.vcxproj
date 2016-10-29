@@ -147,6 +147,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="board.cpp" />
+    <ClCompile Include="command.cpp" />
+    <ClCompile Include="debug.cpp" />
     <ClCompile Include="evaluation.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="move.cpp" />
@@ -156,6 +158,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h" />
+    <ClInclude Include="command.h" />
+    <ClInclude Include="debug.h" />
     <ClInclude Include="defs.h" />
     <ClInclude Include="evaluation.h" />
     <ClInclude Include="move.h" />

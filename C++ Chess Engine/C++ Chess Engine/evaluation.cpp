@@ -104,3 +104,42 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& be
 
      return alpha;
 }
+
+gameState checkGameState(const Board& board) {
+     int kingPos = -1;
+     for (int i = 0; i < 120; i++) {
+          if (board.getSquare(i) == WHITEKING && board.getTurn() == WHITE) {
+               kingPos = i;
+               break;
+          }
+          if (board.getSquare(i) == BLACKKING && board.getTurn() == BLACK) {
+               kingPos = i;
+               break;
+          }
+     }
+
+     // Stalemate: 75 Move Rule
+     // TODO: 50 Move rule will be implemented in moveGen
+     if (board.getHalfMoveClock() >= 150) {
+          return STALEMATE_75;
+     }
+
+     MoveList moveList = moveGeneration(board);
+
+     // Checkmate
+     if (moveList.getCounter() == 0 && isSquareAttacked(board, kingPos)) {
+          if (board.getSquare(kingPos) == WHITE) {
+               return BLACK_CHECKMATE;
+          }
+          else {
+               return WHITE_CHECKMATE;
+          }
+     }
+
+     // Stalemate: No legal move
+     if (moveList.getCounter() == 0) {
+          return STALEMATE_MOVE;
+     }
+
+     return NOTMATE;
+}

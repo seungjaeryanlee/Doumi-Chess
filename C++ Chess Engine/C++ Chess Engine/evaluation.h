@@ -1,5 +1,7 @@
 #pragma once
-#include "protos.h"
+#include "defs.h"
+#include "move.h"
+#include "board.h"
 
 
 /// <summary>
@@ -25,3 +27,11 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Board savedBoa
 //int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& bestMove);
 // TODO: Update documentation
 int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& bestMove, Board savedBoard[MAX_MOVENUMBER], int saveIndex);
+
+
+/// <summary>
+/// This function checks the game state of the given board.
+/// </summary>
+/// <param name="board">The board that will be checked for its game state.</param>
+/// <returns>The game state of the board.</returns>
+gameState checkGameState(const Board& board);

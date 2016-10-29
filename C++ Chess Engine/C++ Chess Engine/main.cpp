@@ -3,429 +3,17 @@
 #include <string>
 #include <Windows.h>
 #include <fstream>
-#include <climits>
 #include <array>
-#include <ctime>
-#include <iomanip>
-#include "protos.h"
+#include "move.h"
+#include "board.h"
 #include "defs.h"
 #include "movegen.h"
 #include "timer.h"
 #include "evaluation.h"
 #include "pgn.h"
 
-
-
-/******************************************************************************/
-/*                                  FUNCTIONS                                 */
-/******************************************************************************/
-
-
-
-void printDebugMenu() {
-     printf("--------------------------------------------------\n");
-     printf("%d: Make move\n", MOVE);
-     printf("%d: Display Board\n", DISPLAY_BOARD);
-     printf("%d: Display FEN\n", DISPLAY_FEN);
-     printf("%d: Reset Board\n", BOARD_RESET);
-     printf("%d: Perft Test\n", PERFT);
-     printf("%d: Quit\n", QUIT);
-     printf("%d: Divide Perft Test\n", DIVIDE);
-     printf("%d: Undo move\n", UNDO_MOVE);
-     printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
-     printf("A: Print Possible Moves\n");
-     printf("B: Negamax vs. Negamax + Alphabeta Pruning\n");
-     printf("C: Evaluate Board\n");
-     printf("D: Alphabeta Speed Check\n");
-     printf("E: Print Saved FEN\n");
-     printf("--------------------------------------------------\n");
-     printf("Please choose command: ");
-}
-void printMenu() {
-     printf("--------------------------------------------------\n");
-     printf("%d: Make move\n", MOVE);
-     printf("%d: Display Board\n", DISPLAY_BOARD);
-     printf("%d: Display FEN\n", DISPLAY_FEN);
-     printf("%d: Reset Board\n", BOARD_RESET);
-     printf("%d: Quit\n", QUIT);
-     printf("%d: Undo move\n", UNDO_MOVE);
-     printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
-     printf("A: Print Possible Moves\n");
-     printf("C: Evaluate Board\n");
-     printf("--------------------------------------------------\n");
-     printf("Please choose command: ");
-}
-
-int moveGenCounter = 0;
-
-void moveGenCalled() {
-     moveGenCounter++;
-}
-
-
-/*                             RECURSION FUNCTIONS                             */
-uint64_t divide(const int depth, const int maxDepth, Board& board, const bool showOutput) {
-
-     if (depth == 0) { return 1; }
-
-     uint64_t node = 0, individualNode = 0;
-     int capturedPiece;
-
-     MoveList moveList = moveGeneration(board);
-     std::array<bool, 4> castlingRights = board.getCastlingRights();
-     int enpassantSquare = board.getEnpassantSquare();
-     int halfMoveClock = board.getHalfMoveClock();
-     int moveNumber = board.getMoveNumber();
-     bool isEndgame = board.getEndgame();
-
-     if (depth == 1) { return moveList.getCounter(); }
-
-     for (int i = 0; i <moveList.getCounter(); i++) {
-
-          int initial = moveList.getMove(i).getInitial();
-          int terminal = moveList.getMove(i).getTerminal();
-                   
-          capturedPiece = makeMove(board, moveList.getMove(i));
-          
-          node += divide(depth - 1, maxDepth, board, showOutput);
-          if (showOutput) {
-               individualNode = divide(depth - 1, maxDepth, board, false);
-          }
-          
-          if (depth >= maxDepth && showOutput) {
-               for (int i = 0; i < 3-depth; i++) { printf("  "); }
-               printf("%c%d%c%d: %llu", numberToFile(initial), numberToRank(initial),
-                    numberToFile(terminal), numberToRank(terminal), individualNode);
-               printf("\n");
-          }
-
-          undoMove(board, moveList.getMove(i), capturedPiece);
-          board.setCastlingRights(castlingRights);
-          board.setEnpassantSquare(enpassantSquare);
-          board.setHalfMoveClock(halfMoveClock);
-          board.setMoveNumber(moveNumber);
-          board.setEndgame(isEndgame);
-     }
-     return node;
-
-}
-uint64_t divide2(const int depth, const int maxDepth, Board& board, const bool showOutput) {
-
-     if (depth == 0) { return 1; }
-
-     //  output text file for large output
-     std::ofstream output2;
-     output2.open("divide.txt");
-
-     uint64_t node = 0, individualNode = 0;
-     int capturedPiece;
-
-     MoveList moveList = moveGeneration(board);
-     std::array<bool, 4> castlingRights = board.getCastlingRights();
-     int enpassantSquare = board.getEnpassantSquare();
-     int halfMoveClock = board.getHalfMoveClock();
-     int moveNumber = board.getMoveNumber();
-     bool isEndgame = board.getEndgame();
-
-     //if (depth == 1) { return depthLegalMoveCount[depth]; }
-
-     for (int i = 0; i < moveList.getCounter(); i++) {
-          int initial = moveList.getMove(i).getInitial();
-          int terminal = moveList.getMove(i).getTerminal();
-
-          capturedPiece = makeMove(board, moveList.getMove(i));
-
-
-          node += divide(depth - 1, maxDepth, board, showOutput);
-          if (showOutput) {
-               individualNode = divide(depth - 1, maxDepth, board, false);
-          }
-
-          if (depth >= maxDepth && showOutput) {
-               output2 << numberToFile(initial) << numberToRank(initial) <<
-                    numberToFile(terminal) << numberToRank(terminal) << ": " << individualNode << std::endl;
-          }
-
-
-          undoMove(board, moveList.getMove(i), capturedPiece);
-          board.setCastlingRights(castlingRights);
-          board.setEnpassantSquare(enpassantSquare);
-          board.setHalfMoveClock(halfMoveClock);
-          board.setMoveNumber(moveNumber);
-          board.setEndgame(isEndgame);
-     }
-     return node;
-     output2.close();
-}
-
-int makeMove(Board &board, const Move& move) {
-     int capturedPiece = EMPTYSQUARE;
-     int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
-
-     board.setEnpassantSquare(0);
-     board.changeTurn();
-
-     if (moveType == NORMAL) {
-          capturedPiece = board.getSquare(terminal);
-          board.setSquare(terminal, board.getSquare(initial));
-          board.setSquare(initial, EMPTYSQUARE);
-     }
-     else if (moveType == DOUBLEMOVE) {
-          board.setSquare(terminal, board.getSquare(initial));
-          board.setSquare(initial, EMPTYSQUARE);
-          board.setEnpassantSquare((terminal + initial) / 2);
-     }
-     else if (moveType == QUEENSIDE_CASTLING) {
-          //  move king
-          board.setSquare(terminal, board.getSquare(initial));
-          board.setSquare(initial, EMPTYSQUARE);
-          //  move rook
-          board.setSquare(terminal + COLUMN, board.getSquare(initial - 4 * COLUMN));
-          board.setSquare(initial - 4 * COLUMN, EMPTYSQUARE);
-          //  castling does not involve capture
-     }
-     else if (moveType == KINGSIDE_CASTLING) {
-          //  move king
-          board.setSquare(terminal, board.getSquare(initial));
-          board.setSquare(initial, EMPTYSQUARE);
-          //  move rook
-          board.setSquare(terminal - COLUMN, board.getSquare(terminal + COLUMN));
-          board.setSquare(terminal + COLUMN, EMPTYSQUARE);
-          //  castling does not involve capture
-     }
-     else if (moveType == KNIGHT_PROMOTION) {
-          capturedPiece = board.getSquare(terminal);
-
-          //  white turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, WHITEKNIGHT);
-          }
-          //  black turn
-          else {
-               board.setSquare(terminal, BLACKKNIGHT);
-          }
-          board.setSquare(initial, EMPTYSQUARE);
-     }
-     else if (moveType == BISHOP_PROMOTION) {
-          capturedPiece = board.getSquare(terminal);
-
-          //  white turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, WHITEBISHOP);
-          }
-          //  black turn
-          else {
-               board.setSquare(terminal, BLACKBISHOP);
-          }
-          board.setSquare(initial, EMPTYSQUARE);
-     }
-     else if (moveType == ROOK_PROMOTION) {
-          capturedPiece = board.getSquare(terminal);
-
-          //  white turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, WHITEROOK);
-          }
-          //  black turn
-          else {
-               board.setSquare(terminal, BLACKROOK);
-          }
-          board.setSquare(initial, EMPTYSQUARE);
-     }
-     else if (moveType == QUEEN_PROMOTION) {
-          capturedPiece = board.getSquare(terminal);
-
-          //  white turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, WHITEQUEEN);
-          }
-          //  black turn
-          else {
-               board.setSquare(terminal, BLACKQUEEN);
-          }
-          board.setSquare(initial, EMPTYSQUARE);
-     }
-     else if (moveType == ENPASSANT) {
-          //  White turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, board.getSquare(initial));
-               board.setSquare(initial, EMPTYSQUARE);
-               board.setSquare(terminal + ROW, EMPTYSQUARE);
-               capturedPiece = BLACKPAWN;
-          }
-          //  Black turn
-          else {
-               board.setSquare(terminal, board.getSquare(initial));
-               board.setSquare(initial, EMPTYSQUARE);
-               board.setSquare(terminal - ROW, EMPTYSQUARE);
-               capturedPiece = WHITEPAWN;
-          }
-     }
-     else {
-          printf("Invalid moveType\n");
-          return 0;
-     }
-
-     updateBoard(board, move, capturedPiece);
-     return capturedPiece;
-}
-void undoMove(Board &board, const Move& move, const int capturedPiece) {
-     int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
-
-     board.changeTurn();
-
-     if (moveType == NORMAL) {
-          board.setSquare(initial, board.getSquare(terminal));
-          board.setSquare(terminal, capturedPiece);
-     }
-     else if (moveType == DOUBLEMOVE) {
-          board.setSquare(initial, board.getSquare(terminal));
-          board.setSquare(terminal, EMPTYSQUARE);
-     }
-     else if (moveType == QUEENSIDE_CASTLING) {
-          //  undo king move
-          board.setSquare(initial, board.getSquare(terminal));
-          board.setSquare(terminal, EMPTYSQUARE);
-
-          //  undo rook move
-          board.setSquare(initial - 4 * COLUMN, board.getSquare(terminal + COLUMN));
-          board.setSquare(terminal + COLUMN, EMPTYSQUARE);
-
-     }
-     else if (moveType == KINGSIDE_CASTLING) {
-          //  undo king move
-          board.setSquare(initial, board.getSquare(terminal));
-          board.setSquare(terminal, EMPTYSQUARE);
-
-          //  undo rook move
-          board.setSquare(terminal + COLUMN, board.getSquare(terminal - COLUMN));
-          board.setSquare(terminal - COLUMN, EMPTYSQUARE);
-     }
-     else if (moveType == KNIGHT_PROMOTION || moveType == BISHOP_PROMOTION ||
-          moveType == ROOK_PROMOTION || moveType == QUEEN_PROMOTION) {
-          //  white turn
-          if (checkColor(board.getSquare(terminal)) == WHITE) {
-               board.setSquare(terminal, capturedPiece);
-               board.setSquare(initial, WHITEPAWN);
-          }
-          //  black turn
-          else {
-               board.setSquare(terminal, capturedPiece);
-               board.setSquare(initial, BLACKPAWN);
-          }
-     }
-     else if (moveType == ENPASSANT) {
-          //  white turn
-          if (board.getSquare(terminal) == WHITEPAWN) {
-               board.setSquare(terminal, EMPTYSQUARE);
-               board.setSquare(initial, WHITEPAWN);
-               board.setSquare(terminal + ROW, BLACKPAWN);
-          }
-          //  black turn
-          else {
-               board.setSquare(terminal, EMPTYSQUARE);
-               board.setSquare(initial, BLACKPAWN);
-               board.setSquare(terminal - ROW, WHITEPAWN);
-          }
-     }
-}
-
-/*                                  MISC                                      */
-void updateCastling(Board& board, const Move& move) {
-     if (board.getSquare(move.getInitial()) == WHITEKING) {
-          board.setCastlingRight(WKCASTLING, false);
-          board.setCastlingRight(WQCASTLING, false);
-     }
-     if (board.getSquare(move.getInitial()) == BLACKKING) {
-          board.setCastlingRight(BKCASTLING, false);
-          board.setCastlingRight(BQCASTLING, false);
-     }
-     if (board.getSquare(move.getInitial()) == WHITEROOK) {
-          if (move.getInitial() == A1) {
-               board.setCastlingRight(WQCASTLING, false);
-          }
-          if (move.getInitial() == H1) {
-               board.setCastlingRight(WKCASTLING, false);
-          }
-     }
-     if (board.getSquare(move.getInitial()) == BLACKROOK) {
-          if (move.getInitial() == A8) {
-               board.setCastlingRight(BQCASTLING, false);
-          }
-          if (move.getInitial() == H8) {
-               board.setCastlingRight(BKCASTLING, false);
-          }
-     }
-}
-void updateEnPassant(Board& board, const Move& move) {
-     if (move.getType() == DOUBLEMOVE) {
-          board.setEnpassantSquare((move.getInitial() + move.getTerminal()) / 2);
-     }
-     else { board.setEnpassantSquare(0); }
-}
-void updateHalfMoveClock(Board& board, const Move& move) {
-     if (board.getSquare(move.getTerminal()) == EMPTYSQUARE
-          && board.getSquare(move.getInitial()) != WHITEPAWN
-          && board.getSquare(move.getInitial()) != BLACKPAWN) {
-          board.incrementHalfMoveClock();
-     }
-     else { board.setHalfMoveClock(0); }
-}
-void updateMoveNumber(Board& board) {
-     if (board.getTurn() == WHITE) { board.incrementMoveNumber(); }
-}
-
-void updateBoard(Board& board, const Move& move, const int capturedPiece) {
-     updateCastling(board, move);
-     updateEnPassant(board, move);
-     updateHalfMoveClock(board, move);
-     board.updateEndgame(move);
-     board.updatePieceCount(move, capturedPiece);
-     updateMoveNumber(board);
-}
-
-gameState checkGameState(const Board& board) {
-     int kingPos = -1;
-     for (int i = 0; i < 120; i++) {
-          if (board.getSquare(i) == WHITEKING && board.getTurn() == WHITE) {
-               kingPos = i;
-               break;
-          }
-          if (board.getSquare(i) == BLACKKING && board.getTurn() == BLACK) {
-               kingPos = i;
-               break;
-          }
-     }
-     
-     // Stalemate: 75 Move Rule
-     // TODO: 50 Move rule will be implemented in moveGen
-     if (board.getHalfMoveClock() >= 150) {
-          return STALEMATE_75;
-     }
-
-     MoveList moveList = moveGeneration(board);
-
-     // Checkmate
-     if (moveList.getCounter() == 0 && isSquareAttacked(board, kingPos)) {
-          if (board.getSquare(kingPos) == WHITE) {
-               return BLACK_CHECKMATE;
-          }
-          else {
-               return WHITE_CHECKMATE;
-          }
-     }
-
-     // Stalemate: No legal move
-     if (moveList.getCounter() == 0) {
-          return STALEMATE_MOVE;
-     }
-     
-     return NOTMATE;
-}
-bool fiftyMoveCheck(const Board& board) {
-     return (board.getHalfMoveClock() >= 100);
-}
-
+#include "debug.h"
+#include "command.h"
 
 /******************************************************************************/
 /*                               MAIN FUNCTION                                */
@@ -454,10 +42,11 @@ void main() {
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("Engine Search Depth: %d\n", EVAL_DEPTH);
-     printf("Castling - WK:%d WQ:%d BK:%d BQ:%d\n", currentBoard.getCastlingRight(WKCASTLING), 
-                                                    currentBoard.getCastlingRight(WQCASTLING), 
-                                                    currentBoard.getCastlingRight(BKCASTLING), 
-                                                    currentBoard.getCastlingRight(BQCASTLING));
+     printf("Castling - WK:%d WQ:%d BK:%d BQ:%d\n", 
+          currentBoard.getCastlingRight(WKCASTLING), 
+          currentBoard.getCastlingRight(WQCASTLING), 
+          currentBoard.getCastlingRight(BKCASTLING), 
+          currentBoard.getCastlingRight(BQCASTLING));
      printf("en passant Square: %d\n", currentBoard.getEnpassantSquare());
      printf("Move number: %d\n", currentBoard.getMoveNumber());
      if (currentBoard.getTurn() == WHITE) { printf("Turn: White\n"); }
@@ -878,8 +467,8 @@ void main() {
                printf("IsEndgame: %d\n", currentBoard.getEndgame());
                
                // Reset Debug
-               moveGenCounter = 0;
                // TODO: Enable this again
+               //moveGenCounter = 0;
                //boardEvalCounter = 0;
 
                LARGE_INTEGER frequency, beginTime, endTime;
@@ -935,9 +524,8 @@ void main() {
                std::cout << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
                log << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
 
-               // Output Call Count
-               printf("Move Gen Call Count: %d\n", moveGenCounter);
                // TODO: Enable this again
+               //printf("Move Gen Call Count: %d\n", moveGenCounter);
                //printf("Board Eval Call Count: %d\n", boardEvalCounter);
 
           }
