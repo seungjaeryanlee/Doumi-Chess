@@ -1,5 +1,3 @@
-#include "defs.h"
-#include "move.h"
 #include "board.h"
 #include "movegen.h"
 

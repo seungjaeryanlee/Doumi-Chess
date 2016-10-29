@@ -1,6 +1,4 @@
 #include "debug.h"
-#include "move.h"
-#include "board.h"
 #include "movegen.h"
 #include <fstream>
 

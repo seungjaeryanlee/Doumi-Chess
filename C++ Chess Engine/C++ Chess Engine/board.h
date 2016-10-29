@@ -1,6 +1,5 @@
 #pragma once
 #include <array>
-#include "defs.h"
 #include "move.h"
 
 void boardEvalCalled();

@@ -1,6 +1,4 @@
 #pragma once
-#include "defs.h"
-#include "move.h"
 #include "board.h"
 
 

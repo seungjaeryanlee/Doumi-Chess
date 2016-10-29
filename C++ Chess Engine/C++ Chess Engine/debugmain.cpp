@@ -4,9 +4,7 @@
 #include <Windows.h>
 #include <fstream>
 #include <array>
-#include "move.h"
 #include "board.h"
-#include "defs.h"
 #include "movegen.h"
 #include "timer.h"
 #include "evaluation.h"

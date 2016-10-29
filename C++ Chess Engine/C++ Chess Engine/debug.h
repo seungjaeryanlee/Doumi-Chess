@@ -2,7 +2,6 @@
 
 #include "board.h"
 
-
 /// <summary>
 /// This function prints the extensive menu of possible user commands, including some options created for debugging the code.
 /// </summary>
