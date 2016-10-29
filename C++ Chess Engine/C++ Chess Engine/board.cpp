@@ -2,13 +2,6 @@
 #include <string>
 #include <iostream>
 
-int boardEvalCounter = 0;
-
-void boardEvalCalled() {
-     boardEvalCounter++;
-}
-
-
 void board120Setup(Board& board) {
      board.setTurn(WHITE);
      board.setEnpassantSquare(0);

@@ -2,8 +2,6 @@
 #include <array>
 #include "move.h"
 
-void boardEvalCalled();
-
 class Board {
 private:
      std::array<int, 120> board;

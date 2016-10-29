@@ -76,9 +76,6 @@ void main() {
                gamePlaying = false;
                break;
           case STALEMATE_MOVE:
-               gamePlaying = false;
-               gameResult = TIE;
-               break;
           case STALEMATE_75:
                gamePlaying = false;
                gameResult = TIE;
@@ -399,7 +396,8 @@ void main() {
                else if (commandType == ALPHABETA_SPEED_CHECK) { continue; }
                else if (commandType == PRINT_SAVED_FEN) {
                     for (int i = 0; i < saveIndex; i++) {
-                         boardToFEN(savedBoard[i]); // Print statement inside boardToFEN() prints the FEN
+                         // Print statement inside boardToFEN() prints the FEN
+                         boardToFEN(savedBoard[i]); 
                     }
                }
                else if (commandType == DEBUG) { continue; }
@@ -407,12 +405,6 @@ void main() {
           
           //  Computer turn
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
-               printf("IsEndgame: %d\n", currentBoard.getEndgame());
-               
-               // Reset Debug
-               // TODO: Enable this again
-               //moveGenCounter = 0;
-               //boardEvalCounter = 0;
 
                LARGE_INTEGER frequency, beginTime, endTime;
                frequency = startTimer(&beginTime, 2);
@@ -467,9 +459,6 @@ void main() {
                std::cout << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
                log << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
 
-               // TODO: Enable this again
-               //printf("Move Gen Call Count: %d\n", moveGenCounter);
-               //printf("Board Eval Call Count: %d\n", boardEvalCounter);
 
           }
      }

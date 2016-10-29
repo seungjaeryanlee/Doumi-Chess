@@ -1,12 +1,6 @@
 #include "board.h"
 #include "movegen.h"
 
-
-int moveGenCounter = 0;
-void moveGenCalled() {
-     moveGenCounter++;
-}
-
 MoveList moveGeneration(const Board& board) {
      moveGenCalled();
      MoveList pseudolegalMoveList;
