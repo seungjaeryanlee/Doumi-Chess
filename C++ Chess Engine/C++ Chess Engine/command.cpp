@@ -1,6 +1,16 @@
-#include "command.h"
-#include "defs.h"
 #include <stdio.h>
+#include <iostream>
+#include <string>
+#include <Windows.h>
+#include <fstream>
+#include <array>
+#include "board.h"
+#include "movegen.h"
+#include "timer.h"
+#include "evaluation.h"
+#include "pgn.h"
+
+#include "debug.h"
 
 void printMenu() {
      printf("--------------------------------------------------\n");

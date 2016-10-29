@@ -391,73 +391,18 @@ void main() {
                     }
                     continue;
                }
-               else if (commandType == ALPHABETA_COMPARE) {
-                    printf("Comparison is no longer possible. Sorry!\n");
-                    continue;
-               }
+               else if (commandType == ALPHABETA_COMPARE) { continue; }
                else if (commandType == EVALUATE_BOARD) {
                     printf("Current Board Evaluation: %d\n", currentBoard.boardEvaluation());
                     continue;
                }
-               else if (commandType == ALPHABETA_SPEED_CHECK) {
-                    LARGE_INTEGER frequency2, beginTime2, endTime2;
-
-                    frequency2 = startTimer(&beginTime2, 2);
-                    int alphabetaValue = alphabeta(6, currentBoard, DEFAULT_ALPHA, DEFAULT_BETA, savedBoard, saveIndex);
-                    stopTimer(&endTime2, 2);
-                    printf("Alphabeta Value: %d\n", alphabetaValue);
-                    std::cout << "Alphabeta timer : " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms elapsed." << std::endl;
-                    std::ofstream speedlog;
-                    speedlog.open("speed.log");
-
-                    speedlog << "Alphabeta Timer for Depth 6: " << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms." << std::endl;
-                    speedlog.close();
-               }
+               else if (commandType == ALPHABETA_SPEED_CHECK) { continue; }
                else if (commandType == PRINT_SAVED_FEN) {
                     for (int i = 0; i < saveIndex; i++) {
                          boardToFEN(savedBoard[i]); // Print statement inside boardToFEN() prints the FEN
                     }
                }
-               else if (commandType == DEBUG) {
-                    // COMMIT 4445572
-                    // MoveGen 6300 calls: 769 ms, BoardEval 4500 calls: 23 ms
-                    // COMMIT 5edfb72
-                    // PAWN 3 ms KNIGHT 8 ms BISHOP 15 ms ROOK 26ms QUEEN 28ms KING 10ms
-                    // COMMIT ?
-                    // ATTACKCHECK 13 ms MAKEMOVE 3 UNDOMOVE 
-
-                    FENboardSetup(currentBoard, "8/8/8/4B3/8/3Q4/8/7K w - - 0 1");
-
-                    MoveList moveList;
-                    LARGE_INTEGER frequency2, beginTime2, endTime2;
-
-                    frequency2 = startTimer(&beginTime2, 2);
-                    for (int i = 0; i < 6300; i++) {
-                         moveGeneration(currentBoard);
-                    }
-                    stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 moveGen.\n";
-
-                    frequency2 = startTimer(&beginTime2, 2);
-                    for (int i = 0; i < 6300; i++) {
-                         moveList.setCounterToZero();
-                         bishopMoveGeneration(currentBoard, E5, moveList);
-                    }
-                    stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 bishopMoveGen.\n";
-
-                    frequency2 = startTimer(&beginTime2, 2);
-                    for (int i = 0; i < 6300; i++) {
-                         moveList.setCounterToZero();
-                         queenMoveGeneration(currentBoard, D3, moveList);
-                    }
-                    stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for 6300 queenMoveGen.\n";
-
-                    
-                    
-
-               }
+               else if (commandType == DEBUG) { continue; }
           }
           
           //  Computer turn
