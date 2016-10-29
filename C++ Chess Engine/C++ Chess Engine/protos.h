@@ -6,67 +6,14 @@
 
 /*                                    CALL COUNT                               */
 void moveGenCalled();
-
-
-
-
-
-
-
-/*                                  BOARD SETUP                               */
 /// <summary>
-/// This function sets the given board to the initial state.
+/// This function prints the basic menu of possible user commands.
 /// </summary>
-/// <param name="board">The board that will be changed to initial state.</param>
-void board120Setup(Board& board);
+void printMenu();
 /// <summary>
-/// This function sets the given board according to the FEN.
+/// This function prints the extensive menu of possible user commands, including some options created for debugging the code.
 /// </summary>
-/// <param name="board">The board that will be changed to initial state.</param>
-/// <param name="FEN">The desired board in FEN notation.</param>
-void FENboardSetup(Board& board, const std::string FEN);
-/// <summary>
-/// This function converts the given board to FEN notation.
-/// </summary>
-/// <param name="board">The board that will be converted to FEN notation.</param>
-/// <returns>FEN notation of the given board.</returns>
-std::string boardToFEN(const Board& board);
-
-
-/// <summary>
-/// This function returns the color of the given piece type
-/// </summary>
-/// <param name="pieceType">The piece that will be checked its color</param>
-/// <returns>The color of the given piece</returns>
-int checkColor(const int pieceType);
-/// <summary>
-/// This function returns the column character (file) of a given square.
-/// </summary>
-/// <param name="position">The square that the function will give its file</param>
-/// <returns>The file of the given square</returns>
-char numberToFile(const int position);
-/// <summary>
-/// This function returns the row number (rank) of a given square.
-/// </summary>
-/// <param name="position">The square that the function will give its rank</param>
-/// <returns>The rank of the given square</returns>
-int numberToRank(const int position);
-/// <summary>
-/// This function converts the file and rank notation to board index of a board. 
-/// </summary>
-/// <param name="file">The file of the square</param>
-/// <param name="rank">The rank of the square</param>
-/// <returns>The board index notation of the square</returns>
-int filerankToNumber(const char file, const int rank);
-/// <summary>
-/// This function converts a position's notation from board index to file rank.
-/// </summary>
-/// <param name="position">The square in board index notation.</param>
-/// <returns>A two-letter string with file rank notation of the given square.</returns>
-std::string numberToFilerank(const int position);
-
-
-
+void printDebugMenu();
 
 
 /*                                   RECURSION                                */

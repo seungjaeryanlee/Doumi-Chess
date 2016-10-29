@@ -239,3 +239,57 @@ public:
 };
 
 
+/*                                  BOARD SETUP                               */
+/// <summary>
+/// This function sets the given board to the initial state.
+/// </summary>
+/// <param name="board">The board that will be changed to initial state.</param>
+void board120Setup(Board& board);
+/// <summary>
+/// This function sets the given board according to the FEN.
+/// </summary>
+/// <param name="board">The board that will be changed to initial state.</param>
+/// <param name="FEN">The desired board in FEN notation.</param>
+void FENboardSetup(Board& board, const std::string FEN);
+/// <summary>
+/// This function converts the given board to FEN notation.
+/// </summary>
+/// <param name="board">The board that will be converted to FEN notation.</param>
+/// <returns>FEN notation of the given board.</returns>
+std::string boardToFEN(const Board& board);
+
+
+/// <summary>
+/// This function returns the color of the given piece type
+/// </summary>
+/// <param name="pieceType">The piece that will be checked its color</param>
+/// <returns>The color of the given piece</returns>
+int checkColor(const int pieceType);
+
+/// <summary>
+/// This function converts the file and rank notation to board index of a board. 
+/// </summary>
+/// <param name="file">The file of the square</param>
+/// <param name="rank">The rank of the square</param>
+/// <returns>The board index notation of the square</returns>
+int filerankToNumber(const char file, const int rank);
+
+
+/// <summary>
+/// This function checks whether the king is being attacked or not.
+/// </summary>
+/// <param name="board">The board that will be checked.</param>
+/// <param name="kingPos">The position of the king</param>
+/// <returns>True if </returns>
+bool isSquareAttacked(const Board& board, int kingPos);
+
+/// <summary>
+/// This function prints the given board to console.
+/// </summary>
+/// <param name="board">The board that will be printed to console.</param>
+void printBoard(const Board& board);
+/// <summary>
+/// This function prints the given board to console excluding the error squares.
+/// </summary>
+/// <param name="board">The board that will be printed to console.</param>
+void printSimpleBoard(const Board& board);

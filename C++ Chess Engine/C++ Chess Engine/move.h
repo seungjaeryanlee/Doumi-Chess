@@ -63,3 +63,29 @@ public:
      }
      void setCounterToZero() { moveCounter = 0; }
 };
+
+/// <summary>
+/// This function returns the column character (file) of a given square.
+/// </summary>
+/// <param name="position">The square that the function will give its file</param>
+/// <returns>The file of the given square</returns>
+char numberToFile(const int position);
+/// <summary>
+/// This function returns the row number (rank) of a given square.
+/// </summary>
+/// <param name="position">The square that the function will give its rank</param>
+/// <returns>The rank of the given square</returns>
+int numberToRank(const int position);
+/// <summary>
+/// This function converts a position's notation from board index to file rank.
+/// </summary>
+/// <param name="position">The square in board index notation.</param>
+/// <returns>A two-letter string with file rank notation of the given square.</returns>
+std::string numberToFilerank(const int position);
+
+/// <summary>
+/// This function prints the given move to console in filerank-filerank notation.
+/// </summary>
+/// <param name="moveNumber">The move number of the move that will be printed to console</param>
+/// <param name="move">The move that will be printed to console</param>
+std::string printMove(const int moveNumber, const Move& move);
