@@ -21,12 +21,9 @@
 /******************************************************************************/
 
 int moveGenCounter = 0;
-int boardEvalCounter = 0;
+
 void moveGenCalled() {
      moveGenCounter++;
-}
-void boardEvalCalled() {
-     boardEvalCounter++;
 }
 
 /*                             BOARD SETUP FUNCTIONS                          */
@@ -1172,7 +1169,8 @@ void main() {
                
                // Reset Debug
                moveGenCounter = 0;
-               boardEvalCounter = 0;
+               // TODO: Enable this again
+               //boardEvalCounter = 0;
 
                LARGE_INTEGER frequency, beginTime, endTime;
                frequency = startTimer(&beginTime, 2);
@@ -1229,7 +1227,8 @@ void main() {
 
                // Output Call Count
                printf("Move Gen Call Count: %d\n", moveGenCounter);
-               printf("Board Eval Call Count: %d\n", boardEvalCounter);
+               // TODO: Enable this again
+               //printf("Board Eval Call Count: %d\n", boardEvalCounter);
 
           }
      }
