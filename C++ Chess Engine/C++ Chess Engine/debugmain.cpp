@@ -20,7 +20,7 @@ void main() {
      Board initialBoard;
      
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Board120Setup / FENBoardSetup Testing                                          \n");
+     printf(" Board120Setup / FENBoardSetup Test                                             \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
@@ -33,7 +33,7 @@ void main() {
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" MoveGen Testing                                                                \n");
+     printf(" MoveGen Test                                                                   \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
      
@@ -48,7 +48,7 @@ void main() {
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Perft Testing                                                                  \n");
+     printf(" Perft Test                                                                     \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
@@ -59,7 +59,7 @@ void main() {
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Evaluation Testing                                                             \n");
+     printf(" Evaluation Test                                                                \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
@@ -69,7 +69,7 @@ void main() {
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" MakeMove / Evaluation Testing                                                  \n");
+     printf(" MakeMove / Evaluation Test                                                     \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
      
@@ -86,7 +86,7 @@ void main() {
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Depth 1 Alphabeta Testing                                                      \n");
+     printf(" Depth 1 Alphabeta Test                                                         \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
@@ -106,7 +106,7 @@ void main() {
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Depth 2 Alphabeta Testing                                                      \n");
+     printf(" Depth 2 Alphabeta Test                                                         \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
@@ -124,7 +124,7 @@ void main() {
      
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Depth 3 Alphabeta Testing                                                      \n");
+     printf(" Depth 3 Alphabeta Test                                                         \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
@@ -141,7 +141,7 @@ void main() {
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Depth 4 Alphabeta Testing                                                      \n");
+     printf(" Depth 4 Alphabeta Test                                                         \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
@@ -159,7 +159,7 @@ void main() {
      /*
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Depth 5 Alphabeta Testing                                                      \n");
+     printf(" Depth 5 Alphabeta Test                                                         \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
@@ -177,7 +177,7 @@ void main() {
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" First 4 Moves with Depth 4                                                     \n");
+     printf(" First 4 Moves with Depth 4 Test                                                \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
@@ -197,7 +197,7 @@ void main() {
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Stalemate Test 1: No Legal Move                                                \n");
+     printf(" Stalemate Detection Test 1: No Legal Move                                      \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
      
@@ -217,7 +217,7 @@ void main() {
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Stalemate Test 2: 50 Move Rule                                                 \n");
+     printf(" Stalemate Detection Test 2: 50 Move Rule                                       \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
@@ -235,7 +235,7 @@ void main() {
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Stalemate Test 3: 75 Nove Rule                                                 \n");
+     printf(" Stalemate Detection Test 3: 75 Nove Rule                                       \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
@@ -253,7 +253,7 @@ void main() {
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Stalemate Test 4: Threefold Repetition                                         \n");
+     printf(" Stalemate Detection Test 4: Threefold Repetition                               \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
@@ -276,7 +276,7 @@ void main() {
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Checkmate Test                                                                 \n");
+     printf(" Checkmate Detection Test                                                       \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
@@ -292,4 +292,73 @@ void main() {
      else {
           printf("Checkmate test failed!\n");
      }
+
+     printf("\n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf(" Mate in 1 Test                                                                 \n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf("\n");
+
+     Board matein1Board;
+     Board savedBoard5[MAX_MOVENUMBER];
+     int saveIndex5 = 0;
+     FENboardSetup(matein1Board, "7k/RR6/8/8/8/8/8/7K w - - 0 1");
+
+     Move matein1Move[MAX_DEPTH];
+     int matein1Score = rootAlphabeta(4, matein1Board, DEFAULT_ALPHA, DEFAULT_BETA, matein1Move, savedBoard5, saveIndex5);
+     printf("Best Move Score: %3d\n", matein1Score);
+     std::cout << "Best Moves: ";
+     for (int i = 4; i >= 1; i--) {
+          std::cout << numberToFilerank(matein1Move[i].getInitial())
+               << numberToFilerank(matein1Move[i].getTerminal())
+               << " ";
+     }
+     printf("\n");
+
+
+     printf("\n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf(" Mate in 2 Test                                                                 \n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf("\n");
+
+     Board matein2Board;
+     FENboardSetup(matein2Board, "7k/8/RR6/8/8/8/8/7K w - - 0 1");
+
+     Move matein2Move[MAX_DEPTH];
+     int matein2Score = rootAlphabeta(4, matein2Board, DEFAULT_ALPHA, DEFAULT_BETA, matein2Move, savedBoard5, saveIndex5);
+     printf("Best Move Score: %3d\n", matein2Score);
+     std::cout << "Best Moves: ";
+     for (int i = 4; i >= 1; i--) {
+          std::cout << numberToFilerank(matein2Move[i].getInitial())
+               << numberToFilerank(matein2Move[i].getTerminal())
+               << " ";
+     }
+     printf("\n");
+
+     printf("\n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf(" Forced Stalemate in Unfavorable Position Test                                  \n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf("\n");
+
+     Board forcedStalemateBoard;
+     FENboardSetup(forcedStalemateBoard, "5k2/r7/4PKP1/4PPP1/8/8/8/N7 b - - 0 1");
+     //FENboardSetup(forcedStalemateBoard, "5k2/r7/4PKP1/4PPP1/8/8/8/4QQQ1 b - - 0 1");
+     forcedStalemateBoard.updatePieceCount();
+     printf("Board Evaluation: %d\n", forcedStalemateBoard.boardEvaluation());
+
+     printSimpleBoard(forcedStalemateBoard);
+
+     Move forcedStalemateMoves[MAX_DEPTH];
+     int forcedStalemateScore = rootAlphabeta(4, forcedStalemateBoard, DEFAULT_ALPHA, DEFAULT_BETA, forcedStalemateMoves, savedBoard5, saveIndex5);
+     printf("Best Move Score: %3d\n", forcedStalemateScore);
+     std::cout << "Best Moves: ";
+     for (int i = 4; i >= 1; i--) {
+          std::cout << numberToFilerank(forcedStalemateMoves[i].getInitial())
+               << numberToFilerank(forcedStalemateMoves[i].getTerminal())
+               << " ";
+     }
+     printf("\n");
+
 }
