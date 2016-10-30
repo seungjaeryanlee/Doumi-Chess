@@ -211,7 +211,6 @@ public:
      /// </summary>
      /// <returns>The score of the board</returns>
      int boardEvaluation() {
-          boardEvalCalled();
           int score = 0;
           score += (pieceCount[WHITEPAWN] - pieceCount[BLACKPAWN])*PAWNVALUE
                + (pieceCount[WHITEKNIGHT] - pieceCount[BLACKKNIGHT])*KNIGHTVALUE

@@ -19,23 +19,20 @@
 void main() {
      Board currentBoard;
      MoveList currentBoardMoveList;
-
      Board savedBoard[MAX_MOVENUMBER];    //  Stores Board and Board States for threefold repetition
      int savedCapturedPiece[MAX_MOVENUMBER];  //  Saved values for UNDO_MOVE command
      Move savedMove[MAX_MOVENUMBER];
      int saveIndex = 0;
-
      bool gamePlaying = true;
      result gameResult = NOT_FINISHED;            // Records the result of the game
      int userColor = ERRORCODE;                   // Which color user plays
      bool spectate = false;                       // if true, the game is between two computers
      LARGE_INTEGER frequency, beginTime, endTime; //  added for time performance check
-
      std::ofstream log;
-     log.open("log.txt");
-     log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
 
      board120Setup(currentBoard);
+     log.open("log.txt");
+     log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
 
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
@@ -55,12 +52,13 @@ void main() {
      // Begin timer
      frequency = startTimer(&beginTime, 1);
      
-     bool correctInput = false;
-     std::string userCommand;
 
 /******************************************************************************/
 /*                                 MAIN LOOP                                  */
 /******************************************************************************/
+     bool correctInput = false;
+     std::string userCommand;
+
      currentBoard.updateEndgame();
      currentBoard.updatePieceCount();
      while (gamePlaying) {

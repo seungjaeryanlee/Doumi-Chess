@@ -2,7 +2,6 @@
 #include "movegen.h"
 
 MoveList moveGeneration(const Board& board) {
-     moveGenCalled();
      MoveList pseudolegalMoveList;
      // STEP 1: PSEUDOLEGAL MOVEGEN
      castlingMoveGeneration(board, pseudolegalMoveList);
