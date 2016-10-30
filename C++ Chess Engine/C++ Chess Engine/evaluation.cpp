@@ -1,27 +1,41 @@
 #include "evaluation.h"
 #include "movegen.h"
 
-int alphabeta(const int depth, Board& board, int alpha, int beta, Move bestMoves[MAX_DEPTH], Board savedBoard[MAX_MOVENUMBER], int saveIndex) {
+// Principal Variation:
+// https://chessprogramming.wikispaces.com/Principal+Variation
+
+
+
+int alphabeta(const int depth, Board& board, int alpha, int beta, Variation* pVariation, Board savedBoard[MAX_MOVENUMBER], int saveIndex) {
+
+     Variation variation;
+
+     // TODO: pline->cmove = 0 for these cases?
      switch (checkGameState(board, savedBoard, saveIndex)) {
      case NOTMATE:
           break;
      case WHITE_CHECKMATE:
+          pVariation->cmove = 0;
           return -1 * (MATE_VALUE + depth);
           break;
      case BLACK_CHECKMATE:
+          pVariation->cmove = 0;
           return (MATE_VALUE + depth);
           break;
      case STALEMATE_3F: case STALEMATE_50:
           if (board.getTurn() * board.boardEvaluation() <= STALEMATE_BOUND) {
+               pVariation->cmove = 0;
                return 0;
           }
           break;
      case STALEMATE_75: case STALEMATE_MOVE:
+          pVariation->cmove = 0;
           return 0;
           break;
      }
 
      if (depth == 0) {
+          pVariation->cmove = 0;
           return board.getTurn() * board.boardEvaluation();
      }
 
@@ -32,7 +46,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Move bestMoves
 
           savedBoard[saveIndex] = board;
 
-          int score = -alphabeta(depth - 1, board, -beta, -alpha, bestMoves, savedBoard, saveIndex + 1);
+          int score = -alphabeta(depth - 1, board, -beta, -alpha, &variation, savedBoard, saveIndex + 1);
 
           if (score >= beta) {
                board = oldBoard;
@@ -41,17 +55,22 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Move bestMoves
 
           if (score > alpha) {
                alpha = score;
-               bestMoves[depth] = moveList.getMove(i);
+               pVariation->argmove[0] = moveList.getMove(i); 
+               for (int j = 0; j < variation.cmove; j++) {
+                    pVariation->argmove[j + 1] = variation.argmove[j];
+               }
+               pVariation->cmove = variation.cmove + 1;
           }
           board = oldBoard;
      }
 
      return alpha;
 }
-int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move bestMoves[MAX_DEPTH], Board savedBoard[MAX_MOVENUMBER], int saveIndex) {
+int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Variation* principalVariation, Board savedBoard[MAX_MOVENUMBER], int saveIndex) {
      int score;
      int capturedPiece;
 
+     Variation variation;
      Board oldBoard = board;
      MoveList moveList = moveGeneration(board);
 
@@ -60,7 +79,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move bes
           capturedPiece = makeMove(board, moveList.getMove(i));
           savedBoard[saveIndex] = board;
 
-          score = -alphabeta(maxDepth - 1, board, -beta, -alpha, bestMoves, savedBoard, saveIndex + 1);
+          score = -alphabeta(maxDepth - 1, board, -beta, -alpha, &variation, savedBoard, saveIndex + 1);
 
           // TODO: Check if this is needed and change it
           if (score >= beta) {
@@ -70,7 +89,11 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move bes
 
           if (score > alpha) {
                alpha = score;
-               bestMoves[maxDepth] = moveList.getMove(i);
+               principalVariation->argmove[0] = moveList.getMove(i);
+               for (int j = 0; j < variation.cmove; j++) {
+                    principalVariation->argmove[j + 1] = variation.argmove[j];
+               }
+               principalVariation->cmove = variation.cmove + 1;
           }
           board = oldBoard;
      }
