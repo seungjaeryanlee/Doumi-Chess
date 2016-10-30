@@ -195,4 +195,103 @@ void main() {
           makeMove(initialBoard, bestMoves[4]);
      }
 
+     printf("\n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf(" Stalemate Test 1: No Legal Move                                                \n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf("\n");
+     
+     Board stalemateboard1;
+     Board savedBoard2[MAX_MOVENUMBER];
+     int saveIndex2 = 0;
+     FENboardSetup(stalemateboard1, "6bk/5p1p/5P1P/8/8/8/8/4K3 b - - 0 1");
+     printSimpleBoard(stalemateboard1);
+
+     gameState stalemate1 = checkGameState(stalemateboard1, savedBoard2, saveIndex2);
+     if (stalemate1 == STALEMATE_MOVE) {
+          printf("\nCorrect stalemate detected.\n");
+     }
+     else {
+          printf("\nStalemate test 1 failed!\n");
+     }
+
+     printf("\n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf(" Stalemate Test 2: 50 Move Rule                                                 \n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf("\n");
+
+     Board stalemateboard2;
+     FENboardSetup(stalemateboard2, "7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 100 1");
+     printSimpleBoard(stalemateboard2);
+
+     printf("%d\n", stalemateboard2.getHalfMoveClock());
+
+     gameState stalemate2 = checkGameState(stalemateboard2, savedBoard2, saveIndex2);
+     if (stalemate2 == STALEMATE_50) {
+          printf("\nCorrect stalemate detected.\n");
+     }
+     else {
+          printf("\nStalemate test 2 failed!\n");
+     }
+
+     printf("\n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf(" Stalemate Test 3: 75 Nove Rule                                                 \n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf("\n");
+
+     Board stalemateboard3;
+     FENboardSetup(stalemateboard3, "7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 150 1");
+     printSimpleBoard(stalemateboard2);
+
+     gameState stalemate3 = checkGameState(stalemateboard3, savedBoard2, saveIndex2);
+     if (stalemate3 == STALEMATE_75) {
+          printf("\nCorrect stalemate detected.\n");
+     }
+     else {
+          printf("\nStalemate test 3 failed!\n");
+     }
+
+     printf("\n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf(" Stalemate Test 4: Threefold Repetition                                         \n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf("\n");
+
+     Board stalemateboard4;
+     Board savedBoard3[MAX_MOVENUMBER];
+     int saveIndex3 = 3;
+     FENboardSetup(stalemateboard4, "7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 0 1");
+
+     savedBoard3[0] = stalemateboard4;
+     savedBoard3[1] = stalemateboard4;
+     savedBoard3[2] = stalemateboard4;
+
+     gameState stalemate4 = checkGameState(stalemateboard4, savedBoard3, saveIndex3);
+     if (stalemate4 == STALEMATE_3F) {
+          printf("Correct stalemate detected.\n");
+     }
+     else {
+          printf("Stalemate test 4 failed!\n");
+     }
+
+     printf("\n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf(" Checkmate Test                                                                 \n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf("\n");
+
+     Board checkmateboard;
+     Board savedBoard4[MAX_MOVENUMBER];
+     int saveIndex4 = 0;
+     FENboardSetup(checkmateboard, "R6k/R7/8/8/8/8/8/7K b - - 0 1");
+
+     gameState checkmate = checkGameState(checkmateboard, savedBoard4, saveIndex4);
+     if (checkmate == WHITE_CHECKMATE) {
+          printf("Correct stalemate detected.\n");
+     }
+     else {
+          printf("Checkmate test failed!\n");
+     }
 }
