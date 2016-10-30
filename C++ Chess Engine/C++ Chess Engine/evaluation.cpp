@@ -9,6 +9,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, LINE* pline, B
 
      LINE line;
 
+     // TODO: pline->cmove = 0 for these cases?
      switch (checkGameState(board, savedBoard, saveIndex)) {
      case NOTMATE:
           break;

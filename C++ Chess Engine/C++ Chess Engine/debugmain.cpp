@@ -84,7 +84,7 @@ void main() {
           printf("  %4d\n", copiedInitBoard.boardEvaluation());
      }
 
-     /*
+     
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
      printf(" Depth 1 Alphabeta Test                                                         \n");
@@ -94,16 +94,18 @@ void main() {
      Board savedBoard[MAX_MOVENUMBER];
      int saveIndex = 0;
 
-     Move bestMoves1[MAX_DEPTH];
-     int bestMoveScore1 = rootAlphabeta(1, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, bestMoves1, savedBoard, saveIndex);
+     LINE bestMoves1;
+     int bestMoveScore1 = rootAlphabeta(1, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves1, savedBoard, saveIndex);
      printf("Best Move Score: %3d\n", bestMoveScore1);
      std::cout << "Best Moves: ";
-     for (int i = 1; i >= 1; i--) {
-          std::cout << numberToFilerank(bestMoves1[i].getInitial())
-               << numberToFilerank(bestMoves1[i].getTerminal())
+     for (int i = 0; i < bestMoves1.cmove; i++) {
+          std::cout << numberToFilerank(bestMoves1.argmove[i].getInitial())
+               << numberToFilerank(bestMoves1.argmove[i].getTerminal())
                << " ";
      }
      printf("\n");
+
+
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
@@ -111,13 +113,13 @@ void main() {
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
-     Move bestMoves2[MAX_DEPTH];
-     int bestMoveScore2 = rootAlphabeta(2, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, bestMoves2, savedBoard, saveIndex);
+     LINE bestMoves2;
+     int bestMoveScore2 = rootAlphabeta(2, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves2, savedBoard, saveIndex);
      printf("Best Move Score: %3d\n", bestMoveScore2);
      std::cout << "Best Moves: ";
-     for (int i = 2; i >= 1; i--) {
-          std::cout << numberToFilerank(bestMoves2[i].getInitial())
-               << numberToFilerank(bestMoves2[i].getTerminal())
+     for (int i = 0; i < bestMoves2.cmove; i++) {
+          std::cout << numberToFilerank(bestMoves2.argmove[i].getInitial())
+               << numberToFilerank(bestMoves2.argmove[i].getTerminal())
                << " ";
      }
      printf("\n");
@@ -129,33 +131,29 @@ void main() {
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
-     Move bestMoves3[MAX_DEPTH];
-     int bestMoveScore3 = rootAlphabeta(3, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, bestMoves3, savedBoard, saveIndex);
+     LINE bestMoves3;
+     int bestMoveScore3 = rootAlphabeta(3, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves3, savedBoard, saveIndex);
      printf("Best Move Score: %3d\n", bestMoveScore3);
      std::cout << "Best Moves: ";
-     for (int i = 3; i >= 1; i--) {
-          std::cout << numberToFilerank(bestMoves3[i].getInitial())
-               << numberToFilerank(bestMoves3[i].getTerminal())
+     for (int i = 0; i < bestMoves3.cmove; i++) {
+          std::cout << numberToFilerank(bestMoves3.argmove[i].getInitial())
+               << numberToFilerank(bestMoves3.argmove[i].getTerminal())
                << " ";
      }
      printf("\n");
 
-     */
+     
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
      printf(" Depth 4 Alphabeta Test                                                         \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
-     
-     //Move bestMoves4[MAX_DEPTH];
      LINE bestMoves4;
-     Board savedBoard[MAX_MOVENUMBER];
-     int saveIndex = 0;
      int bestMoveScore4 = rootAlphabeta(4, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves4, savedBoard, saveIndex);
      printf("Best Move Score: %3d\n", bestMoveScore4);
      std::cout << "Best Moves: ";
-     for (int i = 0; i < 4; i++) {
+     for (int i = 0; i < bestMoves4.cmove; i++) {
           std::cout << numberToFilerank(bestMoves4.argmove[i].getInitial())
                << numberToFilerank(bestMoves4.argmove[i].getTerminal())
                << " ";
@@ -163,25 +161,28 @@ void main() {
      printf("\n");
 
      /*
+     
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
      printf(" Depth 5 Alphabeta Test                                                         \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
-     Move bestMoves5[MAX_DEPTH];
-     int bestMoveScore5 = rootAlphabeta(5, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, bestMoves5, savedBoard, saveIndex);
+     LINE bestMoves5;
+     int bestMoveScore5 = rootAlphabeta(5, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves5, savedBoard, saveIndex);
      printf("Best Move Score: %3d\n", bestMoveScore5);
      std::cout << "Best Moves: ";
-     for (int i = 5; i >= 1; i--) {
-     std::cout << numberToFilerank(bestMoves5[i].getInitial())
-     << numberToFilerank(bestMoves5[i].getTerminal())
-     << " ";
+     for (int i = 0; i < 4; i++) {
+          std::cout << numberToFilerank(bestMoves5.argmove[i].getInitial())
+               << numberToFilerank(bestMoves5.argmove[i].getTerminal())
+               << " ";
      }
      printf("\n");
+     
      */
-
+     
      /*
+     
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
      printf(" First 4 Moves with Depth 4 Test                                                \n");
@@ -189,21 +190,23 @@ void main() {
      printf("\n");
 
      for (int i = 0; i < 4; i++) {
-     Move bestMoves[MAX_DEPTH];
-     int bestMoveScore = rootAlphabeta(4, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, bestMoves, savedBoard, saveIndex);
-     printf("Best Move Score: %3d\n", bestMoveScore);
-     std::cout << "Best Moves: ";
-     for (int j = 4; j >= 1; j--) {
-     std::cout << numberToFilerank(bestMoves[j].getInitial())
-     << numberToFilerank(bestMoves[j].getTerminal())
-     << " ";
+          LINE bestMoves;
+          int bestMoveScore = rootAlphabeta(4, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves, savedBoard, saveIndex);
+          printf("Best Move Score: %3d\n", bestMoveScore);
+          std::cout << "Best Moves: ";
+          for (int j = 0; j < 4; j++) {
+               std::cout << numberToFilerank(bestMoves.argmove[j].getInitial())
+                    << numberToFilerank(bestMoves.argmove[j].getTerminal())
+                    << " ";
+          }
+          printf("\n");
+          makeMove(initialBoard, bestMoves[4]);
      }
-     printf("\n");
-     makeMove(initialBoard, bestMoves[4]);
-     }
+     
      */
+     
 
-     /*
+
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
      printf(" Stalemate Detection Test 1: No Legal Move                                      \n");
@@ -224,6 +227,8 @@ void main() {
           printf("\nStalemate test 1 failed!\n");
      }
 
+
+
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
      printf(" Stalemate Detection Test 2: 50 Move Rule                                       \n");
@@ -242,6 +247,8 @@ void main() {
           printf("\nStalemate test 2 failed!\n");
      }
 
+
+
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
      printf(" Stalemate Detection Test 3: 75 Nove Rule                                       \n");
@@ -259,6 +266,8 @@ void main() {
      else {
           printf("\nStalemate test 3 failed!\n");
      }
+
+
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
@@ -283,6 +292,8 @@ void main() {
           printf("Stalemate test 4 failed!\n");
      }
 
+
+
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
      printf(" Checkmate Detection Test                                                       \n");
@@ -302,6 +313,8 @@ void main() {
           printf("Checkmate test failed!\n");
      }
 
+     
+
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
      printf(" Mate in 1 Test                                                                 \n");
@@ -313,17 +326,18 @@ void main() {
      int saveIndex5 = 0;
      FENboardSetup(matein1Board, "7k/RR6/8/8/8/8/8/7K w - - 0 1");
 
-     Move matein1Move[MAX_DEPTH];
-     int matein1Score = rootAlphabeta(4, matein1Board, DEFAULT_ALPHA, DEFAULT_BETA, matein1Move, savedBoard5, saveIndex5);
+     LINE matein1Move;
+     int matein1Score = rootAlphabeta(4, matein1Board, DEFAULT_ALPHA, DEFAULT_BETA, &matein1Move, savedBoard5, saveIndex5);
      printf("Best Move Score: %3d\n", matein1Score);
      std::cout << "Best Moves: ";
-     for (int i = 4; i >= 1; i--) {
-          std::cout << numberToFilerank(matein1Move[i].getInitial())
-               << numberToFilerank(matein1Move[i].getTerminal())
+     for (int i = 0; i < matein1Move.cmove; i++) {
+          std::cout << numberToFilerank(matein1Move.argmove[i].getInitial())
+               << numberToFilerank(matein1Move.argmove[i].getTerminal())
                << " ";
      }
      printf("\n");
 
+     
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
@@ -334,16 +348,18 @@ void main() {
      Board matein2Board;
      FENboardSetup(matein2Board, "7k/8/RR6/8/8/8/8/7K w - - 0 1");
 
-     Move matein2Move[MAX_DEPTH];
-     int matein2Score = rootAlphabeta(4, matein2Board, DEFAULT_ALPHA, DEFAULT_BETA, matein2Move, savedBoard5, saveIndex5);
+     LINE matein2Move;
+     int matein2Score = rootAlphabeta(4, matein2Board, DEFAULT_ALPHA, DEFAULT_BETA, &matein2Move, savedBoard5, saveIndex5);
      printf("Best Move Score: %3d\n", matein2Score);
      std::cout << "Best Moves: ";
-     for (int i = 4; i >= 1; i--) {
-          std::cout << numberToFilerank(matein2Move[i].getInitial())
-               << numberToFilerank(matein2Move[i].getTerminal())
+     for (int i = 0; i < matein2Move.cmove; i++) {
+          std::cout << numberToFilerank(matein2Move.argmove[i].getInitial())
+               << numberToFilerank(matein2Move.argmove[i].getTerminal())
                << " ";
      }
      printf("\n");
+
+     
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
@@ -360,15 +376,14 @@ void main() {
      printSimpleBoard(forcedStalemateBoard);
      
 
-     Move forcedStalemateMoves[MAX_DEPTH];
-     int forcedStalemateScore = rootAlphabeta(4, forcedStalemateBoard, DEFAULT_ALPHA, DEFAULT_BETA, forcedStalemateMoves, savedBoard5, saveIndex5);
+     LINE forcedStalemateMoves;
+     int forcedStalemateScore = rootAlphabeta(4, forcedStalemateBoard, DEFAULT_ALPHA, DEFAULT_BETA, &forcedStalemateMoves, savedBoard5, saveIndex5);
      printf("Best Move Score: %3d\n", forcedStalemateScore);
      std::cout << "Best Moves: ";
-     for (int i = 4; i >= 1; i--) {
-          std::cout << numberToFilerank(forcedStalemateMoves[i].getInitial())
-               << numberToFilerank(forcedStalemateMoves[i].getTerminal())
+     for (int i = 0; i < forcedStalemateMoves.cmove; i++) {
+          std::cout << numberToFilerank(forcedStalemateMoves.argmove[i].getInitial())
+               << numberToFilerank(forcedStalemateMoves.argmove[i].getTerminal())
                << " ";
      }
      printf("\n");
-     */
 }
