@@ -1,7 +1,7 @@
 #pragma once
 #include "board.h"
 
-typedef struct LINE {
+typedef struct Variation {
      int cmove;                // Number of moves in the line.
      Move argmove[MAX_DEPTH];  // The line.
 }   LINE;
@@ -16,7 +16,7 @@ typedef struct LINE {
 /// <returns>The evaluation score of best move.</returns>
 // int alphabeta(const int maxDepth, Board& board, int alpha, int beta);
 // TODO: Update documentation
-int alphabeta(const int depth, Board& board, int alpha, int beta, LINE* pline, Board savedBoard[MAX_MOVENUMBER], int saveIndex);
+int alphabeta(const int depth, Board& board, int alpha, int beta, Variation* pline, Board savedBoard[MAX_MOVENUMBER], int saveIndex);
 /// <summary>
 /// This function is the root function for negaMax().
 /// </summary>
@@ -28,7 +28,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, LINE* pline, B
 /// <returns>The evaluation score of best move.</returns>
 //int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& bestMove);
 // TODO: Update documentation
-int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, LINE* pline, Board savedBoard[MAX_MOVENUMBER], int saveIndex);
+int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Variation* pline, Board savedBoard[MAX_MOVENUMBER], int saveIndex);
 
 
 /// <summary>

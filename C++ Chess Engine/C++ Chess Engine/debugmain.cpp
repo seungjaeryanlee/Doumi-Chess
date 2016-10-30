@@ -94,7 +94,7 @@ void main() {
      Board savedBoard[MAX_MOVENUMBER];
      int saveIndex = 0;
 
-     LINE bestMoves1;
+     Variation bestMoves1;
      int bestMoveScore1 = rootAlphabeta(1, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves1, savedBoard, saveIndex);
      printf("Best Move Score: %3d\n", bestMoveScore1);
      std::cout << "Best Moves: ";
@@ -113,7 +113,7 @@ void main() {
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
-     LINE bestMoves2;
+     Variation bestMoves2;
      int bestMoveScore2 = rootAlphabeta(2, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves2, savedBoard, saveIndex);
      printf("Best Move Score: %3d\n", bestMoveScore2);
      std::cout << "Best Moves: ";
@@ -131,7 +131,7 @@ void main() {
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
-     LINE bestMoves3;
+     Variation bestMoves3;
      int bestMoveScore3 = rootAlphabeta(3, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves3, savedBoard, saveIndex);
      printf("Best Move Score: %3d\n", bestMoveScore3);
      std::cout << "Best Moves: ";
@@ -149,7 +149,7 @@ void main() {
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
-     LINE bestMoves4;
+     Variation bestMoves4;
      int bestMoveScore4 = rootAlphabeta(4, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves4, savedBoard, saveIndex);
      printf("Best Move Score: %3d\n", bestMoveScore4);
      std::cout << "Best Moves: ";
@@ -326,7 +326,7 @@ void main() {
      int saveIndex5 = 0;
      FENboardSetup(matein1Board, "7k/RR6/8/8/8/8/8/7K w - - 0 1");
 
-     LINE matein1Move;
+     Variation matein1Move;
      int matein1Score = rootAlphabeta(4, matein1Board, DEFAULT_ALPHA, DEFAULT_BETA, &matein1Move, savedBoard5, saveIndex5);
      printf("Best Move Score: %3d\n", matein1Score);
      std::cout << "Best Moves: ";
@@ -348,7 +348,7 @@ void main() {
      Board matein2Board;
      FENboardSetup(matein2Board, "7k/8/RR6/8/8/8/8/7K w - - 0 1");
 
-     LINE matein2Move;
+     Variation matein2Move;
      int matein2Score = rootAlphabeta(4, matein2Board, DEFAULT_ALPHA, DEFAULT_BETA, &matein2Move, savedBoard5, saveIndex5);
      printf("Best Move Score: %3d\n", matein2Score);
      std::cout << "Best Moves: ";
@@ -374,9 +374,8 @@ void main() {
      printf("Board Evaluation: %d\n", forcedStalemateBoard.boardEvaluation());
 
      printSimpleBoard(forcedStalemateBoard);
-     
 
-     LINE forcedStalemateMoves;
+     Variation forcedStalemateMoves;
      int forcedStalemateScore = rootAlphabeta(4, forcedStalemateBoard, DEFAULT_ALPHA, DEFAULT_BETA, &forcedStalemateMoves, savedBoard5, saveIndex5);
      printf("Best Move Score: %3d\n", forcedStalemateScore);
      std::cout << "Best Moves: ";
