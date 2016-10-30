@@ -1,6 +1,10 @@
 #pragma once
 #include "board.h"
 
+typedef struct LINE {
+     int cmove;                // Number of moves in the line.
+     Move argmove[MAX_DEPTH];  // The line.
+}   LINE;
 
 /// <summary>
 /// This function finds the best move using negaMax recursion and alpha-beta pruning on the given board for given depth. This function should only be called in rootAlphabeta().
@@ -12,7 +16,7 @@
 /// <returns>The evaluation score of best move.</returns>
 // int alphabeta(const int maxDepth, Board& board, int alpha, int beta);
 // TODO: Update documentation
-int alphabeta(const int depth, Board& board, int alpha, int beta, Move bestMoves[MAX_DEPTH], Board savedBoard[MAX_MOVENUMBER], int saveIndex);
+int alphabeta(const int depth, Board& board, int alpha, int beta, LINE* pline, Board savedBoard[MAX_MOVENUMBER], int saveIndex);
 /// <summary>
 /// This function is the root function for negaMax().
 /// </summary>
@@ -24,7 +28,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Move bestMoves
 /// <returns>The evaluation score of best move.</returns>
 //int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& bestMove);
 // TODO: Update documentation
-int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move bestMoves[MAX_DEPTH], Board savedBoard[MAX_MOVENUMBER], int saveIndex);
+int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, LINE* pline, Board savedBoard[MAX_MOVENUMBER], int saveIndex);
 
 
 /// <summary>

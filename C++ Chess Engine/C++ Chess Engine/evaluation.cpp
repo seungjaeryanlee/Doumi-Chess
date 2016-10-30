@@ -1,7 +1,14 @@
 #include "evaluation.h"
 #include "movegen.h"
 
-int alphabeta(const int depth, Board& board, int alpha, int beta, Move bestMoves[MAX_DEPTH], Board savedBoard[MAX_MOVENUMBER], int saveIndex) {
+
+
+
+
+int alphabeta(const int depth, Board& board, int alpha, int beta, LINE* pline, Board savedBoard[MAX_MOVENUMBER], int saveIndex) {
+
+     LINE line;
+
      switch (checkGameState(board, savedBoard, saveIndex)) {
      case NOTMATE:
           break;
@@ -22,6 +29,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Move bestMoves
      }
 
      if (depth == 0) {
+          pline->cmove = 0;
           return board.getTurn() * board.boardEvaluation();
      }
 
@@ -32,7 +40,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Move bestMoves
 
           savedBoard[saveIndex] = board;
 
-          int score = -alphabeta(depth - 1, board, -beta, -alpha, bestMoves, savedBoard, saveIndex + 1);
+          int score = -alphabeta(depth - 1, board, -beta, -alpha, &line, savedBoard, saveIndex + 1);
 
           if (score >= beta) {
                board = oldBoard;
@@ -41,17 +49,22 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Move bestMoves
 
           if (score > alpha) {
                alpha = score;
-               bestMoves[depth] = moveList.getMove(i);
+               pline->argmove[0] = moveList.getMove(i); 
+               for (int j = 0; j < line.cmove; j++) {
+                    pline->argmove[j + 1] = line.argmove[j];
+               }
+               pline->cmove = line.cmove + 1;
           }
           board = oldBoard;
      }
 
      return alpha;
 }
-int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move bestMoves[MAX_DEPTH], Board savedBoard[MAX_MOVENUMBER], int saveIndex) {
+int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, LINE* pline, Board savedBoard[MAX_MOVENUMBER], int saveIndex) {
      int score;
      int capturedPiece;
 
+     LINE line;
      Board oldBoard = board;
      MoveList moveList = moveGeneration(board);
 
@@ -60,7 +73,7 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move bes
           capturedPiece = makeMove(board, moveList.getMove(i));
           savedBoard[saveIndex] = board;
 
-          score = -alphabeta(maxDepth - 1, board, -beta, -alpha, bestMoves, savedBoard, saveIndex + 1);
+          score = -alphabeta(maxDepth - 1, board, -beta, -alpha, &line, savedBoard, saveIndex + 1);
 
           // TODO: Check if this is needed and change it
           if (score >= beta) {
@@ -70,7 +83,12 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move bes
 
           if (score > alpha) {
                alpha = score;
-               bestMoves[maxDepth] = moveList.getMove(i);
+               pline->argmove[0] = moveList.getMove(i);
+               for (int j = 0; j < line.cmove; j++) {
+                    pline->argmove[j + 1] = line.argmove[j];
+               }
+               //memcpy(pline->argmove + 1, line.argmove, line.cmove * sizeof(Move));
+               pline->cmove = line.cmove + 1;
           }
           board = oldBoard;
      }
