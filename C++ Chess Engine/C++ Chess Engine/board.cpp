@@ -169,8 +169,16 @@ void FENboardSetup(Board& board, const std::string FEN) {
      }
      // Two-digit Fifty Move Count
      else if ('0' <= FEN.at(i + 1) && FEN.at(i + 1) <= '9') {
-          board.setHalfMoveClock(10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0'));
-          i += 3;
+          if (FEN.at(i + 2) == ' ') {
+               board.setHalfMoveClock(10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0'));
+               i += 3;
+          }
+          else if ('0' <= FEN.at(i + 2) && FEN.at(i + 2) <= '9') {
+               board.setHalfMoveClock(100 * (FEN.at(i) - '0') + 
+                                       10 * (FEN.at(i + 1) - '0') + 
+                                            (FEN.at(i + 2) - '0'));
+               i += 4;
+          }
      }
 
      // One-digit Move Number

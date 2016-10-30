@@ -225,8 +225,6 @@ void main() {
      FENboardSetup(stalemateboard2, "7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 100 1");
      printSimpleBoard(stalemateboard2);
 
-     printf("%d\n", stalemateboard2.getHalfMoveClock());
-
      gameState stalemate2 = checkGameState(stalemateboard2, savedBoard2, saveIndex2);
      if (stalemate2 == STALEMATE_50) {
           printf("\nCorrect stalemate detected.\n");
