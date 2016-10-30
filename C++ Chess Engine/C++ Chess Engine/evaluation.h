@@ -26,6 +26,8 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Board savedBoa
 // TODO: Update documentation
 int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move& bestMove, Board savedBoard[MAX_MOVENUMBER], int saveIndex);
 
+int alphabeta(const int depth, Board& board, int alpha, int beta, Move bestMoves[MAX_DEPTH], Board savedBoard[MAX_MOVENUMBER], int saveIndex);
+int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move bestMoves[MAX_DEPTH], Board savedBoard[MAX_MOVENUMBER], int saveIndex);
 
 /// <summary>
 /// This function checks the game state of the given board.

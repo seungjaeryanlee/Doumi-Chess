@@ -139,6 +139,22 @@ void main() {
                                 << numberToFilerank(bestMove4.getTerminal())
                                 << std::endl;
 
-     
+     printf("\n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf(" Depth 4 Alphabeta Testing                                                      \n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf("\n");
+
+     Move bestMoves4[MAX_DEPTH];
+     int bestMoveScore44 = rootAlphabeta(4, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, bestMoves4, savedBoard, saveIndex);
+     printf("Best Move Score: %3d\n", bestMoveScore44);
+     std::cout << "Best Moves: ";
+     for (int i = 4; i >= 1; i--) {
+          std::cout << numberToFilerank(bestMoves4[i].getInitial())
+               << numberToFilerank(bestMoves4[i].getTerminal())
+               << " ";
+     }
+     printf("\n");
+
 
 }
