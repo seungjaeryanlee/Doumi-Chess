@@ -50,17 +50,14 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Board savedBoa
           return board.getTurn() * board.boardEvaluation();
      }
 
-     int score;
-     int capturedPiece;
-
      Board oldBoard = board;
      MoveList moveList = moveGeneration(board);
-
      for (int i = 0; i < moveList.getCounter(); i++) {
-          capturedPiece = makeMove(board, moveList.getMove(i));
+          int capturedPiece = makeMove(board, moveList.getMove(i));
+          
           savedBoard[saveIndex] = board;
 
-          score = -alphabeta(depth - 1, board, -beta, -alpha, savedBoard, saveIndex + 1);
+          int score = -alphabeta(depth - 1, board, -beta, -alpha, savedBoard, saveIndex + 1);
 
           if (score >= beta) {
                board = oldBoard;
