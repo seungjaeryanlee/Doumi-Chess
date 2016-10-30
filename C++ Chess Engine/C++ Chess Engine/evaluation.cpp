@@ -1,7 +1,8 @@
 #include "evaluation.h"
 #include "movegen.h"
 
-
+// Principal Variation:
+// https://chessprogramming.wikispaces.com/Principal+Variation
 
 
 
@@ -14,17 +15,21 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Variation* pVa
      case NOTMATE:
           break;
      case WHITE_CHECKMATE:
+          pVariation->cmove = 0;
           return -1 * (MATE_VALUE + depth);
           break;
      case BLACK_CHECKMATE:
+          pVariation->cmove = 0;
           return (MATE_VALUE + depth);
           break;
      case STALEMATE_3F: case STALEMATE_50:
           if (board.getTurn() * board.boardEvaluation() <= STALEMATE_BOUND) {
+               pVariation->cmove = 0;
                return 0;
           }
           break;
      case STALEMATE_75: case STALEMATE_MOVE:
+          pVariation->cmove = 0;
           return 0;
           break;
      }
