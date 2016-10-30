@@ -33,3 +33,4 @@ int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Move bes
 /// <param name="board">The board that will be checked for its game state.</param>
 /// <returns>The game state of the board.</returns>
 gameState checkGameState(const Board& board);
+gameState checkGameState(Board& board, const Board savedBoard[MAX_MOVENUMBER], int saveIndex);

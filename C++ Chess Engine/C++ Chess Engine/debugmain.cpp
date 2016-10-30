@@ -156,5 +156,21 @@ void main() {
      }
      printf("\n");
 
+     printf("\n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf(" Depth 5 Alphabeta Testing                                                      \n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf("\n");
+
+     Move bestMoves5[MAX_DEPTH];
+     int bestMoveScore5 = rootAlphabeta(5, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, bestMoves5, savedBoard, saveIndex);
+     printf("Best Move Score: %3d\n", bestMoveScore5);
+     std::cout << "Best Moves: ";
+     for (int i = 5; i >= 1; i--) {
+          std::cout << numberToFilerank(bestMoves5[i].getInitial())
+               << numberToFilerank(bestMoves5[i].getTerminal())
+               << " ";
+     }
+     printf("\n");
 
 }
