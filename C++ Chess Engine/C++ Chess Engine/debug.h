@@ -3,12 +3,6 @@
 #include "board.h"
 
 /// <summary>
-/// This function prints the extensive menu of possible user commands, including some options created for debugging the code.
-/// </summary>
-void printDebugMenu();
-
-
-/// <summary>
 /// This function finds the number of possible move sequences for given depth and divides them into categories of first few moves given by maxDepth and prints them to console.
 /// </summary>
 /// <param name="depth">The current depth of the recursion.</param>

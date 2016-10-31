@@ -2,26 +2,6 @@
 #include "movegen.h"
 #include <fstream>
 
-void printDebugMenu() {
-     printf("--------------------------------------------------\n");
-     printf("%d: Make move\n", MOVE);
-     printf("%d: Display Board\n", DISPLAY_BOARD);
-     printf("%d: Display FEN\n", DISPLAY_FEN);
-     printf("%d: Reset Board\n", BOARD_RESET);
-     printf("%d: Perft Test\n", PERFT);
-     printf("%d: Quit\n", QUIT);
-     printf("%d: Divide Perft Test\n", DIVIDE);
-     printf("%d: Undo move\n", UNDO_MOVE);
-     printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
-     printf("A: Print Possible Moves\n");
-     printf("B: Negamax vs. Negamax + Alphabeta Pruning\n");
-     printf("C: Evaluate Board\n");
-     printf("D: Alphabeta Speed Check\n");
-     printf("E: Print Saved FEN\n");
-     printf("--------------------------------------------------\n");
-     printf("Please choose command: ");
-}
-
 uint64_t divide(const int depth, const int maxDepth, Board& board, const bool showOutput) {
 
      if (depth == 0) { return 1; }

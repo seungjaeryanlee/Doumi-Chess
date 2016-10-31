@@ -21,7 +21,7 @@ const int UNDECIDED = 2;
 void main() {
      Board currentBoard;
      MoveList currentBoardMoveList;
-     Board savedBoard[MAX_MOVENUMBER];    //  Stores Board and Board States for threefold repetition
+     Board savedBoard[MAX_MOVENUMBER];    //  Stores Board for threefold repetition
      int savedCapturedPiece[MAX_MOVENUMBER];  //  Saved values for UNDO_MOVE command
      Move savedMove[MAX_MOVENUMBER];
      int saveIndex = 0;
@@ -134,7 +134,7 @@ void main() {
                // Get user command
                correctInput = false;
                while (!correctInput) {
-                    printDebugMenu();
+                    printMenu();
                     std::getline(std::cin, userCommand);
 
                     if (userCommand.size() == 0) {
@@ -327,42 +327,10 @@ void main() {
                     printSimpleBoard(currentBoard);
                     continue;
                }
-               else if (commandType == PERFT) {
-                    correctInput = false;
-                    while (!correctInput) {
-                         printf("What depth? (1~%d): ", MAX_DEPTH);
-                         std::getline(std::cin, userCommand);
-                         if (userCommand.size() == 0 || userCommand.at(0) - '0' < 1 || userCommand.at(0) - '0' > MAX_DEPTH) {
-                              printf("Wrong Input!\n");
-                              continue;
-                         }
-                         else {
-                              printf("Perft (Depth %c): %llu\n", userCommand.at(0), divide(userCommand.at(0) - '0', 0, currentBoard, false));
-                              correctInput = true;
-                              break;
-                         }
-                    }
-               }
                else if (commandType == QUIT) {
                     gamePlaying = false;
                     gameResult = NOT_FINISHED;
                     break;
-               }
-               else if (commandType == DIVIDE) {
-                    correctInput = false;
-                    while (!correctInput) {
-                         printf("What depth? (1~%d): ", MAX_DEPTH);
-                         std::getline(std::cin, userCommand);
-                         if (userCommand.size() == 0 || userCommand.at(0) - '0' < 1 || userCommand.at(0) - '0' > MAX_DEPTH) {
-                              printf("Wrong Input!\n");
-                              continue;
-                         }
-                         else {
-                              printf("Divide (Depth %c): %llu\n", userCommand.at(0), divide(userCommand.at(0) - '0', userCommand.at(0) - '0', currentBoard, true));
-                              correctInput = true;
-                              break;
-                         }
-                    }
                }
                else if (commandType == UNDO_MOVE) {
                     if (saveIndex == 0) {
@@ -388,19 +356,10 @@ void main() {
                     }
                     continue;
                }
-               else if (commandType == ALPHABETA_COMPARE) { continue; }
                else if (commandType == EVALUATE_BOARD) {
                     printf("Current Board Evaluation: %d\n", currentBoard.boardEvaluation());
                     continue;
                }
-               else if (commandType == ALPHABETA_SPEED_CHECK) { continue; }
-               else if (commandType == PRINT_SAVED_FEN) {
-                    for (int i = 0; i < saveIndex; i++) {
-                         // Print statement inside boardToFEN() prints the FEN
-                         boardToFEN(savedBoard[i]); 
-                    }
-               }
-               else if (commandType == DEBUG) { continue; }
           }
           
           //  Computer turn
@@ -412,7 +371,8 @@ void main() {
                Variation PV;
                int abValue = rootAlphabeta(EVAL_DEPTH, currentBoard, &PV, savedBoard, saveIndex);
                printf("Alphabeta Value: %d\n", abValue);
-               std::cout << "Alphabeta Move: " << printMove(currentBoard.getMoveNumber(), PV.moves[0]);
+               printf("Alphabeta PV: ");
+               printVariation(std::cout, PV);
 
                // Make Move, Save and Print
                savedBoard[saveIndex] = currentBoard;
@@ -424,7 +384,6 @@ void main() {
                std::cout << printMove(currentBoard.getMoveNumber(), PV.moves[0]);
                log << printMove(currentBoard.getMoveNumber(), PV.moves[0]);
 
-               //  TODO: Add 50 Move Rule option in move generation / selection?               
                // Check Fifty move rule
                if (fiftyMoveCheck(currentBoard)) {
                     // If in bad position, declare fifty move rule
