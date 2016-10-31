@@ -95,7 +95,7 @@ void main() {
      int saveIndex = 0;
 
      Variation bestMoves1;
-     int bestMoveScore1 = rootAlphabeta(1, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves1, savedBoard, saveIndex);
+     int bestMoveScore1 = rootAlphabeta(1, initialBoard, &bestMoves1, savedBoard, saveIndex);
      printf("Best Move Score: %3d\n", bestMoveScore1);
      std::cout << "Best Moves: ";
      for (int i = 0; i < bestMoves1.length; i++) {
@@ -114,7 +114,7 @@ void main() {
      printf("\n");
 
      Variation bestMoves2;
-     int bestMoveScore2 = rootAlphabeta(2, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves2, savedBoard, saveIndex);
+     int bestMoveScore2 = rootAlphabeta(2, initialBoard, &bestMoves2, savedBoard, saveIndex);
      printf("Best Move Score: %3d\n", bestMoveScore2);
      std::cout << "Best Moves: ";
      for (int i = 0; i < bestMoves2.length; i++) {
@@ -132,7 +132,7 @@ void main() {
      printf("\n");
 
      Variation bestMoves3;
-     int bestMoveScore3 = rootAlphabeta(3, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves3, savedBoard, saveIndex);
+     int bestMoveScore3 = rootAlphabeta(3, initialBoard, &bestMoves3, savedBoard, saveIndex);
      printf("Best Move Score: %3d\n", bestMoveScore3);
      std::cout << "Best Moves: ";
      for (int i = 0; i < bestMoves3.length; i++) {
@@ -150,7 +150,7 @@ void main() {
      printf("\n");
 
      Variation bestMoves4;
-     int bestMoveScore4 = rootAlphabeta(4, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves4, savedBoard, saveIndex);
+     int bestMoveScore4 = rootAlphabeta(4, initialBoard, &bestMoves4, savedBoard, saveIndex);
      printf("Best Move Score: %3d\n", bestMoveScore4);
      std::cout << "Best Moves: ";
      for (int i = 0; i < bestMoves4.length; i++) {
@@ -169,7 +169,7 @@ void main() {
      printf("\n");
 
      LINE bestMoves5;
-     int bestMoveScore5 = rootAlphabeta(5, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves5, savedBoard, saveIndex);
+     int bestMoveScore5 = rootAlphabeta(5, initialBoard, &bestMoves5, savedBoard, saveIndex);
      printf("Best Move Score: %3d\n", bestMoveScore5);
      std::cout << "Best Moves: ";
      for (int i = 0; i < 4; i++) {
@@ -191,7 +191,7 @@ void main() {
 
      for (int i = 0; i < 4; i++) {
           LINE bestMoves;
-          int bestMoveScore = rootAlphabeta(4, initialBoard, DEFAULT_ALPHA, DEFAULT_BETA, &bestMoves, savedBoard, saveIndex);
+          int bestMoveScore = rootAlphabeta(4, initialBoard, &bestMoves, savedBoard, saveIndex);
           printf("Best Move Score: %3d\n", bestMoveScore);
           std::cout << "Best Moves: ";
           for (int j = 0; j < 4; j++) {
@@ -327,7 +327,7 @@ void main() {
      FENboardSetup(matein1Board, "7k/RR6/8/8/8/8/8/7K w - - 0 1");
 
      Variation matein1Move;
-     int matein1Score = rootAlphabeta(4, matein1Board, DEFAULT_ALPHA, DEFAULT_BETA, &matein1Move, savedBoard5, saveIndex5);
+     int matein1Score = rootAlphabeta(4, matein1Board, &matein1Move, savedBoard5, saveIndex5);
      printf("Best Move Score: %3d\n", matein1Score);
      std::cout << "Best Moves: ";
      for (int i = 0; i < matein1Move.length; i++) {
@@ -349,7 +349,7 @@ void main() {
      FENboardSetup(matein2Board, "7k/8/RR6/8/8/8/8/7K w - - 0 1");
 
      Variation matein2Move;
-     int matein2Score = rootAlphabeta(4, matein2Board, DEFAULT_ALPHA, DEFAULT_BETA, &matein2Move, savedBoard5, saveIndex5);
+     int matein2Score = rootAlphabeta(4, matein2Board, &matein2Move, savedBoard5, saveIndex5);
      printf("Best Move Score: %3d\n", matein2Score);
      std::cout << "Best Moves: ";
      for (int i = 0; i < matein2Move.length; i++) {
@@ -376,7 +376,7 @@ void main() {
      printSimpleBoard(forcedStalemateBoard);
 
      Variation forcedStalemateMoves;
-     int forcedStalemateScore = rootAlphabeta(4, forcedStalemateBoard, DEFAULT_ALPHA, DEFAULT_BETA, &forcedStalemateMoves, savedBoard5, saveIndex5);
+     int forcedStalemateScore = rootAlphabeta(4, forcedStalemateBoard, &forcedStalemateMoves, savedBoard5, saveIndex5);
      printf("Best Move Score: %3d\n", forcedStalemateScore);
      std::cout << "Best Moves: ";
      for (int i = 0; i < forcedStalemateMoves.length; i++) {

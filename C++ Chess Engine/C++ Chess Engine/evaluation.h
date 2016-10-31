@@ -1,6 +1,9 @@
 #pragma once
 #include "board.h"
 
+const int DEFAULT_ALPHA = -999999;
+const int DEFAULT_BETA = 999999;
+
 struct Variation {
      int length;             // Number of moves in the variation.
      Move moves[MAX_DEPTH];  // The moves.
@@ -23,13 +26,11 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Variation* pVa
 /// </summary>
 /// <param name="maxDepth">The depth of the recursion.</param>
 /// <param name="board">The board that will be analyzed.</param>
-/// <param name="alpha">The alpha value used for alpha-beta pruning.</param>
-/// <param name="beta">The beta value used for alpha-beta pruning.</param>
 /// <param name="principalVariation">The best variation found after alphabeta.</param>
 /// <param name="savedBoard">The past boards. Used for threefold repetition checking.</param>
 /// <param name="saveIndex">Number of boards in savedBoard.</param>
 /// <returns>The evaluation score of best move.</returns>
-int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Variation* principalVariation, Board savedBoard[MAX_MOVENUMBER], int saveIndex);
+int rootAlphabeta(const int maxDepth, Board board, Variation* principalVariation, Board savedBoard[MAX_MOVENUMBER], int saveIndex);
 
 
 /// <summary>

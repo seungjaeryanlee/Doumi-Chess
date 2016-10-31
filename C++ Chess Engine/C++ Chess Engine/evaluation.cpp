@@ -59,12 +59,13 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Variation* pVa
 
      return alpha;
 }
-int rootAlphabeta(const int maxDepth, Board board, int alpha, int beta, Variation* principalVariation, Board savedBoard[MAX_MOVENUMBER], int saveIndex) {
+int rootAlphabeta(const int maxDepth, Board board, Variation* principalVariation, Board savedBoard[MAX_MOVENUMBER], int saveIndex) {
      Variation variation;
      Board oldBoard = board;
      MoveList moveList = moveGeneration(board);
 
-
+     int alpha = DEFAULT_ALPHA;
+     int beta = DEFAULT_BETA;
      for (int i = 0; i < moveList.getCounter(); i++) {
           int capturedPiece = makeMove(board, moveList.getMove(i));
           

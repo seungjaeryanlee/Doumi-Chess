@@ -24,9 +24,6 @@ const int STALEMATE_BOUND = -100;
 
 const int MATE_VALUE = 40000;
 
-const int DEFAULT_ALPHA = -999999;
-const int DEFAULT_BETA = 999999;
-
 /*                                   ENUMERATION                              */
 enum squareType {
      EMPTYSQUARE,
