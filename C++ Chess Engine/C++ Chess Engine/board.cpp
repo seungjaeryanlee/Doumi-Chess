@@ -1,6 +1,7 @@
 #include "board.h"
 #include <string>
 #include <iostream>
+#include <stdexcept>
 
 void board120Setup(Board& board) {
      board.setTurn(WHITE);
@@ -314,15 +315,14 @@ int checkColor(const int pieceType) {
           return NEITHER;
      }
      else {
-          printf("Invalid pieceType\n");
-          return 0;
+          throw std::invalid_argument("Invalid pieceType.");
      }
 }
 
 int filerankToNumber(const char file, const int rank) {
      //  if it is not a correct filerank format, return error
      if ('a' > file || file > 'h' || 1 > rank || rank > 8) {
-          return ERRORCODE;
+          throw std::invalid_argument("Not correct filerank format.");
      }
      return COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - 1));
 }
@@ -658,9 +658,7 @@ bool isSquareAttacked(const Board& board, int kingPos) {
      }
 
      else {
-          // TODO: Better Exception Handling
-          throw "Board given as argument to isSquareAttacked does not have valid turn.\n";
-          return true;
+          throw std::invalid_argument("The board has invalid turn.");
      }
 
 }

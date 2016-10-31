@@ -19,7 +19,6 @@ const int MAX_MOVENUMBER = 200;
 const int MAX_DEPTH = 6;
 const int EVAL_DEPTH = 4;
 
-const int ERRORCODE = 970201;
 const int STALEMATE_BOUND = -100;
 
 const int MATE_VALUE = 40000;
@@ -52,7 +51,8 @@ enum moveType {
 };
 enum castlingCheck {WKCASTLING, WQCASTLING, BKCASTLING, BQCASTLING};
 enum result {BLACK_WIN = -1, TIE, WHITE_WIN, NOT_FINISHED};
-enum commandType {ERROR_COMMAND,
+enum commandType {
+     ERROR_COMMAND,
      MOVE,
      DISPLAY_BOARD,
      DISPLAY_FEN,
