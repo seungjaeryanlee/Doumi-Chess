@@ -41,3 +41,7 @@ int rootAlphabeta(const int maxDepth, Board board, Variation* principalVariation
 /// <param name="saveIndex">Number of boards in savedBoard.</param>
 /// <returns>The game state of the board.</returns>
 gameState checkGameState(Board& board, const Board savedBoard[MAX_MOVENUMBER], int saveIndex);
+
+
+// TODO: Documentation
+void printVariation(std::ostream& stream, Variation& var);

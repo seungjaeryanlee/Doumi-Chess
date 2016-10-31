@@ -1,5 +1,7 @@
 #include "evaluation.h"
 #include "movegen.h"
+#include <fstream>
+#include <string>
 
 // Principal Variation:
 // https://chessprogramming.wikispaces.com/Principal+Variation
@@ -133,4 +135,13 @@ gameState checkGameState(Board& board, const Board savedBoard[MAX_MOVENUMBER], i
      }
 
      return NOTMATE;
+}
+
+void printVariation(std::ostream& stream, Variation& var) {
+     for (int i = 0; i < var.length; i++) {
+          stream << numberToFilerank(var.moves[i].getInitial())
+               << numberToFilerank(var.moves[i].getTerminal())
+               << " ";
+     }
+     stream << std::endl;
 }

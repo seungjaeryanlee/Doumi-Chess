@@ -21,7 +21,7 @@ std::string printMove(const int moveNumber, const Move& move) {
           output += "\n";
           break;
      case DOUBLEMOVE:
-          output += "\n";
+          output += "Double Move\n";
           break;
      case ENPASSANT:
           output += "En passant\n";
@@ -36,7 +36,7 @@ std::string printMove(const int moveNumber, const Move& move) {
           output += "Promotion to Knight\n";
           break;
      case BISHOP_PROMOTION:
-          output += "Promotion to Bishopn";
+          output += "Promotion to Bishop\n";
           break;
      case ROOK_PROMOTION:
           output += "Promotion to Rook\n";
