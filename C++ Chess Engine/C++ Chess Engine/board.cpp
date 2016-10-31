@@ -320,9 +320,9 @@ int checkColor(const int pieceType) {
 }
 
 int filerankToNumber(const char file, const int rank) {
-     //  if it is not a correct filerank format, return error
+     //  if it is not a correct filerank format, return -1
      if ('a' > file || file > 'h' || 1 > rank || rank > 8) {
-          throw std::invalid_argument("Not correct filerank format.");
+          return -1;
      }
      return COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - 1));
 }

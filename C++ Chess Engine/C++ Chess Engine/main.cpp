@@ -13,6 +13,8 @@
 #include "debug.h"
 #include "command.h"
 
+const int UNDECIDED = 2;
+
 /******************************************************************************/
 /*                               MAIN FUNCTION                                */
 /******************************************************************************/
@@ -25,7 +27,7 @@ void main() {
      int saveIndex = 0;
      bool gamePlaying = true;
      result gameResult = NOT_FINISHED;            // Records the result of the game
-     int userColor = ERRORCODE;                   // Which color user plays
+     int userColor = UNDECIDED;                   // Which color user plays
      bool spectate = false;                       // if true, the game is between two computers
      LARGE_INTEGER frequency, beginTime, endTime; //  added for time performance check
      std::ofstream log;
@@ -64,7 +66,7 @@ void main() {
      while (gamePlaying) {
 
           //  Detect Checkmate/Stalemate
-          switch (checkGameState(currentBoard)) {
+          switch (checkGameState(currentBoard, savedBoard, saveIndex)) {
           case WHITE_CHECKMATE:
                gameResult = WHITE_WIN;
                gamePlaying = false;
@@ -87,7 +89,7 @@ void main() {
  
           //  Let user determine color to play
           correctInput = false;
-          while (!correctInput && userColor == ERRORCODE) {
+          while (!correctInput && userColor == UNDECIDED) {
                printf("Which color would you like to play? (W, B or N): ");
                std::getline(std::cin, userCommand);
                if (userCommand.size() == 0) {
@@ -169,7 +171,7 @@ void main() {
 
                          //  Check size
                          if (userCommand.size() < 4) {
-                              printf("Wrong format: correct format is [a-h][1-8][a-h][1-8].\n");
+                              printf("Wrong format: correct format is [char][int][char][int].\n");
                               continue;
                          }
 
@@ -177,8 +179,8 @@ void main() {
                          terminalSquare = filerankToNumber(userCommand.at(2), userCommand.at(3)-'0');
                          
                          //  Check if Filerank format is correct
-                         if (initialSquare == ERRORCODE || terminalSquare == ERRORCODE) {
-                              printf("Wrong format: correct format is [char][int][char][int].\n");
+                         if (initialSquare == -1 || terminalSquare == -1) {
+                              printf("Wrong format: correct format is [a-h][1-8][a-h][1-8].\n");
                               continue;
                          }
 
@@ -363,7 +365,7 @@ void main() {
                     }
                }
                else if (commandType == UNDO_MOVE) {
-                    if (savedCapturedPiece[saveIndex] == ERRORCODE || saveIndex == 0) {
+                    if (saveIndex == 0) {
                          printf("No move can be undone!\n");
                          continue;
                     }
@@ -407,20 +409,20 @@ void main() {
                LARGE_INTEGER frequency, beginTime, endTime;
                frequency = startTimer(&beginTime, 2);
 
-               Move abMove;
-               int abValue = rootAlphabeta(EVAL_DEPTH, currentBoard, DEFAULT_ALPHA, DEFAULT_BETA, abMove, savedBoard, saveIndex);
+               Variation PV;
+               int abValue = rootAlphabeta(EVAL_DEPTH, currentBoard, &PV, savedBoard, saveIndex);
                printf("Alphabeta Value: %d\n", abValue);
-               std::cout << "Alphabeta Move: " << printMove(currentBoard.getMoveNumber(), abMove);
+               std::cout << "Alphabeta Move: " << printMove(currentBoard.getMoveNumber(), PV.moves[0]);
 
                // Make Move, Save and Print
                savedBoard[saveIndex] = currentBoard;
-               savedCapturedPiece[saveIndex] = makeMove(currentBoard, abMove);
-               savedMove[saveIndex] = abMove;
+               savedCapturedPiece[saveIndex] = makeMove(currentBoard, PV.moves[0]);
+               savedMove[saveIndex] = PV.moves[0];
                saveIndex++;
 
                printSimpleBoard(currentBoard);
-               std::cout << printMove(currentBoard.getMoveNumber(), abMove);
-               log << printMove(currentBoard.getMoveNumber(), abMove);
+               std::cout << printMove(currentBoard.getMoveNumber(), PV.moves[0]);
+               log << printMove(currentBoard.getMoveNumber(), PV.moves[0]);
 
                //  TODO: Add 50 Move Rule option in move generation / selection?               
                // Check Fifty move rule
