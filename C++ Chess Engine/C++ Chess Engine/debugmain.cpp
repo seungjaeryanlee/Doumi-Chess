@@ -65,7 +65,7 @@ void main() {
 
      // TODO: Include this to FENboardsetup / Board120Setup
      initialBoard.updatePieceCount();
-     printf("Initial Board Evaluation: %d\n", initialBoard.boardEvaluation());
+     printf("Initial Board Evaluation: %d\n", initialBoard.evaluate());
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
@@ -81,7 +81,7 @@ void main() {
           std::cout << numberToFilerank(moveList.getMove(i).getInitial())
                << numberToFilerank(moveList.getMove(i).getTerminal());
           int capturedPiece = makeMove(copiedInitBoard, moveList.getMove(i));
-          printf("  %4d\n", copiedInitBoard.boardEvaluation());
+          printf("  %4d\n", copiedInitBoard.evaluate());
      }
 
      
@@ -340,7 +340,7 @@ void main() {
      FENboardSetup(forcedStalemateBoard, "5k2/r7/4PKP1/4PPP1/8/8/8/N3NN2 b - - 0 1");
      //FENboardSetup(forcedStalemateBoard, "5k2/r7/4PKP1/4PPP1/8/8/8/4QQQ1 b - - 0 1");
      forcedStalemateBoard.updatePieceCount();
-     printf("Board Evaluation: %d\n", forcedStalemateBoard.boardEvaluation());
+     printf("Board Evaluation: %d\n", forcedStalemateBoard.evaluate());
 
      printSimpleBoard(forcedStalemateBoard);
 

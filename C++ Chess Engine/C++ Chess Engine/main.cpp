@@ -357,7 +357,7 @@ void main() {
                     continue;
                }
                else if (commandType == EVALUATE_BOARD) {
-                    printf("Naguene's Board Evaluation: %d\n", currentBoard.boardEvaluation());
+                    printf("Naguene's Board Evaluation: %d\n", currentBoard.evaluate());
                     continue;
                }
                else if (commandType == QUIT) {

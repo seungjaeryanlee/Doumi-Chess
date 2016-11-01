@@ -20,7 +20,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Variation* pVa
           return (MATE_VALUE + depth);
           break;
      case STALEMATE_3F: case STALEMATE_50:
-          if (board.getTurn() * board.boardEvaluation() <= STALEMATE_BOUND) {
+          if (board.getTurn() * board.evaluate() <= STALEMATE_BOUND) {
                pVariation->length = 0;
                return 0;
           }
@@ -33,7 +33,7 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Variation* pVa
 
      if (depth == 0) {
           pVariation->length = 0;
-          return board.getTurn() * board.boardEvaluation();
+          return board.getTurn() * board.evaluate();
      }
 
      Variation variation;

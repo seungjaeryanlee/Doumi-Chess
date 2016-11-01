@@ -15,7 +15,6 @@ private:
      //std::array<int, 14> pieceCount;
 
 public:
-
      // Default Constructor
      Board() {}
 
@@ -73,16 +72,36 @@ public:
      }
 
      //  Mutators
-     void setBoard(const std::array<int, 120> b) { board = b; }
-     void setSquare(const int square, const int value) { board.at(square) = value; }
-     void setCastlingRights(const std::array<bool, 4> cc) { castlingRights = cc; }
-     void setCastlingRight(const int index, const bool value) { castlingRights.at(index) = value; }
-     void setTurn(const color t) { turn = t; }
-     void setEnpassantSquare(const int e) { enpassantSquare = e; }
-     void setHalfMoveClock(const int f) { halfMoveClock = f; }
-     void setMoveNumber(const int m) { moveNumber = m; }
-     void setEndgame(bool e) { isEndgame = e; }
+     inline void setBoard(const std::array<int, 120> b) { board = b; }
+     inline void setSquare(const int square, const int value) { board.at(square) = value; }
+     inline void setCastlingRights(const std::array<bool, 4> cc) { castlingRights = cc; }
+     inline void setCastlingRight(const int index, const bool value) { castlingRights.at(index) = value; }
+     inline void setTurn(const color t) { turn = t; }
+     inline void setEnpassantSquare(const int e) { enpassantSquare = e; }
+     inline void setHalfMoveClock(const int f) { halfMoveClock = f; }
+     inline void setMoveNumber(const int m) { moveNumber = m; }
+     inline void setEndgame(bool e) { isEndgame = e; }
      //void setPieceCount(const std::array<int, 14> pc) { pieceCount = pc; }
+
+     //  Accessors
+     inline const std::array<int, 120> getBoard() const { return board; }
+     inline const int getSquare(int square) const { return board.at(square); }
+     inline  std::array<bool, 4> getCastlingRights() const { return castlingRights; }
+     inline const bool getCastlingRight(int index) const { return castlingRights.at(index); }
+     inline const color getTurn() const { return turn; }
+     inline const int getEnpassantSquare() const { return enpassantSquare; }
+     inline const int getHalfMoveClock() const { return halfMoveClock; }
+     inline const int getMoveNumber() const { return moveNumber; }
+     inline const bool getEndgame() const { return isEndgame; }
+     //const std::array<int, 14> getPieceCount() const { return pieceCount; }
+
+     //  Other Functions
+     inline void changeTurn() { turn = (color)-turn; }
+     inline void incrementHalfMoveClock() { halfMoveClock++; }
+     inline void decrementHalfMoveClock() { halfMoveClock--; }
+     inline void incrementMoveNumber() { moveNumber++; }
+     inline void decrementMoveNumber() { moveNumber--; }
+
      void updateEndgame() {
           if (isEndgame) { return; }
           else {
@@ -110,26 +129,6 @@ public:
                else { isEndgame = false; }
           }
      }
-
-     //  Accessors
-     const std::array<int, 120> getBoard() const { return board; }
-     const int getSquare(int square) const { return board.at(square); }
-     const std::array<bool, 4> getCastlingRights() const { return castlingRights; }
-     const bool getCastlingRight(int index) const { return castlingRights.at(index); }
-     const color getTurn() const { return turn; }
-     const int getEnpassantSquare() const { return enpassantSquare; }
-     const int getHalfMoveClock() const { return halfMoveClock; }
-     const int getMoveNumber() const { return moveNumber; }
-     const bool getEndgame() const { return isEndgame; }
-     //const std::array<int, 14> getPieceCount() const { return pieceCount; }
-
-     //  Other Functions
-     void changeTurn() { turn = (color)-turn; }
-     void incrementHalfMoveClock() { halfMoveClock++; }
-     void decrementHalfMoveClock() { halfMoveClock--; }
-     void incrementMoveNumber() { moveNumber++; }
-     void decrementMoveNumber() { moveNumber--; }
-
      /*
      void updatePieceCount() {
           for (int i = 0; i < 14; i++) {
@@ -212,7 +211,7 @@ public:
      /// This function returns evaluation score of the board using piece values and PCSQ tables. Positive score signifies white's advantage.
      /// </summary>
      /// <returns>The score of the board</returns>
-     int boardEvaluation() {
+     int evaluate() {
           int score = 0;
 
           for (int i = 0; i < 8; i++) {
