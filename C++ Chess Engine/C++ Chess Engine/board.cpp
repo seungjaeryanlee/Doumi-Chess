@@ -3,6 +3,178 @@
 #include <iostream>
 #include <stdexcept>
 
+/******************************************************************************/
+/* BOARD CLASS                                                                */
+/******************************************************************************/
+// Default Constructor
+Board::Board() {}
+
+// Constructor adding all content at once
+Board::Board(std::array<int, 120> b, std::array<bool, 4> cc, color t, int e, int f, int m) {
+     board = b;
+     castlingRights = cc;
+     turn = t;
+     enpassantSquare = e;
+     halfMoveClock = f;
+     moveNumber = m;
+}
+
+//  Clone Method
+Board::Board(const Board& originalBoard) {
+     board = originalBoard.getBoard();
+     castlingRights = originalBoard.getCastlingRights();
+     turn = originalBoard.getTurn();
+     enpassantSquare = originalBoard.getEnpassantSquare();
+     halfMoveClock = originalBoard.getHalfMoveClock();
+     moveNumber = originalBoard.getMoveNumber();
+}
+
+//  equality for threefold repetition checking
+bool Board::isEqual_3F(const Board& thatBoard) {
+     if (this == &thatBoard) {
+          return true;
+     }
+     if (board == thatBoard.board &&
+          castlingRights == thatBoard.castlingRights &&
+          enpassantSquare == thatBoard.enpassantSquare) {
+          return true;
+     }
+     else {
+          return false;
+     }
+}
+
+void Board::updateEndgame() {
+     if (isEndgame) { return; }
+     else {
+          int queenCount = 0;
+          for (int i = 0; i < 120; i++) {
+               if (board[i] == WHITEQUEEN || board[i] == BLACKQUEEN) {
+                    queenCount++;
+               }
+          }
+          if (queenCount == 0) { isEndgame = true; }
+          else { isEndgame = false; }
+     }
+}
+void Board::updateEndgame(Move move) {
+     if (isEndgame) { return; }
+     if (move.getTerminal() != WHITEQUEEN && move.getTerminal() != BLACKQUEEN) { return; }
+     else {
+          int queenCount = 0;
+          for (int i = 0; i < 120; i++) {
+               if (board[i] == WHITEQUEEN || board[i] == BLACKQUEEN) {
+                    queenCount++;
+               }
+          }
+          if (queenCount == 0) { isEndgame = true; }
+          else { isEndgame = false; }
+     }
+}
+/*
+void updatePieceCount() {
+for (int i = 0; i < 14; i++) {
+pieceCount[i] = 0;
+}
+for (int i = 0; i < 8; i++) {
+for (int j = 0; j < 8; j++) {
+int position120 = ROW*(i + 2) + (j + 1);
+pieceCount[board[position120]]++;
+}
+}
+}
+void updatePieceCount(const Move& move, const int capturedPiece) {
+if (capturedPiece != EMPTYSQUARE) {
+pieceCount[capturedPiece]--;
+return;
+}
+else if (move.getType() == KNIGHT_PROMOTION) {
+if (move.getTerminal() == WHITEKNIGHT) {
+pieceCount[WHITEPAWN]--;
+pieceCount[WHITEKNIGHT]++;
+return;
+}
+else {
+pieceCount[BLACKPAWN]--;
+pieceCount[BLACKKNIGHT]++;
+return;
+}
+}
+else if (move.getType() == KNIGHT_PROMOTION) {
+if (move.getTerminal() == WHITEKNIGHT) {
+pieceCount[WHITEPAWN]--;
+pieceCount[WHITEKNIGHT]++;
+return;
+}
+else {
+pieceCount[BLACKPAWN]--;
+pieceCount[BLACKKNIGHT]++;
+return;
+}
+}
+else if (move.getType() == BISHOP_PROMOTION) {
+if (move.getTerminal() == WHITEBISHOP) {
+pieceCount[WHITEPAWN]--;
+pieceCount[WHITEBISHOP]++;
+return;
+}
+else {
+pieceCount[BLACKPAWN]--;
+pieceCount[BLACKBISHOP]++;
+return;
+}
+}
+else if (move.getType() == ROOK_PROMOTION) {
+if (move.getTerminal() == WHITEROOK) {
+pieceCount[WHITEPAWN]--;
+pieceCount[WHITEROOK]++;
+return;
+}
+else {
+pieceCount[BLACKPAWN]--;
+pieceCount[BLACKROOK]++;
+return;
+}
+}
+else if (move.getType() == QUEEN_PROMOTION) {
+if (move.getTerminal() == WHITEQUEEN) {
+pieceCount[WHITEPAWN]--;
+pieceCount[WHITEQUEEN]++;
+}
+else {
+pieceCount[BLACKPAWN]--;
+pieceCount[BLACKQUEEN]++;
+}
+}
+}
+*/
+
+/// <summary>
+/// This function returns evaluation score of the board using piece values and PCSQ tables. Positive score signifies white's advantage.
+/// </summary>
+/// <returns>The score of the board</returns>
+int Board::evaluate() {
+     int score = 0;
+
+     for (int i = 0; i < 8; i++) {
+          for (int j = 0; j < 8; j++) {
+               int position120 = ROW*(i + 2) + (j + 1);
+               if (!isEndgame) {
+                    score += PIECEVALUE[board[position120]] + PCSQVALUE[board[position120]][position120];
+               }
+               else {
+                    score += PIECEVALUE[board[position120]] + PCSQVALUE_ENDGAME[board[position120]][position120];
+               }
+          }
+     }
+     return score;
+}
+
+
+
+
+
+
 void board120Setup(Board& board) {
      board.setTurn(WHITE);
      board.setEnpassantSquare(0);

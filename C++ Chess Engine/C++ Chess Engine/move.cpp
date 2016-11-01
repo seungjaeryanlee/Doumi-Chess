@@ -2,6 +2,9 @@
 #include "move.h"
 #include <string>
 
+/******************************************************************************/
+/* MOVE CLASS                                                                 */
+/******************************************************************************/
 // Constructors
 Move::Move() {}
 Move::Move(int i, int t, int m) {
@@ -33,13 +36,13 @@ inline const int Move::getTerminal() const { return terminalSquare; }
 inline const int Move::getType() const { return moveType; }
 inline const int Move::getCapturedPiece() const { return capturedPiece; }
 
-std::string numberToFilerank(const int position) {
+inline std::string numberToFilerank(const int position) {
      return numberToFile(position) + std::to_string(numberToRank(position));
 }
-char numberToFile(const int position) {
+inline char numberToFile(const int position) {
      return ('a' + position % ROW - 1);
 }
-int numberToRank(const int position) {
+inline int numberToRank(const int position) {
      return (10 - position / ROW);
 }
 std::string printMove(const int moveNumber, const Move& move) {

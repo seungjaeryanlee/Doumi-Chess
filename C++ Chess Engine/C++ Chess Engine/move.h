@@ -34,7 +34,7 @@ private:
      std::array<Move, MAX_MOVEGEN_COUNT> movelist;
      int moveCounter;
 public:
-     // Construcctor
+     // Constructor
      MoveList() {
           moveCounter = 0;
      }
@@ -49,7 +49,6 @@ public:
           movelist[moveCounter] = move;
           moveCounter++;
      }
-     void setCounterToZero() { moveCounter = 0; }
 };
 
 /// <summary>
