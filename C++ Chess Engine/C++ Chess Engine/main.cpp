@@ -248,7 +248,7 @@ void main() {
                     // Check Threefold repetition
                     int repetitionCount = 0;
                     for (int i = 0; i < saveIndex; i++) {
-                         if (currentBoard.isAlmostEqual(savedBoard[i])) {
+                         if (currentBoard.isEqual_3F(savedBoard[i])) {
                               repetitionCount++;
                          }
                          if (repetitionCount >= 3) { break; }
@@ -404,7 +404,7 @@ void main() {
                // Check Threefold repetition
                int repetitionCount = 0;
                for (int i = 0; i < saveIndex; i++) {
-                    if (currentBoard.isAlmostEqual(savedBoard[i])) {
+                    if (currentBoard.isEqual_3F(savedBoard[i])) {
                          repetitionCount++;
                     }
                     if (repetitionCount >= 3) { break; }

@@ -875,8 +875,7 @@ int makeMove(Board &board, const Move& move) {
           }
      }
      else {
-          printf("Invalid moveType\n");
-          return 0;
+          std::invalid_argument("makeMove() called with invalid moveType.");
      }
 
      updateBoard(board, move, capturedPiece);
@@ -999,5 +998,3 @@ void updateBoard(Board& board, const Move& move, const int capturedPiece) {
 bool fiftyMoveCheck(const Board& board) {
      return (board.getHalfMoveClock() >= 100);
 }
-
-

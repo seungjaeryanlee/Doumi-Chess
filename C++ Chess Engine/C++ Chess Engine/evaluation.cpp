@@ -126,7 +126,7 @@ gameState checkGameState(Board& board, const Board savedBoard[MAX_MOVENUMBER], i
      // Stalemate: Threefold Repetition
      int repetitionCount = 0;
      for (int i = 0; i < saveIndex; i++) {
-          if (board.isAlmostEqual(savedBoard[i])) {
+          if (board.isEqual_3F(savedBoard[i])) {
                repetitionCount++;
           }
           if (repetitionCount >= 3) {

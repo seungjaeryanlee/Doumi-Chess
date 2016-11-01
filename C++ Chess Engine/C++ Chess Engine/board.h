@@ -37,27 +37,9 @@ public:
           halfMoveClock = originalBoard.getHalfMoveClock();
           moveNumber = originalBoard.getMoveNumber();
      }
-
-     //  isEqual Method
-     bool isEqual(const Board& thatBoard) {
-          if (this == &thatBoard) {
-               return true;
-          }
-          if (board == thatBoard.board &&
-               castlingRights == thatBoard.castlingRights &&
-               turn == thatBoard.turn &&
-               enpassantSquare == thatBoard.enpassantSquare &&
-               halfMoveClock == thatBoard.halfMoveClock &&
-               moveNumber && thatBoard.moveNumber) {
-               return true;
-          }
-          else {
-               return false;
-          }
-     }
-
-     //  isAlmostEqual Method (for threefold repetition checking)
-     bool isAlmostEqual(const Board& thatBoard) {
+     
+     //  equality for threefold repetition checking
+     bool isEqual_3F(const Board& thatBoard) {
           if (this == &thatBoard) {
                return true;
           }
@@ -86,7 +68,7 @@ public:
      //  Accessors
      inline const std::array<int, 120> getBoard() const { return board; }
      inline const int getSquare(int square) const { return board.at(square); }
-     inline  std::array<bool, 4> getCastlingRights() const { return castlingRights; }
+     inline const std::array<bool, 4> getCastlingRights() const { return castlingRights; }
      inline const bool getCastlingRight(int index) const { return castlingRights.at(index); }
      inline const color getTurn() const { return turn; }
      inline const int getEnpassantSquare() const { return enpassantSquare; }
@@ -301,7 +283,7 @@ int makeMove(Board &board, const Move& move);
 /// <param name="capturedPiece">The piece that was captured by the move</param>
 void undoMove(Board &board, const Move& move, const int capturedPiece);
 
-// TODO: Check if this can be integrated inside makeMove
+
 /// <summary>
 /// This function updates the castling rights of the given board if the given move changed it. This is called after the move was applied to the board.
 /// </summary>

@@ -2,6 +2,36 @@
 #include "move.h"
 #include <string>
 
+// Constructors
+Move::Move() {}
+Move::Move(int i, int t, int m) {
+     initialSquare = i;
+     terminalSquare = t;
+     moveType = m;
+}
+
+// Clone Methods
+Move::Move(const Move& originalMove) {
+     initialSquare = originalMove.getInitial();
+     terminalSquare = originalMove.getTerminal();
+     moveType = originalMove.getType();
+}
+Move::Move(int originalMove[3]) {
+     initialSquare = originalMove[0];
+     terminalSquare = originalMove[1];
+     moveType = originalMove[2];
+}
+
+// Mutators
+inline void Move::setInitial(const int i) { initialSquare = i; }
+inline void Move::setTerminal(const int t) { terminalSquare = t; }
+inline void Move::setType(const int t) { moveType = t; }
+inline void Move::setCapturedPiece(const int c) { capturedPiece = c; }
+// Accessors
+inline const int Move::getInitial() const { return initialSquare; }
+inline const int Move::getTerminal() const { return terminalSquare; }
+inline const int Move::getType() const { return moveType; }
+inline const int Move::getCapturedPiece() const { return capturedPiece; }
 
 std::string numberToFilerank(const int position) {
      return numberToFile(position) + std::to_string(numberToRank(position));

@@ -10,36 +10,24 @@ private:
      int capturedPiece;
 public:
      // Constructors
-     Move() {}
-     Move(int i, int t, int m) {
-          initialSquare = i;
-          terminalSquare = t;
-          moveType = m;
-     }
+     Move();
+     Move(int i, int t, int m);
 
      // Clone Methods
-     Move(const Move& originalMove) {
-          initialSquare = originalMove.getInitial();
-          terminalSquare = originalMove.getTerminal();
-          moveType = originalMove.getType();
-     }
-     Move(int originalMove[3]) {
-          initialSquare = originalMove[0];
-          terminalSquare = originalMove[1];
-          moveType = originalMove[2];
-     }
+     Move(const Move& originalMove);
+     Move(int originalMove[3]);
 
      // Mutators
-     inline void setInitial(const int i) { initialSquare = i; }
-     inline void setTerminal(const int t) { terminalSquare = t; }
-     inline void setType(const int t) { moveType = t; }
-     inline void setCapturedPiece(const int c) { capturedPiece = c; }
-     // Accessors
-     inline const int getInitial() const { return initialSquare; }
-     inline const int getTerminal() const { return terminalSquare; }
-     inline const int getType() const { return moveType; }
-     inline const int getCapturedPiece() const { return capturedPiece; }
+     inline void setInitial(const int i);
+     inline void setTerminal(const int t);
+     inline void setType(const int t);
+     inline void setCapturedPiece(const int c);
 
+     // Accessors
+     inline const int getInitial() const;
+     inline const int getTerminal() const;
+     inline const int getType() const;
+     inline const int getCapturedPiece() const;
 };
 class MoveList {
 private:
