@@ -25,16 +25,24 @@ Move::Move(int originalMove[3]) {
      moveType = originalMove[2];
 }
 
-// Mutators
-inline void Move::setInitial(const int i) { initialSquare = i; }
-inline void Move::setTerminal(const int t) { terminalSquare = t; }
-inline void Move::setType(const int t) { moveType = t; }
-inline void Move::setCapturedPiece(const int c) { capturedPiece = c; }
-// Accessors
-inline const int Move::getInitial() const { return initialSquare; }
-inline const int Move::getTerminal() const { return terminalSquare; }
-inline const int Move::getType() const { return moveType; }
-inline const int Move::getCapturedPiece() const { return capturedPiece; }
+/******************************************************************************/
+/* MOVELIST CLASS                                                             */
+/******************************************************************************/
+
+// Constructor
+MoveList::MoveList() {
+     moveCounter = 0;
+}
+
+// Mutator
+void MoveList::addMove(Move& move) {
+     movelist[moveCounter] = move;
+     moveCounter++;
+}
+
+
+
+
 
 inline std::string numberToFilerank(const int position) {
      return numberToFile(position) + std::to_string(numberToRank(position));

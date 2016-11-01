@@ -18,16 +18,15 @@ public:
      Move(int originalMove[3]);
 
      // Mutators
-     inline void setInitial(const int i);
-     inline void setTerminal(const int t);
-     inline void setType(const int t);
-     inline void setCapturedPiece(const int c);
-
+     inline void Move::setInitial(const int i) { initialSquare = i; }
+     inline void Move::setTerminal(const int t) { terminalSquare = t; }
+     inline void Move::setType(const int t) { moveType = t; }
+     inline void Move::setCapturedPiece(const int c) { capturedPiece = c; }
      // Accessors
-     inline const int getInitial() const;
-     inline const int getTerminal() const;
-     inline const int getType() const;
-     inline const int getCapturedPiece() const;
+     inline const int Move::getInitial() const { return initialSquare; }
+     inline const int Move::getTerminal() const { return terminalSquare; }
+     inline const int Move::getType() const { return moveType; }
+     inline const int Move::getCapturedPiece() const { return capturedPiece; }
 };
 class MoveList {
 private:
@@ -35,9 +34,7 @@ private:
      int moveCounter;
 public:
      // Constructor
-     MoveList() {
-          moveCounter = 0;
-     }
+     MoveList();
 
      // Accessor
      inline std::array<Move, MAX_MOVEGEN_COUNT> getList() { return movelist; }
@@ -45,10 +42,7 @@ public:
      inline int getCounter() { return moveCounter; }
 
      // Mutator
-     void addMove(Move& move) {
-          movelist[moveCounter] = move;
-          moveCounter++;
-     }
+     void addMove(Move& move);
 };
 
 /// <summary>
