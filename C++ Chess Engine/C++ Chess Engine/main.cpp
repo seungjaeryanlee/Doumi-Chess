@@ -25,7 +25,6 @@ void main() {
      int savedCapturedPiece[MAX_MOVENUMBER];  //  Saved values for UNDO_MOVE command
      Move savedMove[MAX_MOVENUMBER];
      int saveIndex = 0;
-     bool gamePlaying = true;
      result gameResult = NOT_FINISHED;            // Records the result of the game
      int userColor = UNDECIDED;                   // Which color user plays
      bool spectate = false;                       // if true, the game is between two computers
@@ -35,7 +34,11 @@ void main() {
      board120Setup(currentBoard);
      log.open("log.txt");
      log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
-
+     
+     printf("===========================================================================\n");
+     printf("                        NAGUENE CHESS (Pre-release)                        \n");
+     printf("                            Seungjae (Ryan) Lee                            \n");
+     printf("===========================================================================\n");
      printSimpleBoard(currentBoard);
      printf("--------------------------------------------------\n");
      printf("Engine Search Depth: %d\n", EVAL_DEPTH);
@@ -62,7 +65,9 @@ void main() {
      std::string userCommand;
 
      currentBoard.updateEndgame();
-     currentBoard.updatePieceCount();
+     //currentBoard.updatePieceCount();
+
+     bool gamePlaying = true;
      while (gamePlaying) {
 
           //  Detect Checkmate/Stalemate
@@ -327,11 +332,6 @@ void main() {
                     printSimpleBoard(currentBoard);
                     continue;
                }
-               else if (commandType == QUIT) {
-                    gamePlaying = false;
-                    gameResult = NOT_FINISHED;
-                    break;
-               }
                else if (commandType == UNDO_MOVE) {
                     if (saveIndex == 0) {
                          printf("No move can be undone!\n");
@@ -357,8 +357,13 @@ void main() {
                     continue;
                }
                else if (commandType == EVALUATE_BOARD) {
-                    printf("Current Board Evaluation: %d\n", currentBoard.boardEvaluation());
+                    printf("Naguene's Board Evaluation: %d\n", currentBoard.boardEvaluation());
                     continue;
+               }
+               else if (commandType == QUIT) {
+                    gamePlaying = false;
+                    gameResult = NOT_FINISHED;
+                    break;
                }
           }
           
@@ -417,8 +422,6 @@ void main() {
                stopTimer(&endTime, 2);
                std::cout << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
                log << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
-
-
           }
      }
      savePGN(gameResult, savedMove, saveIndex, spectate, userColor);

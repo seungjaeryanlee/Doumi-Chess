@@ -12,7 +12,7 @@ private:
      int moveNumber;
 
      bool isEndgame = false;
-     std::array<int, 14> pieceCount;
+     //std::array<int, 14> pieceCount;
 
 public:
 
@@ -82,7 +82,7 @@ public:
      void setHalfMoveClock(const int f) { halfMoveClock = f; }
      void setMoveNumber(const int m) { moveNumber = m; }
      void setEndgame(bool e) { isEndgame = e; }
-     void setPieceCount(const std::array<int, 14> pc) { pieceCount = pc; }
+     //void setPieceCount(const std::array<int, 14> pc) { pieceCount = pc; }
      void updateEndgame() {
           if (isEndgame) { return; }
           else {
@@ -121,7 +121,7 @@ public:
      const int getHalfMoveClock() const { return halfMoveClock; }
      const int getMoveNumber() const { return moveNumber; }
      const bool getEndgame() const { return isEndgame; }
-     const std::array<int, 14> getPieceCount() const { return pieceCount; }
+     //const std::array<int, 14> getPieceCount() const { return pieceCount; }
 
      //  Other Functions
      void changeTurn() { turn = (color)-turn; }
@@ -130,6 +130,7 @@ public:
      void incrementMoveNumber() { moveNumber++; }
      void decrementMoveNumber() { moveNumber--; }
 
+     /*
      void updatePieceCount() {
           for (int i = 0; i < 14; i++) {
                pieceCount[i] = 0;
@@ -205,6 +206,7 @@ public:
                }
           }
      }
+     */
 
      /// <summary>
      /// This function returns evaluation score of the board using piece values and PCSQ tables. Positive score signifies white's advantage.
@@ -212,21 +214,15 @@ public:
      /// <returns>The score of the board</returns>
      int boardEvaluation() {
           int score = 0;
-          score += (pieceCount[WHITEPAWN] - pieceCount[BLACKPAWN])*PAWNVALUE
-               + (pieceCount[WHITEKNIGHT] - pieceCount[BLACKKNIGHT])*KNIGHTVALUE
-               + (pieceCount[WHITEBISHOP] - pieceCount[BLACKBISHOP])*BISHOPVALUE
-               + (pieceCount[WHITEROOK] - pieceCount[BLACKROOK])*ROOKVALUE
-               + (pieceCount[WHITEQUEEN] - pieceCount[BLACKQUEEN])*QUEENVALUE
-               + (pieceCount[WHITEKING] - pieceCount[BLACKKING])*KINGVALUE;
 
           for (int i = 0; i < 8; i++) {
                for (int j = 0; j < 8; j++) {
                     int position120 = ROW*(i + 2) + (j + 1);
                     if (!isEndgame) {
-                         score += PCSQVALUE[board[position120]][position120];
+                         score += PIECEVALUE[board[position120]] + PCSQVALUE[board[position120]][position120];
                     }
                     else {
-                         score += PCSQVALUE_ENDGAME[board[position120]][position120];
+                         score += PIECEVALUE[board[position120]] + PCSQVALUE_ENDGAME[board[position120]][position120];
                     }
                }
           }

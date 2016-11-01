@@ -992,7 +992,7 @@ void updateBoard(Board& board, const Move& move, const int capturedPiece) {
      updateEnPassant(board, move);
      updateHalfMoveClock(board, move);
      board.updateEndgame(move);
-     board.updatePieceCount(move, capturedPiece);
+     //board.updatePieceCount(move, capturedPiece);
      updateMoveNumber(board);
 }
 
