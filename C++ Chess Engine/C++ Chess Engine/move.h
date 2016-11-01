@@ -30,15 +30,15 @@ public:
      }
 
      // Mutators
-     void setInitial(const int i) { initialSquare = i; }
-     void setTerminal(const int t) { terminalSquare = t; }
-     void setType(const int t) { moveType = t; }
-     void setCapturedPiece(const int c) { capturedPiece = c; }
+     inline void setInitial(const int i) { initialSquare = i; }
+     inline void setTerminal(const int t) { terminalSquare = t; }
+     inline void setType(const int t) { moveType = t; }
+     inline void setCapturedPiece(const int c) { capturedPiece = c; }
      // Accessors
-     const int getInitial() const { return initialSquare; }
-     const int getTerminal() const { return terminalSquare; }
-     const int getType() const { return moveType; }
-     const int getCapturedPiece() const { return capturedPiece; }
+     inline const int getInitial() const { return initialSquare; }
+     inline const int getTerminal() const { return terminalSquare; }
+     inline const int getType() const { return moveType; }
+     inline const int getCapturedPiece() const { return capturedPiece; }
 
 };
 class MoveList {
