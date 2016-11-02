@@ -38,7 +38,7 @@ void main() {
      board120Setup(currentBoard);
      log.open("log.txt");
      log << "===========================================================================\n";
-     log << "                        NAGUENE CHESS (Pre-release)                        \n";
+     log << "                           NAGUENE CHESS  v1.0.0                           \n";
      log << "                            Seungjae (Ryan) Lee                            \n";
      log << "                                    LOG                                    \n";
      log << "===========================================================================\n";
@@ -46,7 +46,7 @@ void main() {
      
      
      printf("===========================================================================\n");
-     printf("                        NAGUENE CHESS (Pre-release)                        \n");
+     printf("                           NAGUENE CHESS  v1.0.0                           \n");
      printf("                            Seungjae (Ryan) Lee                            \n");
      printf("===========================================================================\n");
      printSimpleBoard(currentBoard);
