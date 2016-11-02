@@ -33,7 +33,13 @@ void main() {
 
      board120Setup(currentBoard);
      log.open("log.txt");
+     log << "===========================================================================\n";
+     log << "                        NAGUENE CHESS (Pre-release)                        \n";
+     log << "                            Seungjae (Ryan) Lee                            \n";
+     log << "                                    LOG                                    \n";
+     log << "===========================================================================\n";
      log << "COM Search Depth: " << EVAL_DEPTH << std::endl;
+     
      
      printf("===========================================================================\n");
      printf("                        NAGUENE CHESS (Pre-release)                        \n");
@@ -125,6 +131,7 @@ void main() {
                     continue;
                }
           }
+          log << "---------------------------------------------------------------------------\n";
 
 /******************************************************************************/
 /*                                 GAME LOOP                                  */
@@ -380,6 +387,8 @@ void main() {
                printf("Alphabeta Value: %d\n", abValue);
                printf("Alphabeta PV: ");
                printVariation(std::cout, PV);
+               log << "Alphabeta PV: ";
+               printVariation(log, PV);
                std::cout << printMove(currentBoard.getMoveNumber(), PV.moves[0]);
                log << printMove(currentBoard.getMoveNumber(), PV.moves[0]);
 
