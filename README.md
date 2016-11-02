@@ -7,7 +7,7 @@ I use size 120 array to represent a board. The 12x10 array uses the middle 8x8 a
 2. Board Evaluation  
 3. Move Generation  
 4. Recursion  
-I am using Negamax algorithm for this engine.
+I am using Negamax algorithm with Alphabeta pruning for this engine.
 
 ## Current Progress
 1. Board Representation - **Complete**  
@@ -21,12 +21,12 @@ I am using Negamax algorithm for this engine.
 4. Recursion - *In progress*  
   - Implement Negamax - **Complete**  
   - Implement Alphabeta Pruning - **Complete**  
-  - Test Recursion - *In progress*  
-  - Consider Edge Cases (Checkmate, Stalemate) - *In progress*
+  - Test Recursion - **Complete**  
+  - Consider Edge Cases (Checkmate, Stalemate) - **Complete**
 5. Other Minor Details  
-  - Stalemate rules - *In progress*  
-    - Threefold Repetition (FIDE 9.2)
-    - Fifty Move Rule (FIDE 9.3) - *In progress*  
+  - Stalemate rules - **Complete** 
+    - Threefold Repetition (FIDE 9.2) - **Complete**
+    - Fifty Move Rule (FIDE 9.3) - **Complete**
     - 75 Move Rule (FIDE 9.6) - **Complete**  
   - Resignation  
 6. Qt Widget
@@ -35,9 +35,6 @@ I am using Negamax algorithm for this engine.
   - Test Widget
 
 ## TODOs  
-1. Add Undo Move command Player vs. COM
-2. Add 50 Move Rule option in moveGen
-3. Check Threefold Repetition
 
 ## Non-necessary Addition to Chess Engine
 1. Opening Book  
