@@ -64,7 +64,6 @@ void main() {
      printf("\n");
 
      // TODO: Include this to FENboardsetup / Board120Setup
-     initialBoard.updatePieceCount();
      printf("Initial Board Evaluation: %d\n", initialBoard.evaluate());
 
      printf("\n");
@@ -339,7 +338,6 @@ void main() {
      Board forcedStalemateBoard;
      FENboardSetup(forcedStalemateBoard, "5k2/r7/4PKP1/4PPP1/8/8/8/N3NN2 b - - 0 1");
      //FENboardSetup(forcedStalemateBoard, "5k2/r7/4PKP1/4PPP1/8/8/8/4QQQ1 b - - 0 1");
-     forcedStalemateBoard.updatePieceCount();
      printf("Board Evaluation: %d\n", forcedStalemateBoard.evaluate());
 
      printSimpleBoard(forcedStalemateBoard);

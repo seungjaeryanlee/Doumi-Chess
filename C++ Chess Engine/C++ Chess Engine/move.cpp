@@ -54,7 +54,7 @@ inline int numberToRank(const int position) {
      return (10 - position / ROW);
 }
 std::string printMove(const int moveNumber, const Move& move) {
-     std::string output = std::to_string(moveNumber) + ": " + numberToFilerank(move.getInitial()) + " "
+     std::string output = std::to_string(moveNumber) + ": " + numberToFilerank(move.getInitial())
           + numberToFilerank(move.getTerminal()) + " ";
 
      switch (move.getType()) {

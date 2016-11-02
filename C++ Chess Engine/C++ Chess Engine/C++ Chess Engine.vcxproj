@@ -154,7 +154,7 @@
     </ClCompile>
     <ClCompile Include="evaluation.cpp" />
     <ClCompile Include="main.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">n</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="move.cpp" />
     <ClCompile Include="movegen.cpp" />

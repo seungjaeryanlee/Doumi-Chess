@@ -948,9 +948,6 @@ int makeMove(Board &board, const Move& move) {
      int capturedPiece = EMPTYSQUARE;
      int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
-     board.setEnpassantSquare(0);
-     board.changeTurn();
-
      if (moveType == NORMAL) {
           capturedPiece = board.getSquare(terminal);
           board.setSquare(terminal, board.getSquare(initial));
@@ -1156,7 +1153,7 @@ void updateHalfMoveClock(Board& board, const Move& move) {
      else { board.setHalfMoveClock(0); }
 }
 void updateMoveNumber(Board& board) {
-     if (board.getTurn() == WHITE) { board.incrementMoveNumber(); }
+     if (board.getTurn() == BLACK) { board.incrementMoveNumber(); }
 }
 
 void updateBoard(Board& board, const Move& move, const int capturedPiece) {
@@ -1166,6 +1163,7 @@ void updateBoard(Board& board, const Move& move, const int capturedPiece) {
      board.updateEndgame(move);
      //board.updatePieceCount(move, capturedPiece);
      updateMoveNumber(board);
+     board.changeTurn();
 }
 
 bool fiftyMoveCheck(const Board& board) {

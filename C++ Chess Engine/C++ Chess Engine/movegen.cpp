@@ -58,7 +58,7 @@ MoveList moveGeneration(const Board& board) {
 
      // STEP 2: CHECK LEGALITY
      MoveList moveList;
-     Board copiedBoard = board; // QUESTION: Make argument not-const and skip this?
+     Board copiedBoard = board;
 
      //  find king position
      int kingPosition = 0, changedKingPosition = 0;
@@ -391,7 +391,6 @@ MoveList moveGeneration(const Board& board) {
           }
           else { changedKingPosition = kingPosition; }
 
-          //  make move
           capturedPiece = makeMove(copiedBoard, pseudolegalMoveList.getMove(i));
           //  In this case, we don't want makeMove to change turn, so let's change it again
           copiedBoard.changeTurn();
@@ -401,10 +400,7 @@ MoveList moveGeneration(const Board& board) {
                moveList.addMove(pseudolegalMoveList.getMove(i));
           }
 
-          //  undo move
-          undoMove(copiedBoard, pseudolegalMoveList.getMove(i), capturedPiece);
-          //  Same reason as above
-          copiedBoard.changeTurn();
+          copiedBoard = board;
      }
      
      return moveList;

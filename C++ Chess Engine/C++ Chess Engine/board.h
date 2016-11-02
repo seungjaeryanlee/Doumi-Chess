@@ -140,6 +140,7 @@ int makeMove(Board &board, const Move& move);
 /// <param name="board">The board that the move will be reverted in</param>
 /// <param name="move">The move that will be reverted</param>
 /// <param name="capturedPiece">The piece that was captured by the move</param>
+//TODO: Re-implement and use
 void undoMove(Board &board, const Move& move, const int capturedPiece);
 
 

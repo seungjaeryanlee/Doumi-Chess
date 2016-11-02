@@ -40,7 +40,7 @@ void main() {
      printf("                            Seungjae (Ryan) Lee                            \n");
      printf("===========================================================================\n");
      printSimpleBoard(currentBoard);
-     printf("--------------------------------------------------\n");
+     printf("---------------------------------------------------------------------------\n");
      printf("Engine Search Depth: %d\n", EVAL_DEPTH);
      printf("Castling - WK:%d WQ:%d BK:%d BQ:%d\n", 
           currentBoard.getCastlingRight(WKCASTLING), 
@@ -52,7 +52,7 @@ void main() {
      if (currentBoard.getTurn() == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
      boardToFEN(currentBoard);
-     printf("--------------------------------------------------\n");
+     printf("---------------------------------------------------------------------------\n");
 
      // Begin timer
      frequency = startTimer(&beginTime, 1);
@@ -66,7 +66,7 @@ void main() {
 
      currentBoard.updateEndgame();
      //currentBoard.updatePieceCount();
-
+     
      bool gamePlaying = true;
      while (gamePlaying) {
 
@@ -313,9 +313,11 @@ void main() {
                     // add to log file
                     log << printMove(currentBoard.getMoveNumber(), userMove);
 
+                    printSimpleBoard(currentBoard);
                     stopTimer(&endTime2, 2);
                     std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for this move.\n";
                     log << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for this move.\n";
+                    printf("---------------------------------------------------------------------------\n");
 
                     continue;
                }
@@ -378,6 +380,8 @@ void main() {
                printf("Alphabeta Value: %d\n", abValue);
                printf("Alphabeta PV: ");
                printVariation(std::cout, PV);
+               std::cout << printMove(currentBoard.getMoveNumber(), PV.moves[0]);
+               log << printMove(currentBoard.getMoveNumber(), PV.moves[0]);
 
                // Make Move, Save and Print
                savedBoard[saveIndex] = currentBoard;
@@ -386,8 +390,6 @@ void main() {
                saveIndex++;
 
                printSimpleBoard(currentBoard);
-               std::cout << printMove(currentBoard.getMoveNumber(), PV.moves[0]);
-               log << printMove(currentBoard.getMoveNumber(), PV.moves[0]);
 
                // Check Fifty move rule
                if (fiftyMoveCheck(currentBoard)) {
@@ -422,6 +424,7 @@ void main() {
                stopTimer(&endTime, 2);
                std::cout << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
                log << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
+               printf("---------------------------------------------------------------------------\n");
           }
      }
      savePGN(gameResult, savedMove, saveIndex, spectate, userColor);
