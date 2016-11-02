@@ -1,3 +1,8 @@
+/******************************************************************************/
+/* main.cpp                                                                   */
+/* Seung Jae (Ryan) Lee                                                       */
+/******************************************************************************/
+
 #include <stdio.h>
 #include <iostream>
 #include <string>
@@ -9,7 +14,6 @@
 #include "timer.h"
 #include "evaluation.h"
 #include "pgn.h"
-
 #include "debug.h"
 #include "command.h"
 
