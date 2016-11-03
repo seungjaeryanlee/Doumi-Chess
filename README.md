@@ -45,6 +45,10 @@ I am using Negamax algorithm with Alphabeta pruning for this engine.
 6. Complex heuristic for Board Evaluation  
 *These will be worked on after the basic chess engine is completed. (Not in order)*  
 
+## Dependency Diagram
+![Dependency](/../master/diagram.png?raw=true)
+
+
 ## References  
 The Piece Square Tables of this version is from the following link:   https://chessprogramming.wikispaces.com/Simplified+evaluation+function  
 
