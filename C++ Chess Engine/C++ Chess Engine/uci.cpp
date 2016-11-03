@@ -20,8 +20,14 @@ void main() {
           std::istringstream is(command);
           is >> std::skipws >> token;
 
+          // 2. ACT BASED ON INPUT
           if (token == "quit") {
                break;
+          }
+          else if (token == "uci") {
+               std::cout << "id name Nageune\n";
+               std::cout << "id author Seung Jae (Ryan) Lee\n";
+               std::cout << "uciok\n";
           }
      }
 }
