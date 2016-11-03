@@ -14,6 +14,7 @@ void tellUCI(std::string output) {
      std::cout << output;
 }
 
+
 void main() {
      // The line of command read
      std::string command;
@@ -49,16 +50,19 @@ void main() {
           else if (token == "go") {
                Variation PV;
                rootAlphabeta(4, board, &PV, savedBoard, saveIndex);
-               // TODO: Output Best Move
+               tellUCI("bestmove " + moveToString(PV.moves[0]) + "\n");
                // TODO: Check all options
           }
-          
+          else if (token == "ucinewgame") {
+               board120Setup(board);
+          }
+
+
           // 3. UNIMPLEMENTED TOKENS
           else if (token == "debug") {}
-          else if (token == "isready") {}
           else if (token == "setoption") {}
           else if (token == "register") {}
-          else if (token == "ucinewgame") {}
+          
           else if (token == "position") {}
           else if (token == "stop") {}
           else if (token == "ponderhit") {}
