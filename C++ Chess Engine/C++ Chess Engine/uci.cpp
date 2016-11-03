@@ -7,10 +7,19 @@
 #include <sstream>
 #include <string>
 
+#include "evaluation.h"
+#include "board.h"
+
 void main() {
-     std::string token;
+     // The line of command read
      std::string command;
+     // A word from command
+     std::string token;
      
+     Board board;
+     Board savedBoard[MAX_MOVENUMBER];
+     int saveIndex = 0;
+
      while (1) {
           // 0. INITIALIZE
           token.clear();
@@ -29,5 +38,25 @@ void main() {
                std::cout << "id author Seung Jae (Ryan) Lee\n";
                std::cout << "uciok\n";
           }
+          else if (token == "isready") {
+               std::cout << "readyok\n";
+          }
+          else if (token == "go") {
+               Variation PV;
+               rootAlphabeta(4, board, &PV, savedBoard, saveIndex);
+               // TODO: Output Best Move
+               // TODO: Check all options
+          }
+          
+          // 3. UNIMPLEMENTED TOKENS
+          else if (token == "debug") {}
+          else if (token == "isready") {}
+          else if (token == "setoption") {}
+          else if (token == "register") {}
+          else if (token == "ucinewgame") {}
+          else if (token == "position") {}
+          else if (token == "stop") {}
+          else if (token == "ponderhit") {}
+
      }
 }
