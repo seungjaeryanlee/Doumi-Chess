@@ -10,6 +10,10 @@
 #include "evaluation.h"
 #include "board.h"
 
+void tellUCI(std::string output) {
+     std::cout << output;
+}
+
 void main() {
      // The line of command read
      std::string command;
@@ -34,12 +38,13 @@ void main() {
                break;
           }
           else if (token == "uci") {
-               std::cout << "id name Nageune\n";
-               std::cout << "id author Seung Jae (Ryan) Lee\n";
-               std::cout << "uciok\n";
+               tellUCI("id name Nageune\n");
+               tellUCI("id author Seung Jae (Ryan) Lee\n");
+               tellUCI("uciok\n");
+               // tellUCI("copyprotection ok\n");
           }
           else if (token == "isready") {
-               std::cout << "readyok\n";
+               tellUCI("readyok\n");
           }
           else if (token == "go") {
                Variation PV;
