@@ -154,12 +154,13 @@
     </ClCompile>
     <ClCompile Include="evaluation.cpp" />
     <ClCompile Include="main.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="move.cpp" />
     <ClCompile Include="movegen.cpp" />
     <ClCompile Include="pgn.cpp" />
     <ClCompile Include="timer.cpp" />
+    <ClCompile Include="uci.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h" />
