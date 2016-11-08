@@ -14,6 +14,7 @@
 #include "timer.h"
 #include "evaluation.h"
 #include "pgn.h"
+#include "opening.h"
 
 #include "debug.h"
 #include "command.h"
@@ -347,9 +348,21 @@ void main() {
 
      printSimpleBoard(forcedStalemateBoard);
 
-     Variation forcedStalemateMoves;
-     int forcedStalemateScore = rootAlphabeta(4, forcedStalemateBoard, &forcedStalemateMoves, savedBoard5, saveIndex5);
-     printf("Best Move Score: %3d\n", forcedStalemateScore);
-     std::cout << "Best Moves: ";
-     printVariation(std::cout, forcedStalemateMoves);
+
+     printf("\n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf(" Opening Book Test                                                              \n");
+     printf("--------------------------------------------------------------------------------\n");
+     printf("\n");
+
+     Board board2;
+     board120Setup(board2);
+     Move move = checkOpeningBook(board2);
+     if (move.getInitial() == -1) {
+          std::cout << "No opening move found.\n";
+     }
+     else {
+          std::cout << moveToString(move) << std::endl;
+     }
+     
 }
