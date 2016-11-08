@@ -359,10 +359,19 @@ void main() {
      board120Setup(board2);
      Move move = checkOpeningBook(board2);
      if (move.getInitial() == -1) {
-          std::cout << "No opening move found.\n";
+          std::cout << "Error 1: No opening move found.\n";
      }
      else {
           std::cout << moveToString(move) << std::endl;
+     }
+
+     makeMove(board2, Move(E2, E4, DOUBLEMOVE));
+     Move move2 = checkOpeningBook(board2);
+     if (move2.getInitial() == -1) {
+          std::cout << "Error 2: No opening move found.\n";
+     }
+     else {
+          std::cout << moveToString(move2) << std::endl;
      }
      
 }

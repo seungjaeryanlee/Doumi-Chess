@@ -4,20 +4,16 @@
 #include <sstream>
 #include <string>
 #include <random>
-#include <algorithm>
 
 Move checkOpeningBook(const Board& board) {
      std::ifstream book("opening.book");
-     std::string line;
-     while (std::getline(book, line)) {
-          std::istringstream is(line);
-          std::string bookboard;
-          is >> std::skipws >> bookboard;
-          // Change bookboard to correct FEN string
-          std::replace(bookboard.begin(), bookboard.end(), '_', ' ');
-
+     std::string fen;
+     std::string moves;
+     while (std::getline(book, fen) && std::getline(book, moves)) {
+          std::istringstream is(moves);
+          
           // TODO: Disable output on boardToFEN
-          if (bookboard == boardToFEN(board)) {
+          if (fen == boardToFEN(board)) {
                int variationCount;
                is >> variationCount;
 
