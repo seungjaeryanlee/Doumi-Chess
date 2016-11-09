@@ -4,18 +4,30 @@
 /******************************************************************************/
 
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <string>
 
 #include "evaluation.h"
 #include "board.h"
 
-void tellUCI(std::string output) {
+void logInput(std::ostream& ucilog, std::string input) {
+     ucilog << "I " << input << std::endl;
+     ucilog.flush();
+}
+
+void tellUCI(std::ostream& ucilog, std::string output) {
      std::cout << output;
+     ucilog << "O " << output;
+     ucilog.flush();
 }
 
 
+
 void main() {
+     std::ofstream ucilog;
+     ucilog.open("uci.log");
+
      // The line of command read
      std::string command;
      // A word from command
@@ -31,6 +43,7 @@ void main() {
 
           // 1. GET INPUT FROM UCI
           std::getline(std::cin, command);
+          logInput(ucilog, command);
           std::istringstream is(command);
           is >> std::skipws >> token;
 
@@ -39,18 +52,23 @@ void main() {
                break;
           }
           else if (token == "uci") {
-               tellUCI("id name Nageune\n");
-               tellUCI("id author Seung Jae (Ryan) Lee\n");
-               tellUCI("uciok\n");
+               tellUCI(ucilog, "id name Nageune\n");
+               tellUCI(ucilog, "id author Seung Jae (Ryan) Lee\n");
+               tellUCI(ucilog, "uciok\n");
                // tellUCI("copyprotection ok\n");
           }
           else if (token == "isready") {
-               tellUCI("readyok\n");
+               tellUCI(ucilog, "readyok\n");
           }
           else if (token == "go") {
                Variation PV;
                rootAlphabeta(4, board, &PV, savedBoard, saveIndex);
-               tellUCI("bestmove " + moveToString(PV.moves[0]) + "\n");
+               tellUCI(ucilog, "bestmove " + moveToString(PV.moves[0]) + "\n");
+               tellUCI(ucilog, "info depth 4 pv ");
+               for (int i = 0; i < 4; i++) {
+                    tellUCI(ucilog, moveToString(PV.moves[i]) + " ");
+               }
+               tellUCI(ucilog, "\n");
                // TODO: Check all options
           }
           else if (token == "ucinewgame") {
