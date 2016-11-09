@@ -51,6 +51,11 @@ void main() {
                Variation PV;
                rootAlphabeta(4, board, &PV, savedBoard, saveIndex);
                tellUCI("bestmove " + moveToString(PV.moves[0]) + "\n");
+               tellUCI("info depth 4 pv ");
+               for (int i = 0; i < 4; i++) {
+                    tellUCI(moveToString(PV.moves[i]) + " ");
+               }
+               tellUCI("\n");
                // TODO: Check all options
           }
           else if (token == "ucinewgame") {
