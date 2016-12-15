@@ -39,7 +39,7 @@ MoveList::MoveList() {
 }
 
 // Mutator
-void MoveList::addMove(Move& move) {
+void MoveList::addMove(const Move& move) {
      movelist[moveCounter] = move;
      moveCounter++;
 }

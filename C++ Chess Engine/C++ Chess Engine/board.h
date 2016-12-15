@@ -33,35 +33,35 @@ public:
      bool isEqual_3F(const Board& thatBoard);
 
      //  Mutators
-     inline void Board::setBoard(const std::array<int, 120> b) { board = b; }
-     inline void Board::setSquare(const int square, const int value) { board.at(square) = value; }
-     inline void Board::setCastlingRights(const std::array<bool, 4> cc) { castlingRights = cc; }
-     inline void Board::setCastlingRight(const int index, const bool value) { castlingRights.at(index) = value; }
-     inline void Board::setTurn(const color t) { turn = t; }
-     inline void Board::setEnpassantSquare(const int e) { enpassantSquare = e; }
-     inline void Board::setHalfMoveClock(const int f) { halfMoveClock = f; }
-     inline void Board::setMoveNumber(const int m) { moveNumber = m; }
-     inline void Board::setEndgame(bool e) { isEndgame = e; }
+     inline void setBoard(const std::array<int, 120> b) { board = b; }
+     inline void setSquare(const int square, const int value) { board.at(square) = value; }
+     inline void setCastlingRights(const std::array<bool, 4> cc) { castlingRights = cc; }
+     inline void setCastlingRight(const int index, const bool value) { castlingRights.at(index) = value; }
+     inline void setTurn(const color t) { turn = t; }
+     inline void setEnpassantSquare(const int e) { enpassantSquare = e; }
+     inline void setHalfMoveClock(const int f) { halfMoveClock = f; }
+     inline void setMoveNumber(const int m) { moveNumber = m; }
+     inline void setEndgame(bool e) { isEndgame = e; }
      //void setPieceCount(const std::array<int, 14> pc) { pieceCount = pc; }
 
      //  Accessors
-     inline const std::array<int, 120> Board::getBoard() const { return board; }
-     inline const int Board::getSquare(int square) const { return board.at(square); }
-     inline const std::array<bool, 4> Board::getCastlingRights() const { return castlingRights; }
-     inline const bool Board::getCastlingRight(int index) const { return castlingRights.at(index); }
-     inline const color Board::getTurn() const { return turn; }
-     inline const int Board::getEnpassantSquare() const { return enpassantSquare; }
-     inline const int Board::getHalfMoveClock() const { return halfMoveClock; }
-     inline const int Board::getMoveNumber() const { return moveNumber; }
-     inline const bool Board::getEndgame() const { return isEndgame; }
+     inline const std::array<int, 120> getBoard() const { return board; }
+     inline const int getSquare(int square) const { return board.at(square); }
+     inline const std::array<bool, 4> getCastlingRights() const { return castlingRights; }
+     inline const bool getCastlingRight(int index) const { return castlingRights.at(index); }
+     inline const color getTurn() const { return turn; }
+     inline const int getEnpassantSquare() const { return enpassantSquare; }
+     inline const int getHalfMoveClock() const { return halfMoveClock; }
+     inline const int getMoveNumber() const { return moveNumber; }
+     inline const bool getEndgame() const { return isEndgame; }
      //const std::array<int, 14> getPieceCount() const { return pieceCount; }
 
      //  Other Functions
-     inline void Board::changeTurn() { turn = (color)-turn; }
-     inline void Board::incrementHalfMoveClock() { halfMoveClock++; }
-     inline void Board::decrementHalfMoveClock() { halfMoveClock--; }
-     inline void Board::incrementMoveNumber() { moveNumber++; }
-     inline void Board::decrementMoveNumber() { moveNumber--; }
+     inline void changeTurn() { turn = (color)-turn; }
+     inline void incrementHalfMoveClock() { halfMoveClock++; }
+     inline void decrementHalfMoveClock() { halfMoveClock--; }
+     inline void incrementMoveNumber() { moveNumber++; }
+     inline void decrementMoveNumber() { moveNumber--; }
 
      void updateEndgame();
      void updateEndgame(Move move);

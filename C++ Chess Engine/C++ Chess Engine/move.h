@@ -23,15 +23,15 @@ public:
      Move(int originalMove[3]);
 
      // Mutators
-     inline void Move::setInitial(const int i) { initialSquare = i; }
-     inline void Move::setTerminal(const int t) { terminalSquare = t; }
-     inline void Move::setType(const int t) { moveType = t; }
-     inline void Move::setCapturedPiece(const int c) { capturedPiece = c; }
+     inline void setInitial(const int i) { initialSquare = i; }
+     inline void setTerminal(const int t) { terminalSquare = t; }
+     inline void setType(const int t) { moveType = t; }
+     inline void setCapturedPiece(const int c) { capturedPiece = c; }
      // Accessors
-     inline const int Move::getInitial() const { return initialSquare; }
-     inline const int Move::getTerminal() const { return terminalSquare; }
-     inline const int Move::getType() const { return moveType; }
-     inline const int Move::getCapturedPiece() const { return capturedPiece; }
+     inline const int getInitial() const { return initialSquare; }
+     inline const int getTerminal() const { return terminalSquare; }
+     inline const int getType() const { return moveType; }
+     inline const int getCapturedPiece() const { return capturedPiece; }
 };
 class MoveList {
 private:
@@ -47,7 +47,7 @@ public:
      inline int getCounter() { return moveCounter; }
 
      // Mutator
-     void addMove(Move& move);
+     void addMove(const Move& move);
 };
 
 /// <summary>

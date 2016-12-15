@@ -8,8 +8,9 @@
 #include <sstream>
 #include <string>
 
-#include "evaluation.h"
+#include "move.h"
 #include "board.h"
+#include "evaluation.h"
 
 void logInput(std::ostream& ucilog, std::string input) {
      ucilog << "I " << input << std::endl;
@@ -24,7 +25,7 @@ void tellUCI(std::ostream& ucilog, std::string output) {
 
 
 
-void main() {
+int main() {
      std::ofstream ucilog;
      ucilog.open("uci.log");
 
@@ -85,7 +86,7 @@ void main() {
                else if (option == "fen") { // FEN is given
                     FENboardSetup(board, option);
                }
-               else { return; }
+               else { return 0; }
 
                // Check if there are any moves given
                is >> std::skipws >> option;
@@ -118,7 +119,7 @@ void main() {
                          else if (moveString[4] == 'q') {
                               move.setType(QUEEN_PROMOTION);
                          }
-                         else { return; }
+                         else { return 0; }
 
                          // Make move on the board
                          makeMove(board, move);
@@ -141,4 +142,6 @@ void main() {
           }
 
      }
+
+     return 0;
 }
