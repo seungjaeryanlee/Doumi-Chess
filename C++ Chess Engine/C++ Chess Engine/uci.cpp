@@ -62,15 +62,21 @@ int main() {
                tellUCI(ucilog, "readyok\n");
           }
           else if (token == "go") {
-               Variation PV;
-               rootAlphabeta(4, board, &PV, savedBoard, saveIndex);
-               tellUCI(ucilog, "bestmove " + moveToString(PV.moves[0]) + "\n");
-               tellUCI(ucilog, "info depth 4 pv ");
-               for (int i = 0; i < 4; i++) {
-                    tellUCI(ucilog, moveToString(PV.moves[i]) + " ");
-               }
-               tellUCI(ucilog, "\n");
+
                // TODO: Check all options
+               // TODO: Implement PV ordering
+               Variation PV;
+               for (int depth = 1; depth <= 4; depth++) {
+                    int score = rootAlphabeta(depth, board, &PV, savedBoard, saveIndex);
+                    tellUCI(ucilog, "info depth " + std::to_string(depth) + " score " + std::to_string(score) + " pv ");
+                    for (int i = 0; i < depth; i++) {
+                         tellUCI(ucilog, moveToString(PV.moves[i]) + " ");
+                    }
+                    tellUCI(ucilog, "\n");
+               }
+               tellUCI(ucilog, "bestmove " + moveToString(PV.moves[0]) + "\n");
+
+               
           }
           else if (token == "ucinewgame") {
                board120Setup(board);
