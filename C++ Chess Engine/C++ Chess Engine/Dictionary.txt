@@ -1,3 +1,0 @@
-Representation of Squares / Positions
-     File Rank Notation (ex. d3)
-     Board Index Notation (ex. 105)
