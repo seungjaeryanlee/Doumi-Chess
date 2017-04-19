@@ -78,16 +78,17 @@ public:
      /// This function sets the board to the initial state.
      /// </summary>
      void setup();
+
+     /// <summary>
+     /// This function sets the board according to the FEN.
+     /// </summary>
+     /// <param name="FEN">The desired board in FEN notation.</param>
+     void FENboardSetup(const std::string FEN);
 };
 
 
 /*                                  BOARD SETUP                               */
-/// <summary>
-/// This function sets the given board according to the FEN.
-/// </summary>
-/// <param name="board">The board that will be changed to initial state.</param>
-/// <param name="FEN">The desired board in FEN notation.</param>
-void FENboardSetup(Board& board, const std::string FEN);
+
 /// <summary>
 /// This function converts the given board to FEN notation.
 /// </summary>

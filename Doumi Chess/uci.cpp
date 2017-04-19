@@ -90,7 +90,7 @@ int main() {
                     board.setup();
                }
                else if (option == "fen") { // FEN is given
-                    FENboardSetup(board, option);
+                    board.FENboardSetup(option);
                }
                else { return 0; }
 

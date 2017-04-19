@@ -155,10 +155,6 @@ pieceCount[BLACKQUEEN]++;
 }
 */
 
-/// <summary>
-/// This function returns evaluation score of the board using piece values and PCSQ tables. Positive score signifies white's advantage.
-/// </summary>
-/// <returns>The score of the board</returns>
 int Board::evaluate() {
      int score = 0;
 
@@ -228,25 +224,20 @@ void Board::setup() {
      }
 }
 
-
-
-
-
-
-void FENboardSetup(Board& board, const std::string FEN) {
-     board.setCastlingRights({ false, false, false, false });
-     board.setEnpassantSquare(0);
+void Board::FENboardSetup(const std::string FEN) {
+     castlingRights = { false, false, false, false };
+     enpassantSquare = 0;
 
      //  Add Error Squares
      for (int j = 0; j < 10; j++) {
-          board.setSquare(j, ERRORSQUARE);
-          board.setSquare(10 + j, ERRORSQUARE);
-          board.setSquare(100 + j, ERRORSQUARE);
-          board.setSquare(110 + j, ERRORSQUARE);
+          board[j] = ERRORSQUARE;
+          board[10 + j] = ERRORSQUARE;
+          board[100 + j] = ERRORSQUARE;
+          board[110 + j] = ERRORSQUARE;
      }
      for (int j = 0; j < 12; j++) {
-          board.setSquare(10 * j, ERRORSQUARE);
-          board.setSquare(10 * j + 9, ERRORSQUARE);
+          board[10 * j] = ERRORSQUARE;
+          board[10 * j + 9] = ERRORSQUARE;
      }
 
      int currentSquare = 21;
@@ -260,70 +251,70 @@ void FENboardSetup(Board& board, const std::string FEN) {
           }
           else if ('1' <= FEN.at(i) && FEN.at(i) <= '8') {
                for (int k = 0; k < FEN.at(i) - '0'; k++) {
-                    board.setSquare(currentSquare, EMPTYSQUARE);
+                    board[currentSquare] = EMPTYSQUARE;
                     currentSquare++;
                }
           }
           else {
                switch (FEN.at(i)) {
                case 'p':
-                    board.setSquare(currentSquare, BLACKPAWN);
+                    board[currentSquare] = BLACKPAWN;
                     break;
                case 'r':
-                    board.setSquare(currentSquare, BLACKROOK);
+                    board[currentSquare] = BLACKROOK;
                     break;
                case 'n':
-                    board.setSquare(currentSquare, BLACKKNIGHT);
+                    board[currentSquare] = BLACKKNIGHT;
                     break;
                case 'b':
-                    board.setSquare(currentSquare, BLACKBISHOP);
+                    board[currentSquare] = BLACKBISHOP;
                     break;
                case 'q':
-                    board.setSquare(currentSquare, BLACKQUEEN);
+                    board[currentSquare] = BLACKQUEEN;
                     break;
                case 'k':
-                    board.setSquare(currentSquare, BLACKKING);
+                    board[currentSquare] = BLACKKING;
                     break;
                case 'P':
-                    board.setSquare(currentSquare, WHITEPAWN);
+                    board[currentSquare] = WHITEPAWN;
                     break;
                case 'R':
-                    board.setSquare(currentSquare, WHITEROOK);
+                    board[currentSquare] = WHITEROOK;
                     break;
                case 'N':
-                    board.setSquare(currentSquare, WHITEKNIGHT);
+                    board[currentSquare] = WHITEKNIGHT;
                     break;
                case 'B':
-                    board.setSquare(currentSquare, WHITEBISHOP);
+                    board[currentSquare] = WHITEBISHOP;
                     break;
                case 'Q':
-                    board.setSquare(currentSquare, WHITEQUEEN);
+                    board[currentSquare] = WHITEQUEEN;
                     break;
                case 'K':
-                    board.setSquare(currentSquare, WHITEKING);
+                    board[currentSquare] = WHITEKING;
                     break;
                }
                currentSquare++;
           }
      }
      i++;
-     if (FEN.at(i) == 'w') { board.setTurn(WHITE); }
-     else { board.setTurn(BLACK); }
+     if (FEN.at(i) == 'w') { turn = WHITE; }
+     else { turn = BLACK; }
 
      i += 2;
      if (FEN.at(i) != '-') {
           while (FEN.at(i) != ' ') {
                if (FEN.at(i) == 'K') {
-                    board.setCastlingRight(WKCASTLING, true);
+                    castlingRights[WKCASTLING] = true;
                }
                if (FEN.at(i) == 'Q') {
-                    board.setCastlingRight(WQCASTLING, true);
+                    castlingRights[WQCASTLING] = true;
                }
                if (FEN.at(i) == 'k') {
-                    board.setCastlingRight(BKCASTLING, true);
+                    castlingRights[BKCASTLING] = true;
                }
                if (FEN.at(i) == 'q') {
-                    board.setCastlingRight(BQCASTLING, true);
+                    castlingRights[BQCASTLING] = true;
                }
                i++;
           }
@@ -331,47 +322,48 @@ void FENboardSetup(Board& board, const std::string FEN) {
      }
      else { i += 2; }
 
+     // Set enpassant square
      if (FEN.at(i) != '-') {
-          //  get enpassant square
-          int enpassantSquare;
           enpassantSquare = COLUMN*(FEN.at(i) - 'a' + 1);
           i++;
           enpassantSquare += ROW*('9' - FEN.at(i) + 1);
-
-          board.setEnpassantSquare(enpassantSquare);
      }
 
      i += 2;
      // One-digit Fifty Move Count
      if (FEN.at(i + 1) == ' ') {
-          board.setHalfMoveClock(FEN.at(i) - '0');
+          halfMoveClock = FEN.at(i) - '0';
           i += 2;
      }
      // Two-digit Fifty Move Count
      else if ('0' <= FEN.at(i + 1) && FEN.at(i + 1) <= '9') {
           if (FEN.at(i + 2) == ' ') {
-               board.setHalfMoveClock(10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0'));
+               halfMoveClock = 10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0');
                i += 3;
           }
           else if ('0' <= FEN.at(i + 2) && FEN.at(i + 2) <= '9') {
-               board.setHalfMoveClock(100 * (FEN.at(i) - '0') + 
-                                       10 * (FEN.at(i + 1) - '0') + 
-                                            (FEN.at(i + 2) - '0'));
+               halfMoveClock = 100 * (FEN.at(i) - '0') +
+                                10 * (FEN.at(i + 1) - '0') +
+                                     (FEN.at(i + 2) - '0');
                i += 4;
           }
      }
 
      // One-digit Move Number
      if (FEN.length() == i + 1 || FEN.at(i + 1) == ' ') {
-          board.setMoveNumber(FEN.at(i) - '0');
+          moveNumber = FEN.at(i) - '0';
      }
      // Two-digit Move Number
      else if ('0' <= FEN.at(i + 1) && FEN.at(i + 1) <= '9') {
-          board.setMoveNumber(10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0'));
+          moveNumber = 10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0');
      }
-
-
 }
+
+
+
+
+
+
 std::string boardToFEN(const Board& board) {
      std::string FEN;
      int emptySquareCount = 0;
