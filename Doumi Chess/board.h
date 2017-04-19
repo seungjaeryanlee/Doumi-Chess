@@ -73,15 +73,15 @@ public:
      /// </summary>
      /// <returns>The score of the board</returns>
      int evaluate();
+
+     /// <summary>
+     /// This function sets the board to the initial state.
+     /// </summary>
+     void board120Setup();
 };
 
 
 /*                                  BOARD SETUP                               */
-/// <summary>
-/// This function sets the given board to the initial state.
-/// </summary>
-/// <param name="board">The board that will be changed to initial state.</param>
-void board120Setup(Board& board);
 /// <summary>
 /// This function sets the given board according to the FEN.
 /// </summary>

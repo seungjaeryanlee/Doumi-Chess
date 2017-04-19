@@ -30,8 +30,8 @@ void main() {
 
      FENboardSetup(initialBoard, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
      boardToFEN(initialBoard);
-
-     board120Setup(initialBoard);
+     
+     initialBoard.board120Setup();
      boardToFEN(initialBoard);
 
 

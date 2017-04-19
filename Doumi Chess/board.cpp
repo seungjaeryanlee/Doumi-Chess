@@ -176,62 +176,63 @@ int Board::evaluate() {
      return score;
 }
 
-
-
-
-
-
-void board120Setup(Board& board) {
-     board.setTurn(WHITE);
-     board.setEnpassantSquare(0);
-     board.setMoveNumber(1);
-     board.setHalfMoveClock(0);
-     board.setCastlingRights({ true, true, true, true });
+void Board::board120Setup() {
+     turn = WHITE;
+     enpassantSquare = 0;
+     moveNumber = 1;
+     halfMoveClock = 0;
+     castlingRights = { true, true, true, true };
 
      //  Add Empty Squares
      for (int i = 0; i < 8; i++) {
           for (int j = 0; j < 8; j++) {
-               board.setSquare((i + 2) * 10 + j + 1, EMPTYSQUARE);
+               board[(i + 2) * 10 + j + 1] = EMPTYSQUARE;
           }
      }
 
      //  Add Error Squares
      for (int j = 0; j < 10; j++) {
-          board.setSquare(j, ERRORSQUARE);
-          board.setSquare(10 + j, ERRORSQUARE);
-          board.setSquare(100 + j, ERRORSQUARE);
-          board.setSquare(110 + j, ERRORSQUARE);
+          board[j] = ERRORSQUARE;
+          board[10 + j] = ERRORSQUARE;
+          board[100 + j] = ERRORSQUARE;
+          board[110 + j] = ERRORSQUARE;
      }
      for (int j = 0; j < 12; j++) {
-          board.setSquare(10 * j, ERRORSQUARE);
-          board.setSquare(10 * j + 9, ERRORSQUARE);
+          board[10 * j] = ERRORSQUARE;
+          board[10 * j + 9] = ERRORSQUARE;
      }
 
      //  Add Non-Pawn Pieces
-     board.setSquare(A8, BLACKROOK);
-     board.setSquare(B8, BLACKKNIGHT);
-     board.setSquare(C8, BLACKBISHOP);
-     board.setSquare(D8, BLACKQUEEN);
-     board.setSquare(E8, BLACKKING);
-     board.setSquare(F8, BLACKBISHOP);
-     board.setSquare(G8, BLACKKNIGHT);
-     board.setSquare(H8, BLACKROOK);
+     board[A8] = BLACKROOK;
+     board[B8] = BLACKKNIGHT;
+     board[C8] = BLACKBISHOP;
+     board[D8] = BLACKQUEEN;
+     board[E8] = BLACKKING;
+     board[F8] = BLACKBISHOP;
+     board[G8] = BLACKKNIGHT;
+     board[H8] = BLACKROOK;
 
-     board.setSquare(A1, WHITEROOK);
-     board.setSquare(B1, WHITEKNIGHT);
-     board.setSquare(C1, WHITEBISHOP);
-     board.setSquare(D1, WHITEQUEEN);
-     board.setSquare(E1, WHITEKING);
-     board.setSquare(F1, WHITEBISHOP);
-     board.setSquare(G1, WHITEKNIGHT);
-     board.setSquare(H1, WHITEROOK);
+     board[A1] = WHITEROOK;
+     board[B1] = WHITEKNIGHT;
+     board[C1] = WHITEBISHOP;
+     board[D1] = WHITEQUEEN;
+     board[E1] = WHITEKING;
+     board[F1] = WHITEBISHOP;
+     board[G1] = WHITEKNIGHT;
+     board[H1] = WHITEROOK;
 
      //  Add Pawn Pieces
      for (int i = 0; i < 8; i++) {
-          board.setSquare(A2 + i, WHITEPAWN);
-          board.setSquare(A7 + i, BLACKPAWN);
+          board[A2 + i] = WHITEPAWN;
+          board[A7 + i] = BLACKPAWN;
      }
 }
+
+
+
+
+
+
 void FENboardSetup(Board& board, const std::string FEN) {
      board.setCastlingRights({ false, false, false, false });
      board.setEnpassantSquare(0);

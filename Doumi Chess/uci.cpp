@@ -79,7 +79,7 @@ int main() {
                
           }
           else if (token == "ucinewgame") {
-               board120Setup(board);
+               board.board120Setup();
           }
           else if (token == "position") {
                std::string option;
@@ -87,7 +87,7 @@ int main() {
                
                // Find Starting position
                if (option == "startpos") {
-                    board120Setup(board);
+                    board.board120Setup();
                }
                else if (option == "fen") { // FEN is given
                     FENboardSetup(board, option);

@@ -52,7 +52,7 @@ void main() {
      LARGE_INTEGER frequency, beginTime, endTime; //  added for time performance check
      std::ofstream log;
 
-     board120Setup(currentBoard);
+     currentBoard.board120Setup();
      log.open("log.txt");
      log << "===========================================================================\n";
      log << "                           NAGUENE CHESS  v1.0.0                           \n";
@@ -358,7 +358,7 @@ void main() {
                     continue;
                }
                else if (commandType == BOARD_RESET) {
-                    board120Setup(currentBoard);
+                    currentBoard.board120Setup();
                     printSimpleBoard(currentBoard);
                     continue;
                }
