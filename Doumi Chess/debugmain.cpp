@@ -24,14 +24,14 @@ void main() {
      Board initialBoard;
 
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Board120Setup / FENBoardSetup Test                                             \n");
+     printf(" Setup / FENBoardSetup Test                                                     \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
      FENboardSetup(initialBoard, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
      boardToFEN(initialBoard);
      
-     initialBoard.board120Setup();
+     initialBoard.setup();
      boardToFEN(initialBoard);
 
 
@@ -67,7 +67,7 @@ void main() {
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
-     // TODO: Include this to FENboardsetup / Board120Setup
+     // TODO: Include this to FENboardsetup / setup
      printf("Initial Board Evaluation: %d\n", initialBoard.evaluate());
 
      printf("\n");

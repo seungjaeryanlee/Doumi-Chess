@@ -176,7 +176,7 @@ int Board::evaluate() {
      return score;
 }
 
-void Board::board120Setup() {
+void Board::setup() {
      turn = WHITE;
      enpassantSquare = 0;
      moveNumber = 1;

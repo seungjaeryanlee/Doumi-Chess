@@ -77,7 +77,7 @@ public:
      /// <summary>
      /// This function sets the board to the initial state.
      /// </summary>
-     void board120Setup();
+     void setup();
 };
 
 
