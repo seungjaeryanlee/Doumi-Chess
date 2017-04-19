@@ -224,7 +224,8 @@ void Board::setup() {
      }
 }
 
-void Board::FENboardSetup(const std::string FEN) {
+// FIXME: Use Atoi
+void Board::import(const std::string FEN) {
      castlingRights = { false, false, false, false };
      enpassantSquare = 0;
 

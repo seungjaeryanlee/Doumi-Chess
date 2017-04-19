@@ -83,7 +83,7 @@ public:
      /// This function sets the board according to the FEN.
      /// </summary>
      /// <param name="FEN">The desired board in FEN notation.</param>
-     void FENboardSetup(const std::string FEN);
+     void import(const std::string FEN);
 };
 
 

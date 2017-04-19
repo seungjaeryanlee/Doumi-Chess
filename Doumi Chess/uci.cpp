@@ -90,7 +90,7 @@ int main() {
                     board.setup();
                }
                else if (option == "fen") { // FEN is given
-                    board.FENboardSetup(option);
+                    board.import(option);
                }
                else { return 0; }
 

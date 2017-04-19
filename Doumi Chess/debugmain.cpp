@@ -24,11 +24,11 @@ void main() {
      Board initialBoard;
 
      printf("--------------------------------------------------------------------------------\n");
-     printf(" Setup / FENBoardSetup Test                                                     \n");
+     printf(" Setup / Import Test                                                            \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
-     initialBoard.FENboardSetup("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+     initialBoard.import("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
      boardToFEN(initialBoard);
      
      initialBoard.setup();
@@ -67,7 +67,7 @@ void main() {
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
-     // TODO: Include this to FENboardsetup / setup
+     // TODO: Include this to import / setup
      printf("Initial Board Evaluation: %d\n", initialBoard.evaluate());
 
      printf("\n");
@@ -198,7 +198,7 @@ void main() {
      Board stalemateboard1;
      Board savedBoard2[MAX_MOVENUMBER];
      int saveIndex2 = 0;
-     stalemateboard1.FENboardSetup("6bk/5p1p/5P1P/8/8/8/8/4K3 b - - 0 1");
+     stalemateboard1.import("6bk/5p1p/5P1P/8/8/8/8/4K3 b - - 0 1");
      printSimpleBoard(stalemateboard1);
 
      gameState stalemate1 = checkGameState(stalemateboard1, savedBoard2, saveIndex2);
@@ -218,7 +218,7 @@ void main() {
      printf("\n");
 
      Board stalemateboard2;
-     stalemateboard2.FENboardSetup("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 100 1");
+     stalemateboard2.import("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 100 1");
      printSimpleBoard(stalemateboard2);
 
      gameState stalemate2 = checkGameState(stalemateboard2, savedBoard2, saveIndex2);
@@ -238,7 +238,7 @@ void main() {
      printf("\n");
 
      Board stalemateboard3;
-     stalemateboard3.FENboardSetup("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 150 1");
+     stalemateboard3.import("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 150 1");
      printSimpleBoard(stalemateboard2);
 
      gameState stalemate3 = checkGameState(stalemateboard3, savedBoard2, saveIndex2);
@@ -260,7 +260,7 @@ void main() {
      Board stalemateboard4;
      Board savedBoard3[MAX_MOVENUMBER];
      int saveIndex3 = 3;
-     stalemateboard4.FENboardSetup("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 0 1");
+     stalemateboard4.import("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 0 1");
 
      savedBoard3[0] = stalemateboard4;
      savedBoard3[1] = stalemateboard4;
@@ -285,7 +285,7 @@ void main() {
      Board checkmateboard;
      Board savedBoard4[MAX_MOVENUMBER];
      int saveIndex4 = 0;
-     checkmateboard.FENboardSetup("R6k/R7/8/8/8/8/8/7K b - - 0 1");
+     checkmateboard.import("R6k/R7/8/8/8/8/8/7K b - - 0 1");
 
      gameState checkmate = checkGameState(checkmateboard, savedBoard4, saveIndex4);
      if (checkmate == WHITE_CHECKMATE) {
@@ -306,7 +306,7 @@ void main() {
      Board matein1Board;
      Board savedBoard5[MAX_MOVENUMBER];
      int saveIndex5 = 0;
-     matein1Board.FENboardSetup("7k/RR6/8/8/8/8/8/7K w - - 0 1");
+     matein1Board.import("7k/RR6/8/8/8/8/8/7K w - - 0 1");
 
      Variation matein1Move;
      int matein1Score = rootAlphabeta(4, matein1Board, &matein1Move, savedBoard5, saveIndex5);
@@ -323,7 +323,7 @@ void main() {
      printf("\n");
 
      Board matein2Board;
-     matein2Board.FENboardSetup("7k/8/RR6/8/8/8/8/7K w - - 0 1");
+     matein2Board.import("7k/8/RR6/8/8/8/8/7K w - - 0 1");
 
      Variation matein2Move;
      int matein2Score = rootAlphabeta(4, matein2Board, &matein2Move, savedBoard5, saveIndex5);
@@ -340,8 +340,8 @@ void main() {
      printf("\n");
 
      Board forcedStalemateBoard;
-     forcedStalemateBoard.FENboardSetup("5k2/r7/4PKP1/4PPP1/8/8/8/N3NN2 b - - 0 1");
-     //forcedStalemateBoardFENboardSetup("5k2/r7/4PKP1/4PPP1/8/8/8/4QQQ1 b - - 0 1");
+     forcedStalemateBoard.import("5k2/r7/4PKP1/4PPP1/8/8/8/N3NN2 b - - 0 1");
+     //forcedStalemateBoard.import("5k2/r7/4PKP1/4PPP1/8/8/8/4QQQ1 b - - 0 1");
      printf("Board Evaluation: %d\n", forcedStalemateBoard.evaluate());
 
      printSimpleBoard(forcedStalemateBoard);
