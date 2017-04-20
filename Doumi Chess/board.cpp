@@ -360,7 +360,7 @@ void Board::import(const std::string FEN) {
      }
 }
 
-std::string Board::boardToFEN() {
+std::string Board::fen() {
      std::string FEN;
      int emptySquareCount = 0;
 

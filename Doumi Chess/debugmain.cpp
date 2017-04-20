@@ -29,10 +29,10 @@ void main() {
      printf("\n");
 
      initialBoard.import("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-     std::cout << initialBoard.boardToFEN() << std::endl;
+     std::cout << initialBoard.fen() << std::endl;
      
      initialBoard.setup();
-     std::cout << initialBoard.boardToFEN() << std::endl;
+     std::cout << initialBoard.fen() << std::endl;
 
 
      printf("\n");

@@ -78,7 +78,7 @@ void main() {
      printf("Move number: %d\n", currentBoard.getMoveNumber());
      if (currentBoard.getTurn() == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
-     std::cout << currentBoard.boardToFEN() << std::endl;
+     std::cout << currentBoard.fen() << std::endl;
      printf("---------------------------------------------------------------------------\n");
 
      // Begin timer
@@ -354,7 +354,7 @@ void main() {
                     continue;
                }
                else if (commandType == DISPLAY_FEN) {
-                    std::cout << currentBoard.boardToFEN() << std::endl;
+                    std::cout << currentBoard.fen() << std::endl;
                     continue;
                }
                else if (commandType == BOARD_RESET) {

@@ -89,7 +89,7 @@ public:
      /// This function converts the board to FEN notation.
      /// </summary>
      /// <returns>FEN notation of the board.</returns>
-     std::string boardToFEN();
+     std::string fen();
 };
 
 /// <summary>
