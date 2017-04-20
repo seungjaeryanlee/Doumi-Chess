@@ -98,6 +98,13 @@ public:
      /// <returns>True if attacked, False if not.</returns>
      const bool isAttacked(int kingPos) const;
 
+     /// <summary>
+     /// This function checks if in the given board a fifty move rule can be declared.
+     /// </summary>
+     /// <param name="board">The board that will be checked for fifty move rule.</param>
+     /// <returns>True if fifty move rule is possible. False if not.</returns>
+     const bool fiftyMoveCheck() const;
+
 
 };
 
@@ -176,11 +183,4 @@ void updateMoveNumber(Board& board);
 /// <param name="move">The move that was made that could have changed the board properties.</param>
 // TODO: UPDATE
 void updateBoard(Board& board, const Move& move, const int capturedPiece);
-
-/// <summary>
-/// This function checks if in the given board a fifty move rule can be declared.
-/// </summary>
-/// <param name="board">The board that will be checked for fifty move rule.</param>
-/// <returns>True if fifty move rule is possible. False if not.</returns>
-bool fiftyMoveCheck(const Board& board);
 

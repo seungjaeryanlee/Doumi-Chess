@@ -312,7 +312,7 @@ void main() {
                     saveIndex++;
 
                     // Check Fifty Move rule
-                    if (fiftyMoveCheck(currentBoard)) {
+                    if (currentBoard.fiftyMoveCheck()) {
                          bool correctInput = false, declareTie = false;
                          while (!correctInput) {
                               printf("Declare Fifty Move Rule? (Y/N):");
@@ -422,7 +422,7 @@ void main() {
                printSimpleBoard(currentBoard);
 
                // Check Fifty move rule
-               if (fiftyMoveCheck(currentBoard)) {
+               if (currentBoard.fiftyMoveCheck()) {
                     // If in bad position, declare fifty move rule
                     if (abValue <= STALEMATE_BOUND) {
                          printf("Computer declares Fifty Move Rule.\n");

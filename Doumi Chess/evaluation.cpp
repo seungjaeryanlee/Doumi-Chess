@@ -124,7 +124,7 @@ gameState checkGameState(Board& board, const Board savedBoard[MAX_MOVENUMBER], i
      }
 
      // Stalemate: 50 Move Rule
-     if (fiftyMoveCheck(board)) {
+     if (board.fiftyMoveCheck()) {
           return STALEMATE_50;
      }
 

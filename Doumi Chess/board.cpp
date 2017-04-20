@@ -804,7 +804,9 @@ const bool Board::isAttacked(const int kingPos) const {
 
 }
 
-
+const bool Board::fiftyMoveCheck() const {
+     return (halfMoveClock >= 100);
+}
 
 
 // FIXME: ELSE
@@ -1159,8 +1161,4 @@ void updateBoard(Board& board, const Move& move, const int capturedPiece) {
      //board.updatePieceCount(move, capturedPiece);
      updateMoveNumber(board);
      board.changeTurn();
-}
-
-bool fiftyMoveCheck(const Board& board) {
-     return (board.getHalfMoveClock() >= 100);
 }
