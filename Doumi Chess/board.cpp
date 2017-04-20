@@ -808,37 +808,12 @@ const bool Board::fiftyMoveCheck() const {
      return (halfMoveClock >= 100);
 }
 
-
-// FIXME: ELSE
-int checkColor(const int pieceType) {
-     if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
-          return WHITE;
-     }
-     else if (BLACKPAWN <= pieceType && pieceType <= BLACKKING) {
-          return BLACK;
-     }
-     else if (pieceType == EMPTYSQUARE || pieceType == ERRORSQUARE) {
-          return NEITHER;
-     }
-     else {
-          throw std::invalid_argument("Invalid pieceType.");
-     }
-}
-
-int filerankToNumber(const char file, const int rank) {
-     //  if it is not a correct filerank format, return -1
-     if ('a' > file || file > 'h' || 1 > rank || rank > 8) {
-          return -1;
-     }
-     return COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - 1));
-}
-
-void printBoard(const Board& board) {
+void Board::printBoard() const {
      for (int i = 0; i < 120; i++) {
           if (i % 10 == 0) {
                printf("\n");
           }
-          switch (board.getSquare(i)) {
+          switch (board[i]) {
           case ERRORSQUARE:
                printf("X ");
                break;
@@ -885,11 +860,11 @@ void printBoard(const Board& board) {
      }
      printf("\n");
 }
-void printSimpleBoard(const Board& board) {
+void Board::printSimpleBoard() const {
      for (int i = 2; i < 10; i++) {
           printf("%d| ", 10 - i);
           for (int j = 1; j < 9; j++) {
-               switch (board.getSquare(i*ROW + j*COLUMN)) {
+               switch (board[i*ROW + j*COLUMN]) {
                case ERRORSQUARE:
                     printf("X ");
                     break;
@@ -939,6 +914,32 @@ void printSimpleBoard(const Board& board) {
      printf("  ----------------\n");
      printf("   a b c d e f g h\n");
 }
+
+
+// FIXME: ELSE
+int checkColor(const int pieceType) {
+     if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
+          return WHITE;
+     }
+     else if (BLACKPAWN <= pieceType && pieceType <= BLACKKING) {
+          return BLACK;
+     }
+     else if (pieceType == EMPTYSQUARE || pieceType == ERRORSQUARE) {
+          return NEITHER;
+     }
+     else {
+          throw std::invalid_argument("Invalid pieceType.");
+     }
+}
+
+int filerankToNumber(const char file, const int rank) {
+     //  if it is not a correct filerank format, return -1
+     if ('a' > file || file > 'h' || 1 > rank || rank > 8) {
+          return -1;
+     }
+     return COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - 1));
+}
+
 
 
 int makeMove(Board &board, const Move& move) {

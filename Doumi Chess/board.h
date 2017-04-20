@@ -105,6 +105,17 @@ public:
      /// <returns>True if fifty move rule is possible. False if not.</returns>
      const bool fiftyMoveCheck() const;
 
+     /// <summary>
+     /// This function prints the given board to console.
+     /// </summary>
+     /// <param name="board">The board that will be printed to console.</param>
+     void printBoard() const;
+     /// <summary>
+     /// This function prints the given board to console excluding the error squares.
+     /// </summary>
+     /// <param name="board">The board that will be printed to console.</param>
+     void printSimpleBoard() const;
+
 
 };
 
@@ -122,18 +133,6 @@ int checkColor(const int pieceType);
 /// <param name="rank">The rank of the square</param>
 /// <returns>The board index notation of the square</returns>
 int filerankToNumber(const char file, const int rank);
-
-/// <summary>
-/// This function prints the given board to console.
-/// </summary>
-/// <param name="board">The board that will be printed to console.</param>
-void printBoard(const Board& board);
-/// <summary>
-/// This function prints the given board to console excluding the error squares.
-/// </summary>
-/// <param name="board">The board that will be printed to console.</param>
-void printSimpleBoard(const Board& board);
-
 
 /// <summary>
 /// This function applies the given move to the given board.
