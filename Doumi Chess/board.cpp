@@ -469,7 +469,340 @@ std::string Board::fen() {
      return FEN;
 }
 
+const bool Board::isSquareAttacked(const int kingPos) const {
+     if (turn == WHITE) {
+          //  1. pawn
+          if (board[kingPos - ROW - COLUMN] == BLACKPAWN ||
+              board[kingPos - ROW + COLUMN] == BLACKPAWN) {
+               return true;
+          }
+          //  2. knight
+          if (board[kingPos - ROW - 2 * COLUMN] == BLACKKNIGHT ||
+              board[kingPos - ROW + 2 * COLUMN] == BLACKKNIGHT ||
+              board[kingPos + ROW - 2 * COLUMN] == BLACKKNIGHT ||
+              board[kingPos + ROW + 2 * COLUMN] == BLACKKNIGHT ||
+              board[kingPos - 2 * ROW - COLUMN] == BLACKKNIGHT ||
+              board[kingPos - 2 * ROW + COLUMN] == BLACKKNIGHT ||
+              board[kingPos + 2 * ROW - COLUMN] == BLACKKNIGHT ||
+              board[kingPos + 2 * ROW + COLUMN] == BLACKKNIGHT) {
+               return true;
+          }
+          //  3. bishop
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos - i*ROW - i*COLUMN] == BLACKBISHOP ||
+                    board[kingPos - i*ROW - i*COLUMN] == BLACKQUEEN) {
+                    return true;
+               }
 
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos - i*ROW - i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos - i*ROW - i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos - i*ROW + i*COLUMN] == BLACKBISHOP ||
+                   board[kingPos - i*ROW + i*COLUMN] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos - i*ROW + i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos - i*ROW + i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos + i*ROW - i*COLUMN] == BLACKBISHOP ||
+                   board[kingPos + i*ROW - i*COLUMN] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos + i*ROW - i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos + i*ROW - i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos + i*ROW + i*COLUMN] == BLACKBISHOP ||
+                    board[kingPos + i*ROW + i*COLUMN] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos + i*ROW + i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos + i*ROW + i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          //  4. rook
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos - i*ROW] == BLACKROOK ||
+                    board[kingPos - i*ROW] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos - i*ROW] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos - i*ROW] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos + i*ROW] == BLACKROOK ||
+                    board[kingPos + i*ROW] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos + i*ROW] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos + i*ROW] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos - i*COLUMN] == BLACKROOK ||
+                    board[kingPos - i*COLUMN] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos - i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos - i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos + i*COLUMN] == BLACKROOK ||
+                    board[kingPos + i*COLUMN] == BLACKQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos + i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos + i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          //  (5. queen: added to bishop and rook)
+
+          //  6. king: is it needed?
+          if (board[kingPos + 1] == BLACKKING ||
+              board[kingPos - 1] == BLACKKING ||
+              board[kingPos + 11] == BLACKKING ||
+              board[kingPos - 11] == BLACKKING ||
+              board[kingPos + 9] == BLACKKING ||
+              board[kingPos - 9] == BLACKKING ||
+              board[kingPos + 10] == BLACKKING ||
+              board[kingPos - 10] == BLACKKING) {
+                return true;
+          }
+
+          return false;
+     }
+
+     else if (turn == BLACK) {
+          //  1. pawn
+          if (board[kingPos + ROW - COLUMN] == WHITEPAWN ||
+               board[kingPos + ROW + COLUMN] == WHITEPAWN) {
+               return true;
+          }
+          //  2. knight
+          if (board[kingPos - ROW - 2 * COLUMN] == WHITEKNIGHT ||
+               board[kingPos - ROW + 2 * COLUMN] == WHITEKNIGHT ||
+               board[kingPos + ROW - 2 * COLUMN] == WHITEKNIGHT ||
+               board[kingPos + ROW + 2 * COLUMN] == WHITEKNIGHT ||
+               board[kingPos - 2 * ROW - COLUMN] == WHITEKNIGHT ||
+               board[kingPos - 2 * ROW + COLUMN] == WHITEKNIGHT ||
+               board[kingPos + 2 * ROW - COLUMN] == WHITEKNIGHT ||
+               board[kingPos + 2 * ROW + COLUMN] == WHITEKNIGHT) {
+               return true;
+          }
+          //  3. bishop
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos - i*ROW - i*COLUMN] == WHITEBISHOP ||
+                    board[kingPos - i*ROW - i*COLUMN] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos - i*ROW - i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos - i*ROW - i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos - i*ROW + i*COLUMN] == WHITEBISHOP ||
+                    board[kingPos - i*ROW + i*COLUMN] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos - i*ROW + i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos - i*ROW + i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos + i*ROW - i*COLUMN] == WHITEBISHOP ||
+                    board[kingPos + i*ROW - i*COLUMN] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos + i*ROW - i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos + i*ROW - i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos + i*ROW + i*COLUMN] == WHITEBISHOP ||
+                    board[kingPos + i*ROW + i*COLUMN] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos + i*ROW + i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos + i*ROW + i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          //  4. rook
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos - i*ROW] == WHITEROOK ||
+                    board[kingPos - i*ROW] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos - i*ROW] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos - i*ROW] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos + i*ROW] == WHITEROOK ||
+                    board[kingPos + i*ROW] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos + i*ROW] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos + i*ROW] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos - i*COLUMN] == WHITEROOK ||
+                    board[kingPos - i*COLUMN] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos - i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos - i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+          for (int i = 1; i < 8; i++) {
+               if (board[kingPos + i*COLUMN] == WHITEROOK ||
+                    board[kingPos + i*COLUMN] == WHITEQUEEN) {
+                    return true;
+               }
+
+               //  if some other piece blocks it, no more serach is necessary
+               else if (board[kingPos + i*COLUMN] != EMPTYSQUARE) {
+                    break;
+               }
+
+               //  also when it reaches the end of the board
+               else if (board[kingPos + i*COLUMN] == ERRORSQUARE) {
+                    break;
+               }
+          }
+
+          //  (5. queen: added to bishop and rook)
+
+          //  6. king: is it needed?
+          if (board[kingPos + 1] == WHITEKING ||
+               board[kingPos - 1] == WHITEKING ||
+               board[kingPos + 11] == WHITEKING ||
+               board[kingPos - 11] == WHITEKING ||
+               board[kingPos + 9] == WHITEKING ||
+               board[kingPos - 9] == WHITEKING ||
+               board[kingPos + 10] == WHITEKING ||
+               board[kingPos - 10] == WHITEKING) {
+               return true;
+          }
+          return false;
+     }
+
+     else {
+          throw std::invalid_argument("The board has invalid turn.");
+     }
+
+}
 
 
 
@@ -496,342 +829,6 @@ int filerankToNumber(const char file, const int rank) {
           return -1;
      }
      return COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - 1));
-}
-
-bool isSquareAttacked(const Board& board, int kingPos) {
-     if (board.getTurn() == WHITE) {
-          //  1. pawn
-          if (board.getSquare(kingPos - ROW - COLUMN) == BLACKPAWN ||
-               board.getSquare(kingPos - ROW + COLUMN) == BLACKPAWN) {
-               return true;
-          }
-          //  2. knight
-          if (board.getSquare(kingPos - ROW - 2 * COLUMN) == BLACKKNIGHT ||
-               board.getSquare(kingPos - ROW + 2 * COLUMN) == BLACKKNIGHT ||
-               board.getSquare(kingPos + ROW - 2 * COLUMN) == BLACKKNIGHT ||
-               board.getSquare(kingPos + ROW + 2 * COLUMN) == BLACKKNIGHT ||
-               board.getSquare(kingPos - 2 * ROW - COLUMN) == BLACKKNIGHT ||
-               board.getSquare(kingPos - 2 * ROW + COLUMN) == BLACKKNIGHT ||
-               board.getSquare(kingPos + 2 * ROW - COLUMN) == BLACKKNIGHT ||
-               board.getSquare(kingPos + 2 * ROW + COLUMN) == BLACKKNIGHT) {
-               return true;
-          }
-          //  3. bishop
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*ROW - i*COLUMN) == BLACKBISHOP ||
-                    board.getSquare(kingPos - i*ROW - i*COLUMN) == BLACKQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*ROW - i*COLUMN) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*ROW - i*COLUMN) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*ROW + i*COLUMN) == BLACKBISHOP ||
-                    board.getSquare(kingPos - i*ROW + i*COLUMN) == BLACKQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*ROW + i*COLUMN) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*ROW + i*COLUMN) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*ROW - i*COLUMN) == BLACKBISHOP ||
-                    board.getSquare(kingPos + i*ROW - i*COLUMN) == BLACKQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*ROW - i*COLUMN) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*ROW - i*COLUMN) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*ROW + i*COLUMN) == BLACKBISHOP ||
-                    board.getSquare(kingPos + i*ROW + i*COLUMN) == BLACKQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*ROW + i*COLUMN) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*ROW + i*COLUMN) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          //  4. rook
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*ROW) == BLACKROOK ||
-                    board.getSquare(kingPos - i*ROW) == BLACKQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*ROW) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*ROW) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*ROW) == BLACKROOK ||
-                    board.getSquare(kingPos + i*ROW) == BLACKQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*ROW) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*ROW) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*COLUMN) == BLACKROOK ||
-                    board.getSquare(kingPos - i*COLUMN) == BLACKQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*COLUMN) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*COLUMN) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*COLUMN) == BLACKROOK ||
-                    board.getSquare(kingPos + i*COLUMN) == BLACKQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*COLUMN) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*COLUMN) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          //  (5. queen: added to bishop and rook)
-
-          //  6. king: is it needed?
-          if (board.getSquare(kingPos + 1) == BLACKKING ||
-               board.getSquare(kingPos - 1) == BLACKKING ||
-               board.getSquare(kingPos + 11) == BLACKKING ||
-               board.getSquare(kingPos - 11) == BLACKKING ||
-               board.getSquare(kingPos + 9) == BLACKKING ||
-               board.getSquare(kingPos - 9) == BLACKKING ||
-               board.getSquare(kingPos + 10) == BLACKKING ||
-               board.getSquare(kingPos - 10) == BLACKKING) {
-               return true;
-          }
-
-          return false;
-     }
-
-     else if (board.getTurn() == BLACK) {
-          //  1. pawn
-          if (board.getSquare(kingPos + ROW - COLUMN) == WHITEPAWN ||
-               board.getSquare(kingPos + ROW + COLUMN) == WHITEPAWN) {
-               return true;
-          }
-          //  2. knight
-          if (board.getSquare(kingPos - ROW - 2 * COLUMN) == WHITEKNIGHT ||
-               board.getSquare(kingPos - ROW + 2 * COLUMN) == WHITEKNIGHT ||
-               board.getSquare(kingPos + ROW - 2 * COLUMN) == WHITEKNIGHT ||
-               board.getSquare(kingPos + ROW + 2 * COLUMN) == WHITEKNIGHT ||
-               board.getSquare(kingPos - 2 * ROW - COLUMN) == WHITEKNIGHT ||
-               board.getSquare(kingPos - 2 * ROW + COLUMN) == WHITEKNIGHT ||
-               board.getSquare(kingPos + 2 * ROW - COLUMN) == WHITEKNIGHT ||
-               board.getSquare(kingPos + 2 * ROW + COLUMN) == WHITEKNIGHT) {
-               return true;
-          }
-          //  3. bishop
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*ROW - i*COLUMN) == WHITEBISHOP ||
-                    board.getSquare(kingPos - i*ROW - i*COLUMN) == WHITEQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*ROW - i*COLUMN) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*ROW - i*COLUMN) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*ROW + i*COLUMN) == WHITEBISHOP ||
-                    board.getSquare(kingPos - i*ROW + i*COLUMN) == WHITEQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*ROW + i*COLUMN) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*ROW + i*COLUMN) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*ROW - i*COLUMN) == WHITEBISHOP ||
-                    board.getSquare(kingPos + i*ROW - i*COLUMN) == WHITEQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*ROW - i*COLUMN) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*ROW - i*COLUMN) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*ROW + i*COLUMN) == WHITEBISHOP ||
-                    board.getSquare(kingPos + i*ROW + i*COLUMN) == WHITEQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*ROW + i*COLUMN) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*ROW + i*COLUMN) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          //  4. rook
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*ROW) == WHITEROOK ||
-                    board.getSquare(kingPos - i*ROW) == WHITEQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*ROW) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*ROW) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*ROW) == WHITEROOK ||
-                    board.getSquare(kingPos + i*ROW) == WHITEQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*ROW) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*ROW) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*COLUMN) == WHITEROOK ||
-                    board.getSquare(kingPos - i*COLUMN) == WHITEQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*COLUMN) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*COLUMN) == ERRORSQUARE) {
-                    break;
-               }
-          }
-          for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*COLUMN) == WHITEROOK ||
-                    board.getSquare(kingPos + i*COLUMN) == WHITEQUEEN) {
-                    return true;
-               }
-
-               //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*COLUMN) != EMPTYSQUARE) {
-                    break;
-               }
-
-               //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*COLUMN) == ERRORSQUARE) {
-                    break;
-               }
-          }
-
-          //  (5. queen: added to bishop and rook)
-
-          //  6. king: is it needed?
-          if (board.getSquare(kingPos + 1) == WHITEKING ||
-               board.getSquare(kingPos - 1) == WHITEKING ||
-               board.getSquare(kingPos + 11) == WHITEKING ||
-               board.getSquare(kingPos - 11) == WHITEKING ||
-               board.getSquare(kingPos + 9) == WHITEKING ||
-               board.getSquare(kingPos - 9) == WHITEKING ||
-               board.getSquare(kingPos + 10) == WHITEKING ||
-               board.getSquare(kingPos - 10) == WHITEKING) {
-               return true;
-          }
-
-          return false;
-     }
-
-     else {
-          throw std::invalid_argument("The board has invalid turn.");
-     }
-
 }
 
 void printBoard(const Board& board) {

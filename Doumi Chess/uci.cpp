@@ -29,10 +29,8 @@ int main() {
      std::ofstream ucilog;
      ucilog.open("uci.log");
 
-     // The line of command read
-     std::string command;
-     // A word from command
-     std::string token;
+     std::string command;  // The line of command read
+     std::string token;    // A word from command
      
      Board board;
      Board savedBoard[MAX_MOVENUMBER];

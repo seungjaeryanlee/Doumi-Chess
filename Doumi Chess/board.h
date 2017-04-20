@@ -90,6 +90,15 @@ public:
      /// </summary>
      /// <returns>FEN notation of the board.</returns>
      std::string fen();
+     
+     /// <summary>
+     /// This function checks whether the king is being attacked or not.
+     /// </summary>
+     /// <param name="kingPos">The position of the king</param>
+     /// <returns>True if attacked, False if not.</returns>
+     const bool isSquareAttacked(int kingPos) const;
+
+
 };
 
 /// <summary>
@@ -106,15 +115,6 @@ int checkColor(const int pieceType);
 /// <param name="rank">The rank of the square</param>
 /// <returns>The board index notation of the square</returns>
 int filerankToNumber(const char file, const int rank);
-
-
-/// <summary>
-/// This function checks whether the king is being attacked or not.
-/// </summary>
-/// <param name="board">The board that will be checked.</param>
-/// <param name="kingPos">The position of the king</param>
-/// <returns>True if </returns>
-bool isSquareAttacked(const Board& board, int kingPos);
 
 /// <summary>
 /// This function prints the given board to console.
