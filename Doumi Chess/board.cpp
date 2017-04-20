@@ -808,7 +808,7 @@ const bool Board::fiftyMoveCheck() const {
      return (halfMoveClock >= 100);
 }
 
-void Board::printBoard() const {
+void Board::print_verbose() const {
      for (int i = 0; i < 120; i++) {
           if (i % 10 == 0) {
                printf("\n");
@@ -860,7 +860,7 @@ void Board::printBoard() const {
      }
      printf("\n");
 }
-void Board::printSimpleBoard() const {
+void Board::print() const {
      for (int i = 2; i < 10; i++) {
           printf("%d| ", 10 - i);
           for (int j = 1; j < 9; j++) {

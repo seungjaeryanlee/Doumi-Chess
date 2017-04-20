@@ -199,7 +199,7 @@ void main() {
      Board savedBoard2[MAX_MOVENUMBER];
      int saveIndex2 = 0;
      stalemateboard1.import("6bk/5p1p/5P1P/8/8/8/8/4K3 b - - 0 1");
-     stalemateboard1.printSimpleBoard();
+     stalemateboard1.print();
 
      gameState stalemate1 = checkGameState(stalemateboard1, savedBoard2, saveIndex2);
      if (stalemate1 == STALEMATE_MOVE) {
@@ -219,7 +219,7 @@ void main() {
 
      Board stalemateboard2;
      stalemateboard2.import("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 100 1");
-     stalemateboard2.printSimpleBoard();
+     stalemateboard2.print();
 
      gameState stalemate2 = checkGameState(stalemateboard2, savedBoard2, saveIndex2);
      if (stalemate2 == STALEMATE_50) {
@@ -239,7 +239,7 @@ void main() {
 
      Board stalemateboard3;
      stalemateboard3.import("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 150 1");
-     stalemateboard2.printSimpleBoard();
+     stalemateboard2.print();
 
      gameState stalemate3 = checkGameState(stalemateboard3, savedBoard2, saveIndex2);
      if (stalemate3 == STALEMATE_75) {
@@ -344,7 +344,7 @@ void main() {
      //forcedStalemateBoard.import("5k2/r7/4PKP1/4PPP1/8/8/8/4QQQ1 b - - 0 1");
      printf("Board Evaluation: %d\n", forcedStalemateBoard.evaluate());
 
-     forcedStalemateBoard.printSimpleBoard();
+     forcedStalemateBoard.print();
 
      Variation forcedStalemateMoves;
      int forcedStalemateScore = rootAlphabeta(4, forcedStalemateBoard, &forcedStalemateMoves, savedBoard5, saveIndex5);

@@ -109,12 +109,12 @@ public:
      /// This function prints the given board to console.
      /// </summary>
      /// <param name="board">The board that will be printed to console.</param>
-     void printBoard() const;
+     void print_verbose() const;
      /// <summary>
      /// This function prints the given board to console excluding the error squares.
      /// </summary>
      /// <param name="board">The board that will be printed to console.</param>
-     void printSimpleBoard() const;
+     void print() const;
 
 
 };
