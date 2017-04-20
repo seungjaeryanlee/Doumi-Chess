@@ -96,7 +96,7 @@ public:
      /// </summary>
      /// <param name="kingPos">The position of the king</param>
      /// <returns>True if attacked, False if not.</returns>
-     const bool isSquareAttacked(int kingPos) const;
+     const bool isAttacked(int kingPos) const;
 
 
 };

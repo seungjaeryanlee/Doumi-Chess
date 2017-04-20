@@ -110,7 +110,7 @@ gameState checkGameState(Board& board, const Board savedBoard[MAX_MOVENUMBER], i
      }
      MoveList moveList = moveGeneration(board);
      // Checkmate
-     if (moveList.getCounter() == 0 && board.isSquareAttacked(kingPos)) {
+     if (moveList.getCounter() == 0 && board.isAttacked(kingPos)) {
           if (board.getSquare(kingPos) == WHITE) {
                return BLACK_CHECKMATE;
           }

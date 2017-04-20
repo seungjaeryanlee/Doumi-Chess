@@ -401,7 +401,7 @@ MoveList moveGeneration(const Board& board) {
           copiedBoard.changeTurn();
 
           //  if king is safe
-          if (!copiedBoard.isSquareAttacked(changedKingPosition)) {
+          if (!copiedBoard.isAttacked(changedKingPosition)) {
                moveList.addMove(pseudolegalMoveList.getMove(i));
           }
 
@@ -618,18 +618,18 @@ void castlingMoveGeneration(const Board& board, MoveList& moveList) {
           if (board.getCastlingRight(WKCASTLING) &&                                             //  neither piece moved
                board.getSquare(E1) == WHITEKING && board.getSquare(H1) == WHITEROOK &&     //  both pieces exists on board
                board.getSquare(F1) == EMPTYSQUARE && board.getSquare(G1) == EMPTYSQUARE && //  between them are empty
-               board.isSquareAttacked(E1) == false &&                                    //  not in check
-               board.isSquareAttacked(F1) == false &&                                    //  not attacked while moving
-               board.isSquareAttacked(G1) == false) {
+               board.isAttacked(E1) == false &&                                    //  not in check
+               board.isAttacked(F1) == false &&                                    //  not attacked while moving
+               board.isAttacked(G1) == false) {
 
                addMove(E1, G1, KINGSIDE_CASTLING, moveList);
           }
           if (board.getCastlingRight(WQCASTLING) && board.getSquare(B1) == EMPTYSQUARE &&
                board.getSquare(C1) == EMPTYSQUARE && board.getSquare(D1) == EMPTYSQUARE &&
                board.getSquare(E1) == WHITEKING && board.getSquare(A1) == WHITEROOK &&
-               board.isSquareAttacked(E1) == false &&
-               board.isSquareAttacked(C1) == false &&
-               board.isSquareAttacked(D1) == false) {
+               board.isAttacked(E1) == false &&
+               board.isAttacked(C1) == false &&
+               board.isAttacked(D1) == false) {
                addMove(E1, C1, QUEENSIDE_CASTLING, moveList);
           }
 
@@ -638,18 +638,18 @@ void castlingMoveGeneration(const Board& board, MoveList& moveList) {
           if (board.getCastlingRight(BKCASTLING) &&                                             //  neither piece moved
                board.getSquare(E8) == BLACKKING && board.getSquare(H8) == BLACKROOK &&     //  both pieces exists on board
                board.getSquare(F8) == EMPTYSQUARE && board.getSquare(G8) == EMPTYSQUARE && //  between them are empty
-               board.isSquareAttacked(E8) == false &&                                    //  not in check
-               board.isSquareAttacked(F8) == false &&                                    //  not attacked while moving
-               board.isSquareAttacked(G8) == false) {
+               board.isAttacked(E8) == false &&                                    //  not in check
+               board.isAttacked(F8) == false &&                                    //  not attacked while moving
+               board.isAttacked(G8) == false) {
 
                addMove(E8, G8, KINGSIDE_CASTLING, moveList);
           }
           if (board.getCastlingRight(BQCASTLING) && board.getSquare(B8) == EMPTYSQUARE &&
                board.getSquare(C8) == EMPTYSQUARE && board.getSquare(D8) == EMPTYSQUARE &&
                board.getSquare(E8) == BLACKKING && board.getSquare(A8) == BLACKROOK &&
-               board.isSquareAttacked(E8) == false &&
-               board.isSquareAttacked(C8) == false &&
-               board.isSquareAttacked(D8) == false) {
+               board.isAttacked(E8) == false &&
+               board.isAttacked(C8) == false &&
+               board.isAttacked(D8) == false) {
                addMove(E8, C8, QUEENSIDE_CASTLING, moveList);
           }
      }

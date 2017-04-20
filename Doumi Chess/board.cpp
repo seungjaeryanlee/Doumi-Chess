@@ -469,7 +469,7 @@ std::string Board::fen() {
      return FEN;
 }
 
-const bool Board::isSquareAttacked(const int kingPos) const {
+const bool Board::isAttacked(const int kingPos) const {
      if (turn == WHITE) {
           //  1. pawn
           if (board[kingPos - ROW - COLUMN] == BLACKPAWN ||
