@@ -78,7 +78,7 @@ void main() {
      printf("Move number: %d\n", currentBoard.getMoveNumber());
      if (currentBoard.getTurn() == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
-     boardToFEN(currentBoard);
+     currentBoard.boardToFEN();
      printf("---------------------------------------------------------------------------\n");
 
      // Begin timer
@@ -354,7 +354,7 @@ void main() {
                     continue;
                }
                else if (commandType == DISPLAY_FEN) {
-                    boardToFEN(currentBoard);
+                    currentBoard.boardToFEN();
                     continue;
                }
                else if (commandType == BOARD_RESET) {

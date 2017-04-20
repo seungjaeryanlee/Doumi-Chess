@@ -360,27 +360,22 @@ void Board::import(const std::string FEN) {
      }
 }
 
-
-
-
-
-
-std::string boardToFEN(const Board& board) {
+std::string Board::boardToFEN() {
      std::string FEN;
      int emptySquareCount = 0;
 
      for (int i = 2; i < 10; i++) {
           for (int j = 1; j < 9; j++) {
-               if (board.getSquare(i*ROW + j*COLUMN) == EMPTYSQUARE) {
+               if (board[i*ROW + j*COLUMN] == EMPTYSQUARE) {
                     emptySquareCount++;
                     continue;
                }
-               if (board.getSquare(i*ROW + j*COLUMN) != EMPTYSQUARE &&
+               if (board[i*ROW + j*COLUMN] != EMPTYSQUARE &&
                     emptySquareCount != 0) {
                     FEN += ('0' + emptySquareCount);
                     emptySquareCount = 0;
                }
-               switch (board.getSquare(i*ROW + j*COLUMN)) {
+               switch (board[i*ROW + j*COLUMN]) {
                case WHITEPAWN:
                     FEN += 'P';
                     break;
@@ -432,15 +427,15 @@ std::string boardToFEN(const Board& board) {
      }
 
      FEN += ' ';
-     if (board.getTurn() == WHITE) { FEN += 'w'; }
+     if (turn == WHITE) { FEN += 'w'; }
      else { FEN += 'b'; }
 
      FEN += ' ';
      //  no castling available
-     bool WKCastling = board.getCastlingRight(WKCASTLING);
-     bool WQCastling = board.getCastlingRight(WQCASTLING);
-     bool BKCastling = board.getCastlingRight(BKCASTLING);
-     bool BQCastling = board.getCastlingRight(BQCASTLING);
+     bool WKCastling = castlingRights[WKCASTLING];
+     bool WQCastling = castlingRights[WQCASTLING];
+     bool BKCastling = castlingRights[BKCASTLING];
+     bool BQCastling = castlingRights[BQCASTLING];
      if (!(WKCastling || WQCastling || BKCastling || BQCastling)) {
           FEN += '-';
      }
@@ -460,22 +455,27 @@ std::string boardToFEN(const Board& board) {
      }
 
      FEN += ' ';
-     if (board.getEnpassantSquare() != 0) {
-          FEN += numberToFile(board.getEnpassantSquare());
-          FEN += ('0' + numberToRank(board.getEnpassantSquare()));
+     if (enpassantSquare != 0) {
+          FEN += numberToFile(enpassantSquare);
+          FEN += ('0' + numberToRank(enpassantSquare));
      }
      else { FEN += '-'; }
 
      FEN += ' ';
-     FEN += std::to_string(board.getHalfMoveClock());
+     FEN += std::to_string(halfMoveClock);
      FEN += ' ';
-     FEN += std::to_string(board.getMoveNumber());
+     FEN += std::to_string(moveNumber);
 
      std::cout << FEN << std::endl;
      return FEN;
-
 }
 
+
+
+
+
+
+// FIXME: ELSE
 int checkColor(const int pieceType) {
      if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
           return WHITE;

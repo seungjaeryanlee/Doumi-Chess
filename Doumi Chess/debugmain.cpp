@@ -29,10 +29,10 @@ void main() {
      printf("\n");
 
      initialBoard.import("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-     boardToFEN(initialBoard);
+     initialBoard.boardToFEN();
      
      initialBoard.setup();
-     boardToFEN(initialBoard);
+     initialBoard.boardToFEN();
 
 
      printf("\n");

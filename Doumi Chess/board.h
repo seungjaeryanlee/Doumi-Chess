@@ -84,18 +84,13 @@ public:
      /// </summary>
      /// <param name="FEN">The desired board in FEN notation.</param>
      void import(const std::string FEN);
+
+     /// <summary>
+     /// This function converts the board to FEN notation.
+     /// </summary>
+     /// <returns>FEN notation of the board.</returns>
+     std::string boardToFEN();
 };
-
-
-/*                                  BOARD SETUP                               */
-
-/// <summary>
-/// This function converts the given board to FEN notation.
-/// </summary>
-/// <param name="board">The board that will be converted to FEN notation.</param>
-/// <returns>FEN notation of the given board.</returns>
-std::string boardToFEN(const Board& board);
-
 
 /// <summary>
 /// This function returns the color of the given piece type
