@@ -466,7 +466,6 @@ std::string Board::boardToFEN() {
      FEN += ' ';
      FEN += std::to_string(moveNumber);
 
-     std::cout << FEN << std::endl;
      return FEN;
 }
 

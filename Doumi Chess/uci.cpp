@@ -144,7 +144,7 @@ int main() {
 
           // 4. DEBUGGING TOKENS (NOT FOR UCI)
           else if (token == "printfen") {
-               board.boardToFEN();
+               std::cout << board.boardToFEN() << std::endl;
           }
 
      }
