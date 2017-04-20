@@ -2,10 +2,10 @@
 CC = g++
 CPPFLAGS = -std=c++0x
 
-all: nageuneuci
+all: doumiUCI
 	
-nageuneuci: uci.o evaluation.o movegen.o move.o board.o
-	$(CC) $(CPPFLAGS) uci.o evaluation.o movegen.o move.o board.o -o nageuneuci
+doumiUCI: uci.o evaluation.o movegen.o move.o board.o
+	$(CC) $(CPPFLAGS) uci.o evaluation.o movegen.o move.o board.o -o doumiUCI
 
 uci.o: uci.cpp evaluation.h board.h
 	$(CC) $(CPPFLAGS) -c uci.cpp
@@ -23,4 +23,4 @@ move.o: move.cpp move.h
 	$(CC) $(CPPFLAGS) -c move.cpp
 
 clean:
-	rm -f *.o nageuneuci
+	rm -f *.o doumiUCI
