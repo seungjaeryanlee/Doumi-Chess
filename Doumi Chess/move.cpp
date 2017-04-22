@@ -45,9 +45,6 @@ void MoveList::addMove(const Move& move) {
 }
 
 
-
-
-
 inline std::string numberToFilerank(const int position) {
      return numberToFile(position) + std::to_string(numberToRank(position));
 }
