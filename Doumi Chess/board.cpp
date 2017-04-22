@@ -1018,10 +1018,9 @@ int Board::makeMove(const Move& move) {
           std::invalid_argument("makeMove() called with invalid moveType.");
      }
 
-     updateBoard(*this, move, capturedPiece);
+     updateBoard(move, capturedPiece);
      return capturedPiece;
 }
-
 void Board::undoMove(const Move& move, const int capturedPiece) {
      int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
@@ -1083,6 +1082,62 @@ void Board::undoMove(const Move& move, const int capturedPiece) {
      }
 }
 
+void Board::updateCastling(const Move& move) {
+     if (board[move.getInitial()] == WHITEKING) {
+          castlingRights[WKCASTLING] = false;
+          castlingRights[WQCASTLING] = false;
+     }
+     if (board[move.getInitial()] == BLACKKING) {
+          castlingRights[BKCASTLING] = false;
+          castlingRights[BQCASTLING] = false;
+     }
+     if (board[move.getInitial()] == WHITEROOK) {
+          if (move.getInitial() == A1) {
+               castlingRights[WQCASTLING] = false;
+          }
+          if (move.getInitial() == H1) {
+               castlingRights[WKCASTLING] = false;
+          }
+     }
+     if (board[move.getInitial()] == BLACKROOK) {
+          if (move.getInitial() == A8) {
+               castlingRights[BQCASTLING] = false;
+          }
+          if (move.getInitial() == H8) {
+               castlingRights[BKCASTLING] = false;
+          }
+     }
+}
+void Board::updateEnPassant(const Move& move) {
+     if (move.getType() == DOUBLEMOVE) {
+          enpassantSquare = (move.getInitial() + move.getTerminal()) / 2;
+     }
+     else { enpassantSquare = 0; }
+}
+void Board::updateHalfMoveClock(const Move& move) {
+     if (board[move.getTerminal()] == EMPTYSQUARE
+          && board[move.getInitial()] != WHITEPAWN
+          && board[move.getInitial()] != BLACKPAWN) {
+          halfMoveClock++;
+     }
+     else { halfMoveClock = 0; }
+}
+void Board::updateMoveNumber() {
+     if (turn == BLACK) { moveNumber++; }
+}
+
+void Board::updateBoard(const Move& move, const int capturedPiece) {
+     updateCastling(move);
+     updateEnPassant(move);
+     updateHalfMoveClock(move);
+     updateEndgame(move);
+     //board.updatePieceCount(move, capturedPiece);
+     updateMoveNumber();
+     changeTurn();
+}
+
+
+
 // FIXME: ELSE
 int checkColor(const int pieceType) {
      if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
@@ -1111,56 +1166,4 @@ int filerankToNumber(const char file, const int rank) {
 
 
 
-void updateCastling(Board& board, const Move& move) {
-     if (board.getSquare(move.getInitial()) == WHITEKING) {
-          board.setCastlingRight(WKCASTLING, false);
-          board.setCastlingRight(WQCASTLING, false);
-     }
-     if (board.getSquare(move.getInitial()) == BLACKKING) {
-          board.setCastlingRight(BKCASTLING, false);
-          board.setCastlingRight(BQCASTLING, false);
-     }
-     if (board.getSquare(move.getInitial()) == WHITEROOK) {
-          if (move.getInitial() == A1) {
-               board.setCastlingRight(WQCASTLING, false);
-          }
-          if (move.getInitial() == H1) {
-               board.setCastlingRight(WKCASTLING, false);
-          }
-     }
-     if (board.getSquare(move.getInitial()) == BLACKROOK) {
-          if (move.getInitial() == A8) {
-               board.setCastlingRight(BQCASTLING, false);
-          }
-          if (move.getInitial() == H8) {
-               board.setCastlingRight(BKCASTLING, false);
-          }
-     }
-}
-void updateEnPassant(Board& board, const Move& move) {
-     if (move.getType() == DOUBLEMOVE) {
-          board.setEnpassantSquare((move.getInitial() + move.getTerminal()) / 2);
-     }
-     else { board.setEnpassantSquare(0); }
-}
-void updateHalfMoveClock(Board& board, const Move& move) {
-     if (board.getSquare(move.getTerminal()) == EMPTYSQUARE
-          && board.getSquare(move.getInitial()) != WHITEPAWN
-          && board.getSquare(move.getInitial()) != BLACKPAWN) {
-          board.incrementHalfMoveClock();
-     }
-     else { board.setHalfMoveClock(0); }
-}
-void updateMoveNumber(Board& board) {
-     if (board.getTurn() == BLACK) { board.incrementMoveNumber(); }
-}
 
-void updateBoard(Board& board, const Move& move, const int capturedPiece) {
-     updateCastling(board, move);
-     updateEnPassant(board, move);
-     updateHalfMoveClock(board, move);
-     board.updateEndgame(move);
-     //board.updatePieceCount(move, capturedPiece);
-     updateMoveNumber(board);
-     board.changeTurn();
-}

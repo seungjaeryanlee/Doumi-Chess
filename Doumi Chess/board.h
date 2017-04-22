@@ -119,7 +119,6 @@ public:
      /// <summary>
      /// This function applies the given move.
      /// </summary>
-     /// <param name="board">The board that the move will apply to.</param>
      /// <param name="move">The move to be applied to the board.</param>
      /// <returns>The piece that was captured with the move</returns>
      int makeMove(const Move& move);
@@ -131,6 +130,39 @@ public:
      /// <param name="capturedPiece">The piece that was captured by the move</param>
      //TODO: Re-implement and use
      void undoMove(const Move& move, const int capturedPiece);
+
+     /// <summary>
+     /// This function updates the castling rights of the board if the given move changed it. This is called after the move was applied to the board.
+     /// </summary>
+     /// <param name="move">The move that was made that could have changed the castling rights.</param>
+     void updateCastling(const Move& move);
+     /// <summary>
+     /// This function updates the en passant square of the board if the given move changed it. This is called after the move was applied to the board.
+     /// </summary>
+     /// <param name="board">The board that will be checked.</param>
+     /// <param name="move">The move that was made that could have changed the en passant square.</param>
+     void updateEnPassant(const Move& move);
+     /// <summary>
+     /// This function updates the half move clock of the board if the given move changed it. This is called after the move was applied to the board.
+     /// </summary>
+     /// <param name="board">The board that will be checked.</param>
+     /// <param name="move">The move that was made that has changed the half move clock.</param>
+     void updateHalfMoveClock(const Move& move);
+     /// <summary>
+     /// This function updates the move number of the board if the given move changed it. This is called after the move was applied to the board.
+     /// </summary>
+     /// <param name="board">The board that will be checked.</param>
+     /// <param name="move">The move that was made that could have changed the move number.</param>
+     void updateMoveNumber();
+     /// <summary>
+     /// This function updates the non-board components (casting, enpassant, halfmoveclock, movenumber) of the board if the given move changed it. This is called after the move was applied to the board.
+     /// </summary>
+     /// <param name="board">The board that will be checked.</param>
+     /// <param name="move">The move that was made that could have changed the board properties.</param>
+     // TODO: UPDATE
+     void updateBoard(const Move& move, const int capturedPiece);
+
+
 };
 
 /// <summary>
@@ -152,35 +184,4 @@ int filerankToNumber(const char file, const int rank);
 
 
 
-/// <summary>
-/// This function updates the castling rights of the given board if the given move changed it. This is called after the move was applied to the board.
-/// </summary>
-/// <param name="board">The board that will be checked.</param>
-/// <param name="move">The move that was made that could have changed the castling rights.</param>
-void updateCastling(Board& board, const Move& move);
-/// <summary>
-/// This function updates the en passant square of the given board if the given move changed it. This is called after the move was applied to the board.
-/// </summary>
-/// <param name="board">The board that will be checked.</param>
-/// <param name="move">The move that was made that could have changed the en passant square.</param>
-void updateEnPassant(Board& board, const Move& move);
-/// <summary>
-/// This function updates the half move clock of the given board if the given move changed it. This is called after the move was applied to the board.
-/// </summary>
-/// <param name="board">The board that will be checked.</param>
-/// <param name="move">The move that was made that has changed the half move clock.</param>
-void updateHalfMoveClock(Board& board, const Move& move);
-/// <summary>
-/// This function updates the move number of the given board if the given move changed it. This is called after the move was applied to the board.
-/// </summary>
-/// <param name="board">The board that will be checked.</param>
-/// <param name="move">The move that was made that could have changed the move number.</param>
-void updateMoveNumber(Board& board);
-/// <summary>
-/// This function updates the non-board components (casting, enpassant, halfmoveclock, movenumber) of the given board if the given move changed it. This is called after the move was applied to the board.
-/// </summary>
-/// <param name="board">The board that will be checked.</param>
-/// <param name="move">The move that was made that could have changed the board properties.</param>
-// TODO: UPDATE
-void updateBoard(Board& board, const Move& move, const int capturedPiece);
 
