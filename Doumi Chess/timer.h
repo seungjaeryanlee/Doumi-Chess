@@ -6,6 +6,21 @@
 #pragma once
 #include <Windows.h>
 
+class Timer {
+private:
+     LARGE_INTEGER frequency;
+     LARGE_INTEGER beginTime;
+     LARGE_INTEGER endTime;
+     bool hasStarted;
+     bool isRunning;
+public:
+     Timer();
+     void start();
+     void stop();
+     double duration();
+};
+
+
 /// <summary>
 /// This function starts a timer with an index.
 /// </summary>
