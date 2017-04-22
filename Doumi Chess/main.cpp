@@ -49,7 +49,6 @@ void main() {
      result gameResult = NOT_FINISHED;            // Records the result of the game
      int userColor = UNDECIDED;                   // Which color user plays
      bool spectate = false;                       // if true, the game is between two computers
-     LARGE_INTEGER frequency, beginTime, endTime; //  added for time performance check
      std::ofstream log;
 
      currentBoard.setup();
@@ -82,8 +81,8 @@ void main() {
      printf("---------------------------------------------------------------------------\n");
 
      // Begin timer
-     frequency = startTimer(&beginTime, 1);
-     
+     Timer programTimer;
+     programTimer.start();     
 
 /******************************************************************************/
 /*                                 MAIN LOOP                                  */
@@ -187,8 +186,8 @@ void main() {
                }
                
                if (commandType == MOVE) {
-                    LARGE_INTEGER frequency2, beginTime2, endTime2;
-                    frequency2 = startTimer(&beginTime2, 2);
+                    Timer moveTimer;
+                    moveTimer.start();
 
                     savedBoard[saveIndex] = currentBoard;
 
@@ -342,9 +341,9 @@ void main() {
                     log << printMove(currentBoard.getMoveNumber(), userMove);
 
                     printSimpleBoard(currentBoard);
-                    stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for this move.\n";
-                    log << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for this move.\n";
+                    moveTimer.stop();
+                    std::cout << moveTimer.duration() << " ms for this move.\n";
+                    log << moveTimer.duration() << " ms for this move.\n";
                     printf("---------------------------------------------------------------------------\n");
 
                     continue;
@@ -400,8 +399,7 @@ void main() {
           //  Computer turn
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
 
-               LARGE_INTEGER frequency, beginTime, endTime;
-               frequency = startTimer(&beginTime, 2);
+               Timer moveTimer;
 
                Variation PV;
                int abValue = rootAlphabeta(EVAL_DEPTH, currentBoard, &PV, savedBoard, saveIndex);
@@ -452,8 +450,9 @@ void main() {
                }
 
                stopTimer(&endTime, 2);
-               std::cout << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
-               log << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
+               moveTimer.stop();
+               std::cout << moveTimer.duration() << " ms for this move.\n";
+               log << moveTimer.duration() << " ms for this move.\n";
                printf("---------------------------------------------------------------------------\n");
           }
      }
@@ -479,9 +478,10 @@ void main() {
      }
 
      //  Stop timer and print elapsed time
-     stopTimer(&endTime, 1);
-     printElapsedTime(beginTime, endTime, frequency, 1);
-     log << "Total Time: " << elapsedTime(beginTime, endTime, frequency, 1) << "ms" << std::endl;
+     programTimer.stop();
+     std::cout << "Program Duration: " << programTimer.duration() << " ms elapsed." << std::endl;
+
+     log << "Program Duration: " << programTimer.duration() << "ms" << std::endl;
 
      log.close();
 }

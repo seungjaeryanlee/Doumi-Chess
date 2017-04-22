@@ -22,6 +22,8 @@
 /******************************************************************************/
 void main() {
      Board initialBoard;
+     Timer programTimer;
+     programTimer.start();
 
      printf("--------------------------------------------------------------------------------\n");
      printf(" Setup / Import Test                                                            \n");
@@ -351,4 +353,7 @@ void main() {
      printf("Best Move Score: %3d\n", forcedStalemateScore);
      std::cout << "Best Moves: ";
      printVariation(std::cout, forcedStalemateMoves);
+
+     programTimer.stop();
+     std::cout << "Test Duration: " << programTimer.duration() << " ms." << std::endl;
 }
