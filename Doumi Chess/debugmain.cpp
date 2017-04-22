@@ -85,7 +85,7 @@ void main() {
           printf("%2d  ", i + 1);
           std::cout << numberToFilerank(moveList.getMove(i).getInitial())
                << numberToFilerank(moveList.getMove(i).getTerminal());
-          int capturedPiece = makeMove(copiedInitBoard, moveList.getMove(i));
+          int capturedPiece = copiedInitBoard.makeMove(moveList.getMove(i));
           printf("  %4d\n", copiedInitBoard.evaluate());
      }
 
@@ -184,7 +184,7 @@ void main() {
                     << " ";
           }
           printf("\n");
-          makeMove(initialBoard, bestMoves[4]);
+          initialBoard.makeMove(bestMoves[4]);
      }
      
      */

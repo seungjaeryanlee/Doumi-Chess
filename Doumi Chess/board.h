@@ -116,6 +116,13 @@ public:
      /// <param name="board">The board that will be printed to console.</param>
      void print() const;
 
+     /// <summary>
+     /// This function applies the given move to the given board.
+     /// </summary>
+     /// <param name="board">The board that the move will apply to.</param>
+     /// <param name="move">The move to be applied to the board.</param>
+     /// <returns>The piece that was captured with the move</returns>
+     int makeMove(const Move& move);
 
 };
 
@@ -134,13 +141,7 @@ int checkColor(const int pieceType);
 /// <returns>The board index notation of the square</returns>
 int filerankToNumber(const char file, const int rank);
 
-/// <summary>
-/// This function applies the given move to the given board.
-/// </summary>
-/// <param name="board">The board that the move will apply to.</param>
-/// <param name="move">The move to be applied to the board.</param>
-/// <returns>The piece that was captured with the move</returns>
-int makeMove(Board &board, const Move& move);
+
 /// <summary>
 /// This function reverts the given move on the given board.
 /// </summary>

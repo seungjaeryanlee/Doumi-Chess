@@ -28,7 +28,7 @@ uint64_t divide(const int depth, const int maxDepth, Board& board, const bool sh
           int initial = moveList.getMove(i).getInitial();
           int terminal = moveList.getMove(i).getTerminal();
 
-          capturedPiece = makeMove(board, moveList.getMove(i));
+          capturedPiece = board.makeMove(moveList.getMove(i));
 
           node += divide(depth - 1, maxDepth, board, showOutput);
           if (showOutput) {
@@ -76,7 +76,7 @@ uint64_t divide2(const int depth, const int maxDepth, Board& board, const bool s
           int initial = moveList.getMove(i).getInitial();
           int terminal = moveList.getMove(i).getTerminal();
 
-          capturedPiece = makeMove(board, moveList.getMove(i));
+          capturedPiece = board.makeMove(moveList.getMove(i));
 
 
           node += divide(depth - 1, maxDepth, board, showOutput);

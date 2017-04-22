@@ -396,7 +396,7 @@ MoveList moveGeneration(const Board& board) {
           }
           else { changedKingPosition = kingPosition; }
 
-          capturedPiece = makeMove(copiedBoard, pseudolegalMoveList.getMove(i));
+          capturedPiece = copiedBoard.makeMove(pseudolegalMoveList.getMove(i));
           //  In this case, we don't want makeMove to change turn, so let's change it again
           copiedBoard.changeTurn();
 

@@ -306,7 +306,7 @@ void main() {
                          }
                     }
                     Move userMove = Move(initialSquare, terminalSquare, moveType);
-                    savedCapturedPiece[saveIndex] = makeMove(currentBoard, userMove);
+                    savedCapturedPiece[saveIndex] = currentBoard.makeMove(userMove);
                     savedMove[saveIndex] = userMove;
                     saveIndex++;
 
@@ -413,7 +413,7 @@ void main() {
 
                // Make Move, Save and Print
                savedBoard[saveIndex] = currentBoard;
-               savedCapturedPiece[saveIndex] = makeMove(currentBoard, PV.moves[0]);
+               savedCapturedPiece[saveIndex] = currentBoard.makeMove(PV.moves[0]);
                savedMove[saveIndex] = PV.moves[0];
                saveIndex++;
 

@@ -126,7 +126,7 @@ int main() {
                          else { return 0; }
 
                          // Make move on the board
-                         makeMove(board, move);
+                         board.makeMove(move);
                     }
                }
 

@@ -914,6 +914,115 @@ void Board::print() const {
      printf("   a b c d e f g h\n");
 }
 
+int Board::makeMove(const Move& move) {
+     int capturedPiece = EMPTYSQUARE;
+     int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
+
+     if (moveType == NORMAL) {
+          capturedPiece = board[terminal];
+          board[terminal] = board[initial];
+          board[initial] = EMPTYSQUARE;
+     }
+     else if (moveType == DOUBLEMOVE) {
+          board[terminal] = board[initial];
+          board[initial] = EMPTYSQUARE;
+          enpassantSquare = (terminal + initial) / 2;
+     }
+     else if (moveType == QUEENSIDE_CASTLING) {
+          //  move king
+          board[terminal] = board[initial];
+          board[initial] = EMPTYSQUARE;
+          //  move rook
+          board[terminal + COLUMN] = board[initial - 4 * COLUMN];
+          board[initial - 4 * COLUMN] = EMPTYSQUARE;
+          //  castling does not involve capture
+     }
+     else if (moveType == KINGSIDE_CASTLING) {
+          //  move king
+          board[terminal] = board[initial];
+          board[initial] = EMPTYSQUARE;
+          //  move rook
+          board[terminal - COLUMN] = board[terminal + COLUMN];
+          board[terminal + COLUMN] = EMPTYSQUARE;
+          //  castling does not involve capture
+     }
+     else if (moveType == KNIGHT_PROMOTION) {
+          capturedPiece = board[terminal];
+
+          //  white turn
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] = WHITEKNIGHT;
+          }
+          //  black turn
+          else {
+               board[terminal] = BLACKKNIGHT;
+          }
+          board[initial] = EMPTYSQUARE;
+     }
+     else if (moveType == BISHOP_PROMOTION) {
+          capturedPiece = board[terminal];
+
+          //  white turn
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] =  WHITEBISHOP;
+          }
+          //  black turn
+          else {
+               board[terminal] = BLACKBISHOP;
+          }
+          board[initial] = EMPTYSQUARE;
+     }
+     else if (moveType == ROOK_PROMOTION) {
+          capturedPiece = board[terminal];
+
+          //  white turn
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] = WHITEROOK;
+          }
+          //  black turn
+          else {
+               board[terminal] = BLACKROOK;
+          }
+          board[initial] = EMPTYSQUARE;
+     }
+     else if (moveType == QUEEN_PROMOTION) {
+          capturedPiece = board[terminal];
+
+          //  white turn
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] = WHITEQUEEN;
+          }
+          //  black turn
+          else {
+               board[terminal] = BLACKQUEEN;
+          }
+          board[initial] = EMPTYSQUARE;
+     }
+     else if (moveType == ENPASSANT) {
+          //  White turn
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] = board[initial];
+               board[initial] = EMPTYSQUARE;
+               board[terminal + ROW] = EMPTYSQUARE;
+               capturedPiece = BLACKPAWN;
+          }
+          //  Black turn
+          else {
+               board[terminal] = board[initial];
+               board[initial] = EMPTYSQUARE;
+               board[terminal - ROW] = EMPTYSQUARE;
+               capturedPiece = WHITEPAWN;
+          }
+     }
+     else {
+          std::invalid_argument("makeMove() called with invalid moveType.");
+     }
+
+     updateBoard(*this, move, capturedPiece);
+     return capturedPiece;
+}
+
+
 
 // FIXME: ELSE
 int checkColor(const int pieceType) {
@@ -941,113 +1050,6 @@ int filerankToNumber(const char file, const int rank) {
 
 
 
-int makeMove(Board &board, const Move& move) {
-     int capturedPiece = EMPTYSQUARE;
-     int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
-
-     if (moveType == NORMAL) {
-          capturedPiece = board.getSquare(terminal);
-          board.setSquare(terminal, board.getSquare(initial));
-          board.setSquare(initial, EMPTYSQUARE);
-     }
-     else if (moveType == DOUBLEMOVE) {
-          board.setSquare(terminal, board.getSquare(initial));
-          board.setSquare(initial, EMPTYSQUARE);
-          board.setEnpassantSquare((terminal + initial) / 2);
-     }
-     else if (moveType == QUEENSIDE_CASTLING) {
-          //  move king
-          board.setSquare(terminal, board.getSquare(initial));
-          board.setSquare(initial, EMPTYSQUARE);
-          //  move rook
-          board.setSquare(terminal + COLUMN, board.getSquare(initial - 4 * COLUMN));
-          board.setSquare(initial - 4 * COLUMN, EMPTYSQUARE);
-          //  castling does not involve capture
-     }
-     else if (moveType == KINGSIDE_CASTLING) {
-          //  move king
-          board.setSquare(terminal, board.getSquare(initial));
-          board.setSquare(initial, EMPTYSQUARE);
-          //  move rook
-          board.setSquare(terminal - COLUMN, board.getSquare(terminal + COLUMN));
-          board.setSquare(terminal + COLUMN, EMPTYSQUARE);
-          //  castling does not involve capture
-     }
-     else if (moveType == KNIGHT_PROMOTION) {
-          capturedPiece = board.getSquare(terminal);
-
-          //  white turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, WHITEKNIGHT);
-          }
-          //  black turn
-          else {
-               board.setSquare(terminal, BLACKKNIGHT);
-          }
-          board.setSquare(initial, EMPTYSQUARE);
-     }
-     else if (moveType == BISHOP_PROMOTION) {
-          capturedPiece = board.getSquare(terminal);
-
-          //  white turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, WHITEBISHOP);
-          }
-          //  black turn
-          else {
-               board.setSquare(terminal, BLACKBISHOP);
-          }
-          board.setSquare(initial, EMPTYSQUARE);
-     }
-     else if (moveType == ROOK_PROMOTION) {
-          capturedPiece = board.getSquare(terminal);
-
-          //  white turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, WHITEROOK);
-          }
-          //  black turn
-          else {
-               board.setSquare(terminal, BLACKROOK);
-          }
-          board.setSquare(initial, EMPTYSQUARE);
-     }
-     else if (moveType == QUEEN_PROMOTION) {
-          capturedPiece = board.getSquare(terminal);
-
-          //  white turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, WHITEQUEEN);
-          }
-          //  black turn
-          else {
-               board.setSquare(terminal, BLACKQUEEN);
-          }
-          board.setSquare(initial, EMPTYSQUARE);
-     }
-     else if (moveType == ENPASSANT) {
-          //  White turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, board.getSquare(initial));
-               board.setSquare(initial, EMPTYSQUARE);
-               board.setSquare(terminal + ROW, EMPTYSQUARE);
-               capturedPiece = BLACKPAWN;
-          }
-          //  Black turn
-          else {
-               board.setSquare(terminal, board.getSquare(initial));
-               board.setSquare(initial, EMPTYSQUARE);
-               board.setSquare(terminal - ROW, EMPTYSQUARE);
-               capturedPiece = WHITEPAWN;
-          }
-     }
-     else {
-          std::invalid_argument("makeMove() called with invalid moveType.");
-     }
-
-     updateBoard(board, move, capturedPiece);
-     return capturedPiece;
-}
 void undoMove(Board &board, const Move& move, const int capturedPiece) {
      int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
