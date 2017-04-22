@@ -42,7 +42,7 @@ uint64_t divide(const int depth, const int maxDepth, Board& board, const bool sh
                printf("\n");
           }
 
-          undoMove(board, moveList.getMove(i), capturedPiece);
+          board.undoMove(moveList.getMove(i), capturedPiece);
           board.setCastlingRights(castlingRights);
           board.setEnpassantSquare(enpassantSquare);
           board.setHalfMoveClock(halfMoveClock);
@@ -90,7 +90,7 @@ uint64_t divide2(const int depth, const int maxDepth, Board& board, const bool s
           }
 
 
-          undoMove(board, moveList.getMove(i), capturedPiece);
+          board.undoMove(moveList.getMove(i), capturedPiece);
           board.setCastlingRights(castlingRights);
           board.setEnpassantSquare(enpassantSquare);
           board.setHalfMoveClock(halfMoveClock);

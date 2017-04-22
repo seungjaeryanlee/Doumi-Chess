@@ -117,13 +117,20 @@ public:
      void print() const;
 
      /// <summary>
-     /// This function applies the given move to the given board.
+     /// This function applies the given move.
      /// </summary>
      /// <param name="board">The board that the move will apply to.</param>
      /// <param name="move">The move to be applied to the board.</param>
      /// <returns>The piece that was captured with the move</returns>
      int makeMove(const Move& move);
 
+     /// <summary>
+     /// This function reverts the given move.
+     /// </summary>
+     /// <param name="move">The move that will be reverted</param>
+     /// <param name="capturedPiece">The piece that was captured by the move</param>
+     //TODO: Re-implement and use
+     void undoMove(const Move& move, const int capturedPiece);
 };
 
 /// <summary>
@@ -142,14 +149,7 @@ int checkColor(const int pieceType);
 int filerankToNumber(const char file, const int rank);
 
 
-/// <summary>
-/// This function reverts the given move on the given board.
-/// </summary>
-/// <param name="board">The board that the move will be reverted in</param>
-/// <param name="move">The move that will be reverted</param>
-/// <param name="capturedPiece">The piece that was captured by the move</param>
-//TODO: Re-implement and use
-void undoMove(Board &board, const Move& move, const int capturedPiece);
+
 
 
 /// <summary>
