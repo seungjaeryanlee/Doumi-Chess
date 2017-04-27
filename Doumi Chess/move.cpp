@@ -39,18 +39,18 @@ MoveList::MoveList() {
 }
 
 // Mutator
-void MoveList::addMove(const Move& move) {
+void MoveList::push(const Move& move) {
      movelist[moveCounter] = move;
      moveCounter++;
 }
-void MoveList::addMove(int initial, int terminal, int moveType) {
-     addMove(Move(initial, terminal, moveType));
+void MoveList::push(int initial, int terminal, int moveType) {
+     push(Move(initial, terminal, moveType));
 }
-void MoveList::addPromotionMove(int initial, int terminal) {
-     addMove(initial, terminal, KNIGHT_PROMOTION);
-     addMove(initial, terminal, BISHOP_PROMOTION);
-     addMove(initial, terminal, ROOK_PROMOTION);
-     addMove(initial, terminal, QUEEN_PROMOTION);
+void MoveList::pushPromotion(int initial, int terminal) {
+     push(initial, terminal, KNIGHT_PROMOTION);
+     push(initial, terminal, BISHOP_PROMOTION);
+     push(initial, terminal, ROOK_PROMOTION);
+     push(initial, terminal, QUEEN_PROMOTION);
 }
 
 inline std::string numberToFilerank(const int position) {
