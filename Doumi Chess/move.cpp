@@ -43,7 +43,15 @@ void MoveList::addMove(const Move& move) {
      movelist[moveCounter] = move;
      moveCounter++;
 }
-
+void MoveList::addMove(int initial, int terminal, int moveType) {
+     addMove(Move(initial, terminal, moveType));
+}
+void MoveList::addPromotionMove(int initial, int terminal) {
+     addMove(initial, terminal, KNIGHT_PROMOTION);
+     addMove(initial, terminal, BISHOP_PROMOTION);
+     addMove(initial, terminal, ROOK_PROMOTION);
+     addMove(initial, terminal, QUEEN_PROMOTION);
+}
 
 inline std::string numberToFilerank(const int position) {
      return numberToFile(position) + std::to_string(numberToRank(position));

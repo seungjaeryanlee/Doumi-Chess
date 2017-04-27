@@ -75,19 +75,3 @@ void promotionMoveGeneration(const Board& board, const int position, MoveList& m
 /// <param name="moveList">The list of moves where the new moves will be added in.</param>
 void enpassantMoveGeneration(const Board& board, MoveList& moveList);
 
-/// <summary>
-/// This function adds a given move to the given movelist.
-/// </summary>
-/// <param name="initial">The initial square of the move in board index notation.</param>
-/// <param name="terminal">The terminal square of the move in board index notation.</param>
-/// <param name="moveType">The type of the move.</param>
-/// <param name="moveList">The list of moves where the new move will be added in.</param>
-void addMove(int initial, int terminal, int moveType, MoveList& moveList);
-/// <summary>
-/// This function adds four promotion moves from the initial square to the terminal square to the given movelist.
-/// </summary>
-/// <param name="initial">The initial square of the moves in board index notation.</param>
-/// <param name="terminal">The terminal square of the moves in board index notation.</param>
-/// <param name="moveList">The list of moves where the new moves will be added in.</param>
-void addPromotionMove(int initial, int terminal, MoveList& moveList);
-
