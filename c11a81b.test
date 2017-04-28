@@ -1,0 +1,44 @@
+********************************************************************************
+*                                                                              *
+*                            DOUMI CHESS UNIT TESTS                            *
+*                                                                              *
+********************************************************************************
+
+BOARD CLASS
+   SUCCESS   Board::setup() with Board::fen() should return initial FEN
+   SUCCESS   Board::fen() should return FEN string from Board::import()
+   SUCCESS   Board::evaluate() should return 0 in initial board
+PERFT
+   SUCCESS   Perft of depth 1 should give 20 moves
+   SUCCESS   Perft of depth 2 should give 400 moves
+   SUCCESS   Perft of depth 3 should give 8902 moves
+   SUCCESS   Perft of depth 4 should give 197281 moves
+GAME STATE
+   SUCCESS   Initial board state should be NOTMATE
+   SUCCESS   STALEMATE_MOVE should be detected
+   SUCCESS   STALEMATE_50 should be detected
+   SUCCESS   STALEMATE_75 should be detected
+   SUCCESS   STALEMATE_3F should be detected
+   SUCCESS   WHITE_CHECKMATE should be detected
+
+********************************************************************************
+*                                                                              *
+*                              UNIT TESTS SUMMARY                              *
+*                                                                              *
+********************************************************************************
+
+  Test Duration: 1134 ms.
+  Passed tests : 13
+  Failed tests : 0
+
+********************************************************************************
+*                                                                              *
+*                            DOUMI CHESS BOTTLENECK                            *
+*                                                                              *
+********************************************************************************
+
+  MOVEGEN                         107268 ns. (Average of 10000 trials)
+  EVALUATE                          6233 ns. (Average of 10000 trials)
+  COPYBOARD                          185 ns. (Average of 10000 trials)
+  MAKEMOVE                           687 ns. (Average of 20000 trials)
+  CHECKGAMESTATE INIT             114817 ns. (Average of 10000 trials)
