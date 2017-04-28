@@ -73,28 +73,97 @@ public:
      /// </summary>
      /// <returns>The score of the board</returns>
      int evaluate();
+
+     /// <summary>
+     /// This function sets the board to the initial state.
+     /// </summary>
+     void setup();
+
+     /// <summary>
+     /// This function sets the board according to the FEN.
+     /// </summary>
+     /// <param name="FEN">The desired board in FEN notation.</param>
+     void import(const std::string FEN);
+
+     /// <summary>
+     /// This function converts the board to FEN notation.
+     /// </summary>
+     /// <returns>FEN notation of the board.</returns>
+     std::string fen();
+     
+     /// <summary>
+     /// This function checks whether the king is being attacked or not.
+     /// </summary>
+     /// <param name="kingPos">The position of the king</param>
+     /// <returns>True if attacked, False if not.</returns>
+     const bool isAttacked(int kingPos) const;
+
+     /// <summary>
+     /// This function checks if in the given board a fifty move rule can be declared.
+     /// </summary>
+     /// <param name="board">The board that will be checked for fifty move rule.</param>
+     /// <returns>True if fifty move rule is possible. False if not.</returns>
+     const bool fiftyMoveCheck() const;
+
+     /// <summary>
+     /// This function prints the given board to console.
+     /// </summary>
+     /// <param name="board">The board that will be printed to console.</param>
+     void print_verbose() const;
+     /// <summary>
+     /// This function prints the given board to console excluding the error squares.
+     /// </summary>
+     /// <param name="board">The board that will be printed to console.</param>
+     void print() const;
+
+     /// <summary>
+     /// This function applies the given move.
+     /// </summary>
+     /// <param name="move">The move to be applied to the board.</param>
+     /// <returns>The piece that was captured with the move</returns>
+     int makeMove(const Move& move);
+
+     /// <summary>
+     /// This function reverts the given move.
+     /// </summary>
+     /// <param name="move">The move that will be reverted</param>
+     /// <param name="capturedPiece">The piece that was captured by the move</param>
+     //FIXME: Re-implement and use
+     void undoMove(const Move& move, const int capturedPiece);
+
+     /// <summary>
+     /// This function updates the castling rights of the board if the given move changed it. This is called after the move was applied to the board.
+     /// </summary>
+     /// <param name="move">The move that was made that could have changed the castling rights.</param>
+     void updateCastling(const Move& move);
+     /// <summary>
+     /// This function updates the en passant square of the board if the given move changed it. This is called after the move was applied to the board.
+     /// </summary>
+     /// <param name="board">The board that will be checked.</param>
+     /// <param name="move">The move that was made that could have changed the en passant square.</param>
+     void updateEnPassant(const Move& move);
+     /// <summary>
+     /// This function updates the half move clock of the board if the given move changed it. This is called after the move was applied to the board.
+     /// </summary>
+     /// <param name="board">The board that will be checked.</param>
+     /// <param name="move">The move that was made that has changed the half move clock.</param>
+     void updateHalfMoveClock(const Move& move);
+     /// <summary>
+     /// This function updates the move number of the board if the given move changed it. This is called after the move was applied to the board.
+     /// </summary>
+     /// <param name="board">The board that will be checked.</param>
+     /// <param name="move">The move that was made that could have changed the move number.</param>
+     void updateMoveNumber();
+     /// <summary>
+     /// This function updates the non-board components (casting, enpassant, halfmoveclock, movenumber) of the board if the given move changed it. This is called after the move was applied to the board.
+     /// </summary>
+     /// <param name="board">The board that will be checked.</param>
+     /// <param name="move">The move that was made that could have changed the board properties.</param>
+     // FIXME: Fix
+     void updateBoard(const Move& move, const int capturedPiece);
+
+
 };
-
-
-/*                                  BOARD SETUP                               */
-/// <summary>
-/// This function sets the given board to the initial state.
-/// </summary>
-/// <param name="board">The board that will be changed to initial state.</param>
-void board120Setup(Board& board);
-/// <summary>
-/// This function sets the given board according to the FEN.
-/// </summary>
-/// <param name="board">The board that will be changed to initial state.</param>
-/// <param name="FEN">The desired board in FEN notation.</param>
-void FENboardSetup(Board& board, const std::string FEN);
-/// <summary>
-/// This function converts the given board to FEN notation.
-/// </summary>
-/// <param name="board">The board that will be converted to FEN notation.</param>
-/// <returns>FEN notation of the given board.</returns>
-std::string boardToFEN(const Board& board);
-
 
 /// <summary>
 /// This function returns the color of the given piece type
@@ -110,81 +179,3 @@ int checkColor(const int pieceType);
 /// <param name="rank">The rank of the square</param>
 /// <returns>The board index notation of the square</returns>
 int filerankToNumber(const char file, const int rank);
-
-
-/// <summary>
-/// This function checks whether the king is being attacked or not.
-/// </summary>
-/// <param name="board">The board that will be checked.</param>
-/// <param name="kingPos">The position of the king</param>
-/// <returns>True if </returns>
-bool isSquareAttacked(const Board& board, int kingPos);
-
-/// <summary>
-/// This function prints the given board to console.
-/// </summary>
-/// <param name="board">The board that will be printed to console.</param>
-void printBoard(const Board& board);
-/// <summary>
-/// This function prints the given board to console excluding the error squares.
-/// </summary>
-/// <param name="board">The board that will be printed to console.</param>
-void printSimpleBoard(const Board& board);
-
-
-/// <summary>
-/// This function applies the given move to the given board.
-/// </summary>
-/// <param name="board">The board that the move will apply to.</param>
-/// <param name="move">The move to be applied to the board.</param>
-/// <returns>The piece that was captured with the move</returns>
-int makeMove(Board &board, const Move& move);
-/// <summary>
-/// This function reverts the given move on the given board.
-/// </summary>
-/// <param name="board">The board that the move will be reverted in</param>
-/// <param name="move">The move that will be reverted</param>
-/// <param name="capturedPiece">The piece that was captured by the move</param>
-//TODO: Re-implement and use
-void undoMove(Board &board, const Move& move, const int capturedPiece);
-
-
-/// <summary>
-/// This function updates the castling rights of the given board if the given move changed it. This is called after the move was applied to the board.
-/// </summary>
-/// <param name="board">The board that will be checked.</param>
-/// <param name="move">The move that was made that could have changed the castling rights.</param>
-void updateCastling(Board& board, const Move& move);
-/// <summary>
-/// This function updates the en passant square of the given board if the given move changed it. This is called after the move was applied to the board.
-/// </summary>
-/// <param name="board">The board that will be checked.</param>
-/// <param name="move">The move that was made that could have changed the en passant square.</param>
-void updateEnPassant(Board& board, const Move& move);
-/// <summary>
-/// This function updates the half move clock of the given board if the given move changed it. This is called after the move was applied to the board.
-/// </summary>
-/// <param name="board">The board that will be checked.</param>
-/// <param name="move">The move that was made that has changed the half move clock.</param>
-void updateHalfMoveClock(Board& board, const Move& move);
-/// <summary>
-/// This function updates the move number of the given board if the given move changed it. This is called after the move was applied to the board.
-/// </summary>
-/// <param name="board">The board that will be checked.</param>
-/// <param name="move">The move that was made that could have changed the move number.</param>
-void updateMoveNumber(Board& board);
-/// <summary>
-/// This function updates the non-board components (casting, enpassant, halfmoveclock, movenumber) of the given board if the given move changed it. This is called after the move was applied to the board.
-/// </summary>
-/// <param name="board">The board that will be checked.</param>
-/// <param name="move">The move that was made that could have changed the board properties.</param>
-// TODO: UPDATE
-void updateBoard(Board& board, const Move& move, const int capturedPiece);
-
-/// <summary>
-/// This function checks if in the given board a fifty move rule can be declared.
-/// </summary>
-/// <param name="board">The board that will be checked for fifty move rule.</param>
-/// <returns>True if fifty move rule is possible. False if not.</returns>
-bool fiftyMoveCheck(const Board& board);
-

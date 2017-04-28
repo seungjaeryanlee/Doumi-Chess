@@ -37,7 +37,6 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Variation* pVa
 /// <returns>The evaluation score of best move.</returns>
 int rootAlphabeta(const int maxDepth, Board board, Variation* principalVariation, Board savedBoard[MAX_MOVENUMBER], int saveIndex);
 
-
 /// <summary>
 /// This function checks the game state of the given board.
 /// </summary>
@@ -47,6 +46,9 @@ int rootAlphabeta(const int maxDepth, Board board, Variation* principalVariation
 /// <returns>The game state of the board.</returns>
 gameState checkGameState(Board& board, const Board savedBoard[MAX_MOVENUMBER], int saveIndex);
 
-
-// TODO: Documentation
+/// <summary>
+/// This function prints the variation to given stream.
+/// </summary>
+/// <param name="stream">The stream that the variation would be printed on.</param>
+/// <param name="var">The variation to be printed.</param>
 void printVariation(std::ostream& stream, Variation& var);

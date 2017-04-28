@@ -1,34 +1,30 @@
 /******************************************************************************/
-/* timer.cpp                                                                   */
+/* timer.cpp                                                                  */
 /* Seung Jae (Ryan) Lee                                                       */
 /******************************************************************************/
 
-#include <iostream>
 #include "timer.h"
 
-LARGE_INTEGER startTimer(LARGE_INTEGER *beginTime, int timerIndex) {
-     LARGE_INTEGER frequency;  // ticks per second
-
-     // std::cout << "Timer " << timerIndex << " starting!" << std::endl;
-
-     // get ticks per second
-     QueryPerformanceFrequency(&frequency);
-
-     // start timer
-     QueryPerformanceCounter(beginTime);
-
-     return frequency;
+Timer::Timer() {
+     hasStarted = false;
+     isRunning = false;
 }
-void stopTimer(LARGE_INTEGER *endTime, int timerIndex) {
-     QueryPerformanceCounter(endTime);
-     // std::cout << "Timer " << timerIndex << " ended!" << std::endl;
+void Timer::start() {
+     hasStarted = true;
+     isRunning = true;
+     startTime = std::chrono::high_resolution_clock::now();
 }
-void printElapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex) {
-     // in millisecond
-     double elapsedTime = (endTime.QuadPart - beginTime.QuadPart) * 1000.0 / frequency.QuadPart;
-     std::cout << "Timer " << timerIndex << ": " << elapsedTime << " ms elapsed." << std::endl;
+void Timer::stop() {
+     endTime = std::chrono::high_resolution_clock::now();
 }
-double elapsedTime(LARGE_INTEGER beginTime, LARGE_INTEGER endTime, LARGE_INTEGER frequency, int timerIndex) {
-     // in millisecond
-     return (endTime.QuadPart - beginTime.QuadPart) * 1000.0 / frequency.QuadPart;
+std::chrono::high_resolution_clock::duration Timer::duration_lossless() {
+     if (!hasStarted) { return std::chrono::nanoseconds::zero(); }
+     if (isRunning) { stop(); }
+     return (endTime-startTime);
+}
+uint64_t Timer::duration_nano() {
+     return std::chrono::duration_cast<std::chrono::nanoseconds>(duration_lossless()).count();
+}
+uint64_t Timer::duration_milli() {
+     return std::chrono::duration_cast<std::chrono::milliseconds>(duration_lossless()).count();
 }

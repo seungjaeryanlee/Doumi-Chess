@@ -148,24 +148,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="board.cpp" />
-    <ClCompile Include="command.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="debugmain.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="evaluation.cpp" />
     <ClCompile Include="main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="move.cpp" />
     <ClCompile Include="movegen.cpp" />
     <ClCompile Include="pgn.cpp" />
     <ClCompile Include="timer.cpp" />
-    <ClCompile Include="uci.cpp" />
+    <ClCompile Include="uci.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h" />
-    <ClInclude Include="command.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="defs.h" />
     <ClInclude Include="evaluation.h" />
@@ -175,9 +177,6 @@
     <ClInclude Include="timer.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Dictionary.txt" />
-    <Text Include="Improvements.txt" />
-    <Text Include="log.txt" />
     <Text Include="README.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

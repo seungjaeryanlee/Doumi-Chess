@@ -47,7 +47,20 @@ public:
      inline int getCounter() { return moveCounter; }
 
      // Mutator
-     void addMove(const Move& move);
+     void push(const Move& move);
+     /// <summary>
+     /// This function adds a given move to the movelist.
+     /// </summary>
+     /// <param name="initial">The initial square of the move in board index notation.</param>
+     /// <param name="terminal">The terminal square of the move in board index notation.</param>
+     /// <param name="moveType">The type of the move.</param>
+     void push(int initial, int terminal, int moveType);
+     /// <summary>
+     /// This function adds four promotion moves from the initial square to the terminal square to the movelist.
+     /// </summary>
+     /// <param name="initial">The initial square of the moves in board index notation.</param>
+     /// <param name="terminal">The terminal square of the moves in board index notation.</param>
+     void pushPromotion(int initial, int terminal);
 };
 
 /// <summary>
@@ -77,3 +90,4 @@ std::string numberToFilerank(const int position);
 std::string printMove(const int moveNumber, const Move& move);
 
 std::string moveToString(const Move& move);
+

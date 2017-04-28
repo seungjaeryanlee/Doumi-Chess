@@ -23,16 +23,12 @@ void tellUCI(std::ostream& ucilog, std::string output) {
      ucilog.flush();
 }
 
-
-
 int main() {
      std::ofstream ucilog;
      ucilog.open("uci.log");
 
-     // The line of command read
-     std::string command;
-     // A word from command
-     std::string token;
+     std::string command;  // The line of command read
+     std::string token;    // A word from command
      
      Board board;
      Board savedBoard[MAX_MOVENUMBER];
@@ -63,8 +59,8 @@ int main() {
           }
           else if (token == "go") {
 
-               // TODO: Check all options
-               // TODO: Implement PV ordering
+               // FIXME: Check all options
+               // FIXME: Implement PV ordering
                Variation PV;
                for (int depth = 1; depth <= 4; depth++) {
                     int score = rootAlphabeta(depth, board, &PV, savedBoard, saveIndex);
@@ -79,7 +75,7 @@ int main() {
                
           }
           else if (token == "ucinewgame") {
-               board120Setup(board);
+               board.setup();
           }
           else if (token == "position") {
                std::string option;
@@ -87,10 +83,10 @@ int main() {
                
                // Find Starting position
                if (option == "startpos") {
-                    board120Setup(board);
+                    board.setup();
                }
                else if (option == "fen") { // FEN is given
-                    FENboardSetup(board, option);
+                    board.import(option);
                }
                else { return 0; }
 
@@ -110,7 +106,7 @@ int main() {
                          move.setTerminal(filerankToNumber(moveString[2], moveString[3] - '0'));
 
                          if (moveString.length() == 4) {
-                              // TODO: Give correct moveType?
+                              // Unless promotion, no need to have correct type
                               move.setType(NORMAL);
                          }
                          else if (moveString[4] == 'n') {
@@ -128,11 +124,9 @@ int main() {
                          else { return 0; }
 
                          // Make move on the board
-                         makeMove(board, move);
+                         board.makeMove(move);
                     }
                }
-
-               
           }
 
           // 3. UNIMPLEMENTED TOKENS
@@ -144,9 +138,8 @@ int main() {
 
           // 4. DEBUGGING TOKENS (NOT FOR UCI)
           else if (token == "printfen") {
-               boardToFEN(board);
+               std::cout << board.fen() << std::endl;
           }
-
      }
 
      return 0;

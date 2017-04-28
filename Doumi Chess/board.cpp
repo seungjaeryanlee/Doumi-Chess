@@ -1,5 +1,5 @@
 /******************************************************************************/
-/* board.cpp                                                                   */
+/* board.cpp                                                                  */
 /* Seung Jae (Ryan) Lee                                                       */
 /******************************************************************************/
 
@@ -155,10 +155,6 @@ pieceCount[BLACKQUEEN]++;
 }
 */
 
-/// <summary>
-/// This function returns evaluation score of the board using piece values and PCSQ tables. Positive score signifies white's advantage.
-/// </summary>
-/// <returns>The score of the board</returns>
 int Board::evaluate() {
      int score = 0;
 
@@ -176,76 +172,72 @@ int Board::evaluate() {
      return score;
 }
 
-
-
-
-
-
-void board120Setup(Board& board) {
-     board.setTurn(WHITE);
-     board.setEnpassantSquare(0);
-     board.setMoveNumber(1);
-     board.setHalfMoveClock(0);
-     board.setCastlingRights({ true, true, true, true });
+void Board::setup() {
+     turn = WHITE;
+     enpassantSquare = 0;
+     moveNumber = 1;
+     halfMoveClock = 0;
+     castlingRights = { true, true, true, true };
 
      //  Add Empty Squares
      for (int i = 0; i < 8; i++) {
           for (int j = 0; j < 8; j++) {
-               board.setSquare((i + 2) * 10 + j + 1, EMPTYSQUARE);
+               board[(i + 2) * 10 + j + 1] = EMPTYSQUARE;
           }
      }
 
      //  Add Error Squares
      for (int j = 0; j < 10; j++) {
-          board.setSquare(j, ERRORSQUARE);
-          board.setSquare(10 + j, ERRORSQUARE);
-          board.setSquare(100 + j, ERRORSQUARE);
-          board.setSquare(110 + j, ERRORSQUARE);
+          board[j] = ERRORSQUARE;
+          board[10 + j] = ERRORSQUARE;
+          board[100 + j] = ERRORSQUARE;
+          board[110 + j] = ERRORSQUARE;
      }
      for (int j = 0; j < 12; j++) {
-          board.setSquare(10 * j, ERRORSQUARE);
-          board.setSquare(10 * j + 9, ERRORSQUARE);
+          board[10 * j] = ERRORSQUARE;
+          board[10 * j + 9] = ERRORSQUARE;
      }
 
      //  Add Non-Pawn Pieces
-     board.setSquare(A8, BLACKROOK);
-     board.setSquare(B8, BLACKKNIGHT);
-     board.setSquare(C8, BLACKBISHOP);
-     board.setSquare(D8, BLACKQUEEN);
-     board.setSquare(E8, BLACKKING);
-     board.setSquare(F8, BLACKBISHOP);
-     board.setSquare(G8, BLACKKNIGHT);
-     board.setSquare(H8, BLACKROOK);
+     board[A8] = BLACKROOK;
+     board[B8] = BLACKKNIGHT;
+     board[C8] = BLACKBISHOP;
+     board[D8] = BLACKQUEEN;
+     board[E8] = BLACKKING;
+     board[F8] = BLACKBISHOP;
+     board[G8] = BLACKKNIGHT;
+     board[H8] = BLACKROOK;
 
-     board.setSquare(A1, WHITEROOK);
-     board.setSquare(B1, WHITEKNIGHT);
-     board.setSquare(C1, WHITEBISHOP);
-     board.setSquare(D1, WHITEQUEEN);
-     board.setSquare(E1, WHITEKING);
-     board.setSquare(F1, WHITEBISHOP);
-     board.setSquare(G1, WHITEKNIGHT);
-     board.setSquare(H1, WHITEROOK);
+     board[A1] = WHITEROOK;
+     board[B1] = WHITEKNIGHT;
+     board[C1] = WHITEBISHOP;
+     board[D1] = WHITEQUEEN;
+     board[E1] = WHITEKING;
+     board[F1] = WHITEBISHOP;
+     board[G1] = WHITEKNIGHT;
+     board[H1] = WHITEROOK;
 
      //  Add Pawn Pieces
      for (int i = 0; i < 8; i++) {
-          board.setSquare(A2 + i, WHITEPAWN);
-          board.setSquare(A7 + i, BLACKPAWN);
+          board[A2 + i] = WHITEPAWN;
+          board[A7 + i] = BLACKPAWN;
      }
 }
-void FENboardSetup(Board& board, const std::string FEN) {
-     board.setCastlingRights({ false, false, false, false });
-     board.setEnpassantSquare(0);
+
+void Board::import(const std::string FEN) {
+     castlingRights = { false, false, false, false };
+     enpassantSquare = 0;
 
      //  Add Error Squares
      for (int j = 0; j < 10; j++) {
-          board.setSquare(j, ERRORSQUARE);
-          board.setSquare(10 + j, ERRORSQUARE);
-          board.setSquare(100 + j, ERRORSQUARE);
-          board.setSquare(110 + j, ERRORSQUARE);
+          board[j] = ERRORSQUARE;
+          board[10 + j] = ERRORSQUARE;
+          board[100 + j] = ERRORSQUARE;
+          board[110 + j] = ERRORSQUARE;
      }
      for (int j = 0; j < 12; j++) {
-          board.setSquare(10 * j, ERRORSQUARE);
-          board.setSquare(10 * j + 9, ERRORSQUARE);
+          board[10 * j] = ERRORSQUARE;
+          board[10 * j + 9] = ERRORSQUARE;
      }
 
      int currentSquare = 21;
@@ -259,70 +251,70 @@ void FENboardSetup(Board& board, const std::string FEN) {
           }
           else if ('1' <= FEN.at(i) && FEN.at(i) <= '8') {
                for (int k = 0; k < FEN.at(i) - '0'; k++) {
-                    board.setSquare(currentSquare, EMPTYSQUARE);
+                    board[currentSquare] = EMPTYSQUARE;
                     currentSquare++;
                }
           }
           else {
                switch (FEN.at(i)) {
                case 'p':
-                    board.setSquare(currentSquare, BLACKPAWN);
+                    board[currentSquare] = BLACKPAWN;
                     break;
                case 'r':
-                    board.setSquare(currentSquare, BLACKROOK);
+                    board[currentSquare] = BLACKROOK;
                     break;
                case 'n':
-                    board.setSquare(currentSquare, BLACKKNIGHT);
+                    board[currentSquare] = BLACKKNIGHT;
                     break;
                case 'b':
-                    board.setSquare(currentSquare, BLACKBISHOP);
+                    board[currentSquare] = BLACKBISHOP;
                     break;
                case 'q':
-                    board.setSquare(currentSquare, BLACKQUEEN);
+                    board[currentSquare] = BLACKQUEEN;
                     break;
                case 'k':
-                    board.setSquare(currentSquare, BLACKKING);
+                    board[currentSquare] = BLACKKING;
                     break;
                case 'P':
-                    board.setSquare(currentSquare, WHITEPAWN);
+                    board[currentSquare] = WHITEPAWN;
                     break;
                case 'R':
-                    board.setSquare(currentSquare, WHITEROOK);
+                    board[currentSquare] = WHITEROOK;
                     break;
                case 'N':
-                    board.setSquare(currentSquare, WHITEKNIGHT);
+                    board[currentSquare] = WHITEKNIGHT;
                     break;
                case 'B':
-                    board.setSquare(currentSquare, WHITEBISHOP);
+                    board[currentSquare] = WHITEBISHOP;
                     break;
                case 'Q':
-                    board.setSquare(currentSquare, WHITEQUEEN);
+                    board[currentSquare] = WHITEQUEEN;
                     break;
                case 'K':
-                    board.setSquare(currentSquare, WHITEKING);
+                    board[currentSquare] = WHITEKING;
                     break;
                }
                currentSquare++;
           }
      }
      i++;
-     if (FEN.at(i) == 'w') { board.setTurn(WHITE); }
-     else { board.setTurn(BLACK); }
+     if (FEN.at(i) == 'w') { turn = WHITE; }
+     else { turn = BLACK; }
 
      i += 2;
      if (FEN.at(i) != '-') {
           while (FEN.at(i) != ' ') {
                if (FEN.at(i) == 'K') {
-                    board.setCastlingRight(WKCASTLING, true);
+                    castlingRights[WKCASTLING] = true;
                }
                if (FEN.at(i) == 'Q') {
-                    board.setCastlingRight(WQCASTLING, true);
+                    castlingRights[WQCASTLING] = true;
                }
                if (FEN.at(i) == 'k') {
-                    board.setCastlingRight(BKCASTLING, true);
+                    castlingRights[BKCASTLING] = true;
                }
                if (FEN.at(i) == 'q') {
-                    board.setCastlingRight(BQCASTLING, true);
+                    castlingRights[BQCASTLING] = true;
                }
                i++;
           }
@@ -330,63 +322,59 @@ void FENboardSetup(Board& board, const std::string FEN) {
      }
      else { i += 2; }
 
+     // Set enpassant square
      if (FEN.at(i) != '-') {
-          //  get enpassant square
-          int enpassantSquare;
           enpassantSquare = COLUMN*(FEN.at(i) - 'a' + 1);
           i++;
           enpassantSquare += ROW*('9' - FEN.at(i) + 1);
-
-          board.setEnpassantSquare(enpassantSquare);
      }
 
      i += 2;
      // One-digit Fifty Move Count
      if (FEN.at(i + 1) == ' ') {
-          board.setHalfMoveClock(FEN.at(i) - '0');
+          halfMoveClock = FEN.at(i) - '0';
           i += 2;
      }
      // Two-digit Fifty Move Count
      else if ('0' <= FEN.at(i + 1) && FEN.at(i + 1) <= '9') {
           if (FEN.at(i + 2) == ' ') {
-               board.setHalfMoveClock(10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0'));
+               halfMoveClock = 10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0');
                i += 3;
           }
           else if ('0' <= FEN.at(i + 2) && FEN.at(i + 2) <= '9') {
-               board.setHalfMoveClock(100 * (FEN.at(i) - '0') + 
-                                       10 * (FEN.at(i + 1) - '0') + 
-                                            (FEN.at(i + 2) - '0'));
+               halfMoveClock = 100 * (FEN.at(i) - '0') +
+                                10 * (FEN.at(i + 1) - '0') +
+                                     (FEN.at(i + 2) - '0');
                i += 4;
           }
      }
 
      // One-digit Move Number
      if (FEN.length() == i + 1 || FEN.at(i + 1) == ' ') {
-          board.setMoveNumber(FEN.at(i) - '0');
+          moveNumber = FEN.at(i) - '0';
      }
      // Two-digit Move Number
      else if ('0' <= FEN.at(i + 1) && FEN.at(i + 1) <= '9') {
-          board.setMoveNumber(10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0'));
+          moveNumber = 10 * (FEN.at(i) - '0') + (FEN.at(i + 1) - '0');
      }
-
-
 }
-std::string boardToFEN(const Board& board) {
+
+std::string Board::fen() {
      std::string FEN;
      int emptySquareCount = 0;
 
      for (int i = 2; i < 10; i++) {
           for (int j = 1; j < 9; j++) {
-               if (board.getSquare(i*ROW + j*COLUMN) == EMPTYSQUARE) {
+               if (board[i*ROW + j*COLUMN] == EMPTYSQUARE) {
                     emptySquareCount++;
                     continue;
                }
-               if (board.getSquare(i*ROW + j*COLUMN) != EMPTYSQUARE &&
+               if (board[i*ROW + j*COLUMN] != EMPTYSQUARE &&
                     emptySquareCount != 0) {
                     FEN += ('0' + emptySquareCount);
                     emptySquareCount = 0;
                }
-               switch (board.getSquare(i*ROW + j*COLUMN)) {
+               switch (board[i*ROW + j*COLUMN]) {
                case WHITEPAWN:
                     FEN += 'P';
                     break;
@@ -438,15 +426,15 @@ std::string boardToFEN(const Board& board) {
      }
 
      FEN += ' ';
-     if (board.getTurn() == WHITE) { FEN += 'w'; }
+     if (turn == WHITE) { FEN += 'w'; }
      else { FEN += 'b'; }
 
      FEN += ' ';
      //  no castling available
-     bool WKCastling = board.getCastlingRight(WKCASTLING);
-     bool WQCastling = board.getCastlingRight(WQCASTLING);
-     bool BKCastling = board.getCastlingRight(BKCASTLING);
-     bool BQCastling = board.getCastlingRight(BQCASTLING);
+     bool WKCastling = castlingRights[WKCASTLING];
+     bool WQCastling = castlingRights[WQCASTLING];
+     bool BKCastling = castlingRights[BKCASTLING];
+     bool BQCastling = castlingRights[BQCASTLING];
      if (!(WKCastling || WQCastling || BKCastling || BQCastling)) {
           FEN += '-';
      }
@@ -466,354 +454,329 @@ std::string boardToFEN(const Board& board) {
      }
 
      FEN += ' ';
-     if (board.getEnpassantSquare() != 0) {
-          FEN += numberToFile(board.getEnpassantSquare());
-          FEN += ('0' + numberToRank(board.getEnpassantSquare()));
+     if (enpassantSquare != 0) {
+          FEN += numberToFile(enpassantSquare);
+          FEN += ('0' + numberToRank(enpassantSquare));
      }
      else { FEN += '-'; }
 
      FEN += ' ';
-     FEN += std::to_string(board.getHalfMoveClock());
+     FEN += std::to_string(halfMoveClock);
      FEN += ' ';
-     FEN += std::to_string(board.getMoveNumber());
+     FEN += std::to_string(moveNumber);
 
-     std::cout << FEN << std::endl;
      return FEN;
-
 }
 
-int checkColor(const int pieceType) {
-     if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
-          return WHITE;
-     }
-     else if (BLACKPAWN <= pieceType && pieceType <= BLACKKING) {
-          return BLACK;
-     }
-     else if (pieceType == EMPTYSQUARE || pieceType == ERRORSQUARE) {
-          return NEITHER;
-     }
-     else {
-          throw std::invalid_argument("Invalid pieceType.");
-     }
-}
-
-int filerankToNumber(const char file, const int rank) {
-     //  if it is not a correct filerank format, return -1
-     if ('a' > file || file > 'h' || 1 > rank || rank > 8) {
-          return -1;
-     }
-     return COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - 1));
-}
-
-bool isSquareAttacked(const Board& board, int kingPos) {
-     if (board.getTurn() == WHITE) {
+const bool Board::isAttacked(const int position) const {
+     if (turn == WHITE) {
           //  1. pawn
-          if (board.getSquare(kingPos - ROW - COLUMN) == BLACKPAWN ||
-               board.getSquare(kingPos - ROW + COLUMN) == BLACKPAWN) {
+          if (board[position - ROW - COLUMN] == BLACKPAWN ||
+              board[position - ROW + COLUMN] == BLACKPAWN) {
                return true;
           }
           //  2. knight
-          if (board.getSquare(kingPos - ROW - 2 * COLUMN) == BLACKKNIGHT ||
-               board.getSquare(kingPos - ROW + 2 * COLUMN) == BLACKKNIGHT ||
-               board.getSquare(kingPos + ROW - 2 * COLUMN) == BLACKKNIGHT ||
-               board.getSquare(kingPos + ROW + 2 * COLUMN) == BLACKKNIGHT ||
-               board.getSquare(kingPos - 2 * ROW - COLUMN) == BLACKKNIGHT ||
-               board.getSquare(kingPos - 2 * ROW + COLUMN) == BLACKKNIGHT ||
-               board.getSquare(kingPos + 2 * ROW - COLUMN) == BLACKKNIGHT ||
-               board.getSquare(kingPos + 2 * ROW + COLUMN) == BLACKKNIGHT) {
+          if (board[position - ROW - 2 * COLUMN] == BLACKKNIGHT ||
+              board[position - ROW + 2 * COLUMN] == BLACKKNIGHT ||
+              board[position + ROW - 2 * COLUMN] == BLACKKNIGHT ||
+              board[position + ROW + 2 * COLUMN] == BLACKKNIGHT ||
+              board[position - 2 * ROW - COLUMN] == BLACKKNIGHT ||
+              board[position - 2 * ROW + COLUMN] == BLACKKNIGHT ||
+              board[position + 2 * ROW - COLUMN] == BLACKKNIGHT ||
+              board[position + 2 * ROW + COLUMN] == BLACKKNIGHT) {
                return true;
           }
           //  3. bishop
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*ROW - i*COLUMN) == BLACKBISHOP ||
-                    board.getSquare(kingPos - i*ROW - i*COLUMN) == BLACKQUEEN) {
+               if (board[position - i*ROW - i*COLUMN] == BLACKBISHOP ||
+                    board[position - i*ROW - i*COLUMN] == BLACKQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*ROW - i*COLUMN) != EMPTYSQUARE) {
+               else if (board[position - i*ROW - i*COLUMN] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*ROW - i*COLUMN) == ERRORSQUARE) {
+               else if (board[position - i*ROW - i*COLUMN] == ERRORSQUARE) {
                     break;
                }
           }
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*ROW + i*COLUMN) == BLACKBISHOP ||
-                    board.getSquare(kingPos - i*ROW + i*COLUMN) == BLACKQUEEN) {
+               if (board[position - i*ROW + i*COLUMN] == BLACKBISHOP ||
+                   board[position - i*ROW + i*COLUMN] == BLACKQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*ROW + i*COLUMN) != EMPTYSQUARE) {
+               else if (board[position - i*ROW + i*COLUMN] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*ROW + i*COLUMN) == ERRORSQUARE) {
+               else if (board[position - i*ROW + i*COLUMN] == ERRORSQUARE) {
                     break;
                }
           }
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*ROW - i*COLUMN) == BLACKBISHOP ||
-                    board.getSquare(kingPos + i*ROW - i*COLUMN) == BLACKQUEEN) {
+               if (board[position + i*ROW - i*COLUMN] == BLACKBISHOP ||
+                   board[position + i*ROW - i*COLUMN] == BLACKQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*ROW - i*COLUMN) != EMPTYSQUARE) {
+               else if (board[position + i*ROW - i*COLUMN] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*ROW - i*COLUMN) == ERRORSQUARE) {
+               else if (board[position + i*ROW - i*COLUMN] == ERRORSQUARE) {
                     break;
                }
           }
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*ROW + i*COLUMN) == BLACKBISHOP ||
-                    board.getSquare(kingPos + i*ROW + i*COLUMN) == BLACKQUEEN) {
+               if (board[position + i*ROW + i*COLUMN] == BLACKBISHOP ||
+                    board[position + i*ROW + i*COLUMN] == BLACKQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*ROW + i*COLUMN) != EMPTYSQUARE) {
+               else if (board[position + i*ROW + i*COLUMN] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*ROW + i*COLUMN) == ERRORSQUARE) {
+               else if (board[position + i*ROW + i*COLUMN] == ERRORSQUARE) {
                     break;
                }
           }
           //  4. rook
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*ROW) == BLACKROOK ||
-                    board.getSquare(kingPos - i*ROW) == BLACKQUEEN) {
+               if (board[position - i*ROW] == BLACKROOK ||
+                    board[position - i*ROW] == BLACKQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*ROW) != EMPTYSQUARE) {
+               else if (board[position - i*ROW] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*ROW) == ERRORSQUARE) {
+               else if (board[position - i*ROW] == ERRORSQUARE) {
                     break;
                }
           }
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*ROW) == BLACKROOK ||
-                    board.getSquare(kingPos + i*ROW) == BLACKQUEEN) {
+               if (board[position + i*ROW] == BLACKROOK ||
+                    board[position + i*ROW] == BLACKQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*ROW) != EMPTYSQUARE) {
+               else if (board[position + i*ROW] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*ROW) == ERRORSQUARE) {
+               else if (board[position + i*ROW] == ERRORSQUARE) {
                     break;
                }
           }
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*COLUMN) == BLACKROOK ||
-                    board.getSquare(kingPos - i*COLUMN) == BLACKQUEEN) {
+               if (board[position - i*COLUMN] == BLACKROOK ||
+                    board[position - i*COLUMN] == BLACKQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*COLUMN) != EMPTYSQUARE) {
+               else if (board[position - i*COLUMN] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*COLUMN) == ERRORSQUARE) {
+               else if (board[position - i*COLUMN] == ERRORSQUARE) {
                     break;
                }
           }
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*COLUMN) == BLACKROOK ||
-                    board.getSquare(kingPos + i*COLUMN) == BLACKQUEEN) {
+               if (board[position + i*COLUMN] == BLACKROOK ||
+                    board[position + i*COLUMN] == BLACKQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*COLUMN) != EMPTYSQUARE) {
+               else if (board[position + i*COLUMN] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*COLUMN) == ERRORSQUARE) {
+               else if (board[position + i*COLUMN] == ERRORSQUARE) {
                     break;
                }
           }
           //  (5. queen: added to bishop and rook)
 
           //  6. king: is it needed?
-          if (board.getSquare(kingPos + 1) == BLACKKING ||
-               board.getSquare(kingPos - 1) == BLACKKING ||
-               board.getSquare(kingPos + 11) == BLACKKING ||
-               board.getSquare(kingPos - 11) == BLACKKING ||
-               board.getSquare(kingPos + 9) == BLACKKING ||
-               board.getSquare(kingPos - 9) == BLACKKING ||
-               board.getSquare(kingPos + 10) == BLACKKING ||
-               board.getSquare(kingPos - 10) == BLACKKING) {
-               return true;
+          if (board[position + 1] == BLACKKING ||
+              board[position - 1] == BLACKKING ||
+              board[position + 11] == BLACKKING ||
+              board[position - 11] == BLACKKING ||
+              board[position + 9] == BLACKKING ||
+              board[position - 9] == BLACKKING ||
+              board[position + 10] == BLACKKING ||
+              board[position - 10] == BLACKKING) {
+                return true;
           }
 
           return false;
      }
 
-     else if (board.getTurn() == BLACK) {
+     else if (turn == BLACK) {
           //  1. pawn
-          if (board.getSquare(kingPos + ROW - COLUMN) == WHITEPAWN ||
-               board.getSquare(kingPos + ROW + COLUMN) == WHITEPAWN) {
+          if (board[position + ROW - COLUMN] == WHITEPAWN ||
+               board[position + ROW + COLUMN] == WHITEPAWN) {
                return true;
           }
           //  2. knight
-          if (board.getSquare(kingPos - ROW - 2 * COLUMN) == WHITEKNIGHT ||
-               board.getSquare(kingPos - ROW + 2 * COLUMN) == WHITEKNIGHT ||
-               board.getSquare(kingPos + ROW - 2 * COLUMN) == WHITEKNIGHT ||
-               board.getSquare(kingPos + ROW + 2 * COLUMN) == WHITEKNIGHT ||
-               board.getSquare(kingPos - 2 * ROW - COLUMN) == WHITEKNIGHT ||
-               board.getSquare(kingPos - 2 * ROW + COLUMN) == WHITEKNIGHT ||
-               board.getSquare(kingPos + 2 * ROW - COLUMN) == WHITEKNIGHT ||
-               board.getSquare(kingPos + 2 * ROW + COLUMN) == WHITEKNIGHT) {
+          if (board[position - ROW - 2 * COLUMN] == WHITEKNIGHT ||
+               board[position - ROW + 2 * COLUMN] == WHITEKNIGHT ||
+               board[position + ROW - 2 * COLUMN] == WHITEKNIGHT ||
+               board[position + ROW + 2 * COLUMN] == WHITEKNIGHT ||
+               board[position - 2 * ROW - COLUMN] == WHITEKNIGHT ||
+               board[position - 2 * ROW + COLUMN] == WHITEKNIGHT ||
+               board[position + 2 * ROW - COLUMN] == WHITEKNIGHT ||
+               board[position + 2 * ROW + COLUMN] == WHITEKNIGHT) {
                return true;
           }
           //  3. bishop
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*ROW - i*COLUMN) == WHITEBISHOP ||
-                    board.getSquare(kingPos - i*ROW - i*COLUMN) == WHITEQUEEN) {
+               if (board[position - i*ROW - i*COLUMN] == WHITEBISHOP ||
+                    board[position - i*ROW - i*COLUMN] == WHITEQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*ROW - i*COLUMN) != EMPTYSQUARE) {
+               else if (board[position - i*ROW - i*COLUMN] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*ROW - i*COLUMN) == ERRORSQUARE) {
+               else if (board[position - i*ROW - i*COLUMN] == ERRORSQUARE) {
                     break;
                }
           }
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*ROW + i*COLUMN) == WHITEBISHOP ||
-                    board.getSquare(kingPos - i*ROW + i*COLUMN) == WHITEQUEEN) {
+               if (board[position - i*ROW + i*COLUMN] == WHITEBISHOP ||
+                    board[position - i*ROW + i*COLUMN] == WHITEQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*ROW + i*COLUMN) != EMPTYSQUARE) {
+               else if (board[position - i*ROW + i*COLUMN] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*ROW + i*COLUMN) == ERRORSQUARE) {
+               else if (board[position - i*ROW + i*COLUMN] == ERRORSQUARE) {
                     break;
                }
           }
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*ROW - i*COLUMN) == WHITEBISHOP ||
-                    board.getSquare(kingPos + i*ROW - i*COLUMN) == WHITEQUEEN) {
+               if (board[position + i*ROW - i*COLUMN] == WHITEBISHOP ||
+                    board[position + i*ROW - i*COLUMN] == WHITEQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*ROW - i*COLUMN) != EMPTYSQUARE) {
+               else if (board[position + i*ROW - i*COLUMN] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*ROW - i*COLUMN) == ERRORSQUARE) {
+               else if (board[position + i*ROW - i*COLUMN] == ERRORSQUARE) {
                     break;
                }
           }
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*ROW + i*COLUMN) == WHITEBISHOP ||
-                    board.getSquare(kingPos + i*ROW + i*COLUMN) == WHITEQUEEN) {
+               if (board[position + i*ROW + i*COLUMN] == WHITEBISHOP ||
+                    board[position + i*ROW + i*COLUMN] == WHITEQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*ROW + i*COLUMN) != EMPTYSQUARE) {
+               else if (board[position + i*ROW + i*COLUMN] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*ROW + i*COLUMN) == ERRORSQUARE) {
+               else if (board[position + i*ROW + i*COLUMN] == ERRORSQUARE) {
                     break;
                }
           }
           //  4. rook
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*ROW) == WHITEROOK ||
-                    board.getSquare(kingPos - i*ROW) == WHITEQUEEN) {
+               if (board[position - i*ROW] == WHITEROOK ||
+                    board[position - i*ROW] == WHITEQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*ROW) != EMPTYSQUARE) {
+               else if (board[position - i*ROW] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*ROW) == ERRORSQUARE) {
+               else if (board[position - i*ROW] == ERRORSQUARE) {
                     break;
                }
           }
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*ROW) == WHITEROOK ||
-                    board.getSquare(kingPos + i*ROW) == WHITEQUEEN) {
+               if (board[position + i*ROW] == WHITEROOK ||
+                    board[position + i*ROW] == WHITEQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*ROW) != EMPTYSQUARE) {
+               else if (board[position + i*ROW] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*ROW) == ERRORSQUARE) {
+               else if (board[position + i*ROW] == ERRORSQUARE) {
                     break;
                }
           }
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos - i*COLUMN) == WHITEROOK ||
-                    board.getSquare(kingPos - i*COLUMN) == WHITEQUEEN) {
+               if (board[position - i*COLUMN] == WHITEROOK ||
+                    board[position - i*COLUMN] == WHITEQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos - i*COLUMN) != EMPTYSQUARE) {
+               else if (board[position - i*COLUMN] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos - i*COLUMN) == ERRORSQUARE) {
+               else if (board[position - i*COLUMN] == ERRORSQUARE) {
                     break;
                }
           }
           for (int i = 1; i < 8; i++) {
-               if (board.getSquare(kingPos + i*COLUMN) == WHITEROOK ||
-                    board.getSquare(kingPos + i*COLUMN) == WHITEQUEEN) {
+               if (board[position + i*COLUMN] == WHITEROOK ||
+                    board[position + i*COLUMN] == WHITEQUEEN) {
                     return true;
                }
 
                //  if some other piece blocks it, no more serach is necessary
-               else if (board.getSquare(kingPos + i*COLUMN) != EMPTYSQUARE) {
+               else if (board[position + i*COLUMN] != EMPTYSQUARE) {
                     break;
                }
 
                //  also when it reaches the end of the board
-               else if (board.getSquare(kingPos + i*COLUMN) == ERRORSQUARE) {
+               else if (board[position + i*COLUMN] == ERRORSQUARE) {
                     break;
                }
           }
@@ -821,17 +784,16 @@ bool isSquareAttacked(const Board& board, int kingPos) {
           //  (5. queen: added to bishop and rook)
 
           //  6. king: is it needed?
-          if (board.getSquare(kingPos + 1) == WHITEKING ||
-               board.getSquare(kingPos - 1) == WHITEKING ||
-               board.getSquare(kingPos + 11) == WHITEKING ||
-               board.getSquare(kingPos - 11) == WHITEKING ||
-               board.getSquare(kingPos + 9) == WHITEKING ||
-               board.getSquare(kingPos - 9) == WHITEKING ||
-               board.getSquare(kingPos + 10) == WHITEKING ||
-               board.getSquare(kingPos - 10) == WHITEKING) {
+          if (board[position + 1] == WHITEKING ||
+               board[position - 1] == WHITEKING ||
+               board[position + 11] == WHITEKING ||
+               board[position - 11] == WHITEKING ||
+               board[position + 9] == WHITEKING ||
+               board[position - 9] == WHITEKING ||
+               board[position + 10] == WHITEKING ||
+               board[position - 10] == WHITEKING) {
                return true;
           }
-
           return false;
      }
 
@@ -841,12 +803,16 @@ bool isSquareAttacked(const Board& board, int kingPos) {
 
 }
 
-void printBoard(const Board& board) {
+const bool Board::fiftyMoveCheck() const {
+     return (halfMoveClock >= 100);
+}
+
+void Board::print_verbose() const {
      for (int i = 0; i < 120; i++) {
           if (i % 10 == 0) {
                printf("\n");
           }
-          switch (board.getSquare(i)) {
+          switch (board[i]) {
           case ERRORSQUARE:
                printf("X ");
                break;
@@ -893,11 +859,11 @@ void printBoard(const Board& board) {
      }
      printf("\n");
 }
-void printSimpleBoard(const Board& board) {
+void Board::print() const {
      for (int i = 2; i < 10; i++) {
           printf("%d| ", 10 - i);
           for (int j = 1; j < 9; j++) {
-               switch (board.getSquare(i*ROW + j*COLUMN)) {
+               switch (board[i*ROW + j*COLUMN]) {
                case ERRORSQUARE:
                     printf("X ");
                     break;
@@ -948,104 +914,103 @@ void printSimpleBoard(const Board& board) {
      printf("   a b c d e f g h\n");
 }
 
-
-int makeMove(Board &board, const Move& move) {
+int Board::makeMove(const Move& move) {
      int capturedPiece = EMPTYSQUARE;
      int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
      if (moveType == NORMAL) {
-          capturedPiece = board.getSquare(terminal);
-          board.setSquare(terminal, board.getSquare(initial));
-          board.setSquare(initial, EMPTYSQUARE);
+          capturedPiece = board[terminal];
+          board[terminal] = board[initial];
+          board[initial] = EMPTYSQUARE;
      }
      else if (moveType == DOUBLEMOVE) {
-          board.setSquare(terminal, board.getSquare(initial));
-          board.setSquare(initial, EMPTYSQUARE);
-          board.setEnpassantSquare((terminal + initial) / 2);
+          board[terminal] = board[initial];
+          board[initial] = EMPTYSQUARE;
+          enpassantSquare = (terminal + initial) / 2;
      }
      else if (moveType == QUEENSIDE_CASTLING) {
           //  move king
-          board.setSquare(terminal, board.getSquare(initial));
-          board.setSquare(initial, EMPTYSQUARE);
+          board[terminal] = board[initial];
+          board[initial] = EMPTYSQUARE;
           //  move rook
-          board.setSquare(terminal + COLUMN, board.getSquare(initial - 4 * COLUMN));
-          board.setSquare(initial - 4 * COLUMN, EMPTYSQUARE);
+          board[terminal + COLUMN] = board[initial - 4 * COLUMN];
+          board[initial - 4 * COLUMN] = EMPTYSQUARE;
           //  castling does not involve capture
      }
      else if (moveType == KINGSIDE_CASTLING) {
           //  move king
-          board.setSquare(terminal, board.getSquare(initial));
-          board.setSquare(initial, EMPTYSQUARE);
+          board[terminal] = board[initial];
+          board[initial] = EMPTYSQUARE;
           //  move rook
-          board.setSquare(terminal - COLUMN, board.getSquare(terminal + COLUMN));
-          board.setSquare(terminal + COLUMN, EMPTYSQUARE);
+          board[terminal - COLUMN] = board[terminal + COLUMN];
+          board[terminal + COLUMN] = EMPTYSQUARE;
           //  castling does not involve capture
      }
      else if (moveType == KNIGHT_PROMOTION) {
-          capturedPiece = board.getSquare(terminal);
+          capturedPiece = board[terminal];
 
           //  white turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, WHITEKNIGHT);
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] = WHITEKNIGHT;
           }
           //  black turn
           else {
-               board.setSquare(terminal, BLACKKNIGHT);
+               board[terminal] = BLACKKNIGHT;
           }
-          board.setSquare(initial, EMPTYSQUARE);
+          board[initial] = EMPTYSQUARE;
      }
      else if (moveType == BISHOP_PROMOTION) {
-          capturedPiece = board.getSquare(terminal);
+          capturedPiece = board[terminal];
 
           //  white turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, WHITEBISHOP);
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] =  WHITEBISHOP;
           }
           //  black turn
           else {
-               board.setSquare(terminal, BLACKBISHOP);
+               board[terminal] = BLACKBISHOP;
           }
-          board.setSquare(initial, EMPTYSQUARE);
+          board[initial] = EMPTYSQUARE;
      }
      else if (moveType == ROOK_PROMOTION) {
-          capturedPiece = board.getSquare(terminal);
+          capturedPiece = board[terminal];
 
           //  white turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, WHITEROOK);
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] = WHITEROOK;
           }
           //  black turn
           else {
-               board.setSquare(terminal, BLACKROOK);
+               board[terminal] = BLACKROOK;
           }
-          board.setSquare(initial, EMPTYSQUARE);
+          board[initial] = EMPTYSQUARE;
      }
      else if (moveType == QUEEN_PROMOTION) {
-          capturedPiece = board.getSquare(terminal);
+          capturedPiece = board[terminal];
 
           //  white turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, WHITEQUEEN);
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] = WHITEQUEEN;
           }
           //  black turn
           else {
-               board.setSquare(terminal, BLACKQUEEN);
+               board[terminal] = BLACKQUEEN;
           }
-          board.setSquare(initial, EMPTYSQUARE);
+          board[initial] = EMPTYSQUARE;
      }
      else if (moveType == ENPASSANT) {
           //  White turn
-          if (board.getSquare(initial) == WHITEPAWN) {
-               board.setSquare(terminal, board.getSquare(initial));
-               board.setSquare(initial, EMPTYSQUARE);
-               board.setSquare(terminal + ROW, EMPTYSQUARE);
+          if (board[initial] == WHITEPAWN) {
+               board[terminal] = board[initial];
+               board[initial] = EMPTYSQUARE;
+               board[terminal + ROW] = EMPTYSQUARE;
                capturedPiece = BLACKPAWN;
           }
           //  Black turn
           else {
-               board.setSquare(terminal, board.getSquare(initial));
-               board.setSquare(initial, EMPTYSQUARE);
-               board.setSquare(terminal - ROW, EMPTYSQUARE);
+               board[terminal] = board[initial];
+               board[initial] = EMPTYSQUARE;
+               board[terminal - ROW] = EMPTYSQUARE;
                capturedPiece = WHITEPAWN;
           }
      }
@@ -1053,124 +1018,140 @@ int makeMove(Board &board, const Move& move) {
           std::invalid_argument("makeMove() called with invalid moveType.");
      }
 
-     updateBoard(board, move, capturedPiece);
+     updateBoard(move, capturedPiece);
      return capturedPiece;
 }
-void undoMove(Board &board, const Move& move, const int capturedPiece) {
+void Board::undoMove(const Move& move, const int capturedPiece) {
      int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();
 
-     board.changeTurn();
+     changeTurn();
 
      if (moveType == NORMAL) {
-          board.setSquare(initial, board.getSquare(terminal));
-          board.setSquare(terminal, capturedPiece);
+          board[initial] = board[terminal];
+          board[terminal] = capturedPiece;
      }
      else if (moveType == DOUBLEMOVE) {
-          board.setSquare(initial, board.getSquare(terminal));
-          board.setSquare(terminal, EMPTYSQUARE);
+          board[initial] = board[terminal];
+          board[terminal] = EMPTYSQUARE;
      }
      else if (moveType == QUEENSIDE_CASTLING) {
           //  undo king move
-          board.setSquare(initial, board.getSquare(terminal));
-          board.setSquare(terminal, EMPTYSQUARE);
+          board[initial] = board[terminal];
+          board[terminal] = EMPTYSQUARE;
 
           //  undo rook move
-          board.setSquare(initial - 4 * COLUMN, board.getSquare(terminal + COLUMN));
-          board.setSquare(terminal + COLUMN, EMPTYSQUARE);
+          board[initial - 4 * COLUMN] = board[terminal + COLUMN];
+          board[terminal + COLUMN] = EMPTYSQUARE;
 
      }
      else if (moveType == KINGSIDE_CASTLING) {
           //  undo king move
-          board.setSquare(initial, board.getSquare(terminal));
-          board.setSquare(terminal, EMPTYSQUARE);
+          board[initial] = board[terminal];
+          board[terminal] = EMPTYSQUARE;
 
           //  undo rook move
-          board.setSquare(terminal + COLUMN, board.getSquare(terminal - COLUMN));
-          board.setSquare(terminal - COLUMN, EMPTYSQUARE);
+          board[terminal + COLUMN] =board[terminal - COLUMN];
+          board[terminal - COLUMN] = EMPTYSQUARE;
      }
      else if (moveType == KNIGHT_PROMOTION || moveType == BISHOP_PROMOTION ||
           moveType == ROOK_PROMOTION || moveType == QUEEN_PROMOTION) {
           //  white turn
-          if (checkColor(board.getSquare(terminal)) == WHITE) {
-               board.setSquare(terminal, capturedPiece);
-               board.setSquare(initial, WHITEPAWN);
+          if (checkColor(board[terminal]) == WHITE) {
+               board[terminal] = capturedPiece;
+               board[initial] = WHITEPAWN;
           }
           //  black turn
           else {
-               board.setSquare(terminal, capturedPiece);
-               board.setSquare(initial, BLACKPAWN);
+               board[terminal] = capturedPiece;
+               board[initial] = BLACKPAWN;
           }
      }
      else if (moveType == ENPASSANT) {
           //  white turn
-          if (board.getSquare(terminal) == WHITEPAWN) {
-               board.setSquare(terminal, EMPTYSQUARE);
-               board.setSquare(initial, WHITEPAWN);
-               board.setSquare(terminal + ROW, BLACKPAWN);
+          if (board[terminal] == WHITEPAWN) {
+               board[terminal] = EMPTYSQUARE;
+               board[initial] = WHITEPAWN;
+               board[terminal + ROW] = BLACKPAWN;
           }
           //  black turn
           else {
-               board.setSquare(terminal, EMPTYSQUARE);
-               board.setSquare(initial, BLACKPAWN);
-               board.setSquare(terminal - ROW, WHITEPAWN);
+               board[terminal] = EMPTYSQUARE;
+               board[initial] = BLACKPAWN;
+               board[terminal - ROW] = WHITEPAWN;
           }
      }
 }
 
-void updateCastling(Board& board, const Move& move) {
-     if (board.getSquare(move.getInitial()) == WHITEKING) {
-          board.setCastlingRight(WKCASTLING, false);
-          board.setCastlingRight(WQCASTLING, false);
+void Board::updateCastling(const Move& move) {
+     if (board[move.getInitial()] == WHITEKING) {
+          castlingRights[WKCASTLING] = false;
+          castlingRights[WQCASTLING] = false;
      }
-     if (board.getSquare(move.getInitial()) == BLACKKING) {
-          board.setCastlingRight(BKCASTLING, false);
-          board.setCastlingRight(BQCASTLING, false);
+     if (board[move.getInitial()] == BLACKKING) {
+          castlingRights[BKCASTLING] = false;
+          castlingRights[BQCASTLING] = false;
      }
-     if (board.getSquare(move.getInitial()) == WHITEROOK) {
+     if (board[move.getInitial()] == WHITEROOK) {
           if (move.getInitial() == A1) {
-               board.setCastlingRight(WQCASTLING, false);
+               castlingRights[WQCASTLING] = false;
           }
           if (move.getInitial() == H1) {
-               board.setCastlingRight(WKCASTLING, false);
+               castlingRights[WKCASTLING] = false;
           }
      }
-     if (board.getSquare(move.getInitial()) == BLACKROOK) {
+     if (board[move.getInitial()] == BLACKROOK) {
           if (move.getInitial() == A8) {
-               board.setCastlingRight(BQCASTLING, false);
+               castlingRights[BQCASTLING] = false;
           }
           if (move.getInitial() == H8) {
-               board.setCastlingRight(BKCASTLING, false);
+               castlingRights[BKCASTLING] = false;
           }
      }
 }
-void updateEnPassant(Board& board, const Move& move) {
+void Board::updateEnPassant(const Move& move) {
      if (move.getType() == DOUBLEMOVE) {
-          board.setEnpassantSquare((move.getInitial() + move.getTerminal()) / 2);
+          enpassantSquare = (move.getInitial() + move.getTerminal()) / 2;
      }
-     else { board.setEnpassantSquare(0); }
+     else { enpassantSquare = 0; }
 }
-void updateHalfMoveClock(Board& board, const Move& move) {
-     if (board.getSquare(move.getTerminal()) == EMPTYSQUARE
-          && board.getSquare(move.getInitial()) != WHITEPAWN
-          && board.getSquare(move.getInitial()) != BLACKPAWN) {
-          board.incrementHalfMoveClock();
+void Board::updateHalfMoveClock(const Move& move) {
+     if (board[move.getTerminal()] == EMPTYSQUARE
+          && board[move.getInitial()] != WHITEPAWN
+          && board[move.getInitial()] != BLACKPAWN) {
+          halfMoveClock++;
      }
-     else { board.setHalfMoveClock(0); }
+     else { halfMoveClock = 0; }
 }
-void updateMoveNumber(Board& board) {
-     if (board.getTurn() == BLACK) { board.incrementMoveNumber(); }
+void Board::updateMoveNumber() {
+     if (turn == BLACK) { moveNumber++; }
 }
 
-void updateBoard(Board& board, const Move& move, const int capturedPiece) {
-     updateCastling(board, move);
-     updateEnPassant(board, move);
-     updateHalfMoveClock(board, move);
-     board.updateEndgame(move);
+void Board::updateBoard(const Move& move, const int capturedPiece) {
+     updateCastling(move);
+     updateEnPassant(move);
+     updateHalfMoveClock(move);
+     updateEndgame(move);
      //board.updatePieceCount(move, capturedPiece);
-     updateMoveNumber(board);
-     board.changeTurn();
+     updateMoveNumber();
+     changeTurn();
 }
 
-bool fiftyMoveCheck(const Board& board) {
-     return (board.getHalfMoveClock() >= 100);
+int checkColor(const int pieceType) {
+     if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
+          return WHITE;
+     }
+     else if (BLACKPAWN <= pieceType && pieceType <= BLACKKING) {
+          return BLACK;
+     }
+     else {
+          return NEITHER;
+     }
+}
+
+int filerankToNumber(const char file, const int rank) {
+     //  if it is not a correct filerank format, return -1
+     if ('a' > file || file > 'h' || 1 > rank || rank > 8) {
+          return -1;
+     }
+     return COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - 1));
 }

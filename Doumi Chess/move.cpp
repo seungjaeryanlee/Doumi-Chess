@@ -39,14 +39,19 @@ MoveList::MoveList() {
 }
 
 // Mutator
-void MoveList::addMove(const Move& move) {
+void MoveList::push(const Move& move) {
      movelist[moveCounter] = move;
      moveCounter++;
 }
-
-
-
-
+void MoveList::push(int initial, int terminal, int moveType) {
+     push(Move(initial, terminal, moveType));
+}
+void MoveList::pushPromotion(int initial, int terminal) {
+     push(initial, terminal, KNIGHT_PROMOTION);
+     push(initial, terminal, BISHOP_PROMOTION);
+     push(initial, terminal, ROOK_PROMOTION);
+     push(initial, terminal, QUEEN_PROMOTION);
+}
 
 inline std::string numberToFilerank(const int position) {
      return numberToFile(position) + std::to_string(numberToRank(position));

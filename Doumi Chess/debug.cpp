@@ -28,7 +28,7 @@ uint64_t divide(const int depth, const int maxDepth, Board& board, const bool sh
           int initial = moveList.getMove(i).getInitial();
           int terminal = moveList.getMove(i).getTerminal();
 
-          capturedPiece = makeMove(board, moveList.getMove(i));
+          capturedPiece = board.makeMove(moveList.getMove(i));
 
           node += divide(depth - 1, maxDepth, board, showOutput);
           if (showOutput) {
@@ -42,7 +42,7 @@ uint64_t divide(const int depth, const int maxDepth, Board& board, const bool sh
                printf("\n");
           }
 
-          undoMove(board, moveList.getMove(i), capturedPiece);
+          board.undoMove(moveList.getMove(i), capturedPiece);
           board.setCastlingRights(castlingRights);
           board.setEnpassantSquare(enpassantSquare);
           board.setHalfMoveClock(halfMoveClock);
@@ -76,7 +76,7 @@ uint64_t divide2(const int depth, const int maxDepth, Board& board, const bool s
           int initial = moveList.getMove(i).getInitial();
           int terminal = moveList.getMove(i).getTerminal();
 
-          capturedPiece = makeMove(board, moveList.getMove(i));
+          capturedPiece = board.makeMove(moveList.getMove(i));
 
 
           node += divide(depth - 1, maxDepth, board, showOutput);
@@ -90,7 +90,7 @@ uint64_t divide2(const int depth, const int maxDepth, Board& board, const bool s
           }
 
 
-          undoMove(board, moveList.getMove(i), capturedPiece);
+          board.undoMove(moveList.getMove(i), capturedPiece);
           board.setCastlingRights(castlingRights);
           board.setEnpassantSquare(enpassantSquare);
           board.setHalfMoveClock(halfMoveClock);

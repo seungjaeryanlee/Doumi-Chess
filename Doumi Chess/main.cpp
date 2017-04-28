@@ -15,9 +15,26 @@
 #include "evaluation.h"
 #include "pgn.h"
 #include "debug.h"
-#include "command.h"
 
 const int UNDECIDED = 2;
+
+/// <summary>
+/// This function prints the basic menu of possible user commands.
+/// </summary>
+void printMenu() {
+     printf("--------------------------------------------------\n");
+     printf("%d: Make move\n", MOVE);
+     printf("%d: Display Board\n", DISPLAY_BOARD);
+     printf("%d: Display FEN\n", DISPLAY_FEN);
+     printf("%d: Reset Board\n", BOARD_RESET);
+     printf("%d: Undo move\n", UNDO_MOVE);
+     printf("%d: Computer Make Move\n", COM_MAKE_MOVE);
+     printf("%d: Print Possible Moves\n", PRINT_ALL_MOVES);
+     printf("%d: Evaluate Board\n", EVALUATE_BOARD);
+     printf("%d: Quit\n", QUIT);
+     printf("--------------------------------------------------\n");
+     printf("Please choose command: ");
+}
 
 /******************************************************************************/
 /*                               MAIN FUNCTION                                */
@@ -32,10 +49,9 @@ void main() {
      result gameResult = NOT_FINISHED;            // Records the result of the game
      int userColor = UNDECIDED;                   // Which color user plays
      bool spectate = false;                       // if true, the game is between two computers
-     LARGE_INTEGER frequency, beginTime, endTime; //  added for time performance check
      std::ofstream log;
 
-     board120Setup(currentBoard);
+     currentBoard.setup();
      log.open("log.txt");
      log << "===========================================================================\n";
      log << "                           NAGUENE CHESS  v1.0.0                           \n";
@@ -61,12 +77,12 @@ void main() {
      printf("Move number: %d\n", currentBoard.getMoveNumber());
      if (currentBoard.getTurn() == WHITE) { printf("Turn: White\n"); }
      else { printf("Turn: Black\n"); }
-     boardToFEN(currentBoard);
+     std::cout << currentBoard.fen() << std::endl;
      printf("---------------------------------------------------------------------------\n");
 
      // Begin timer
-     frequency = startTimer(&beginTime, 1);
-     
+     Timer programTimer;
+     programTimer.start();     
 
 /******************************************************************************/
 /*                                 MAIN LOOP                                  */
@@ -170,8 +186,8 @@ void main() {
                }
                
                if (commandType == MOVE) {
-                    LARGE_INTEGER frequency2, beginTime2, endTime2;
-                    frequency2 = startTimer(&beginTime2, 2);
+                    Timer moveTimer;
+                    moveTimer.start();
 
                     savedBoard[saveIndex] = currentBoard;
 
@@ -290,12 +306,12 @@ void main() {
                          }
                     }
                     Move userMove = Move(initialSquare, terminalSquare, moveType);
-                    savedCapturedPiece[saveIndex] = makeMove(currentBoard, userMove);
+                    savedCapturedPiece[saveIndex] = currentBoard.makeMove(userMove);
                     savedMove[saveIndex] = userMove;
                     saveIndex++;
 
                     // Check Fifty Move rule
-                    if (fiftyMoveCheck(currentBoard)) {
+                    if (currentBoard.fiftyMoveCheck()) {
                          bool correctInput = false, declareTie = false;
                          while (!correctInput) {
                               printf("Declare Fifty Move Rule? (Y/N):");
@@ -325,9 +341,9 @@ void main() {
                     log << printMove(currentBoard.getMoveNumber(), userMove);
 
                     printSimpleBoard(currentBoard);
-                    stopTimer(&endTime2, 2);
-                    std::cout << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for this move.\n";
-                    log << elapsedTime(beginTime2, endTime2, frequency2, 2) << " ms for this move.\n";
+                    moveTimer.stop();
+                    std::cout << moveTimer.duration() << " ms for this move.\n";
+                    log << moveTimer.duration() << " ms for this move.\n";
                     printf("---------------------------------------------------------------------------\n");
 
                     continue;
@@ -337,11 +353,11 @@ void main() {
                     continue;
                }
                else if (commandType == DISPLAY_FEN) {
-                    boardToFEN(currentBoard);
+                    std::cout << currentBoard.fen() << std::endl;
                     continue;
                }
                else if (commandType == BOARD_RESET) {
-                    board120Setup(currentBoard);
+                    currentBoard.setup();
                     printSimpleBoard(currentBoard);
                     continue;
                }
@@ -383,8 +399,7 @@ void main() {
           //  Computer turn
           else if (currentBoard.getTurn() == -userColor || spectate == true) {
 
-               LARGE_INTEGER frequency, beginTime, endTime;
-               frequency = startTimer(&beginTime, 2);
+               Timer moveTimer;
 
                Variation PV;
                int abValue = rootAlphabeta(EVAL_DEPTH, currentBoard, &PV, savedBoard, saveIndex);
@@ -398,14 +413,14 @@ void main() {
 
                // Make Move, Save and Print
                savedBoard[saveIndex] = currentBoard;
-               savedCapturedPiece[saveIndex] = makeMove(currentBoard, PV.moves[0]);
+               savedCapturedPiece[saveIndex] = currentBoard.makeMove(PV.moves[0]);
                savedMove[saveIndex] = PV.moves[0];
                saveIndex++;
 
                printSimpleBoard(currentBoard);
 
                // Check Fifty move rule
-               if (fiftyMoveCheck(currentBoard)) {
+               if (currentBoard.fiftyMoveCheck()) {
                     // If in bad position, declare fifty move rule
                     if (abValue <= STALEMATE_BOUND) {
                          printf("Computer declares Fifty Move Rule.\n");
@@ -435,8 +450,9 @@ void main() {
                }
 
                stopTimer(&endTime, 2);
-               std::cout << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
-               log << elapsedTime(beginTime, endTime, frequency, 2) << " ms for this move.\n";
+               moveTimer.stop();
+               std::cout << moveTimer.duration() << " ms for this move.\n";
+               log << moveTimer.duration() << " ms for this move.\n";
                printf("---------------------------------------------------------------------------\n");
           }
      }
@@ -462,9 +478,10 @@ void main() {
      }
 
      //  Stop timer and print elapsed time
-     stopTimer(&endTime, 1);
-     printElapsedTime(beginTime, endTime, frequency, 1);
-     log << "Total Time: " << elapsedTime(beginTime, endTime, frequency, 1) << "ms" << std::endl;
+     programTimer.stop();
+     std::cout << "Program Duration: " << programTimer.duration() << " ms elapsed." << std::endl;
+
+     log << "Program Duration: " << programTimer.duration() << "ms" << std::endl;
 
      log.close();
 }
