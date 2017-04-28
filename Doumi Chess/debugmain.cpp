@@ -9,6 +9,7 @@
 #include <fstream>
 #include <array>
 #include <chrono>
+#include <iomanip>
 
 #include "timer.h"
 #include "board.h"
@@ -161,7 +162,7 @@ void time_MoveGen() {
 
      timer.stop();
 
-     std::cout << "  MOVEGEN   " << timer.duration_nano() / MOVEGEN_TEST_COUNT << " ns. (Average of " << MOVEGEN_TEST_COUNT << " trials)" << std::endl;
+     std::cout << std::left << std::setw(10) << "  MOVEGEN" << std::right << std::setw(10) << timer.duration_nano() / MOVEGEN_TEST_COUNT << " ns. (Average of " << MOVEGEN_TEST_COUNT << " trials)" << std::endl;
 }
 
 void time_Evaluate() {
@@ -173,7 +174,7 @@ void time_Evaluate() {
      }
 
      timer.stop();
-     std::cout << "  EVALUATE  " << timer.duration_nano() / EVALUATE_TEST_COUNT << " ns. (Average of " << EVALUATE_TEST_COUNT << " trials)" << std::endl;
+     std::cout << std::left << std::setw(10) << "  EVALUATE" << std::right << std::setw(10) << timer.duration_nano() / EVALUATE_TEST_COUNT << " ns. (Average of " << EVALUATE_TEST_COUNT << " trials)" << std::endl;
 }
 
 int main() {
