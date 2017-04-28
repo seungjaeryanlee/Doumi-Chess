@@ -18,8 +18,15 @@
 #include "pgn.h"
 #include "debug.h"
 
+// FIXME: Add Documentatio
 const int MOVEGEN_TEST_COUNT = 10000;
 const int EVALUATE_TEST_COUNT = 10000;
+const int COPYBOARD_TEST_COUNT = 10000;
+const int MAKEMOVE_TEST_COUNT = 10000;
+const int CHECKGAMESTATE_TEST_COUNT = 10000;
+
+const int FUNCTION_WS_LENGTH = 30;
+const int TIME_WS_LENGTH = 10;
 
 typedef std::chrono::high_resolution_clock Clock;
 
@@ -162,19 +169,58 @@ void time_MoveGen() {
 
      timer.stop();
 
-     std::cout << std::left << std::setw(10) << "  MOVEGEN" << std::right << std::setw(10) << timer.duration_nano() / MOVEGEN_TEST_COUNT << " ns. (Average of " << MOVEGEN_TEST_COUNT << " trials)" << std::endl;
+     std::cout << std::left << std::setw(FUNCTION_WS_LENGTH) << "  MOVEGEN" << std::right << std::setw(TIME_WS_LENGTH) << timer.duration_nano() / MOVEGEN_TEST_COUNT << " ns. (Average of " << MOVEGEN_TEST_COUNT << " trials)" << std::endl;
 }
 
 void time_Evaluate() {
      Board board;  board.setup();
      Timer timer;  timer.start();
 
-     for (int i = 0; i < MOVEGEN_TEST_COUNT; i++) {
+     for (int i = 0; i < EVALUATE_TEST_COUNT; i++) {
           board.evaluate();
      }
 
      timer.stop();
-     std::cout << std::left << std::setw(10) << "  EVALUATE" << std::right << std::setw(10) << timer.duration_nano() / EVALUATE_TEST_COUNT << " ns. (Average of " << EVALUATE_TEST_COUNT << " trials)" << std::endl;
+     std::cout << std::left << std::setw(FUNCTION_WS_LENGTH) << "  EVALUATE" << std::right << std::setw(TIME_WS_LENGTH) << timer.duration_nano() / EVALUATE_TEST_COUNT << " ns. (Average of " << EVALUATE_TEST_COUNT << " trials)" << std::endl;
+}
+
+void time_CopyBoard() {
+     Board board;  board.setup();
+     Timer timer;  timer.start();
+
+     for (int i = 0; i < COPYBOARD_TEST_COUNT; i++) {
+          Board newBoard = board;
+     }
+
+     timer.stop();
+     std::cout << std::left << std::setw(FUNCTION_WS_LENGTH) << "  COPYBOARD" << std::right << std::setw(TIME_WS_LENGTH) << timer.duration_nano() / COPYBOARD_TEST_COUNT << " ns. (Average of " << COPYBOARD_TEST_COUNT << " trials)" << std::endl;
+}
+
+void time_MakeMove() {
+     Board board;  board.setup();
+     Timer timer;  timer.start();
+
+     for (int i = 0; i < MAKEMOVE_TEST_COUNT; i++) {
+          board.makeMove(Move(B1, C3, NORMAL));
+          board.makeMove(Move(C3, B1, NORMAL));
+     }
+
+     timer.stop();
+     std::cout << std::left << std::setw(FUNCTION_WS_LENGTH) << "  MAKEMOVE" << std::right << std::setw(TIME_WS_LENGTH) << timer.duration_nano() / (MAKEMOVE_TEST_COUNT*2) << " ns. (Average of " << MAKEMOVE_TEST_COUNT*2 << " trials)" << std::endl;
+}
+
+void time_CheckGameState() {
+     Board board;  board.setup();
+     Timer timer;  timer.start();
+     Board savedBoard[MAX_MOVENUMBER];
+     int saveIndex = 0;
+
+     for (int i = 0; i < CHECKGAMESTATE_TEST_COUNT; i++) {
+          checkGameState(board, savedBoard, saveIndex);
+     }
+
+     timer.stop();
+     std::cout << std::left << std::setw(FUNCTION_WS_LENGTH) << "  CHECKGAMESTATE INIT" << std::right << std::setw(TIME_WS_LENGTH) << timer.duration_nano() / (CHECKGAMESTATE_TEST_COUNT) << " ns. (Average of " << CHECKGAMESTATE_TEST_COUNT << " trials)" << std::endl;
 }
 
 int main() {
@@ -399,6 +445,9 @@ int main() {
 
      time_MoveGen();
      time_Evaluate();
+     time_CopyBoard();
+     time_MakeMove();
+     time_CheckGameState();
 
      std::cout << std::endl;
 
