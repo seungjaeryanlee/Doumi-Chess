@@ -84,6 +84,70 @@ void test_Perft() {
              divide(5, 0, board, false) == 4865609);
 }
 
+void test_GameState() {
+     std::cout << "GAME STATE" << std::endl;
+     
+
+     // Test 1
+     Board board1;
+     Board savedBoard1[MAX_MOVENUMBER];
+     int saveIndex1 = 0;
+     board1.setup();
+
+     REQUIRE("Initial board state should be NOTMATE",
+             checkGameState(board1, savedBoard1, saveIndex1) == NOTMATE);
+
+     // Test 2
+     Board board2;
+     Board savedBoard2[MAX_MOVENUMBER];
+     int saveIndex2 = 0;
+     board2.import("6bk/5p1p/5P1P/8/8/8/8/4K3 b - - 0 1");
+
+     REQUIRE("STALEMATE_MOVE should be detected",
+             checkGameState(board2, savedBoard2, saveIndex2) == STALEMATE_MOVE);
+
+     // Test 3
+     Board board3;
+     Board savedBoard3[MAX_MOVENUMBER];
+     int saveIndex3 = 0;
+     board3.import("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 100 1");
+
+     REQUIRE("STALEMATE_50 should be detected",
+             checkGameState(board3, savedBoard3, saveIndex3) == STALEMATE_50);
+
+     // Test 4
+     Board board4;
+     Board savedBoard4[MAX_MOVENUMBER];
+     int saveIndex4 = 0;
+     board4.import("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 150 1");
+
+     REQUIRE("STALEMATE_75 should be detected",
+             checkGameState(board4, savedBoard4, saveIndex4) == STALEMATE_75);
+
+     // Test 5
+     Board board5;
+     Board savedBoard5[MAX_MOVENUMBER];
+     int saveIndex5 = 3;
+     board5.import("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 0 1");
+
+     savedBoard5[0] = board5;
+     savedBoard5[1] = board5;
+     savedBoard5[2] = board5; // FIXME: Is this needed?
+     
+     REQUIRE("STALEMATE_3F should be detected",
+             checkGameState(board5, savedBoard5, saveIndex5) == STALEMATE_3F);
+
+     // Test 6
+     Board board6;
+     Board savedBoard6[MAX_MOVENUMBER];
+     int saveIndex6 = 0;
+     board6.import("R6k/R7/8/8/8/8/8/7K b - - 0 1");
+
+     REQUIRE("WHITE_CHECKMATE should be detected",
+             checkGameState(board6, savedBoard6, saveIndex6) == WHITE_CHECKMATE);
+
+}
+
 int main() {
      auto testStart = Clock::now();
 
@@ -98,12 +162,12 @@ int main() {
 
      test_BoardClass();
      test_Perft();
+     test_GameState();
 
      // FIXME: Add MoveGen Test: check equality of elements in array
      // FIXME: Add MakeMove Test
      // FIXME: Add UndoMove Test
      // FIXME: Add Alphabeta Test (check unmodified)
-     // FIXME: Add GameState Test
      // FIXME: Add Mate in X "Test"
 
      Board initialBoard;
@@ -222,116 +286,6 @@ int main() {
           printf("\n");
           initialBoard.makeMove(bestMoves[4]);
      }
-        
-
-
-     printf("\n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf(" Stalemate Detection Test 1: No Legal Move                                      \n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf("\n");
-
-     Board stalemateboard1;
-     Board savedBoard2[MAX_MOVENUMBER];
-     int saveIndex2 = 0;
-     stalemateboard1.import("6bk/5p1p/5P1P/8/8/8/8/4K3 b - - 0 1");
-     stalemateboard1.print();
-
-     gameState stalemate1 = checkGameState(stalemateboard1, savedBoard2, saveIndex2);
-     if (stalemate1 == STALEMATE_MOVE) {
-          printf("\nCorrect stalemate detected.\n");
-     }
-     else {
-          printf("\nStalemate test 1 failed!\n");
-     }
-
-
-
-     printf("\n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf(" Stalemate Detection Test 2: 50 Move Rule                                       \n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf("\n");
-
-     Board stalemateboard2;
-     stalemateboard2.import("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 100 1");
-     stalemateboard2.print();
-
-     gameState stalemate2 = checkGameState(stalemateboard2, savedBoard2, saveIndex2);
-     if (stalemate2 == STALEMATE_50) {
-          printf("\nCorrect stalemate detected.\n");
-     }
-     else {
-          printf("\nStalemate test 2 failed!\n");
-     }
-
-
-
-     printf("\n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf(" Stalemate Detection Test 3: 75 Nove Rule                                       \n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf("\n");
-
-     Board stalemateboard3;
-     stalemateboard3.import("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 150 1");
-     stalemateboard2.print();
-
-     gameState stalemate3 = checkGameState(stalemateboard3, savedBoard2, saveIndex2);
-     if (stalemate3 == STALEMATE_75) {
-          printf("\nCorrect stalemate detected.\n");
-     }
-     else {
-          printf("\nStalemate test 3 failed!\n");
-     }
-
-
-
-     printf("\n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf(" Stalemate Detection Test 4: Threefold Repetition                               \n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf("\n");
-
-     Board stalemateboard4;
-     Board savedBoard3[MAX_MOVENUMBER];
-     int saveIndex3 = 3;
-     stalemateboard4.import("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 0 1");
-
-     savedBoard3[0] = stalemateboard4;
-     savedBoard3[1] = stalemateboard4;
-     savedBoard3[2] = stalemateboard4;
-
-     gameState stalemate4 = checkGameState(stalemateboard4, savedBoard3, saveIndex3);
-     if (stalemate4 == STALEMATE_3F) {
-          printf("Correct stalemate detected.\n");
-     }
-     else {
-          printf("Stalemate test 4 failed!\n");
-     }
-
-
-
-     printf("\n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf(" Checkmate Detection Test                                                       \n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf("\n");
-
-     Board checkmateboard;
-     Board savedBoard4[MAX_MOVENUMBER];
-     int saveIndex4 = 0;
-     checkmateboard.import("R6k/R7/8/8/8/8/8/7K b - - 0 1");
-
-     gameState checkmate = checkGameState(checkmateboard, savedBoard4, saveIndex4);
-     if (checkmate == WHITE_CHECKMATE) {
-          printf("Correct stalemate detected.\n");
-     }
-     else {
-          printf("Checkmate test failed!\n");
-     }
-
-     
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
