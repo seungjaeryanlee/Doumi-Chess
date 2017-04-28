@@ -7,6 +7,15 @@ all: doumiUCI
 doumiUCI: uci.o evaluation.o movegen.o move.o board.o
 	$(CC) $(CPPFLAGS) uci.o evaluation.o movegen.o move.o board.o -o doumiUCI
 
+doumiTEST: debugmain.o debug.o evaluation.o movegen.o move.o board.o
+	$(CC) $(CPPFLAGS) debugmain.o debug.o evaluation.o movegen.o move.o board.o -o doumiTEST
+
+debugmain.o: debugmain.cpp debug.h
+	$(CC) $(CPPFLAGS) -c debugmain.cpp
+
+debug.o: debug.cpp debug.h movegen.h
+	$(CC) $(CPPFLAGS) -c debug.cpp
+
 uci.o: uci.cpp evaluation.h board.h
 	$(CC) $(CPPFLAGS) -c uci.cpp
 

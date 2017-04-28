@@ -8,13 +8,16 @@
 #include <string>
 #include <fstream>
 #include <array>
+#include <chrono>
+
 #include "board.h"
 #include "movegen.h"
-#include "timer.h"
 #include "evaluation.h"
 #include "pgn.h"
 
 #include "debug.h"
+
+typedef std::chrono::high_resolution_clock Clock;
 
 // FIXME: Global variables for clarity?
 int passCount = 0;
@@ -48,9 +51,11 @@ void test_BoardClass() {
           board.evaluate() == 0);
 }
 
-void main() {
-     Timer programTimer;
-     programTimer.start();
+int main() {
+     auto testStart = Clock::now();
+
+     //Timer programTimer;
+     //programTimer.start();
      
      std::cout << "********************************************************************************" << std::endl;
      std::cout << "*                                                                              *" << std::endl;
@@ -364,7 +369,7 @@ void main() {
 
      */
 
-     programTimer.stop();
+     auto testEnd = Clock::now();
      std::cout << std::endl;
      std::cout << "********************************************************************************" << std::endl;
      std::cout << "*                                                                              *" << std::endl;
@@ -372,9 +377,13 @@ void main() {
      std::cout << "*                                                                              *" << std::endl;
      std::cout << "********************************************************************************" << std::endl << std::endl;
      
-     std::cout << "  Test Duration: " << programTimer.duration() << " ms." << std::endl;
+     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(testEnd-testStart).count();
+
+     std::cout << "  Test Duration: " << duration/1000000 << " ms." << std::endl;
      std::cout << "  Passed tests : " << passCount << std::endl;
      std::cout << "  Failed tests : " << failCount << std::endl;
 
      std::cout << std::endl;
+
+     return 0;
 }
