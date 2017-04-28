@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
-#include <Windows.h>
 #include <fstream>
 #include <array>
 #include "board.h"
@@ -17,41 +16,61 @@
 
 #include "debug.h"
 
-/******************************************************************************/
-/*                                   DEBUG                                    */
-/******************************************************************************/
+// FIXME: Global variables for clarity?
+int passCount = 0;
+int failCount = 0;
+
+// FIXME: Add Documentation
+void REQUIRE(std::string description, bool condition) {
+     if (condition) { std::cout << "   SUCCESS   "; passCount++; }
+     else           { std::cout << "   FAILURE   "; failCount++; }
+     std::cout << description << std::endl;
+}
+
+// FIXME: Add Documentation
+void test_BoardClass() {
+     Board board;
+     std::cout << "BOARD CLASS" << std::endl;
+
+     // Test 1
+     board.setup();
+     REQUIRE("Board::setup() followed by Board::fen() should give the correct initial FEN",
+             board.fen() == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+
+     // Test 2
+     board.import("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+     REQUIRE("Board::fen() should return FEN string from Board::import()",
+          board.fen() == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+
+     // Test 3
+     board.setup();
+     REQUIRE("Board::evaluate() should return 0 in initial board",
+          board.evaluate() == 0);
+}
+
 void main() {
-     Board initialBoard;
      Timer programTimer;
      programTimer.start();
-
-     printf("--------------------------------------------------------------------------------\n");
-     printf(" Setup / Import Test                                                            \n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf("\n");
-
-     initialBoard.import("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-     std::cout << initialBoard.fen() << std::endl;
      
+     std::cout << "********************************************************************************" << std::endl;
+     std::cout << "*                                                                              *" << std::endl;
+     std::cout << "*                            DOUMI CHESS UNIT TESTS                            *" << std::endl;
+     std::cout << "*                                                                              *" << std::endl;
+     std::cout << "********************************************************************************" << std::endl << std::endl;
+
+     test_BoardClass();
+     // FIXME: Add MoveGen Test: check equality of elements in array
+     // FIXME: Add Perft Test
+     // FIXME: Add MakeMove Test
+     // FIXME: Add UndoMove Test
+     // FIXME: Add Alphabeta Test (check unmodified)
+     // FIXME: Add GameState Test
+     // FIXME: Add Mate in X "Test"
+
+     Board initialBoard;
      initialBoard.setup();
-     std::cout << initialBoard.fen() << std::endl;
 
-
-     printf("\n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf(" MoveGen Test                                                                   \n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf("\n");
-
-     MoveList moveList = moveGeneration(initialBoard);
-
-     printf("Movecount: %d\n", moveList.getCounter());
-     for (int i = 0; i < moveList.getCounter(); i++) {
-          printf("%2d  ", i + 1);
-          std::cout << numberToFilerank(moveList.getMove(i).getInitial())
-               << numberToFilerank(moveList.getMove(i).getTerminal()) << std::endl;
-     }
-
+     /*
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
      printf(" Perft Test                                                                     \n");
@@ -63,20 +82,14 @@ void main() {
      printf("Perft (Depth %d): %llu\n", 3, divide(3, 0, initialBoard, false));
      printf("Perft (Depth %d): %llu\n", 4, divide(4, 0, initialBoard, false));
 
-     printf("\n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf(" Evaluation Test                                                                \n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf("\n");
 
-     // FIXME: Include this to import / setup test above
-     printf("Initial Board Evaluation: %d\n", initialBoard.evaluate());
 
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
      printf(" MakeMove / Evaluation Test                                                     \n");
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
+
 
      Board copiedInitBoard;
 
@@ -144,7 +157,7 @@ void main() {
      std::cout << "Best Moves: ";
      printVariation(std::cout, bestMoves4);
 
-     /*
+     
      
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
@@ -162,10 +175,7 @@ void main() {
                << " ";
      }
      printf("\n");
-     
-     */
-     
-     /*
+
      
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
@@ -186,9 +196,7 @@ void main() {
           printf("\n");
           initialBoard.makeMove(bestMoves[4]);
      }
-     
-     */
-     
+        
 
 
      printf("\n");
@@ -354,6 +362,19 @@ void main() {
      std::cout << "Best Moves: ";
      printVariation(std::cout, forcedStalemateMoves);
 
+     */
+
      programTimer.stop();
-     std::cout << "Test Duration: " << programTimer.duration() << " ms." << std::endl;
+     std::cout << std::endl;
+     std::cout << "********************************************************************************" << std::endl;
+     std::cout << "*                                                                              *" << std::endl;
+     std::cout << "*                              UNIT TESTS SUMMARY                              *" << std::endl;
+     std::cout << "*                                                                              *" << std::endl;
+     std::cout << "********************************************************************************" << std::endl << std::endl;
+     
+     std::cout << "  Test Duration: " << programTimer.duration() << " ms." << std::endl;
+     std::cout << "  Passed tests : " << passCount << std::endl;
+     std::cout << "  Failed tests : " << failCount << std::endl;
+
+     std::cout << std::endl;
 }
