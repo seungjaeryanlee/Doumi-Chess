@@ -75,7 +75,6 @@ const int GO[8] = { -ROW, -ROW + COLUMN, COLUMN, ROW + COLUMN,ROW,ROW - COLUMN,-
 
 // PCSQ Tables from https://chessprogramming.wikispaces.com/Simplified+evaluation+function
 // All of them are absolute score (+ is WHITE, - is BLACK)
-// TODO: Check PCSQVALUES
 const std::array<std::array<int, 120>, 14> PCSQVALUE = {{
      // EMPTYSQUARE
      {

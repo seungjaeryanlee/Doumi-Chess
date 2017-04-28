@@ -1,5 +1,5 @@
 /******************************************************************************/
-/* board.cpp                                                                   */
+/* board.cpp                                                                  */
 /* Seung Jae (Ryan) Lee                                                       */
 /******************************************************************************/
 
@@ -1136,9 +1136,6 @@ void Board::updateBoard(const Move& move, const int capturedPiece) {
      changeTurn();
 }
 
-
-
-// FIXME: ELSE
 int checkColor(const int pieceType) {
      if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
           return WHITE;
@@ -1146,11 +1143,8 @@ int checkColor(const int pieceType) {
      else if (BLACKPAWN <= pieceType && pieceType <= BLACKKING) {
           return BLACK;
      }
-     else if (pieceType == EMPTYSQUARE || pieceType == ERRORSQUARE) {
-          return NEITHER;
-     }
      else {
-          throw std::invalid_argument("Invalid pieceType.");
+          return NEITHER;
      }
 }
 
@@ -1161,9 +1155,3 @@ int filerankToNumber(const char file, const int rank) {
      }
      return COLUMN*(file - 'a' + 1) + ROW*(9 - (rank - 1));
 }
-
-
-
-
-
-

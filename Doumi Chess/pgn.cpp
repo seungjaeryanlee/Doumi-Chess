@@ -74,20 +74,20 @@ void savePGN(const result gameResult, const Move *savedMove, const int saveIndex
                pgn << numberToFilerank(terminal) << "=Q";
                break;
           case ENPASSANT:
-               // TODO: Find correct way
+               // FIXME: Find correct way to write in PGN format
                pgn << numberToFilerank(initial) << numberToFilerank(terminal) << " ";
                break;
           case DOUBLEMOVE:
                pgn << numberToFilerank(terminal) << " ";
                break;
           case NORMAL:
-               // TODO: Find correct way
+               // FIXME: Find correct way to write in PGN format
                pgn << numberToFilerank(initial) << numberToFilerank(terminal) << " ";
                break;
           }
-          // TODO: Check captures
-          // TODO: Check checks (CHECKCEPTION)
-          // TODO: Check checkmates
+          // FIXME: Find correct way to write in PGN format: Check captures
+          // FIXME: Find correct way to write in PGN format: Check checks (CHECKCEPTION)
+          // FIXME: Find correct way to write in PGN format: Check checkmates
      }
 
      // Print Game Result

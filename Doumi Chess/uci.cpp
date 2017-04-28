@@ -23,8 +23,6 @@ void tellUCI(std::ostream& ucilog, std::string output) {
      ucilog.flush();
 }
 
-
-
 int main() {
      std::ofstream ucilog;
      ucilog.open("uci.log");
@@ -61,8 +59,8 @@ int main() {
           }
           else if (token == "go") {
 
-               // TODO: Check all options
-               // TODO: Implement PV ordering
+               // FIXME: Check all options
+               // FIXME: Implement PV ordering
                Variation PV;
                for (int depth = 1; depth <= 4; depth++) {
                     int score = rootAlphabeta(depth, board, &PV, savedBoard, saveIndex);
@@ -108,7 +106,7 @@ int main() {
                          move.setTerminal(filerankToNumber(moveString[2], moveString[3] - '0'));
 
                          if (moveString.length() == 4) {
-                              // TODO: Give correct moveType?
+                              // Unless promotion, no need to have correct type
                               move.setType(NORMAL);
                          }
                          else if (moveString[4] == 'n') {
@@ -129,8 +127,6 @@ int main() {
                          board.makeMove(move);
                     }
                }
-
-               
           }
 
           // 3. UNIMPLEMENTED TOKENS
@@ -144,7 +140,6 @@ int main() {
           else if (token == "printfen") {
                std::cout << board.fen() << std::endl;
           }
-
      }
 
      return 0;

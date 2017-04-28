@@ -69,7 +69,7 @@ void main() {
      printf("--------------------------------------------------------------------------------\n");
      printf("\n");
 
-     // TODO: Include this to import / setup
+     // FIXME: Include this to import / setup test above
      printf("Initial Board Evaluation: %d\n", initialBoard.evaluate());
 
      printf("\n");

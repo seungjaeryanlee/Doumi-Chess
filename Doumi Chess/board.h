@@ -128,7 +128,7 @@ public:
      /// </summary>
      /// <param name="move">The move that will be reverted</param>
      /// <param name="capturedPiece">The piece that was captured by the move</param>
-     //TODO: Re-implement and use
+     //FIXME: Re-implement and use
      void undoMove(const Move& move, const int capturedPiece);
 
      /// <summary>
@@ -159,7 +159,7 @@ public:
      /// </summary>
      /// <param name="board">The board that will be checked.</param>
      /// <param name="move">The move that was made that could have changed the board properties.</param>
-     // TODO: UPDATE
+     // FIXME: Fix
      void updateBoard(const Move& move, const int capturedPiece);
 
 
@@ -179,9 +179,3 @@ int checkColor(const int pieceType);
 /// <param name="rank">The rank of the square</param>
 /// <returns>The board index notation of the square</returns>
 int filerankToNumber(const char file, const int rank);
-
-
-
-
-
-
