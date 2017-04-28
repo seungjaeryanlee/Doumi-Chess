@@ -32,8 +32,10 @@ void REQUIRE(std::string description, bool condition) {
 
 // FIXME: Add Documentation
 void test_BoardClass() {
-     Board board;
+
      std::cout << "BOARD CLASS" << std::endl;
+
+     Board board;
 
      // Test 1
      board.setup();
@@ -51,6 +53,37 @@ void test_BoardClass() {
           board.evaluate() == 0);
 }
 
+void test_Perft() {
+
+     std::cout << "PERFT" << std::endl;
+     Board board;
+     
+     // Test 1
+     board.setup();
+     REQUIRE("Perft of depth 1 should give 20 moves",
+             divide(1, 0, board, false) == 20);
+
+     // Test 2
+     board.setup();
+     REQUIRE("Perft of depth 2 should give 400 moves",
+             divide(2, 0, board, false) == 400);
+
+     // Test 3
+     board.setup();
+     REQUIRE("Perft of depth 3 should give 8902 moves",
+             divide(3, 0, board, false) == 8902);
+
+     // Test 4
+     board.setup();
+     REQUIRE("Perft of depth 4 should give 197281 moves",
+             divide(4, 0, board, false) == 197281);
+
+     // Test 5
+     board.setup();
+     REQUIRE("Perft of depth 5 should give 4865609 moves",
+             divide(5, 0, board, false) == 4865609);
+}
+
 int main() {
      auto testStart = Clock::now();
 
@@ -64,8 +97,9 @@ int main() {
      std::cout << "********************************************************************************" << std::endl << std::endl;
 
      test_BoardClass();
+     test_Perft();
+
      // FIXME: Add MoveGen Test: check equality of elements in array
-     // FIXME: Add Perft Test
      // FIXME: Add MakeMove Test
      // FIXME: Add UndoMove Test
      // FIXME: Add Alphabeta Test (check unmodified)
@@ -76,19 +110,6 @@ int main() {
      initialBoard.setup();
 
      /*
-     printf("\n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf(" Perft Test                                                                     \n");
-     printf("--------------------------------------------------------------------------------\n");
-     printf("\n");
-
-     printf("Perft (Depth %d): %llu\n", 1, divide(1, 0, initialBoard, false));
-     printf("Perft (Depth %d): %llu\n", 2, divide(2, 0, initialBoard, false));
-     printf("Perft (Depth %d): %llu\n", 3, divide(3, 0, initialBoard, false));
-     printf("Perft (Depth %d): %llu\n", 4, divide(4, 0, initialBoard, false));
-
-
-
      printf("\n");
      printf("--------------------------------------------------------------------------------\n");
      printf(" MakeMove / Evaluation Test                                                     \n");
