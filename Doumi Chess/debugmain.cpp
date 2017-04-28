@@ -17,6 +17,9 @@
 #include "pgn.h"
 #include "debug.h"
 
+const int MOVEGEN_TEST_COUNT = 10000;
+const int EVALUATE_TEST_COUNT = 10000;
+
 typedef std::chrono::high_resolution_clock Clock;
 
 // FIXME: Global variables for clarity?
@@ -79,9 +82,9 @@ void test_Perft() {
              divide(4, 0, board, false) == 197281);
 
      // Test 5
-     board.setup();
-     REQUIRE("Perft of depth 5 should give 4865609 moves",
-             divide(5, 0, board, false) == 4865609);
+     // board.setup();
+     // REQUIRE("Perft of depth 5 should give 4865609 moves",
+     //         divide(5, 0, board, false) == 4865609);
 }
 
 void test_GameState() {
@@ -148,6 +151,31 @@ void test_GameState() {
 
 }
 
+void time_MoveGen() {
+     Board board;  board.setup();
+     Timer timer;  timer.start();
+
+     for (int i = 0; i < MOVEGEN_TEST_COUNT; i++) {
+          moveGeneration(board);
+     }
+
+     timer.stop();
+
+     std::cout << "  MOVEGEN   " << timer.duration_nano() / MOVEGEN_TEST_COUNT << " ns. (Average of " << MOVEGEN_TEST_COUNT << " trials)" << std::endl;
+}
+
+void time_Evaluate() {
+     Board board;  board.setup();
+     Timer timer;  timer.start();
+
+     for (int i = 0; i < MOVEGEN_TEST_COUNT; i++) {
+          board.evaluate();
+     }
+
+     timer.stop();
+     std::cout << "  EVALUATE  " << timer.duration_nano() / EVALUATE_TEST_COUNT << " ns. (Average of " << EVALUATE_TEST_COUNT << " trials)" << std::endl;
+}
+
 int main() {
      auto testStart = Clock::now();
 
@@ -163,6 +191,7 @@ int main() {
      test_BoardClass();
      test_Perft();
      test_GameState();
+
 
      // FIXME: Add MoveGen Test: check equality of elements in array
      // FIXME: Add MakeMove Test
@@ -359,6 +388,16 @@ int main() {
      std::cout << "  Test Duration: " << duration << " ms." << std::endl;
      std::cout << "  Passed tests : " << passCount << std::endl;
      std::cout << "  Failed tests : " << failCount << std::endl;
+
+     std::cout << std::endl;
+     std::cout << "********************************************************************************" << std::endl;
+     std::cout << "*                                                                              *" << std::endl;
+     std::cout << "*                            DOUMI CHESS BOTTLENECK                            *" << std::endl;
+     std::cout << "*                                                                              *" << std::endl;
+     std::cout << "********************************************************************************" << std::endl << std::endl;
+
+     time_MoveGen();
+     time_Evaluate();
 
      std::cout << std::endl;
 
