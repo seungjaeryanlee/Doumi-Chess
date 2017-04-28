@@ -10,11 +10,11 @@
 #include <array>
 #include <chrono>
 
+#include "timer.h"
 #include "board.h"
 #include "movegen.h"
 #include "evaluation.h"
 #include "pgn.h"
-
 #include "debug.h"
 
 typedef std::chrono::high_resolution_clock Clock;
@@ -54,8 +54,8 @@ void test_BoardClass() {
 int main() {
      auto testStart = Clock::now();
 
-     //Timer programTimer;
-     //programTimer.start();
+     Timer programTimer;
+     programTimer.start();
      
      std::cout << "********************************************************************************" << std::endl;
      std::cout << "*                                                                              *" << std::endl;
@@ -377,9 +377,11 @@ int main() {
      std::cout << "*                                                                              *" << std::endl;
      std::cout << "********************************************************************************" << std::endl << std::endl;
      
-     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(testEnd-testStart).count();
+     //auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(testEnd-testStart).count();
 
-     std::cout << "  Test Duration: " << duration/1000000 << " ms." << std::endl;
+     programTimer.stop();
+     uint64_t duration = programTimer.duration_milli();
+     std::cout << "  Test Duration: " << duration << " ms." << std::endl;
      std::cout << "  Passed tests : " << passCount << std::endl;
      std::cout << "  Failed tests : " << failCount << std::endl;
 

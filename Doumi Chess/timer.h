@@ -4,13 +4,12 @@
 /******************************************************************************/
 
 #pragma once
-#include <Windows.h>
+#include <chrono>
 
 class Timer {
 private:
-     LARGE_INTEGER frequency;
-     LARGE_INTEGER beginTime;
-     LARGE_INTEGER endTime;
+     std::chrono::time_point<std::chrono::system_clock> startTime;
+     std::chrono::time_point<std::chrono::system_clock> endTime;
      bool hasStarted;
      bool isRunning;
 public:
@@ -28,5 +27,9 @@ public:
      /// This function returns the elapsed time of the timer.
      /// </summary>
      /// <returns>The amount of time the timer ran in milliseconds</returns>
-     double duration();
+     std::chrono::high_resolution_clock::duration duration_lossless();
+
+     //FIXME: Documentation
+     uint64_t duration_nano();
+     uint64_t duration_milli();
 };

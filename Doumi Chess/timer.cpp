@@ -12,14 +12,19 @@ Timer::Timer() {
 void Timer::start() {
      hasStarted = true;
      isRunning = true;
-     QueryPerformanceFrequency(&frequency);
-     QueryPerformanceCounter(&beginTime);
+     startTime = std::chrono::high_resolution_clock::now();
 }
 void Timer::stop() {
-     QueryPerformanceCounter(&endTime);
+     endTime = std::chrono::high_resolution_clock::now();
 }
-double Timer::duration() {
-     if (!hasStarted) { return 0; }
-     if (isRunning) { QueryPerformanceCounter(&endTime); }
-     return double((endTime.QuadPart - beginTime.QuadPart) * 1000 / frequency.QuadPart);
+std::chrono::high_resolution_clock::duration Timer::duration_lossless() {
+     if (!hasStarted) { return std::chrono::nanoseconds::zero(); }
+     if (isRunning) { stop(); }
+     return (endTime-startTime);
+}
+uint64_t Timer::duration_nano() {
+     return std::chrono::duration_cast<std::chrono::nanoseconds>(duration_lossless()).count();
+}
+uint64_t Timer::duration_milli() {
+     return std::chrono::duration_cast<std::chrono::milliseconds>(duration_lossless()).count();
 }
