@@ -18,7 +18,7 @@
 #include "pgn.h"
 #include "debug.h"
 
-// FIXME: Add Documentatio
+// FIXME: Add Documentation
 const int MOVEGEN_TEST_COUNT = 10000;
 const int EVALUATE_TEST_COUNT = 10000;
 const int COPYBOARD_TEST_COUNT = 10000;
@@ -50,7 +50,7 @@ void test_BoardClass() {
 
      // Test 1
      board.setup();
-     REQUIRE("Board::setup() followed by Board::fen() should give the correct initial FEN",
+     REQUIRE("Board::setup() with Board::fen() should return initial FEN",
              board.fen() == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
      // Test 2
@@ -224,8 +224,6 @@ void time_CheckGameState() {
 }
 
 int main() {
-     auto testStart = Clock::now();
-
      Timer programTimer;
      programTimer.start();
      
@@ -239,15 +237,11 @@ int main() {
      test_Perft();
      test_GameState();
 
-
      // FIXME: Add MoveGen Test: check equality of elements in array
      // FIXME: Add MakeMove Test
      // FIXME: Add UndoMove Test
      // FIXME: Add Alphabeta Test (check unmodified)
      // FIXME: Add Mate in X "Test"
-
-     Board initialBoard;
-     initialBoard.setup();
 
      /*
      printf("\n");
@@ -420,7 +414,6 @@ int main() {
 
      */
 
-     auto testEnd = Clock::now();
      std::cout << std::endl;
      std::cout << "********************************************************************************" << std::endl;
      std::cout << "*                                                                              *" << std::endl;
@@ -428,11 +421,8 @@ int main() {
      std::cout << "*                                                                              *" << std::endl;
      std::cout << "********************************************************************************" << std::endl << std::endl;
      
-     //auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(testEnd-testStart).count();
-
      programTimer.stop();
-     uint64_t duration = programTimer.duration_milli();
-     std::cout << "  Test Duration: " << duration << " ms." << std::endl;
+     std::cout << "  Test Duration: " << programTimer.duration_milli() << " ms." << std::endl;
      std::cout << "  Passed tests : " << passCount << std::endl;
      std::cout << "  Failed tests : " << failCount << std::endl;
 
