@@ -29,20 +29,20 @@ Move::Move(int originalMove[3]) {
      moveType = originalMove[2];
 }
 
-std::string Move::toString(const Move& move) {
-     std::string output = numberToFilerank(move.getInitial())
-          + numberToFilerank(move.getTerminal());
+std::string Move::toString() const {
+     std::string output = numberToFilerank(initialSquare)
+          + numberToFilerank(terminalSquare);
 
-     if (move.getType() == KNIGHT_PROMOTION) {
+     if (moveType == KNIGHT_PROMOTION) {
           output += "n";
      }
-     else if (move.getType() == BISHOP_PROMOTION) {
+     else if (moveType == BISHOP_PROMOTION) {
           output += "b";
      }
-     else if (move.getType() == ROOK_PROMOTION) {
+     else if (moveType == ROOK_PROMOTION) {
           output += "r";
      }
-     else if (move.getType() == QUEEN_PROMOTION) {
+     else if (moveType == QUEEN_PROMOTION) {
           output += "q";
      }
 

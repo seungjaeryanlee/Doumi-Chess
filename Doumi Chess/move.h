@@ -33,7 +33,7 @@ public:
      inline const int getType() const { return moveType; }
      inline const int getCapturedPiece() const { return capturedPiece; }
      
-     std::string toString(const Move& move);
+     std::string toString() const;
 
 };
 class MoveList {
