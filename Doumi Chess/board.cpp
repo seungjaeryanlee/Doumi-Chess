@@ -455,8 +455,7 @@ std::string Board::fen() {
 
      FEN += ' ';
      if (enpassantSquare != 0) {
-          FEN += numberToFile(enpassantSquare);
-          FEN += ('0' + numberToRank(enpassantSquare));
+          FEN += numberToFilerank(enpassantSquare);
      }
      else { FEN += '-'; }
 

@@ -6,6 +6,8 @@
 #include "debug.h"
 #include "movegen.h"
 #include <fstream>
+#include <iostream>
+#include <string>
 
 uint64_t divide(const int depth, const int maxDepth, Board& board, const bool showOutput) {
 
@@ -37,9 +39,7 @@ uint64_t divide(const int depth, const int maxDepth, Board& board, const bool sh
 
           if (depth >= maxDepth && showOutput) {
                for (int i = 0; i < 3 - depth; i++) { printf("  "); }
-               printf("%c%d%c%d: %llu", numberToFile(initial), numberToRank(initial),
-                    numberToFile(terminal), numberToRank(terminal), individualNode);
-               printf("\n");
+               std::cout << numberToFilerank(initial) << numberToFilerank(terminal) << ": " << individualNode << std::endl << std::endl;
           }
 
           board.undoMove(moveList.getMove(i), capturedPiece);
@@ -85,8 +85,7 @@ uint64_t divide2(const int depth, const int maxDepth, Board& board, const bool s
           }
 
           if (depth >= maxDepth && showOutput) {
-               output2 << numberToFile(initial) << numberToRank(initial) <<
-                    numberToFile(terminal) << numberToRank(terminal) << ": " << individualNode << std::endl;
+               output2 << numberToFilerank(initial) << numberToFilerank(terminal) << ": " << individualNode << std::endl;
           }
 
 

@@ -73,13 +73,7 @@ void MoveList::pushPromotion(int initial, int terminal) {
 }
 
 inline std::string numberToFilerank(const int position) {
-     return numberToFile(position) + std::to_string(numberToRank(position));
-}
-inline char numberToFile(const int position) {
-     return ('a' + position % ROW - 1);
-}
-inline int numberToRank(const int position) {
-     return (10 - position / ROW);
+     return char('a' + position % ROW - 1) + std::to_string((10 - position / ROW));
 }
 std::string printMove(const int moveNumber, const Move& move) {
      std::string output = std::to_string(moveNumber) + ": " + numberToFilerank(move.getInitial())

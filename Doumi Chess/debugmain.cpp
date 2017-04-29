@@ -55,10 +55,15 @@ void test_BoardClass() {
 
      // Test 2
      board.import("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-     REQUIRE("Board::fen() should return FEN string from Board::import()",
+     REQUIRE("Board::fen() should return FEN given with Board::import() 1",
           board.fen() == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
      // Test 3
+     board.import("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1");
+     REQUIRE("Board::fen() should return FEN given with Board::import() 2",
+          board.fen() == "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1");
+     
+     // Test 4
      board.setup();
      REQUIRE("Board::evaluate() should return 0 in initial board",
           board.evaluate() == 0);
