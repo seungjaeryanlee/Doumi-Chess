@@ -338,7 +338,7 @@ void main() {
                     if (currentBoard.getTurn() == WHITE) { currentBoard.incrementMoveNumber(); }
                     
                     // add to log file
-                    log << currentBoard.getMoveNumber() << ": " << printMove(userMove);
+                    log << currentBoard.getMoveNumber() << ": " << userMove.toString_vertose();
 
                     printSimpleBoard(currentBoard);
                     moveTimer.stop();
@@ -381,7 +381,7 @@ void main() {
 
                     printf("Movecount: %d\n", currentBoardMoveList.getCounter());
                     for (int i = 0; i <  currentBoardMoveList.getCounter(); i++) {
-                         std::cout << i + 1 << ": "<< printMove(currentBoardMoveList.getMove(i));
+                         std::cout << i + 1 << ": "<< currentBoardMoveList.getMove(i).toString_vertose();
                     }
                     continue;
                }
@@ -408,8 +408,8 @@ void main() {
                printVariation(std::cout, PV);
                log << "Alphabeta PV: ";
                printVariation(log, PV);
-               std::cout << currentBoard.getMoveNumber() << ": " << printMove(PV.moves[0]);
-               log << currentBoard.getMoveNumber() << ": " << printMove(PV.moves[0]);
+               std::cout << currentBoard.getMoveNumber() << ": " << PV.moves[0].toString_vertose();
+               log << currentBoard.getMoveNumber() << ": " << PV.moves[0].toString_vertose();
 
                // Make Move, Save and Print
                savedBoard[saveIndex] = currentBoard;

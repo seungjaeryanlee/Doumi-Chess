@@ -34,8 +34,9 @@ public:
      inline const int getCapturedPiece() const { return capturedPiece; }
      
      std::string toString() const;
-
+     std::string toString_vertose() const;
 };
+
 class MoveList {
 private:
      std::array<Move, MAX_MOVEGEN_COUNT> movelist;
@@ -72,10 +73,4 @@ public:
 /// <param name="position">The square in board index notation.</param>
 /// <returns>A two-letter string with file rank notation of the given square.</returns>
 std::string numberToFilerank(const int position);
-
-/// <summary>
-/// This function prints the given move to console in filerank-filerank notation.
-/// </summary>
-/// <param name="move">The move that will be printed to console</param>
-std::string printMove(const Move& move);
 

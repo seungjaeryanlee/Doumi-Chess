@@ -48,38 +48,11 @@ std::string Move::toString() const {
 
      return output;
 }
-/******************************************************************************/
-/* MOVELIST CLASS                                                             */
-/******************************************************************************/
+std::string Move::toString_vertose() const{
+     std::string output = numberToFilerank(initialSquare)
+          + numberToFilerank(terminalSquare) + " ";
 
-// Constructor
-MoveList::MoveList() {
-     moveCounter = 0;
-}
-
-// Mutator
-void MoveList::push(const Move& move) {
-     movelist[moveCounter] = move;
-     moveCounter++;
-}
-void MoveList::push(int initial, int terminal, int moveType) {
-     push(Move(initial, terminal, moveType));
-}
-void MoveList::pushPromotion(int initial, int terminal) {
-     push(initial, terminal, KNIGHT_PROMOTION);
-     push(initial, terminal, BISHOP_PROMOTION);
-     push(initial, terminal, ROOK_PROMOTION);
-     push(initial, terminal, QUEEN_PROMOTION);
-}
-
-inline std::string numberToFilerank(const int position) {
-     return char('a' + position % ROW - 1) + std::to_string((10 - position / ROW));
-}
-std::string printMove(const Move& move) {
-     std::string output = numberToFilerank(move.getInitial())
-          + numberToFilerank(move.getTerminal()) + " ";
-
-     switch (move.getType()) {
+     switch (moveType) {
      case NORMAL:
           output += "\n";
           break;
@@ -113,3 +86,31 @@ std::string printMove(const Move& move) {
 
      return output;
 }
+/******************************************************************************/
+/* MOVELIST CLASS                                                             */
+/******************************************************************************/
+
+// Constructor
+MoveList::MoveList() {
+     moveCounter = 0;
+}
+
+// Mutator
+void MoveList::push(const Move& move) {
+     movelist[moveCounter] = move;
+     moveCounter++;
+}
+void MoveList::push(int initial, int terminal, int moveType) {
+     push(Move(initial, terminal, moveType));
+}
+void MoveList::pushPromotion(int initial, int terminal) {
+     push(initial, terminal, KNIGHT_PROMOTION);
+     push(initial, terminal, BISHOP_PROMOTION);
+     push(initial, terminal, ROOK_PROMOTION);
+     push(initial, terminal, QUEEN_PROMOTION);
+}
+
+inline std::string numberToFilerank(const int position) {
+     return char('a' + position % ROW - 1) + std::to_string((10 - position / ROW));
+}
+
