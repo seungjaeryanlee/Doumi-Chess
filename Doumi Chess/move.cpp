@@ -75,8 +75,8 @@ void MoveList::pushPromotion(int initial, int terminal) {
 inline std::string numberToFilerank(const int position) {
      return char('a' + position % ROW - 1) + std::to_string((10 - position / ROW));
 }
-std::string printMove(const int moveNumber, const Move& move) {
-     std::string output = std::to_string(moveNumber) + ": " + numberToFilerank(move.getInitial())
+std::string printMove(const Move& move) {
+     std::string output = numberToFilerank(move.getInitial())
           + numberToFilerank(move.getTerminal()) + " ";
 
      switch (move.getType()) {
@@ -90,10 +90,10 @@ std::string printMove(const int moveNumber, const Move& move) {
           output += "En passant\n";
           break;
      case QUEENSIDE_CASTLING:
-          output = std::to_string(moveNumber) + ": O-O-O\n";
+          output = "O-O-O\n";
           break;
      case KINGSIDE_CASTLING:
-          output = std::to_string(moveNumber) + ": O-O\n";
+          output = "O-O\n";
           break;
      case KNIGHT_PROMOTION:
           output += "Promotion to Knight\n";
@@ -113,4 +113,3 @@ std::string printMove(const int moveNumber, const Move& move) {
 
      return output;
 }
-

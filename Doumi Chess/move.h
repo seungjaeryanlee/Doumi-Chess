@@ -76,7 +76,6 @@ std::string numberToFilerank(const int position);
 /// <summary>
 /// This function prints the given move to console in filerank-filerank notation.
 /// </summary>
-/// <param name="moveNumber">The move number of the move that will be printed to console</param>
 /// <param name="move">The move that will be printed to console</param>
-std::string printMove(const int moveNumber, const Move& move);
+std::string printMove(const Move& move);
 
