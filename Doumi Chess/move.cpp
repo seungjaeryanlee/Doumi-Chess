@@ -29,6 +29,25 @@ Move::Move(int originalMove[3]) {
      moveType = originalMove[2];
 }
 
+std::string Move::toString(const Move& move) {
+     std::string output = numberToFilerank(move.getInitial())
+          + numberToFilerank(move.getTerminal());
+
+     if (move.getType() == KNIGHT_PROMOTION) {
+          output += "n";
+     }
+     else if (move.getType() == BISHOP_PROMOTION) {
+          output += "b";
+     }
+     else if (move.getType() == ROOK_PROMOTION) {
+          output += "r";
+     }
+     else if (move.getType() == QUEEN_PROMOTION) {
+          output += "q";
+     }
+
+     return output;
+}
 /******************************************************************************/
 /* MOVELIST CLASS                                                             */
 /******************************************************************************/
@@ -101,22 +120,3 @@ std::string printMove(const int moveNumber, const Move& move) {
      return output;
 }
 
-std::string moveToString(const Move& move) {
-     std::string output = numberToFilerank(move.getInitial())
-          + numberToFilerank(move.getTerminal());
-
-     if (move.getType() == KNIGHT_PROMOTION) {
-          output += "n";
-     }
-     else if (move.getType() == BISHOP_PROMOTION) {
-          output += "b";
-     }
-     else if (move.getType() == ROOK_PROMOTION) {
-          output += "r";
-     }
-     else if (move.getType() == QUEEN_PROMOTION) {
-          output += "q";
-     }
-
-     return output;
-}

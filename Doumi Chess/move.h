@@ -32,6 +32,9 @@ public:
      inline const int getTerminal() const { return terminalSquare; }
      inline const int getType() const { return moveType; }
      inline const int getCapturedPiece() const { return capturedPiece; }
+     
+     std::string toString(const Move& move);
+
 };
 class MoveList {
 private:
@@ -88,6 +91,4 @@ std::string numberToFilerank(const int position);
 /// <param name="moveNumber">The move number of the move that will be printed to console</param>
 /// <param name="move">The move that will be printed to console</param>
 std::string printMove(const int moveNumber, const Move& move);
-
-std::string moveToString(const Move& move);
 

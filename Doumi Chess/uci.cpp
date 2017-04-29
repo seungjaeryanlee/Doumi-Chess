@@ -66,11 +66,11 @@ int main() {
                     int score = rootAlphabeta(depth, board, &PV, savedBoard, saveIndex);
                     tellUCI(ucilog, "info depth " + std::to_string(depth) + " score " + std::to_string(score) + " pv ");
                     for (int i = 0; i < depth; i++) {
-                         tellUCI(ucilog, moveToString(PV.moves[i]) + " ");
+                         tellUCI(ucilog, PV.moves[i].toString() + " ");
                     }
                     tellUCI(ucilog, "\n");
                }
-               tellUCI(ucilog, "bestmove " + moveToString(PV.moves[0]) + "\n");
+               tellUCI(ucilog, "bestmove " + PV.moves[0].toString() + "\n");
 
                
           }
