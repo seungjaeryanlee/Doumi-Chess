@@ -64,7 +64,7 @@ MoveList moveGeneration(const Board& board) {
      // STEP 2: CHECK LEGALITY
      MoveList moveList;
 
-     //  find king position
+     // find king position
      int kingPosition = 0, changedKingPosition = 0;
      int turn = board.getTurn();
      int capturedPiece;
@@ -76,313 +76,12 @@ MoveList moveGeneration(const Board& board) {
           }
      }
 
-     /*
-     // Find pinned pieces
-     bool maybePinned;            // There is a ally piece
-     bool pinned;                 // There is a rook/bishop/queen behind the ally piece
-     int pinnedPiece[8] = { 0, }; // The pinned piece
-     
-     // UPLEFT
-     maybePinned = false; pinned = false;
-     if (turn == WHITE) {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[UPLEFT])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[UPLEFT] = kingPosition + i*GO[UPLEFT];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[UPLEFT]) == WHITEBISHOP)
-                    || (board.getSquare(kingPosition + i*GO[UPLEFT]) == WHITEQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-     else {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[UPLEFT])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[UPLEFT] = kingPosition + i*GO[UPLEFT];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[UPLEFT]) == BLACKBISHOP)
-                    || (board.getSquare(kingPosition + i*GO[UPLEFT]) == BLACKQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-     
-     // UPRIGHT
-     maybePinned = false; pinned = false;
-     if (turn == WHITE) {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[UPRIGHT])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[UPRIGHT] = kingPosition + i*GO[UPRIGHT];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[UPRIGHT]) == WHITEBISHOP)
-                    || (board.getSquare(kingPosition + i*GO[UPRIGHT]) == WHITEQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-     else {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[UPRIGHT])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[UPRIGHT] = kingPosition + i*GO[UPRIGHT];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[UPRIGHT]) == BLACKBISHOP)
-                    || (board.getSquare(kingPosition + i*GO[UPRIGHT]) == BLACKQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-
-     // DOWNLEFT
-     maybePinned = false; pinned = false;
-     if (turn == WHITE) {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[DOWNLEFT])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[DOWNLEFT] = kingPosition + i*GO[DOWNLEFT];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWNLEFT]) == WHITEBISHOP)
-                    || (board.getSquare(kingPosition + i*GO[DOWNLEFT]) == WHITEQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-     else {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[DOWNLEFT])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[DOWNLEFT] = kingPosition + i*GO[DOWNLEFT];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWNLEFT]) == BLACKBISHOP)
-                    || (board.getSquare(kingPosition + i*GO[DOWNLEFT]) == BLACKQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-
-     // DOWNRIGHT
-     maybePinned = false; pinned = false;
-     if (turn == WHITE) {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[DOWNRIGHT])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[DOWNRIGHT] = kingPosition + i*GO[DOWNRIGHT];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWNRIGHT]) == WHITEBISHOP)
-                    || (board.getSquare(kingPosition + i*GO[DOWNRIGHT]) == WHITEQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-     else {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[DOWNRIGHT])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[DOWNRIGHT] = kingPosition + i*GO[DOWNRIGHT];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWNRIGHT]) == BLACKBISHOP)
-                    || (board.getSquare(kingPosition + i*GO[DOWNRIGHT]) == BLACKQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-
-     // UP
-     maybePinned = false; pinned = false;
-     if (turn == WHITE) {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[UP])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[UP] = kingPosition + i*GO[UP];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[UP]) == WHITEROOK)
-                    || (board.getSquare(kingPosition + i*GO[UP]) == WHITEQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-     else {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[UP])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[UP] = kingPosition + i*GO[UP];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[UP]) == BLACKROOK)
-                    || (board.getSquare(kingPosition + i*GO[UP]) == BLACKQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-
-     // DOWN
-     maybePinned = false; pinned = false;
-     if (turn == WHITE) {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[DOWN])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[DOWN] = kingPosition + i*GO[DOWN];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWN]) == WHITEROOK)
-                    || (board.getSquare(kingPosition + i*GO[DOWN]) == WHITEQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-     else {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[DOWN])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[DOWN] = kingPosition + i*GO[DOWN];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[DOWN]) == BLACKROOK)
-                    || (board.getSquare(kingPosition + i*GO[DOWN]) == BLACKQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-
-     // LEFT
-     maybePinned = false; pinned = false;
-     if (turn == WHITE) {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[LEFT])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[LEFT] = kingPosition + i*GO[LEFT];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[LEFT]) == WHITEROOK)
-                    || (board.getSquare(kingPosition + i*GO[LEFT]) == WHITEQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-     else {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[LEFT])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[LEFT] = kingPosition + i*GO[LEFT];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[LEFT]) == BLACKROOK)
-                    || (board.getSquare(kingPosition + i*GO[LEFT]) == BLACKQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-
-     // RIGHT
-     maybePinned = false; pinned = false;
-     if (turn == WHITE) {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[RIGHT])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[RIGHT] = kingPosition + i*GO[RIGHT];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[RIGHT]) == WHITEROOK)
-                    || (board.getSquare(kingPosition + i*GO[RIGHT]) == WHITEQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-     else {
-          for (int i = 1; i < 8; i++) {
-               if (checkColor(board.getSquare(kingPosition + i*GO[RIGHT])) == turn) {
-                    if (maybePinned) { break; }
-                    else {
-                         maybePinned = true;
-                         pinnedPiece[RIGHT] = kingPosition + i*GO[RIGHT];
-                    }
-
-               }
-               if (maybePinned && (board.getSquare(kingPosition + i*GO[RIGHT]) == BLACKROOK)
-                    || (board.getSquare(kingPosition + i*GO[RIGHT]) == BLACKQUEEN)) {
-                    pinned = true;
-                    break;
-               }
-          }
-     }
-     */
+     // FIXME: Maybe find Pinned Pieces
 
      Board copiedBoard = board;
      for (int i = 0; i < pseudolegalMoveList.getCounter(); i++) {
 
-          //  check if king will be moved
+          // check if king will be moved
           if (copiedBoard.getSquare(pseudolegalMoveList.getMove(i).getInitial()) == WHITEKING || copiedBoard.getSquare(pseudolegalMoveList.getMove(i).getInitial()) == BLACKKING) {
                if (pseudolegalMoveList.getMove(i).getType() == NORMAL) {
                     changedKingPosition = pseudolegalMoveList.getMove(i).getTerminal();
@@ -398,10 +97,10 @@ MoveList moveGeneration(const Board& board) {
           else { changedKingPosition = kingPosition; }
 
           capturedPiece = copiedBoard.makeMove(pseudolegalMoveList.getMove(i));
-          //  In this case, we don't want makeMove to change turn, so let's change it again
+          // In this case, we don't want makeMove to change turn, so let's change it again
           copiedBoard.changeTurn();
 
-          //  if king is safe
+          // if king is safe
           if (!copiedBoard.isAttacked(changedKingPosition)) {
                moveList.push(pseudolegalMoveList.getMove(i));
           }
@@ -428,10 +127,10 @@ void pawnMoveGeneration(const Board& board, const int position, MoveList& moveLi
           }
 
           //  attack diagonals
-          if (checkColor(board.getSquare(position + GO[UPLEFT])) == BLACK) {
+          if (board.colorOf(position + GO[UPLEFT]) == BLACK) {
                moveList.push(position, position + GO[UPLEFT], NORMAL);
           }
-          if (checkColor(board.getSquare(position + GO[UPRIGHT])) == BLACK) {
+          if (board.colorOf(position + GO[UPRIGHT]) == BLACK) {
                moveList.push(position, position + GO[UPRIGHT], NORMAL);
           }
      }
@@ -453,10 +152,10 @@ void pawnMoveGeneration(const Board& board, const int position, MoveList& moveLi
           }
 
           //  attack diagonals
-          if (checkColor(board.getSquare(position + GO[DOWNLEFT])) == WHITE) {
+          if (board.colorOf(position + GO[DOWNLEFT]) == WHITE) {
                moveList.push(position, position + GO[DOWNLEFT], NORMAL);
           }
-          if (checkColor(board.getSquare(position + GO[DOWNRIGHT])) == WHITE) {
+          if (board.colorOf(position + GO[DOWNRIGHT]) == WHITE) {
                moveList.push(position, position + GO[DOWNRIGHT], NORMAL);
           }
      }
@@ -464,35 +163,35 @@ void pawnMoveGeneration(const Board& board, const int position, MoveList& moveLi
 void knightMoveGeneration(const Board& board, const int position, MoveList& moveList) {
      int turn = board.getTurn();
 
-     if (checkColor(board.getSquare(position + ROW + 2 * COLUMN)) == -turn ||
+     if (board.colorOf(position + ROW + 2 * COLUMN) == -turn ||
           board.getSquare(position + ROW + 2 * COLUMN) == EMPTYSQUARE) {
           moveList.push(position, position + ROW + 2 * COLUMN, NORMAL);
      }
-     if (checkColor(board.getSquare(position + ROW - 2 * COLUMN)) == -turn ||
+     if (board.colorOf(position + ROW - 2 * COLUMN) == -turn ||
           board.getSquare(position + ROW - 2 * COLUMN) == EMPTYSQUARE) {
           moveList.push(position, position + ROW - 2 * COLUMN, NORMAL);
      }
-     if (checkColor(board.getSquare(position - ROW + 2 * COLUMN)) == -turn ||
+     if (board.colorOf(position - ROW + 2 * COLUMN) == -turn ||
           board.getSquare(position - ROW + 2 * COLUMN) == EMPTYSQUARE) {
           moveList.push(position, position - ROW + 2 * COLUMN, NORMAL);
      }
-     if (checkColor(board.getSquare(position - ROW - 2 * COLUMN)) == -turn ||
+     if (board.colorOf(position - ROW - 2 * COLUMN) == -turn ||
           board.getSquare(position - ROW - 2 * COLUMN) == EMPTYSQUARE) {
           moveList.push(position, position - ROW - 2 * COLUMN, NORMAL);
      }
-     if (checkColor(board.getSquare(position + 2 * ROW + COLUMN)) == -turn ||
+     if (board.colorOf(position + 2 * ROW + COLUMN) == -turn ||
           board.getSquare(position + 2 * ROW + COLUMN) == EMPTYSQUARE) {
           moveList.push(position, position + 2 * ROW + COLUMN, NORMAL);
      }
-     if (checkColor(board.getSquare(position + 2 * ROW - COLUMN)) == -turn ||
+     if (board.colorOf(position + 2 * ROW - COLUMN) == -turn ||
           board.getSquare(position + 2 * ROW - COLUMN) == EMPTYSQUARE) {
           moveList.push(position, position + 2 * ROW - COLUMN, NORMAL);
      }
-     if (checkColor(board.getSquare(position - 2 * ROW + COLUMN)) == -turn ||
+     if (board.colorOf(position - 2 * ROW + COLUMN) == -turn ||
           board.getSquare(position - 2 * ROW + COLUMN) == EMPTYSQUARE) {
           moveList.push(position, position - 2 * ROW + COLUMN, NORMAL);
      }
-     if (checkColor(board.getSquare(position - 2 * ROW - COLUMN)) == -turn ||
+     if (board.colorOf(position - 2 * ROW - COLUMN) == -turn ||
           board.getSquare(position - 2 * ROW - COLUMN) == EMPTYSQUARE) {
           moveList.push(position, position - 2 * ROW - COLUMN, NORMAL);
      }
@@ -505,7 +204,7 @@ void bishopMoveGeneration(const Board& board, const int position, MoveList& move
           if (board.getSquare(position + i*GO[UPRIGHT]) == EMPTYSQUARE) {
                moveList.push(position, position + i*GO[UPRIGHT], NORMAL);
           }
-          else if (checkColor(board.getSquare(position + i*GO[UPRIGHT])) == -turn) {
+          else if (board.colorOf(position + i*GO[UPRIGHT]) == -turn) {
                moveList.push(position, position + i*GO[UPRIGHT], NORMAL);
                break;
           }
@@ -517,7 +216,7 @@ void bishopMoveGeneration(const Board& board, const int position, MoveList& move
           if (board.getSquare(position + i*GO[DOWNRIGHT]) == EMPTYSQUARE) {
                moveList.push(position, position + i*GO[DOWNRIGHT], NORMAL);
           }
-          else if (checkColor(board.getSquare(position + i*GO[DOWNRIGHT])) == -turn) {
+          else if (board.colorOf(position + i*GO[DOWNRIGHT]) == -turn) {
                moveList.push(position, position + i*GO[DOWNRIGHT], NORMAL);
                break;
           }
@@ -529,7 +228,7 @@ void bishopMoveGeneration(const Board& board, const int position, MoveList& move
           if (board.getSquare(position + i*GO[DOWNLEFT]) == EMPTYSQUARE) {
                moveList.push(position, position + i*GO[DOWNLEFT], NORMAL);
           }
-          else if (checkColor(board.getSquare(position + i*GO[DOWNLEFT])) == -turn) {
+          else if (board.colorOf(position + i*GO[DOWNLEFT]) == -turn) {
                moveList.push(position, position + i*GO[DOWNLEFT], NORMAL);
                break;
           }
@@ -541,7 +240,7 @@ void bishopMoveGeneration(const Board& board, const int position, MoveList& move
           if (board.getSquare(position + i*GO[UPLEFT]) == EMPTYSQUARE) {
                moveList.push(position, position + i*GO[UPLEFT], NORMAL);
           }
-          else if (checkColor(board.getSquare(position + i*GO[UPLEFT])) == -turn) {
+          else if (board.colorOf(position + i*GO[UPLEFT]) == -turn) {
                moveList.push(position, position + i*GO[UPLEFT], NORMAL);
                break;
           }
@@ -556,7 +255,7 @@ void rookMoveGeneration(const Board& board, const int position, MoveList& moveLi
           if (board.getSquare(position + i*GO[UP]) == EMPTYSQUARE) {
                moveList.push(position, position + i*GO[UP], NORMAL);
           }
-          else if (checkColor(board.getSquare(position + i*GO[UP])) == -turn) {
+          else if (board.colorOf(position + i*GO[UP]) == -turn) {
                moveList.push(position, position + i*GO[UP], NORMAL);
                break;
           }
@@ -568,7 +267,7 @@ void rookMoveGeneration(const Board& board, const int position, MoveList& moveLi
           if (board.getSquare(position + i*GO[DOWN]) == EMPTYSQUARE) {
                moveList.push(position, position + i*GO[DOWN], NORMAL);
           }
-          else if (checkColor(board.getSquare(position + i*GO[DOWN])) == -turn) {
+          else if (board.colorOf(position + i*GO[DOWN]) == -turn) {
                moveList.push(position, position + i*GO[DOWN], NORMAL);
                break;
           }
@@ -580,7 +279,7 @@ void rookMoveGeneration(const Board& board, const int position, MoveList& moveLi
           if (board.getSquare(position + i*GO[LEFT]) == EMPTYSQUARE) {
                moveList.push(position, position + i*GO[LEFT], NORMAL);
           }
-          else if (checkColor(board.getSquare(position + i*GO[LEFT])) == -turn) {
+          else if (board.colorOf(position + i*GO[LEFT]) == -turn) {
                moveList.push(position, position + i*GO[LEFT], NORMAL);
                break;
           }
@@ -592,7 +291,7 @@ void rookMoveGeneration(const Board& board, const int position, MoveList& moveLi
           if (board.getSquare(position + i*GO[RIGHT]) == EMPTYSQUARE) {
                moveList.push(position, position + i*GO[RIGHT], NORMAL);
           }
-          else if (checkColor(board.getSquare(position + i*GO[RIGHT])) == -turn) {
+          else if (board.colorOf(position + i*GO[RIGHT]) == -turn) {
                moveList.push(position, position + i*GO[RIGHT], NORMAL);
                break;
           }
@@ -605,7 +304,7 @@ void queenMoveGeneration(const Board& board, const int position, MoveList& moveL
 }
 void kingMoveGeneration(const Board& board, const int position, MoveList& moveList) {
      for (int i = 0; i < 8; i++) {
-          if (checkColor(board.getSquare(position + GO[i])) == -board.getTurn() ||
+          if (board.colorOf(position + GO[i]) == -board.getTurn() ||
                board.getSquare(position + GO[i]) == EMPTYSQUARE) {
                moveList.push(position, position + GO[i], NORMAL);
           }
@@ -655,10 +354,10 @@ void castlingMoveGeneration(const Board& board, MoveList& moveList) {
 }
 void promotionMoveGeneration(const Board& board, const int position, MoveList& moveList) {
      if (board.getTurn() == WHITE) {
-          if (checkColor(board.getSquare(position + GO[UPLEFT])) == -board.getTurn()) {
+          if (board.colorOf(position + GO[UPLEFT]) == -board.getTurn()) {
                moveList.pushPromotion(position, position + GO[UPLEFT]);
           }
-          if (checkColor(board.getSquare(position + GO[UPRIGHT])) == -board.getTurn()) {
+          if (board.colorOf(position + GO[UPRIGHT]) == -board.getTurn()) {
                moveList.pushPromotion(position, position + GO[UPRIGHT]);
           }
           if (board.getSquare(position + GO[UP]) == EMPTYSQUARE) {
@@ -666,10 +365,10 @@ void promotionMoveGeneration(const Board& board, const int position, MoveList& m
           }
      }
      if (board.getTurn() == BLACK) {
-          if (checkColor(board.getSquare(position + GO[DOWNLEFT])) == -board.getTurn()) {
+          if (board.colorOf(position + GO[DOWNLEFT]) == -board.getTurn()) {
                moveList.pushPromotion(position, position + GO[DOWNLEFT]);
           }
-          if (checkColor(board.getSquare(position + GO[DOWNRIGHT])) == -board.getTurn()) {
+          if (board.colorOf(position + GO[DOWNRIGHT]) == -board.getTurn()) {
                moveList.pushPromotion(position, position + GO[DOWNRIGHT]);
           }
           if (board.getSquare(position + GO[DOWN]) == EMPTYSQUARE) {

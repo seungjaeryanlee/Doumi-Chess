@@ -1068,7 +1068,7 @@ void Board::undoMove(const Move& move, const int capturedPiece) {
      else if (moveType == KNIGHT_PROMOTION || moveType == BISHOP_PROMOTION ||
           moveType == ROOK_PROMOTION || moveType == QUEEN_PROMOTION) {
           //  white turn
-          if (checkColor(board[terminal]) == WHITE) {
+          if (colorOf(terminal) == WHITE) {
                board[terminal] = capturedPiece;
                board[initial] = WHITEPAWN;
           }
@@ -1146,18 +1146,6 @@ void Board::updateBoard(const Move& move, const int capturedPiece) {
      //board.updatePieceCount(move, capturedPiece);
      updateMoveNumber();
      changeTurn();
-}
-
-int checkColor(const int pieceType) {
-     if (WHITEPAWN <= pieceType && pieceType <= WHITEKING) {
-          return WHITE;
-     }
-     else if (BLACKPAWN <= pieceType && pieceType <= BLACKKING) {
-          return BLACK;
-     }
-     else {
-          return NEITHER;
-     }
 }
 
 int filerankToNumber(const char file, const int rank) {
