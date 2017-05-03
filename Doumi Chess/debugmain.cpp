@@ -23,6 +23,7 @@ const int MOVEGEN_TEST_COUNT = 10000;
 const int EVALUATE_TEST_COUNT = 10000;
 const int COPYBOARD_TEST_COUNT = 10000;
 const int MAKEMOVE_TEST_COUNT = 10000;
+const int MAKEUNDO_TEST_COUNT = 10000;
 const int CHECKGAMESTATE_TEST_COUNT = 10000;
 const int ALPHABETA_TEST_COUNT[6] = { 0, 1000, 200, 50, 10, 1 };
 
@@ -220,6 +221,19 @@ void time_MakeMove() {
 
      timer.stop();
      std::cout << std::left << std::setw(FUNCTION_WS_LENGTH) << "  MAKEMOVE" << std::right << std::setw(TIME_WS_LENGTH) << timer.duration_nano() / (MAKEMOVE_TEST_COUNT*2) << " ns. (Average of " << MAKEMOVE_TEST_COUNT*2 << " trials)" << std::endl;
+}
+
+void time_MakeMoveUndoMove() {
+     Board board;  board.setup();
+     Timer timer;  timer.start();
+
+     for (int i = 0; i < MAKEUNDO_TEST_COUNT; i++) {
+          board.makeMove(Move(B1, C3, NORMAL));
+          board.undoMove(Move(B1, C3, NORMAL), EMPTYSQUARE);
+     }
+
+     timer.stop();
+     std::cout << std::left << std::setw(FUNCTION_WS_LENGTH) << "  MAKEMOVE + UNDOMOVE" << std::right << std::setw(TIME_WS_LENGTH) << timer.duration_nano() / (MAKEUNDO_TEST_COUNT) << " ns. (Average of " << MAKEUNDO_TEST_COUNT << " trials)" << std::endl;
 }
 
 void time_CheckGameState() {
@@ -466,6 +480,7 @@ int main() {
      time_Evaluate();
      time_CopyBoard();
      time_MakeMove();
+     time_MakeMoveUndoMove();
      time_CheckGameState();
      
      std::cout << std::endl;
