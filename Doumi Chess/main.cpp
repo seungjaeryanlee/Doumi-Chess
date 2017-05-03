@@ -97,7 +97,8 @@ void main() {
      while (gamePlaying) {
 
           //  Detect Checkmate/Stalemate
-          switch (checkGameState(currentBoard, savedBoard, saveIndex)) {
+          MoveList moveList = moveGeneration(currentBoard);
+          switch (checkGameState(currentBoard, moveList, savedBoard, saveIndex)) {
           case WHITE_CHECKMATE:
                gameResult = WHITE_WIN;
                gamePlaying = false;

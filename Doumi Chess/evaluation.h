@@ -4,6 +4,7 @@
 /******************************************************************************/
 
 #pragma once
+#include "move.h"
 #include "board.h"
 
 const int DEFAULT_ALPHA = -999999;
@@ -41,10 +42,11 @@ int rootAlphabeta(const int maxDepth, Board board, Variation* principalVariation
 /// This function checks the game state of the given board.
 /// </summary>
 /// <param name="board">The board that will be checked for its game state.</param>
+/// <param name="moveList">The list of legal moves allowed on the given board.</param>
 /// <param name="savedBoard">The past boards. Used for threefold repetition checking.</param>
 /// <param name="saveIndex">Number of boards in savedBoard.</param>
 /// <returns>The game state of the board.</returns>
-gameState checkGameState(Board& board, const Board savedBoard[MAX_MOVENUMBER], int saveIndex);
+gameState checkGameState(Board& board, const MoveList& moveList, const Board savedBoard[MAX_MOVENUMBER], int saveIndex);
 
 /// <summary>
 /// This function prints the variation to given stream.

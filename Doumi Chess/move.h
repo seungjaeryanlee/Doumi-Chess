@@ -46,9 +46,9 @@ public:
      MoveList();
 
      // Accessor
-     inline std::array<Move, MAX_MOVEGEN_COUNT> getList() { return movelist; }
-     inline Move getMove(int index) { return movelist[index]; }
-     inline int getCounter() { return moveCounter; }
+     inline std::array<Move, MAX_MOVEGEN_COUNT> getList() const { return movelist; }
+     inline Move getMove(int index) const { return movelist[index]; }
+     inline int getCounter() const { return moveCounter; }
 
      // Mutator
      void push(const Move& move);

@@ -13,7 +13,9 @@
 
 int alphabeta(const int depth, Board& board, int alpha, int beta, Variation* pVariation, Board savedBoard[MAX_MOVENUMBER], int saveIndex) {
 
-     switch (checkGameState(board, savedBoard, saveIndex)) {
+     MoveList moveList = moveGeneration(board);
+
+     switch (checkGameState(board, moveList, savedBoard, saveIndex)) {
      case NOTMATE:
           break;
      case WHITE_CHECKMATE:
@@ -43,7 +45,6 @@ int alphabeta(const int depth, Board& board, int alpha, int beta, Variation* pVa
 
      Variation variation;
      Board oldBoard = board;
-     MoveList moveList = moveGeneration(board);
      for (int i = 0; i < moveList.getCounter(); i++) {
           int capturedPiece = board.makeMove(moveList.getMove(i));
           
@@ -91,7 +92,7 @@ int rootAlphabeta(const int maxDepth, Board board, Variation* principalVariation
      }
      return alpha;
 }
-gameState checkGameState(Board& board, const Board savedBoard[MAX_MOVENUMBER], int saveIndex) {
+gameState checkGameState(Board& board, const MoveList& moveList, const Board savedBoard[MAX_MOVENUMBER], int saveIndex) {
      // Stalemate: 75 Move Rule
      if (board.getHalfMoveClock() >= 150) {
           return STALEMATE_75;
@@ -108,7 +109,7 @@ gameState checkGameState(Board& board, const Board savedBoard[MAX_MOVENUMBER], i
                break;
           }
      }
-     MoveList moveList = moveGeneration(board);
+
      // Checkmate
      if (moveList.getCounter() == 0 && board.isAttacked(kingPos)) {
           if (board.getSquare(kingPos) == WHITE) {

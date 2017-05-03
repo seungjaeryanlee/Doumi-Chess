@@ -109,58 +109,65 @@ void test_GameState() {
      Board savedBoard1[MAX_MOVENUMBER];
      int saveIndex1 = 0;
      board1.setup();
+     MoveList moveList1 = moveGeneration(board1);
 
      REQUIRE("Initial board state should be NOTMATE",
-             checkGameState(board1, savedBoard1, saveIndex1) == NOTMATE);
+             checkGameState(board1, moveList1, savedBoard1, saveIndex1) == NOTMATE);
 
      // Test 2
      Board board2;
      Board savedBoard2[MAX_MOVENUMBER];
      int saveIndex2 = 0;
      board2.import("6bk/5p1p/5P1P/8/8/8/8/4K3 b - - 0 1");
+     MoveList moveList2 = moveGeneration(board2);
 
      REQUIRE("STALEMATE_MOVE should be detected",
-             checkGameState(board2, savedBoard2, saveIndex2) == STALEMATE_MOVE);
+             checkGameState(board2, moveList2, savedBoard2, saveIndex2) == STALEMATE_MOVE);
 
      // Test 3
      Board board3;
      Board savedBoard3[MAX_MOVENUMBER];
      int saveIndex3 = 0;
      board3.import("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 100 1");
+     MoveList moveList3 = moveGeneration(board3);
+
 
      REQUIRE("STALEMATE_50 should be detected",
-             checkGameState(board3, savedBoard3, saveIndex3) == STALEMATE_50);
+             checkGameState(board3, moveList3, savedBoard3, saveIndex3) == STALEMATE_50);
 
      // Test 4
      Board board4;
      Board savedBoard4[MAX_MOVENUMBER];
      int saveIndex4 = 0;
      board4.import("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 150 1");
+     MoveList moveList4 = moveGeneration(board4);
 
      REQUIRE("STALEMATE_75 should be detected",
-             checkGameState(board4, savedBoard4, saveIndex4) == STALEMATE_75);
+             checkGameState(board4, moveList4, savedBoard4, saveIndex4) == STALEMATE_75);
 
      // Test 5
      Board board5;
      Board savedBoard5[MAX_MOVENUMBER];
      int saveIndex5 = 3;
      board5.import("7k/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 0 1");
+     MoveList moveList5 = moveGeneration(board5);
 
      savedBoard5[0] = board5;
      savedBoard5[1] = board5;
      savedBoard5[2] = board5; // FIXME: Is this needed?
      
      REQUIRE("STALEMATE_3F should be detected",
-             checkGameState(board5, savedBoard5, saveIndex5) == STALEMATE_3F);
+             checkGameState(board5, moveList5, savedBoard5, saveIndex5) == STALEMATE_3F);
 
      // Test 6
      Board board6;
      Board savedBoard6[MAX_MOVENUMBER];
      int saveIndex6 = 0;
      board6.import("R6k/R7/8/8/8/8/8/7K b - - 0 1");
+     MoveList moveList6 = moveGeneration(board6);
 
      REQUIRE("WHITE_CHECKMATE should be detected",
-             checkGameState(board6, savedBoard6, saveIndex6) == WHITE_CHECKMATE);
+             checkGameState(board6, moveList6, savedBoard6, saveIndex6) == WHITE_CHECKMATE);
 
 }
 
@@ -216,12 +223,13 @@ void time_MakeMove() {
 
 void time_CheckGameState() {
      Board board;  board.setup();
-     Timer timer;  timer.start();
      Board savedBoard[MAX_MOVENUMBER];
      int saveIndex = 0;
+     MoveList moveList = moveGeneration(board);
+     Timer timer;  timer.start();
 
      for (int i = 0; i < CHECKGAMESTATE_TEST_COUNT; i++) {
-          checkGameState(board, savedBoard, saveIndex);
+          checkGameState(board, moveList, savedBoard, saveIndex);
      }
 
      timer.stop();
