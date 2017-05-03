@@ -24,6 +24,7 @@ const int EVALUATE_TEST_COUNT = 10000;
 const int COPYBOARD_TEST_COUNT = 10000;
 const int MAKEMOVE_TEST_COUNT = 10000;
 const int CHECKGAMESTATE_TEST_COUNT = 10000;
+const int ALPHABETA_TEST_COUNT[6] = { 0, 1000, 200, 50, 10, 1 };
 
 const int FUNCTION_WS_LENGTH = 30;
 const int TIME_WS_LENGTH = 10;
@@ -234,6 +235,21 @@ void time_CheckGameState() {
 
      timer.stop();
      std::cout << std::left << std::setw(FUNCTION_WS_LENGTH) << "  CHECKGAMESTATE INIT" << std::right << std::setw(TIME_WS_LENGTH) << timer.duration_nano() / (CHECKGAMESTATE_TEST_COUNT) << " ns. (Average of " << CHECKGAMESTATE_TEST_COUNT << " trials)" << std::endl;
+}
+
+void time_Alphabeta(const int depth) {
+     Board board;  board.setup();
+     Variation pv;
+     Board savedBoard[MAX_MOVENUMBER];
+     int saveIndex = 0;
+     Timer timer;  timer.start();
+
+     for (int i = 0; i < ALPHABETA_TEST_COUNT[depth]; i++) {
+          rootAlphabeta(depth, board, &pv, savedBoard, saveIndex);
+     }
+
+     timer.stop();
+     std::cout << std::left << std::setw(FUNCTION_WS_LENGTH) << "  ALPHABETA " + std::to_string(depth) << std::right << std::setw(TIME_WS_LENGTH) << timer.duration_nano() / (ALPHABETA_TEST_COUNT[depth] * 2) << " ns. (Average of " << ALPHABETA_TEST_COUNT[depth] << " trials)" << std::endl;
 }
 
 int main() {
@@ -451,6 +467,14 @@ int main() {
      time_CopyBoard();
      time_MakeMove();
      time_CheckGameState();
+     
+     std::cout << std::endl;
+
+     time_Alphabeta(1);
+     time_Alphabeta(2);
+     time_Alphabeta(3);
+     time_Alphabeta(4);
+     time_Alphabeta(5);
 
      std::cout << std::endl;
 
