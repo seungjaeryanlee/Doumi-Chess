@@ -25,17 +25,17 @@ Board::Board(std::array<int, 120> b, std::array<bool, 4> cc, color t, int e, int
      moveNumber = m;
 }
 
-//  Clone Method
+// Clone Method
 Board::Board(const Board& originalBoard) {
-     board = originalBoard.getBoard();
-     castlingRights = originalBoard.getCastlingRights();
-     turn = originalBoard.getTurn();
-     enpassantSquare = originalBoard.getEnpassantSquare();
-     halfMoveClock = originalBoard.getHalfMoveClock();
-     moveNumber = originalBoard.getMoveNumber();
+     board = originalBoard.board;
+     castlingRights = originalBoard.castlingRights;
+     turn = originalBoard.turn;
+     enpassantSquare = originalBoard.enpassantSquare;
+     halfMoveClock = originalBoard.halfMoveClock;
+     moveNumber = originalBoard.moveNumber;
 }
 
-//  equality for threefold repetition checking
+// Equality for threefold repetition
 bool Board::isEqual_3F(const Board& thatBoard) {
      if (this == &thatBoard) {
           return true;
@@ -912,6 +912,19 @@ void Board::print() const {
      printf("  ----------------\n");
      printf("   a b c d e f g h\n");
 }
+
+int Board::colorOf(const int position) const {
+     if (WHITEPAWN <= board[position] && board[position] <= WHITEKING) {
+          return WHITE;
+     }
+     else if (BLACKPAWN <= board[position] && board[position] <= BLACKKING) {
+          return BLACK;
+     }
+     else {
+          return NEITHER;
+     }
+}
+
 
 int Board::makeMove(const Move& move) {
      int capturedPiece = EMPTYSQUARE;

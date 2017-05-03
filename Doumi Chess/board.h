@@ -117,6 +117,13 @@ public:
      void print() const;
 
      /// <summary>
+     /// This function returns the color of the piece on given position.
+     /// </summary>
+     /// <param name="position">The square of the board.</param>
+     /// <returns>The color of the piece on the given position of the board.</returns>
+     int colorOf(const int position) const;
+
+     /// <summary>
      /// This function applies the given move.
      /// </summary>
      /// <param name="move">The move to be applied to the board.</param>
