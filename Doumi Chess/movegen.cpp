@@ -63,15 +63,14 @@ MoveList moveGeneration(const Board& board) {
 
      // STEP 2: CHECK LEGALITY
      MoveList moveList;
-     Board copiedBoard = board;
 
      //  find king position
      int kingPosition = 0, changedKingPosition = 0;
      int turn = board.getTurn();
      int capturedPiece;
      for (int i = 0; i < 120; i++) {
-          if (copiedBoard.getTurn() == WHITE && copiedBoard.getSquare(i) == WHITEKING ||
-               copiedBoard.getTurn() == BLACK && copiedBoard.getSquare(i) == BLACKKING) {
+          if (board.getTurn() == WHITE && board.getSquare(i) == WHITEKING ||
+               board.getTurn() == BLACK && board.getSquare(i) == BLACKKING) {
                kingPosition = i;
                break;
           }
@@ -380,7 +379,9 @@ MoveList moveGeneration(const Board& board) {
      }
      */
 
+     Board copiedBoard = board;
      for (int i = 0; i < pseudolegalMoveList.getCounter(); i++) {
+
           //  check if king will be moved
           if (copiedBoard.getSquare(pseudolegalMoveList.getMove(i).getInitial()) == WHITEKING || copiedBoard.getSquare(pseudolegalMoveList.getMove(i).getInitial()) == BLACKKING) {
                if (pseudolegalMoveList.getMove(i).getType() == NORMAL) {
@@ -404,10 +405,8 @@ MoveList moveGeneration(const Board& board) {
           if (!copiedBoard.isAttacked(changedKingPosition)) {
                moveList.push(pseudolegalMoveList.getMove(i));
           }
-
           copiedBoard = board;
      }
-     
      return moveList;
 }
 void pawnMoveGeneration(const Board& board, const int position, MoveList& moveList) {
@@ -422,8 +421,8 @@ void pawnMoveGeneration(const Board& board, const int position, MoveList& moveLi
           if (board.getSquare(position + GO[UP]) == EMPTYSQUARE) {
                moveList.push(position, position + GO[UP], NORMAL);
                //  Advance 2 squares
-               if (A2 <= position && position <= H2 &&
-                    board.getSquare(position + 2 * GO[UP]) == EMPTYSQUARE) {
+               if (A2 <= position && position <= H2
+                && board.getSquare(position + 2 * GO[UP]) == EMPTYSQUARE) {
                     moveList.push(position, position + 2 * GO[UP], DOUBLEMOVE);
                }
           }
@@ -447,8 +446,8 @@ void pawnMoveGeneration(const Board& board, const int position, MoveList& moveLi
           if (board.getSquare(position + GO[DOWN]) == EMPTYSQUARE) {
                moveList.push(position, position + GO[DOWN], NORMAL);
                //  Advance 2 squares
-               if (A7 <= position && position <= H7 &&
-                    board.getSquare(position + 2 * GO[DOWN]) == EMPTYSQUARE) {
+               if (A7 <= position && position <= H7 
+                && board.getSquare(position + 2 * GO[DOWN]) == EMPTYSQUARE) {
                     moveList.push(position, position + 2 * GO[DOWN], DOUBLEMOVE);
                }
           }
