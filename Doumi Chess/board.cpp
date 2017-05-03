@@ -925,7 +925,6 @@ int Board::colorOf(const int position) const {
      }
 }
 
-
 int Board::makeMove(const Move& move) {
      int capturedPiece = EMPTYSQUARE;
      int initial = move.getInitial(), terminal = move.getTerminal(), moveType = move.getType();

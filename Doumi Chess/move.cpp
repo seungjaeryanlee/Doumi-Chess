@@ -86,6 +86,7 @@ std::string Move::toString_vertose() const{
 
      return output;
 }
+
 /******************************************************************************/
 /* MOVELIST CLASS                                                             */
 /******************************************************************************/
@@ -95,7 +96,6 @@ MoveList::MoveList() {
      moveCounter = 0;
 }
 
-// Mutator
 void MoveList::push(const Move& move) {
      movelist[moveCounter] = move;
      moveCounter++;
@@ -109,6 +109,7 @@ void MoveList::pushPromotion(int initial, int terminal) {
      push(initial, terminal, ROOK_PROMOTION);
      push(initial, terminal, QUEEN_PROMOTION);
 }
+
 
 inline std::string numberToFilerank(const int position) {
      return char('a' + position % ROW - 1) + std::to_string((10 - position / ROW));

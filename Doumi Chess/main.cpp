@@ -91,8 +91,7 @@ void main() {
      std::string userCommand;
 
      currentBoard.updateEndgame();
-     //currentBoard.updatePieceCount();
-     
+
      bool gamePlaying = true;
      while (gamePlaying) {
 

@@ -42,7 +42,6 @@ public:
      inline void setHalfMoveClock(const int f) { halfMoveClock = f; }
      inline void setMoveNumber(const int m) { moveNumber = m; }
      inline void setEndgame(bool e) { isEndgame = e; }
-     //void setPieceCount(const std::array<int, 14> pc) { pieceCount = pc; }
 
      //  Accessors
      inline const std::array<int, 120> getBoard() const { return board; }
@@ -54,7 +53,6 @@ public:
      inline const int getHalfMoveClock() const { return halfMoveClock; }
      inline const int getMoveNumber() const { return moveNumber; }
      inline const bool getEndgame() const { return isEndgame; }
-     //const std::array<int, 14> getPieceCount() const { return pieceCount; }
 
      //  Other Functions
      inline void changeTurn() { turn = (color)-turn; }
@@ -65,8 +63,6 @@ public:
 
      void updateEndgame();
      void updateEndgame(Move move);
-    
-     // void updatePieceCount();
 
      /// <summary>
      /// This function returns evaluation score of the board using piece values and PCSQ tables. Positive score signifies white's advantage.
@@ -166,18 +162,10 @@ public:
      /// </summary>
      /// <param name="board">The board that will be checked.</param>
      /// <param name="move">The move that was made that could have changed the board properties.</param>
-     // FIXME: Fix
      void updateBoard(const Move& move, const int capturedPiece);
 
 
 };
-
-/// <summary>
-/// This function returns the color of the given piece type
-/// </summary>
-/// <param name="pieceType">The piece that will be checked its color</param>
-/// <returns>The color of the given piece</returns>
-int checkColor(const int pieceType);
 
 /// <summary>
 /// This function converts the file and rank notation to board index of a board. 

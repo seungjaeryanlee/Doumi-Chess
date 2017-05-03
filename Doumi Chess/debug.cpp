@@ -70,7 +70,7 @@ uint64_t divide2(const int depth, const int maxDepth, Board& board, const bool s
      int moveNumber = board.getMoveNumber();
      bool isEndgame = board.getEndgame();
 
-     //if (depth == 1) { return depthLegalMoveCount[depth]; }
+     if (depth == 1) { return moveList.getCounter(); }
 
      for (int i = 0; i < moveList.getCounter(); i++) {
           int initial = moveList.getMove(i).getInitial();
@@ -87,7 +87,6 @@ uint64_t divide2(const int depth, const int maxDepth, Board& board, const bool s
           if (depth >= maxDepth && showOutput) {
                output2 << numberToFilerank(initial) << numberToFilerank(terminal) << ": " << individualNode << std::endl;
           }
-
 
           board.undoMove(moveList.getMove(i), capturedPiece);
           board.setCastlingRights(castlingRights);
