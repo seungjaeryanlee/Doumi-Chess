@@ -35,4 +35,4 @@ timer.o: timer.cpp timer.h
 	$(CC) $(CPPFLAGS) -c timer.cpp	
 
 clean:
-	rm -f *.o doumiUCI
+	rm -f *.o doumiUCI doumiTEST
