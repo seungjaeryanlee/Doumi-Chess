@@ -46,7 +46,7 @@ void REQUIRE(std::string description, bool condition) {
 // FIXME: Add Documentation
 void test_BoardClass() {
 
-     std::cout << "BOARD CLASS" << std::endl;
+     std::cout << "BOARD CLASS" << std::endl << std::endl;
 
      Board board;
 
@@ -69,41 +69,182 @@ void test_BoardClass() {
      board.setup();
      REQUIRE("Board::evaluate() should return 0 in initial board",
           board.evaluate() == 0);
+
+     std::cout << std::endl;
 }
 
 void test_Perft() {
+     // Perft results from https://chessprogramming.wikispaces.com/Perft+Results
 
-     std::cout << "PERFT" << std::endl;
-     Board board;
+     ////////////////////////////////////////////////////////////////////////////////
+     
+     std::cout << "PERFT rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" << std::endl << std::endl;
+     Board board1;
      
      // Test 1
-     board.setup();
+     board1.setup();
      REQUIRE("Perft of depth 1 should give 20 moves",
-             divide(1, 0, board, false) == 20);
+             divide(1, 0, board1, false) == 20);
 
      // Test 2
-     board.setup();
+     board1.setup();
      REQUIRE("Perft of depth 2 should give 400 moves",
-             divide(2, 0, board, false) == 400);
+             divide(2, 0, board1, false) == 400);
 
      // Test 3
-     board.setup();
+     board1.setup();
      REQUIRE("Perft of depth 3 should give 8902 moves",
-             divide(3, 0, board, false) == 8902);
+             divide(3, 0, board1, false) == 8902);
 
      // Test 4
-     board.setup();
+     board1.setup();
      REQUIRE("Perft of depth 4 should give 197281 moves",
-             divide(4, 0, board, false) == 197281);
+             divide(4, 0, board1, false) == 197281);
 
-     // Test 5
-     // board.setup();
-     // REQUIRE("Perft of depth 5 should give 4865609 moves",
-     //         divide(5, 0, board, false) == 4865609);
+     std::cout << std::endl;
+
+     ////////////////////////////////////////////////////////////////////////////////
+     
+     std::cout << "PERFT r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1" << std::endl << std::endl;
+     Board board2;
+
+     // Test 1
+     board2.import("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+     REQUIRE("Perft of depth 1 should give 48 moves",
+             divide(1, 0, board2, false) == 48);
+
+     // Test 2
+     board2.import("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+     REQUIRE("Perft of depth 2 should give 2039 moves",
+             divide(2, 0, board2, false) == 2039);
+
+     // Test 3
+     board2.import("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+     REQUIRE("Perft of depth 3 should give 97862 moves",
+             divide(3, 0, board2, false) == 97862);
+
+     // Test 4
+     board2.import("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+     REQUIRE("Perft of depth 4 should give 4085603 moves",
+             divide(4, 0, board2, false) == 4085603);
+
+     std::cout << std::endl;
+
+     ////////////////////////////////////////////////////////////////////////////////
+     
+     std::cout << "PERFT 8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1" << std::endl << std::endl;
+     Board board3;
+
+     // Test 1
+     board3.import("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1");
+     REQUIRE("Perft of depth 1 should give 14 moves",
+             divide(1, 0, board3, false) == 14);
+
+     // Test 2
+     board3.import("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1");
+     REQUIRE("Perft of depth 2 should give 191 moves",
+             divide(2, 0, board3, false) == 191);
+
+     // Test 3
+     board3.import("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1");
+     REQUIRE("Perft of depth 3 should give 2812 moves",
+             divide(3, 0, board3, false) == 2812);
+
+     // Test 4
+     board3.import("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1");
+     REQUIRE("Perft of depth 4 should give 43238 moves",
+             divide(4, 0, board3, false) == 43238);
+
+     std::cout << std::endl;
+
+     ////////////////////////////////////////////////////////////////////////////////
+     
+     std::cout << "PERFT r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1" << std::endl << std::endl;
+     Board board4;
+
+     // Test 1
+     board4.import("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
+     REQUIRE("Perft of depth 1 should give 6 moves",
+             divide(1, 0, board4, false) == 6);
+
+     // Test 2
+     board4.import("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
+     REQUIRE("Perft of depth 2 should give 264 moves",
+             divide(2, 0, board4, false) == 264);
+
+     // Test 3
+     board4.import("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
+     REQUIRE("Perft of depth 3 should give 9467 moves",
+             divide(3, 0, board4, false) == 9467);
+
+     // Test 4
+     board4.import("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
+     REQUIRE("Perft of depth 4 should give 422333 moves",
+             divide(4, 0, board4, false) == 422333);
+
+     std::cout << std::endl;
+
+     ////////////////////////////////////////////////////////////////////////////////
+     
+     std::cout << "PERFT rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8" << std::endl << std::endl;
+     Board board5;
+
+     // Test 1
+     board5.import("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8");
+     REQUIRE("Perft of depth 1 should give 44 moves",
+             divide(1, 0, board5, false) == 44);
+
+     // Test 2
+     board5.import("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8");
+     REQUIRE("Perft of depth 2 should give 1486 moves",
+             divide(2, 0, board5, false) == 1486);
+
+     // Test 3
+     board5.import("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8");
+     REQUIRE("Perft of depth 3 should give 62379 moves",
+             divide(3, 0, board5, false) == 62379);
+
+     // Test 4
+     board5.import("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8");
+     REQUIRE("Perft of depth 4 should give 2103487 moves",
+             divide(4, 0, board5, false) == 2103487);
+
+     std::cout << std::endl;
+
+     ////////////////////////////////////////////////////////////////////////////////
+     
+     std::cout << "PERFT r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10" << std::endl << std::endl;
+     Board board6;
+
+     // Test 1
+     board6.import("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10");
+     REQUIRE("Perft of depth 1 should give 46 moves",
+             divide(1, 0, board6, false) == 46);
+
+     // Test 2
+     board6.import("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10");
+     REQUIRE("Perft of depth 2 should give 2079 moves",
+             divide(2, 0, board6, false) == 2079);
+
+     // Test 3
+     board6.import("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10");
+     REQUIRE("Perft of depth 3 should give 89890 moves",
+             divide(3, 0, board6, false) == 89890);
+
+     // Test 4
+     board6.import("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10");
+     REQUIRE("Perft of depth 4 should give 3894594 moves",
+             divide(4, 0, board6, false) == 3894594);
+
+     std::cout << std::endl;
+
+
+
+
 }
 
 void test_GameState() {
-     std::cout << "GAME STATE" << std::endl;
+     std::cout << "GAME STATE" << std::endl << std::endl;
      
 
      // Test 1
@@ -171,6 +312,7 @@ void test_GameState() {
      REQUIRE("WHITE_CHECKMATE should be detected",
              checkGameState(board6, moveList6, savedBoard6, saveIndex6) == WHITE_CHECKMATE);
 
+     std::cout << std::endl;
 }
 
 void time_MoveGen() {
