@@ -1,6 +1,6 @@
-# Nageune Chess Engine
+# Doumi Chess
 ## Description
-**Nageune Chess Engine** is a  program written in C++ that can play a full game of chess against human players or other computer chess engines. 
+**Doumi Chess** is a  program written in C++ that can play a full game of chess against human players or other computer chess engines. 
 ## Contributor
 sjlee235
 ## Code Explained (In construction)
