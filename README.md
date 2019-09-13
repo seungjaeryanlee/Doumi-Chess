@@ -2,7 +2,7 @@
 ## Description
 **Doumi Chess** is a  program written in C++ that can play a full game of chess against human players or other computer chess engines. 
 ## Contributor
-sjlee235
+seungjaeryanlee
 ## Code Explained (In construction)
 1. Board Representation  
 I have a Board class to represent a board. It consists of a size 120 array to represent the location of each piece. The 12x10 array uses the middle 8x8 as the chessboard, and all the other squares are declared error squares. With these error squares, it is easier to generate moves for bishop, rook, queen and knight. Eventually I plan to change to bitboard mechanism. The Board class also holds variables for castling rights, en passant square, turn, half move clock, and move number.
